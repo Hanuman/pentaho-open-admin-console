@@ -1,5 +1,6 @@
 package org.pentaho.pac.client.users;
 
+import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacService;
 import org.pentaho.pac.client.PacServiceAsync;
 
@@ -28,6 +29,7 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
   Button addUserBtn = new Button("+");
   Button deleteUserBtn = new Button("-");
   NewUserDialogBox newUserDialogBox = new NewUserDialogBox();
+  MessageDialog confirmUserDeleteDialog = new MessageDialog("Are your sure you want to delete the selected users.", new int[] {MessageDialog.OK_BTN, MessageDialog.CANCEL_BTN});
   
 	public UsersPanel() {
 	  DockPanel userListPanel = buildUsersListPanel();
@@ -51,6 +53,9 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     updateUserBtn.setEnabled(false);
     
     newUserDialogBox.addPopupListener(this);
+    
+    confirmUserDeleteDialog.setText("Delete User");
+    confirmUserDeleteDialog.addPopupListener(this);
  	}
 
 	public DockPanel buildUserDetailsDockPanel() {
@@ -119,7 +124,9 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	  if (sender == updateUserBtn) {
 	    updateUserDetails();
 	  } else if (sender == deleteUserBtn) {
-	    deleteSelectedUsers();
+	    if (usersList.getSelectedUsers().length > 0) {
+	      confirmUserDeleteDialog.center();
+	    }
 	  } else if (sender == addUserBtn) {
 	    addNewUser();
 	  }
@@ -198,12 +205,14 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	}
 
   public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
-    if (newUserDialogBox.isUserCreated()) {
+    if ((sender == newUserDialogBox) && newUserDialogBox.isUserCreated()) {
       ProxyPentahoUser newUser = newUserDialogBox.getUser();
       if (usersList.addUser(newUser)) {
         usersList.setSelectedUser(newUser);
         userSelectionChanged();
       }
+    } else if ((sender == confirmUserDeleteDialog) && (confirmUserDeleteDialog.getButtonPressed() == MessageDialog.OK_BTN)) {
+      deleteSelectedUsers();
     }
   }
   
