@@ -2,7 +2,7 @@ package org.pentaho.pac.client.roles;
 
 import org.pentaho.pac.client.PacService;
 import org.pentaho.pac.client.PacServiceAsync;
-import org.pentaho.pac.client.users.ProxyPentahoUser;
+import org.pentaho.pac.client.PacServiceFactory;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -25,7 +25,6 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
   ProxyPentahoRole[] roles = null;
   RoleDetailsPanel roleDetailsPanel = new RoleDetailsPanel();
   Button updateRoleBtn = new Button("Update");
-  PacServiceAsync pacService;
   Button addRoleBtn = new Button("+");
   Button deleteRoleBtn = new Button("-");
   NewRoleDialogBox newRoleDialogBox = new NewRoleDialogBox();
@@ -129,7 +128,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 
 	private void addNewRole() {
 	  newRoleDialogBox.setUser(null);
-    newRoleDialogBox.show();
+    newRoleDialogBox.center();
    }
 	
 	private void deleteSelectedRoles() {
@@ -146,7 +145,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 	        int x = 1;
 	      }
 	    };
-	    getPacService().deleteRoles(selectedRoles, callback);
+	    PacServiceFactory.getPacService().deleteRoles(selectedRoles, callback);
 	  }
 	}
 	
@@ -174,7 +173,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
         int x = 1;
       }
     };
-    getPacService().updateRole(role, callback);
+    PacServiceFactory.getPacService().updateRole(role, callback);
 	}
 	
 	public boolean validate() {return true;}
@@ -187,17 +186,6 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 	  rolesList.refresh();
 	}
 	
-	private PacServiceAsync getPacService() {
-	  if (pacService == null) {
-	    pacService = (PacServiceAsync) GWT.create(PacService.class);
-	    ServiceDefTarget endpoint = (ServiceDefTarget) pacService;
-	    String moduleRelativeURL = GWT.getModuleBaseURL() + "pacsvc";
-	    endpoint.setServiceEntryPoint(moduleRelativeURL);
-	  }
-	  return pacService;
-
-	}
-
   public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
     if (newRoleDialogBox.isUserCreated()) {
       ProxyPentahoRole newRole = newRoleDialogBox.getRole();

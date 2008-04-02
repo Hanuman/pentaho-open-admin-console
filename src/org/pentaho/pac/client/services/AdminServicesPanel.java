@@ -2,6 +2,7 @@ package org.pentaho.pac.client.services;
 
 import org.pentaho.pac.client.PacService;
 import org.pentaho.pac.client.PacServiceAsync;
+import org.pentaho.pac.client.PacServiceFactory;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -26,7 +27,6 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
   Button refreshSystemSettingsBtn = new Button("Refresh System Settings");
   Button executeGlobalActionsBtn = new Button("Execute Global Actions");
   Button refreshReportingMetadataBtn = new Button("Refresh Reporting Metadata");
-  PacServiceAsync pacService;
   
   public AdminServicesPanel() {
     Grid grid = new Grid(5, 2);
@@ -85,7 +85,7 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
         verticalPanel.add(footerPanel);
         
         dialogBox.setWidget(verticalPanel);
-        dialogBox.show();
+        dialogBox.center();
       }
 
       public void onFailure(Throwable caught) {
@@ -107,39 +107,30 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
         verticalPanel.add(footerPanel);
         
         dialogBox.setWidget(verticalPanel);
-        dialogBox.show();
+        dialogBox.center();
       }
     };
 
+    PacServiceAsync pacServiceAsync = PacServiceFactory.getPacService();
     if (sender == refreshSolutionRepositoryBtn) {
-      getPacService().refreshSolutionRepository(callback);
+      pacServiceAsync.refreshSolutionRepository(callback);
     } else if (sender == cleanRepositoryBtn) {
-      getPacService().cleanRepository(callback);
+      pacServiceAsync.cleanRepository(callback);
     } else if (sender == clearMondrianDataCacheBtn) {
-      getPacService().clearMondrianDataCache(callback);
+      pacServiceAsync.clearMondrianDataCache(callback);
     } else if (sender == clearMondrianSchemaCacheBtn) {
-      getPacService().clearMondrianSchemaCache(callback);
+      pacServiceAsync.clearMondrianSchemaCache(callback);
     } else if (sender == scheduleRepositoryCleaningBtn) {
-      getPacService().scheduleRepositoryCleaning(callback);
+      pacServiceAsync.scheduleRepositoryCleaning(callback);
     } else if (sender == resetRepositoryBtn) {
-      getPacService().resetRepository(callback);
+      pacServiceAsync.resetRepository(callback);
     } else if (sender == refreshSystemSettingsBtn) {
-      getPacService().refreshSystemSettings(callback);
+      pacServiceAsync.refreshSystemSettings(callback);
     } else if (sender == executeGlobalActionsBtn) {
-      getPacService().executeGlobalActions(callback);
+      pacServiceAsync.executeGlobalActions(callback);
     } else if (sender == refreshReportingMetadataBtn) {
-      getPacService().refreshReportingMetadata(callback);
+      pacServiceAsync.refreshReportingMetadata(callback);
     }
-  }
-  
-  private PacServiceAsync getPacService() {
-    if (pacService == null) {
-      pacService = (PacServiceAsync) GWT.create(PacService.class);
-      ServiceDefTarget endpoint = (ServiceDefTarget) pacService;
-      String moduleRelativeURL = GWT.getModuleBaseURL() + "pacsvc";
-      endpoint.setServiceEntryPoint(moduleRelativeURL);
-    }
-    return pacService;
   }
   
 }

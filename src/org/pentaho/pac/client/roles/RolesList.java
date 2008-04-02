@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.pentaho.pac.client.PacService;
-import org.pentaho.pac.client.PacServiceAsync;
+import org.pentaho.pac.client.PacServiceFactory;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -13,7 +13,6 @@ import com.google.gwt.user.client.ui.ListBox;
 
 public class RolesList extends ListBox {
   ArrayList roles = new ArrayList();
-  PacServiceAsync pacService;
   
   public RolesList() {
     super(true);
@@ -113,13 +112,6 @@ public class RolesList extends ListBox {
   }
   
   public void refresh() {
-    if (pacService == null) {
-      pacService = (PacServiceAsync) GWT.create(PacService.class);
-      ServiceDefTarget endpoint = (ServiceDefTarget) pacService;
-      String moduleRelativeURL = GWT.getModuleBaseURL() + "pacsvc";
-      endpoint.setServiceEntryPoint(moduleRelativeURL);
-    }
-
     AsyncCallback callback = new AsyncCallback() {
       public void onSuccess(Object result) {
         setRoles((ProxyPentahoRole[])result);
@@ -130,7 +122,7 @@ public class RolesList extends ListBox {
       }
     };
     
-    pacService.getRoles(callback);
+    PacServiceFactory.getPacService().getRoles(callback);
   }
   
   public boolean addRole(ProxyPentahoRole role) {

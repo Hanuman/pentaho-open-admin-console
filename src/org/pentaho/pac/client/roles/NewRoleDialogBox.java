@@ -1,17 +1,12 @@
 package org.pentaho.pac.client.roles;
 
-import org.pentaho.pac.client.PacService;
-import org.pentaho.pac.client.PacServiceAsync;
-import org.pentaho.pac.client.users.ProxyPentahoUser;
+import org.pentaho.pac.client.PacServiceFactory;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -22,7 +17,6 @@ public class NewRoleDialogBox extends DialogBox implements ClickListener {
   Button cancelButton = new Button("Cancel");
   RoleDetailsPanel roleDetailsPanel = new RoleDetailsPanel();
   boolean roleCreated = false;
-  PacServiceAsync pacService;
   
   public NewRoleDialogBox() {
     super();
@@ -96,19 +90,9 @@ public class NewRoleDialogBox extends DialogBox implements ClickListener {
           int x = 1;
         }
       };
-      getPacService().createRole(role, callback);
+      PacServiceFactory.getPacService().createRole(role, callback);
     }
     return result;
-  }
-  
-  private PacServiceAsync getPacService() {
-    if (pacService == null) {
-      pacService = (PacServiceAsync) GWT.create(PacService.class);
-      ServiceDefTarget endpoint = (ServiceDefTarget) pacService;
-      String moduleRelativeURL = GWT.getModuleBaseURL() + "pacsvc";
-      endpoint.setServiceEntryPoint(moduleRelativeURL);
-    }
-    return pacService;
   }
   
   public void onClick(Widget sender) {
