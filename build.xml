@@ -1,0 +1,63 @@
+<!-- ======================================================================
+     description: main build file for pac
+     ====================================================================== -->
+<project name="pac-demo" default="compile-pac">
+	<description>PAC build process..</description>
+
+	<property file="build.properties" />
+
+	<propertyfile file="version.properties">
+		<entry key="release.build.number" type="int" operation="+" value="1" />
+	</propertyfile>
+
+	<property file="version.properties" />
+
+	<path id="classpath">
+		<fileset dir="lib">
+			<include name="**/*.jar" />
+			<include name="**/*.zip" />
+		</fileset>
+	</path>
+
+
+
+	<!-- ===================================================================
+        target: init              
+       =================================================================== -->
+	<target name="init">
+		<mkdir dir="bin" />
+		<copy todir="bin">
+			<fileset dir="src" includes="**/*.png" />
+			<fileset dir="src" includes="**/*.jpg" />
+			<fileset dir="src" includes="**/*.gif" />
+			<fileset dir="src" includes="**/*.properties" />
+			<fileset dir="src" includes="**/*.xml" />
+		</copy>
+	</target>
+
+	<target name="compile" depends="init">
+		<javac destdir="bin" debug="${debug}" optimize="${optimize}" deprecation="${deprecation}" compiler="modern" source="1.5" target="1.5" fork="true">
+			<src path="src" />
+			<classpath refid="classpath" />
+		</javac>
+	</target>
+
+	<target name="compile-pac" depends="compile">
+		<java classname="com.google.gwt.dev.GWTCompiler" fork="true" maxmemory="512M">
+			<classpath>
+				<path refid="classpath" />
+				<pathelement location="src" />
+			</classpath>
+			<arg value="-out" />
+			<arg value="&quot;${gwt.output.dir}&quot;" />
+			<arg value="%*" />
+			<arg value="${pac.app}" />
+		</java>
+	</target>
+
+	<target name="dist" depends="compile-pac">
+		<mkdir dir="dist/pentaho.war/WEB-INF/lib" />
+		<jar basedir="bin" destfile="dist/pac-${release.major.number}.${release.minor.number}.${release.milestone.number}.${release.build.number}.jar" />
+      	<zip basedir="dist" destfile="dist/pac-${release.major.number}.${release.minor.number}.${release.milestone.number}.${release.build.number}.zip" />
+    </target>
+</project>
