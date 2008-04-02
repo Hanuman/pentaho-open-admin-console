@@ -64,7 +64,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 	  DockPanel headerDockPanel = new DockPanel();
     headerDockPanel.add(deleteDataSourceBtn, DockPanel.EAST);
 	  headerDockPanel.add(addDataSourceBtn, DockPanel.EAST);
-    Label label = new Label("Data Sourcess");
+    Label label = new Label("Data Sources");
 	  headerDockPanel.add(label, DockPanel.WEST);
 	  headerDockPanel.setCellWidth(label, "100%");
     DockPanel dataSourceListPanel = new DockPanel();

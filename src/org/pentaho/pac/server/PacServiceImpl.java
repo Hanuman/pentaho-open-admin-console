@@ -19,6 +19,7 @@ import org.pentaho.pac.client.datasources.Constants;
 import org.pentaho.pac.client.datasources.IDataSource;
 import org.pentaho.pac.client.roles.ProxyPentahoRole;
 import org.pentaho.pac.client.users.DuplicateUserException;
+import org.pentaho.pac.client.users.NonExistingUserException;
 import org.pentaho.pac.client.users.ProxyPentahoUser;
 import org.pentaho.pac.server.datasources.DataSourceManagementException;
 import org.pentaho.pac.server.datasources.DataSourceManagerFacade;
@@ -56,7 +57,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return result;
   }
 
-  public boolean deleteUsers( ProxyPentahoUser[] users ) throws PacServiceException
+  public boolean deleteUsers( ProxyPentahoUser[] users ) throws NonExistingUserException, PentahoSecurityException, PacServiceException
   {
     boolean result = false;
     IPentahoUser[] persistedUsers;
@@ -66,8 +67,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
         persistedUsers[i] = userRoleMgmtService.getUser(users[i].getName());
         if ( null == persistedUsers[i] )
         {
-          throw new PacServiceException(
-              Messages.getString("PacService.USER_DELETION_FAILED_NO_USER", users[i].getName() ) ); //$NON-NLS-1$
+          throw new NonExistingUserException(users[i].getName());
         }
       }
       userRoleMgmtService.beginTransaction();
@@ -76,20 +76,14 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       }
       userRoleMgmtService.commitTransaction();
       result = true;
-    } catch (NonExistingUserException e) {
-      rollbackTransaction();
-      throw new PacServiceException(
-          Messages.getString("PacService.USER_DELETION_FAILED_NO_USER", e.getMessage())); //$NON-NLS-1$
     } catch (DAOException e) {
-      rollbackTransaction();
       throw new PacServiceException(
           Messages.getString("PacService.USER_DELETION_FAILED", e.getMessage())); //$NON-NLS-1$
-    } catch (PentahoSecurityException e) {
-      rollbackTransaction();
-      throw new PacServiceException(
-          Messages.getString("PacService.USER_DELETION_FAILED_NO_USER",  e.getMessage())); //$NON-NLS-1$
     }
     finally {
+      if (!result) {
+        rollbackTransaction();
+      }
       userRoleMgmtService.closeSession();
     }
     return result;
@@ -143,15 +137,14 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return proxyUsers;
   }
   
-  public boolean updateUser(ProxyPentahoUser proxyPentahoUser) throws PacServiceException
+  public boolean updateUser(ProxyPentahoUser proxyPentahoUser) throws NonExistingUserException, PentahoSecurityException, PacServiceException
   {
     boolean result = false;
     try {
       IPentahoUser user = userRoleMgmtService.getUser(proxyPentahoUser.getName());
       if ( null == user )
       {
-        throw new PacServiceException(
-            Messages.getString("PacService.USER_UPDATE_FAILED", proxyPentahoUser.getName()) ); //$NON-NLS-1$
+        throw new NonExistingUserException(proxyPentahoUser.getName());
       }
       userRoleMgmtService.beginTransaction();
       user.setPassword(proxyPentahoUser.getPassword());
@@ -161,19 +154,13 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       userRoleMgmtService.commitTransaction();
       result = true;
     } catch (DAOException e) {
-      rollbackTransaction();
       throw new PacServiceException(
           Messages.getString("PacService.USER_UPDATE_FAILED_NO_PERMISSION", proxyPentahoUser.getName() ), e ); //$NON-NLS-1$
-    } catch (PentahoSecurityException e) {
-      rollbackTransaction();
-      throw new PacServiceException(
-          Messages.getString("PacService.USER_UPDATE_FAILED_DOES_NOT_EXIST", proxyPentahoUser.getName() ), e );  //$NON-NLS-1$
-    } catch (NonExistingUserException e) {
-      rollbackTransaction();
-      throw new PacServiceException(
-          Messages.getString("PacService.USER_UPDATE_FAILED_ROLE_DOES_NOT_EXIST", proxyPentahoUser.getName(), /*role name*/e.getMessage() ), e ); //$NON-NLS-1$
     }
     finally {
+      if (!result) {
+        rollbackTransaction();
+      }
       userRoleMgmtService.closeSession();
     }
     return result;
@@ -623,6 +610,8 @@ private String showStatic(){
   }
   return sb.toString();
 }
+
+  
 
   
 }

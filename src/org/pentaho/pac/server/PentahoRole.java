@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.pentaho.pac.client.users.NonExistingUserException;
+
 public class PentahoRole implements IPentahoRole {
 
   String name;

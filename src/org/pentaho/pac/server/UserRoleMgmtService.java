@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.pentaho.pac.client.PentahoSecurityException;
 import org.pentaho.pac.client.users.DuplicateUserException;
+import org.pentaho.pac.client.users.NonExistingUserException;
 
 /*package private */ class UserRoleMgmtService implements IUserRoleMgmtService {
   IUserRoleDAO userRoleDAO = null;

@@ -3,6 +3,7 @@ package org.pentaho.pac.client.users;
 import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacService;
 import org.pentaho.pac.client.PacServiceAsync;
+import org.pentaho.pac.client.PentahoSecurityException;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -60,7 +61,6 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     
     userDetailsPanel.getUserNameTextBox().setEnabled(false);
     
-    messageDialog.setText("Update User");
  	}
 
 	public DockPanel buildUserDetailsDockPanel() {
@@ -154,7 +154,15 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	      }
 
 	      public void onFailure(Throwable caught) {
-	        int x = 1;
+	        messageDialog.setText("Delete Users");
+          if (caught instanceof PentahoSecurityException) {
+            messageDialog.setMessage("Insufficient privileges.");
+          } else if (caught instanceof NonExistingUserException) {
+            messageDialog.setMessage("User does not exist: " + caught.getMessage());
+          } else {
+            messageDialog.setMessage(caught.getMessage());
+          }
+          messageDialog.center();
 	      }
 	    };
 	    getPacService().deleteUsers(selectedUsers, callback);
@@ -177,6 +185,7 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	
 	private void updateUserDetails() {
 	  if (!userDetailsPanel.getPassword().equals(userDetailsPanel.getPasswordConfirmation())) { 
+	    messageDialog.setText("Update User");
       messageDialog.setMessage("Password does not match password confirmation.");
       messageDialog.center();
 	  } else {
@@ -188,7 +197,15 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	      }
 
 	      public void onFailure(Throwable caught) {
-	        int x = 1;
+          messageDialog.setText("Update User");
+          if (caught instanceof PentahoSecurityException) {
+            messageDialog.setMessage("Insufficient privileges.");
+          } else if (caught instanceof NonExistingUserException) {
+            messageDialog.setMessage("User does not exist: " + caught.getMessage());
+          } else {
+            messageDialog.setMessage(caught.getMessage());
+          }
+          messageDialog.center();
 	      }
 	    };
 	    getPacService().updateUser(user, callback);

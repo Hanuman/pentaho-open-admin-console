@@ -6,6 +6,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.pentaho.pac.client.users.DuplicateUserException;
+import org.pentaho.pac.client.users.NonExistingUserException;
 
 /*package private*/ class UserRoleHibernateDAO implements IUserRoleDAO {
 
