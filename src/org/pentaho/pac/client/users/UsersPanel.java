@@ -135,7 +135,7 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 
 	private void addNewUser() {
 	  newUserDialogBox.setUser(null);
-    newUserDialogBox.show();
+    newUserDialogBox.center();
    }
 	
 	private void deleteSelectedUsers() {

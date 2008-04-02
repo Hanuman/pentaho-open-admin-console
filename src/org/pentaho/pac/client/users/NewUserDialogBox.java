@@ -1,7 +1,9 @@
 package org.pentaho.pac.client.users;
 
+import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacService;
 import org.pentaho.pac.client.PacServiceAsync;
+import org.pentaho.pac.client.PentahoSecurityException;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -22,6 +24,7 @@ public class NewUserDialogBox extends DialogBox implements ClickListener {
   UserDetailsPanel userDetailsPanel = new UserDetailsPanel();
   boolean userCreated = false;
   PacServiceAsync pacService;
+  MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN});
   
   public NewUserDialogBox() {
     super();
@@ -97,22 +100,42 @@ public class NewUserDialogBox extends DialogBox implements ClickListener {
     super.show();
   }
   
+  public void setText(String text) {
+    messageDialog.setText(text);
+    super.setText(text);
+  }
   private boolean createUser() {
     boolean result = false;
-    ProxyPentahoUser user = getUser();
-    if (user != null) {
-      AsyncCallback callback = new AsyncCallback() {
-        public void onSuccess(Object result) {
-          userCreated = true;
-          hide();
-        }
+    if (getUserName().trim().length() == 0) {
+      messageDialog.setMessage("Invalid user name.");
+      messageDialog.center();
+    } else if (!getPassword().equals(getPasswordConfirmation())) { 
+      messageDialog.setMessage("Password does not match password confirmation.");
+      messageDialog.center();
+    } else {
+      ProxyPentahoUser user = getUser();
+      if (user != null) {
+        AsyncCallback callback = new AsyncCallback() {
+          public void onSuccess(Object result) {
+            userCreated = true;
+            hide();
+          }
 
-        public void onFailure(Throwable caught) {
-          int x = 1;
-        }
-      };
-      getPacService().createUser(user, callback);
+          public void onFailure(Throwable caught) {
+            if (caught instanceof PentahoSecurityException) {
+              messageDialog.setMessage("Insufficient privileges.");
+            } else if (caught instanceof DuplicateUserException) {
+              messageDialog.setMessage("User already exists.");
+            } else {
+              messageDialog.setMessage(caught.getMessage());
+            }
+            messageDialog.center();
+          }
+        };
+        getPacService().createUser(user, callback);
+      }
     }
+    
     return result;
   }
   
