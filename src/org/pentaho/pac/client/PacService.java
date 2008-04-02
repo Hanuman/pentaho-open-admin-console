@@ -3,6 +3,7 @@ package org.pentaho.pac.client;
 
 import org.pentaho.pac.client.datasources.IDataSource;
 import org.pentaho.pac.client.roles.ProxyPentahoRole;
+import org.pentaho.pac.client.users.DuplicateUserException;
 import org.pentaho.pac.client.users.ProxyPentahoUser;
 
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -13,7 +14,7 @@ public interface PacService extends RemoteService {
   public boolean updateRole(ProxyPentahoRole role) throws PacServiceException;
   public ProxyPentahoRole[] getRoles() throws PacServiceException;
   
-  public boolean createUser(ProxyPentahoUser user) throws PacServiceException;
+  public boolean createUser(ProxyPentahoUser user) throws DuplicateUserException, PentahoSecurityException, PacServiceException;
   public boolean deleteUsers(ProxyPentahoUser[] users) throws PacServiceException;
   public boolean updateUser(ProxyPentahoUser user) throws PacServiceException;
   public ProxyPentahoUser[] getUsers() throws PacServiceException;
