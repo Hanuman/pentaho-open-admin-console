@@ -2,9 +2,11 @@ package org.pentaho.pac.server;
 
 import java.util.List;
 
+import org.pentaho.pac.client.users.DuplicateUserException;
+
 /*package private*/ interface IUserRoleDAO extends IGenericDAO {
 
-  public void createUser(IPentahoUser newUser) throws DAOException;
+  public void createUser(IPentahoUser newUser) throws DuplicateUserException, DAOException;
   
   public void deleteUser(IPentahoUser user) throws NonExistingUserException, DAOException;
 

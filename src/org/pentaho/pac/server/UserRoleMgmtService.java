@@ -2,6 +2,9 @@ package org.pentaho.pac.server;
 
 import java.util.List;
 
+import org.pentaho.pac.client.PentahoSecurityException;
+import org.pentaho.pac.client.users.DuplicateUserException;
+
 /*package private */ class UserRoleMgmtService implements IUserRoleMgmtService {
   IUserRoleDAO userRoleDAO = null;
 
@@ -9,23 +12,23 @@ import java.util.List;
     userRoleDAO = UserRoleDAOFactory.getDAO();
   }
   
-  public void createRole(IPentahoRole newRole) throws DAOException, UserRoleSecurityException {
+  public void createRole(IPentahoRole newRole) throws DAOException, PentahoSecurityException {
     if (hasCreateRolePerm(newRole)) {
       userRoleDAO.createRole(newRole);
     } else {
-      throw new UserRoleSecurityException();
+      throw new PentahoSecurityException();
     }
   }
 
-  public void createUser(IPentahoUser newUser) throws DuplicateUserException, DAOException, UserRoleSecurityException {
+  public void createUser(IPentahoUser newUser) throws DuplicateUserException, DAOException, PentahoSecurityException {
     if (hasCreateUserPerm(newUser)) {
       userRoleDAO.createUser(newUser);
     } else {
-      throw new UserRoleSecurityException();
+      throw new PentahoSecurityException();
     }
   }
 
-  public void deleteRole(String roleName) throws NonExistingRoleException, DAOException, UserRoleSecurityException {
+  public void deleteRole(String roleName) throws NonExistingRoleException, DAOException, PentahoSecurityException {
     IPentahoRole role = userRoleDAO.getRole(roleName);
     if (role != null) {
       deleteRole(role);
@@ -34,15 +37,15 @@ import java.util.List;
     }
   }
   
-  public void deleteRole(IPentahoRole role) throws NonExistingRoleException, DAOException, UserRoleSecurityException {
+  public void deleteRole(IPentahoRole role) throws NonExistingRoleException, DAOException, PentahoSecurityException {
     if (hasDeleteRolePerm(role)) {
       userRoleDAO.deleteRole(role);
     } else {
-      throw new UserRoleSecurityException();
+      throw new PentahoSecurityException();
     }
   }
 
-  public void deleteUser(String userName) throws NonExistingUserException, DAOException, UserRoleSecurityException {
+  public void deleteUser(String userName) throws NonExistingUserException, DAOException, PentahoSecurityException {
     IPentahoUser role = userRoleDAO.getUser(userName);
     if (role != null) {
       deleteUser(role);
@@ -51,11 +54,11 @@ import java.util.List;
     }
   }
   
-  public void deleteUser(IPentahoUser user) throws NonExistingUserException, DAOException, UserRoleSecurityException {
+  public void deleteUser(IPentahoUser user) throws NonExistingUserException, DAOException, PentahoSecurityException {
     if (hasDeleteUserPerm(user)) {
       userRoleDAO.deleteUser(user);
     } else {
-      throw new UserRoleSecurityException();
+      throw new PentahoSecurityException();
     }    
   }
 
@@ -75,19 +78,19 @@ import java.util.List;
     return userRoleDAO.getUsers();
   }
 
-  public void updateRole(IPentahoRole role) throws DAOException, UserRoleSecurityException, NonExistingRoleException {
+  public void updateRole(IPentahoRole role) throws DAOException, PentahoSecurityException, NonExistingRoleException {
     if (hasUpdateRolePerm(role)) {
       userRoleDAO.updateRole(role);
     } else {
-      throw new UserRoleSecurityException();
+      throw new PentahoSecurityException();
     }    
   }
 
-  public void updateUser(IPentahoUser user) throws DAOException, UserRoleSecurityException, NonExistingUserException {
+  public void updateUser(IPentahoUser user) throws DAOException, PentahoSecurityException, NonExistingUserException {
     if (hasUpdateUserPerm(user)) {
       userRoleDAO.updateUser(user);
     } else {
-      throw new UserRoleSecurityException();
+      throw new PentahoSecurityException();
     }    
   }
   

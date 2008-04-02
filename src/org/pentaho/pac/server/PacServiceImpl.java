@@ -11,9 +11,11 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.pentaho.pac.client.PacService;
 import org.pentaho.pac.client.PacServiceException;
+import org.pentaho.pac.client.PentahoSecurityException;
 import org.pentaho.pac.client.datasources.Constants;
 import org.pentaho.pac.client.datasources.IDataSource;
 import org.pentaho.pac.client.roles.ProxyPentahoRole;
+import org.pentaho.pac.client.users.DuplicateUserException;
 import org.pentaho.pac.client.users.ProxyPentahoUser;
 import org.pentaho.pac.server.datasources.DataSourceManagementException;
 import org.pentaho.pac.server.datasources.DataSourceManagerFacade;
@@ -26,7 +28,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
 
   private IUserRoleMgmtService userRoleMgmtService = new UserRoleMgmtService();
   
-  public boolean createUser( ProxyPentahoUser proxyUser ) throws PacServiceException
+  public boolean createUser( ProxyPentahoUser proxyUser ) throws DuplicateUserException, PentahoSecurityException, PacServiceException
   {
     boolean result = false;
     IPentahoUser user = new PentahoUser(proxyUser.getName());
@@ -39,15 +41,13 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       userRoleMgmtService.commitTransaction();
       result = true;
     } catch ( DAOException e) {
-      rollbackTransaction();
       throw new PacServiceException( 
           Messages.getErrorString( "PacService.ERROR_0004_USER_CREATION_FAILED", proxyUser.getName() ), e ); //$NON-NLS-1$
-    } catch (UserRoleSecurityException e) {
-      rollbackTransaction();
-      throw new PacServiceException( 
-          Messages.getErrorString( "PacService.ERROR_0005_NO_CREATE_USER_PERMISSION", proxyUser.getName() ), e ); //$NON-NLS-1$
     }
     finally {
+      if (!result) {
+        rollbackTransaction();
+      }
       userRoleMgmtService.closeSession();
     }
     return result;
@@ -81,7 +81,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       rollbackTransaction();
       throw new PacServiceException(
           Messages.getString("PacService.USER_DELETION_FAILED", e.getMessage())); //$NON-NLS-1$
-    } catch (UserRoleSecurityException e) {
+    } catch (PentahoSecurityException e) {
       rollbackTransaction();
       throw new PacServiceException(
           Messages.getString("PacService.USER_DELETION_FAILED_NO_USER",  e.getMessage())); //$NON-NLS-1$
@@ -161,7 +161,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       rollbackTransaction();
       throw new PacServiceException(
           Messages.getString("PacService.USER_UPDATE_FAILED_NO_PERMISSION", proxyPentahoUser.getName() ), e ); //$NON-NLS-1$
-    } catch (UserRoleSecurityException e) {
+    } catch (PentahoSecurityException e) {
       rollbackTransaction();
       throw new PacServiceException(
           Messages.getString("PacService.USER_UPDATE_FAILED_DOES_NOT_EXIST", proxyPentahoUser.getName() ), e );  //$NON-NLS-1$
@@ -195,7 +195,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       rollbackTransaction();
       throw new PacServiceException(
           Messages.getString("PacService.ROLE_UPDATE_FAILED", roleName ), e ); //$NON-NLS-1$
-    } catch (UserRoleSecurityException e) {
+    } catch (PentahoSecurityException e) {
       rollbackTransaction();
       throw new PacServiceException(
           Messages.getString("PacService.ROLE_UPDATE_FAILED_NO_PERMISSION", roleName ), e ); //$NON-NLS-1$
@@ -476,7 +476,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       rollbackTransaction();
       throw new PacServiceException( 
           Messages.getErrorString( "PacService.ERROR_0001_ROLE_CREATION_FAILED", proxyRole.getName() ), e ); //$NON-NLS-1$
-    } catch (UserRoleSecurityException e) {
+    } catch (PentahoSecurityException e) {
       rollbackTransaction();
       throw new PacServiceException( 
           Messages.getErrorString( "PacService.ERROR_0002_NO_CREATE_ROLE_PERMISSION", proxyRole.getName() ), e ); //$NON-NLS-1$
@@ -514,7 +514,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       rollbackTransaction();
       throw new PacServiceException(
           Messages.getString("PacService.ROLE_DELETION_FAILED", e.getMessage())); //$NON-NLS-1$
-    } catch (UserRoleSecurityException e) {
+    } catch (PentahoSecurityException e) {
       rollbackTransaction();
       throw new PacServiceException(
           Messages.getString("PacService.USER_DELETION_FAILED_NO_PERMISSION",  e.getMessage())); //$NON-NLS-1$
@@ -565,7 +565,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       rollbackTransaction();
       throw new PacServiceException(
           Messages.getString("PacService.ROLE_UPDATE_FAILED", proxyPentahoRole.getName() ), e ); //$NON-NLS-1$
-    } catch (UserRoleSecurityException e) {
+    } catch (PentahoSecurityException e) {
       rollbackTransaction();
       throw new PacServiceException(
           Messages.getString("PacService.ROLE_UPDATE_FAILED_NO_PERMISSION", proxyPentahoRole.getName() ), e );  //$NON-NLS-1$
