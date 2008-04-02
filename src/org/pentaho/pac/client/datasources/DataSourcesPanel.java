@@ -1,11 +1,8 @@
 package org.pentaho.pac.client.datasources;
 
-import org.pentaho.pac.client.PacService;
-import org.pentaho.pac.client.PacServiceAsync;
+import org.pentaho.pac.client.PacServiceFactory;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -22,7 +19,6 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
   SimpleDataSource[] dataSources = null;
   DataSourceDetailsPanel dataSourceDetailsPanel = new DataSourceDetailsPanel();
   Button updateDataSourceBtn = new Button("Update");
-  PacServiceAsync pacService;
   Button addDataSourceBtn = new Button("+");
   Button deleteDataSourceBtn = new Button("-");
   NewDataSourceDialogBox newDataSourceDialogBox = new NewDataSourceDialogBox();
@@ -122,7 +118,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 	        int x = 1;
 	      }
 	    };
-	    getPacService().deleteDataSources(selectedDataSources, callback);
+	    PacServiceFactory.getPacService().deleteDataSources(selectedDataSources, callback);
 	  }
 	}
 	
@@ -150,7 +146,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
         int x = 1;
       }
     };
-    getPacService().updateDataSource(dataSource, callback);
+    PacServiceFactory.getPacService().updateDataSource(dataSource, callback);
 	}
 	
 	public boolean validate() {return true;}
@@ -163,17 +159,6 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 	  dataSourcesList.refresh();
 	}
 	
-	private PacServiceAsync getPacService() {
-	  if (pacService == null) {
-	    pacService = (PacServiceAsync) GWT.create(PacService.class);
-	    ServiceDefTarget endpoint = (ServiceDefTarget) pacService;
-	    String moduleRelativeURL = GWT.getModuleBaseURL() + "pacsvc";
-	    endpoint.setServiceEntryPoint(moduleRelativeURL);
-	  }
-	  return pacService;
-
-	}
-
   public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
     if (newDataSourceDialogBox.isDataSourceCreated()) {
       SimpleDataSource dataSource = newDataSourceDialogBox.getDataSource();

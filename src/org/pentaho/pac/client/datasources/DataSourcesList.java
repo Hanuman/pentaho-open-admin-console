@@ -4,18 +4,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import org.pentaho.pac.client.PacService;
-import org.pentaho.pac.client.PacServiceAsync;
+import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.users.ProxyPentahoUser;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.ui.ListBox;
 
 public class DataSourcesList extends ListBox {
   ArrayList dataSources = new ArrayList();
-  PacServiceAsync pacService;
   
   public DataSourcesList() {
     super(true);
@@ -115,13 +111,6 @@ public class DataSourcesList extends ListBox {
   }
   
   public void refresh() {
-    if (pacService == null) {
-      pacService = (PacServiceAsync) GWT.create(PacService.class);
-      ServiceDefTarget endpoint = (ServiceDefTarget) pacService;
-      String moduleRelativeURL = GWT.getModuleBaseURL() + "pacsvc";
-      endpoint.setServiceEntryPoint(moduleRelativeURL);
-    }
-
     AsyncCallback callback = new AsyncCallback() {
       public void onSuccess(Object result) {
         setDataSources((IDataSource[])result);
@@ -132,7 +121,7 @@ public class DataSourcesList extends ListBox {
       }
     };
     
-    pacService.getDataSources(callback);
+    PacServiceFactory.getPacService().getDataSources(callback);
   }
   
   public boolean addDataSource(SimpleDataSource dataSource) {

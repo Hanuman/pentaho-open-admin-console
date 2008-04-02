@@ -1,11 +1,8 @@
 package org.pentaho.pac.client.datasources;
 
-import org.pentaho.pac.client.PacService;
-import org.pentaho.pac.client.PacServiceAsync;
+import org.pentaho.pac.client.PacServiceFactory;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -21,7 +18,6 @@ public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
   Button cancelButton = new Button("Cancel");
   DataSourceDetailsPanel dataSourceDetailsPanel = new DataSourceDetailsPanel();
   boolean dataSourceCreated = false;
-  PacServiceAsync pacService;
   
   public NewDataSourceDialogBox() {
     super();
@@ -178,10 +174,10 @@ public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
   }
 
 
-//  public void show() {
-//    dataSourceCreated = false;
-//    super.show();
-//  }
+  public void show() {
+    dataSourceCreated = false;
+    super.show();
+  }
   
   private boolean createDataSource() {
     boolean result = false;
@@ -197,19 +193,9 @@ public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
           int x = 1;
         }
       };
-      getPacService().createDataSource(dataSource, callback);
+      PacServiceFactory.getPacService().createDataSource(dataSource, callback);
     }
     return result;
-  }
-  
-  private PacServiceAsync getPacService() {
-    if (pacService == null) {
-      pacService = (PacServiceAsync) GWT.create(PacService.class);
-      ServiceDefTarget endpoint = (ServiceDefTarget) pacService;
-      String moduleRelativeURL = GWT.getModuleBaseURL() + "pacsvc";
-      endpoint.setServiceEntryPoint(moduleRelativeURL);
-    }
-    return pacService;
   }
   
   public void onClick(Widget sender) {
