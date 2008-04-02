@@ -13,13 +13,15 @@ import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-public class UsersPanel extends DockPanel implements ClickListener, ChangeListener, PopupListener {
+public class UsersPanel extends DockPanel implements ClickListener, ChangeListener, PopupListener, KeyboardListener {
 
   MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN});
   UsersList usersList = new UsersList();
@@ -30,6 +32,7 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
   PacServiceAsync pacService;
   Button addUserBtn = new Button("+");
   Button deleteUserBtn = new Button("-");
+  TextBox filterTextBox = new TextBox();
   NewUserDialogBox newUserDialogBox = new NewUserDialogBox();
   MessageDialog confirmUserDeleteDialog = new MessageDialog("Are your sure you want to delete the selected users.", new int[] {MessageDialog.OK_BTN, MessageDialog.CANCEL_BTN});
   
@@ -96,6 +99,11 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     DockPanel userListPanel = new DockPanel();
     userListPanel.add(headerDockPanel, DockPanel.NORTH);
     userListPanel.add(usersList, DockPanel.CENTER);
+    
+    userListPanel.add(filterTextBox, DockPanel.SOUTH  );
+    userListPanel.add(new Label("User List Filter:"), DockPanel.SOUTH );
+    filterTextBox.addKeyboardListener( this );
+    
     userListPanel.setCellHeight(usersList, "100%");
     userListPanel.setCellWidth(usersList, "100%");
     userListPanel.setHeight("100%");
@@ -106,7 +114,9 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     deleteUserBtn.setWidth("20px");
     addUserBtn.setHeight("20px");
     deleteUserBtn.setHeight("20px");
+    filterTextBox.setWidth( "100%" );
     deleteUserBtn.setEnabled(false);
+    
     usersList.addChangeListener(this);
     addUserBtn.addClickListener(this);
     deleteUserBtn.addClickListener(this);
@@ -244,6 +254,18 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
       deleteSelectedUsers();
     }
   }
-  
 
+  public void onKeyDown(Widget sender, char keyCode, int modifiers) {
+  }
+
+  public void onKeyPress(Widget sender, char keyCode, int modifiers) {
+  }
+
+  public void onKeyUp(Widget sender, char keyCode, int modifiers) {
+    if ( filterTextBox == sender ) {
+      usersList.filterList( filterTextBox.getText() );
+      userSelectionChanged();
+    }
+    
+  }
 }

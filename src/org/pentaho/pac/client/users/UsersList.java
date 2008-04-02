@@ -2,6 +2,10 @@ package org.pentaho.pac.client.users;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.pentaho.pac.client.PacService;
 import org.pentaho.pac.client.PacServiceAsync;
@@ -13,7 +17,7 @@ import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.ui.ListBox;
 
 public class UsersList extends ListBox {
-  ArrayList users = new ArrayList();
+  List users = new ArrayList();
   PacServiceAsync pacService;
   
   public UsersList() {
@@ -33,18 +37,42 @@ public class UsersList extends ListBox {
       addItem(users[i].getName());
     }
   }
-  
+
   public void setUser(int index, ProxyPentahoUser user) {
     users.set(index, user);
     setItemText(index, user.getName());
   }
   
+  private Map getSelectedUsersAsMap() {
+    Map m = new HashMap();
+    ProxyPentahoUser[] users = getSelectedUsers();
+    for ( int ii=0; ii<users.length; ++ii ) {
+      ProxyPentahoUser u = users[ ii ];
+      m.put(u.getName(), u );
+    }
+    return m;
+  }
+  
+  private ProxyPentahoUser getUserByName( String name )
+  {
+    for ( int ii=0; ii<users.size(); ++ii )
+    {
+      ProxyPentahoUser u = (ProxyPentahoUser)users.get( ii );
+      if ( u.getName().equals( name ) ) {
+        return u;
+      }
+    }
+    return null;
+  }
+  
   public ProxyPentahoUser[] getSelectedUsers() {
-    ArrayList selectedUsers = new ArrayList();
+    List selectedUsers = new ArrayList();
     int itemCount = getItemCount();
     for (int i = 0; i < itemCount; i++) {
       if (isItemSelected(i)) {
-        selectedUsers.add(users.get(i));
+        String userName = getItemText( i );
+        ProxyPentahoUser u = getUserByName( userName );
+        selectedUsers.add( u );
       }
     }
     return (ProxyPentahoUser[])selectedUsers.toArray(new ProxyPentahoUser[0]);
@@ -55,7 +83,7 @@ public class UsersList extends ListBox {
   }
   
   public void setSelectedUsers(ProxyPentahoUser[] users) {
-    ArrayList userNames = new ArrayList();
+    List userNames = new ArrayList();
     for (int i = 0; i < users.length; i++) {
       userNames.add(users[i].getName());
     }
@@ -136,5 +164,34 @@ public class UsersList extends ListBox {
       result = true;
     }
     return result;
+  }
+  
+  public void filterList( String filter )
+  {
+    List newSelUsers = new ArrayList();
+    Map previouslySelUsersMap = getSelectedUsersAsMap();
+    this.clear();
+    Iterator userIt = users.iterator();
+    while ( userIt.hasNext() )
+    {
+      ProxyPentahoUser user = (ProxyPentahoUser)userIt.next();
+      boolean doesMatch = doesFilterMatch( filter, user.getName() );
+      if ( doesMatch ) {
+        this.addItem( user.getName() );
+        if( previouslySelUsersMap.containsKey( user.getName())) {
+          newSelUsers.add( user );
+        }
+      }
+    }
+    setSelectedUsers( (ProxyPentahoUser[])newSelUsers.toArray( new ProxyPentahoUser[0] ) );
+  }
+
+  
+  private boolean doesFilterMatch( String filterValue, String filterTarget )
+  {
+    int filterLen = filterValue.length();
+    return ( filterLen <= filterTarget.length() )
+      && filterValue.toLowerCase().substring( 0, filterLen )
+        .equals( filterTarget.toLowerCase().substring( 0, filterLen ) ); 
   }
 }
