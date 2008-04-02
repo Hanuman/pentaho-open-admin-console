@@ -25,7 +25,7 @@ public class PentahoAdminConsole implements EntryPoint {
   DockPanel dockPanel = new DockPanel();
   DockPanel principalsPanel = new DockPanel();
   AdminServicesPanel servicesPanel = new AdminServicesPanel();
-  UsersPanel usersPanel = new UsersPanel();
+  UsersAndRolesPanel usersAndRolesPanel = new UsersAndRolesPanel();
   DataSourcesPanel dataSourcesPanel = new DataSourcesPanel();
   
 
@@ -58,9 +58,11 @@ public class PentahoAdminConsole implements EntryPoint {
     leftVerticalPanel.add(adminToggleBtn);
     
     TabPanel tp = new TabPanel();
-    tp.add(usersPanel, "Principals");
+    tp.add(usersAndRolesPanel, "Principals");
     tp.add(dataSourcesPanel, "Data Sources");
     tp.add(servicesPanel, "Services");
+    
+    usersAndRolesPanel.setBorderWidth(2);
     
     dockPanel.add(leftVerticalPanel, DockPanel.WEST);
     dockPanel.add(tp, DockPanel.CENTER);
@@ -78,18 +80,17 @@ public class PentahoAdminConsole implements EntryPoint {
     tp.setWidth("100%");
     tp.setHeight("100%");
     
-    usersPanel.setWidth("100%");
-    usersPanel.setHeight("100%");
+    usersAndRolesPanel.setWidth("100%");
+    usersAndRolesPanel.setHeight("100%");
     dataSourcesPanel.setWidth("100%");
     dataSourcesPanel.setHeight("100%");
     servicesPanel.setWidth("100%");
     servicesPanel.setHeight("100%");
     
-   tp.selectTab(1);
+    tp.selectTab(1);
 
     RootPanel.get().add(dockPanel);    
     
-    usersPanel.refresh();
     dataSourcesPanel.refresh();
   }
   

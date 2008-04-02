@@ -30,27 +30,28 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
   NewRoleDialogBox newRoleDialogBox = new NewRoleDialogBox();
   
 	public RolesPanel() {
-	  DockPanel roleListPanel = buildRolesListPanel();
-	  
-	  DockPanel roleDetailsDockPanel = buildRoleDetailsPanel();
-    add(roleListPanel, DockPanel.WEST);
-    add(roleDetailsDockPanel, DockPanel.CENTER);
-    
-    setSpacing(10);
-    
-    setCellWidth(roleListPanel, "30%");
-    setCellWidth(roleDetailsDockPanel, "70%");
-    setCellHeight(roleListPanel, "100%");
-    setCellHeight(roleDetailsDockPanel, "100%");
-    roleListPanel.setWidth("100%");
-    roleListPanel.setHeight("100%");
-    roleDetailsDockPanel.setWidth("100%");
-    roleDetailsDockPanel.setHeight("100%");
-    
-    roleDetailsPanel.setEnabled(false);
-    updateRoleBtn.setEnabled(false);
-    
-    newRoleDialogBox.addPopupListener(this);
+	  add(new Label("Roles go here."), DockPanel.NORTH);
+//	  DockPanel roleListPanel = buildRolesListPanel();
+//	  
+//	  DockPanel roleDetailsDockPanel = buildRoleDetailsPanel();
+//    add(roleListPanel, DockPanel.WEST);
+//    add(roleDetailsDockPanel, DockPanel.CENTER);
+//    
+//    setSpacing(10);
+//    
+//    setCellWidth(roleListPanel, "30%");
+//    setCellWidth(roleDetailsDockPanel, "70%");
+//    setCellHeight(roleListPanel, "100%");
+//    setCellHeight(roleDetailsDockPanel, "100%");
+//    roleListPanel.setWidth("100%");
+//    roleListPanel.setHeight("100%");
+//    roleDetailsDockPanel.setWidth("100%");
+//    roleDetailsDockPanel.setHeight("100%");
+//    
+//    roleDetailsPanel.setEnabled(false);
+//    updateRoleBtn.setEnabled(false);
+//    
+//    newRoleDialogBox.addPopupListener(this);
  	}
 
 	public DockPanel buildRoleDetailsPanel() {
@@ -183,7 +184,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 	}
 	
 	public void refresh() {
-	  rolesList.refresh();
+//	  rolesList.refresh();
 	}
 	
   public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
