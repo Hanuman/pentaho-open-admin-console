@@ -93,7 +93,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 	
 	public void onClick(Widget sender) {
 	  if (sender == updateDataSourceBtn) {
-	    updateDataSourceDetails();
+	    updateDataSourceDetails( sender );
 	  } else if (sender == deleteDataSourceBtn) {
 	    deleteSelectedDataSources();
 	  } else if (sender == addDataSourceBtn) {
@@ -136,7 +136,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
     deleteDataSourceBtn.setEnabled(selectedDataSources.length > 0);
 	}
 	
-	private void updateDataSourceDetails() {
+	private void updateDataSourceDetails( final Widget sender ) {
     if (dataSourceDetailsPanel.getJndiName().trim().length() == 0) {
       messageDialog.setText("Update User");
       messageDialog.setMessage("Invalid connection name.");
@@ -156,12 +156,16 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
     } else {
       final SimpleDataSource dataSource = dataSourceDetailsPanel.getDataSource();
       final int index = dataSourcesList.getSelectedIndex();
+      
+      ((Button)sender).setEnabled( false );
       AsyncCallback callback = new AsyncCallback() {
         public void onSuccess(Object result) {
           dataSourcesList.setDataSource(index, dataSource);
+          ((Button)sender).setEnabled( true );
         }
 
         public void onFailure(Throwable caught) {
+          ((Button)sender).setEnabled( true );
           int x = 1;
         }
       };
