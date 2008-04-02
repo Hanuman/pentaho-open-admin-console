@@ -48,7 +48,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   
   public PacServiceImpl()
   {
-    initFromProperties();
+    initConfiguration();
   }
   
   public boolean createUser( ProxyPentahoUser proxyUser ) throws DuplicateUserException, PentahoSecurityException, PacServiceException
@@ -350,7 +350,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return executePublishRequest("org.pentaho.plugin.mql.MetadataPublisher", getUserName(), getPassword()); //$NON-NLS-1$
   }
   
-  private void initFromProperties()
+  private void initConfiguration()
   {
     InputStream s = this.getClass().getResourceAsStream( "/" + PROPERTIES_FILE_NAME );
     Properties p = new Properties();
