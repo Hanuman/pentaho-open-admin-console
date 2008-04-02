@@ -3,7 +3,7 @@ package org.pentaho.pac.client;
 import java.io.Serializable;
 
 
-public class PacServiceException extends CheckedException implements Serializable{
+public class PacServiceException extends CheckedException {
   
   /**
    * 
@@ -23,5 +23,6 @@ public class PacServiceException extends CheckedException implements Serializabl
   }
   
   public PacServiceException() {
+    super();
   }
 }
