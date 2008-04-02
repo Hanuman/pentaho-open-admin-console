@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
@@ -12,6 +13,10 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.pentaho.pac.client.PacService;
 import org.pentaho.pac.client.PacServiceException;
 import org.pentaho.pac.client.PentahoSecurityException;
@@ -31,6 +36,20 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class PacServiceImpl extends RemoteServiceServlet implements PacService {
 
   private IUserRoleMgmtService userRoleMgmtService = new UserRoleMgmtService();
+  private static final String PROPERTIES_FILE_NAME = "pac.properties";
+  private static final Log logger = LogFactory.getLog(PacServiceImpl.class);
+  
+  private String jmxHostName = null;
+  private String jmxPortNumber = null;
+  private String password = null;
+  private String username = null;
+  private String pciContextPath = null;
+  private String biServerBaseURL = null;
+  
+  public PacServiceImpl()
+  {
+    initFromProperties();
+  }
   
   public boolean createUser( ProxyPentahoUser proxyUser ) throws DuplicateUserException, PentahoSecurityException, PacServiceException
   {
@@ -331,28 +350,49 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return executePublishRequest("org.pentaho.plugin.mql.MetadataPublisher", getUserName(), getPassword()); //$NON-NLS-1$
   }
   
+  private void initFromProperties()
+  {
+    InputStream s = this.getClass().getResourceAsStream( "/" + PROPERTIES_FILE_NAME );
+    Properties p = new Properties();
+    if ( null != s ) {
+      try {
+        p.load( s );
+      } catch (IOException e) {
+        logger.error( "Failed to load properties file: " + PROPERTIES_FILE_NAME );
+      }
+    } else {
+      logger.warn( "Failed to open properties file: " + PROPERTIES_FILE_NAME );
+    }
+    jmxHostName = StringUtils.defaultIfEmpty( p.getProperty("jmxHostName"), System.getProperty("jmxHostName") );
+    jmxPortNumber = StringUtils.defaultIfEmpty( p.getProperty("jmxPortNumber"), System.getProperty("jmxPortNumber") );
+    password = StringUtils.defaultIfEmpty( p.getProperty("pentaho.platform.password"), System.getProperty("pentaho.platform.password") );
+    username = StringUtils.defaultIfEmpty( p.getProperty("pentaho.platform.username"), System.getProperty("pentaho.platform.username") );
+    pciContextPath = StringUtils.defaultIfEmpty( p.getProperty("pciContextPath"), System.getProperty("pciContextPath") );
+    biServerBaseURL = StringUtils.defaultIfEmpty( p.getProperty("biServerBaseURL"), System.getProperty("biServerBaseURL") );
+  }
 
   public String getJmxHostName() {
-    return System.getProperty("jmxHostName");
+    return jmxHostName;
   }
 
   public String getJmxPortNumber() {
-    return System.getProperty("jmxPortNumber");
+    return jmxPortNumber;
   }
 
   public String getPassword() {
-    return System.getProperty("pentaho.platform.password");
+    return password;
   }
 
   public String getUserName() {
-    return System.getProperty("pentaho.platform.username");
+    return username;
   }
+  
   public String getPciContextPath() {
-    return System.getProperty("pciContextPath");
+    return pciContextPath;
   }
   
   public String getBIServerBaseUrl() {
-    return System.getProperty("baseURL");
+    return biServerBaseURL;
   }
   
   private String executeXAction(String solution, String path, String xAction, String userid, String password) throws PacServiceException{
