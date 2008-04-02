@@ -403,7 +403,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       HttpClient client = new HttpClient();
 
       // Create a method instance.
-      method = new GetMethod(getBIServerBaseUrl() + "ViewAction"); //$NON-NLS-1$
+      method = new GetMethod(getBIServerBaseUrl() + "/ViewAction"); //$NON-NLS-1$
       NameValuePair nvp1 = new NameValuePair("solution", solution); //$NON-NLS-1$
       NameValuePair nvp3 = new NameValuePair("path", path); //$NON-NLS-1$
       NameValuePair nvp2 = new NameValuePair("action", xAction); //$NON-NLS-1$
@@ -434,7 +434,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     String result = "Action Failed";
 
     // Create a method instance.
-    GetMethod method = new GetMethod(getBIServerBaseUrl() + "Publish"); //$NON-NLS-1$
+    GetMethod method = new GetMethod(getBIServerBaseUrl() + "/Publish"); //$NON-NLS-1$
     NameValuePair nvp1 = new NameValuePair("publish", "now"); //$NON-NLS-1$ //$NON-NLS-2$
     NameValuePair nvp3 = new NameValuePair("style", "popup"); //$NON-NLS-1$ //$NON-NLS-2$
     NameValuePair nvp2 = new NameValuePair("class", publisherClassName); //$NON-NLS-1$
@@ -468,7 +468,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     HttpClient client = new HttpClient();
     String result = "Action Failed";
 
-    GetMethod method = new GetMethod(getBIServerBaseUrl()+"ResetRepository"); //$NON-NLS-1$
+    GetMethod method = new GetMethod(getBIServerBaseUrl()+"/ResetRepository"); //$NON-NLS-1$
     NameValuePair nvp1 = new NameValuePair("userid", userid); //$NON-NLS-1$
     NameValuePair nvp2 = new NameValuePair("password", password); //$NON-NLS-1$
 
