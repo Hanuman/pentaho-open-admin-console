@@ -1,10 +1,13 @@
 package org.pentaho.pac.server;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -579,5 +582,47 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     }
     return result;
   }
+  
+  public String getHomePage(String url) throws PacServiceException {
+	    String html = null;
+	    HttpClient client = new HttpClient();
+	    HttpMethod method = new GetMethod(url);
+	    method.getParams().setParameter("http.socket.timeout", new Integer(15000));
+	    
+	    try{
+	      int statusCode = client.executeMethod(method);
+
+	      if (statusCode != HttpStatus.SC_OK) {
+	    	  throw new PacServiceException(Messages.getString("PacService.ERROR_ACCESSING_URL", url )); //$NON-NLS-1$	        
+	      }
+	      
+	      byte[] responseBody = method.getResponseBody();
+	      html = new String(responseBody);
+	      html = html.substring(html.indexOf("<body>")+6);
+	      html = html.substring(0, html.indexOf("</body>"));
+	    } catch(Exception e){
+	        return showStatic();
+	    } finally {
+	      method.releaseConnection();
+	    }
+	    
+	    return html.toString();
+	  }
+	  
+private String showStatic(){
+  InputStream flatFile = getClass().getResourceAsStream("defaultHome.ftl");
+  StringBuffer sb = new StringBuffer(8096);
+  int i = 0;
+  try {
+  	while (i != -1) {
+  		i = flatFile.read();
+  		sb.append((char) i);
+      }
+  } catch (IOException io) {
+            	                  	  
+  }
+  return sb.toString();
+}
+
   
 }

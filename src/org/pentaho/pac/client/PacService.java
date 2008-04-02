@@ -33,4 +33,5 @@ public interface PacService extends RemoteService {
   public String refreshSystemSettings() throws PacServiceException;
   public String executeGlobalActions() throws PacServiceException;
   public String refreshReportingMetadata() throws PacServiceException;
+  public String getHomePage(String url) throws PacServiceException;
 }
