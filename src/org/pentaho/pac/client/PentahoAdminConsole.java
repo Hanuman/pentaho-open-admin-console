@@ -69,13 +69,10 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener {
     
     dockPanel.setSpacing(10);
     
-    tp.setWidth("50%");
-    tp.setHeight("50%");
-    
     dockPanel.setWidth("100%");
     dockPanel.setHeight("100%");
-    tp.setWidth("50%");
-    tp.setHeight("50%");
+    tp.setWidth("100%");
+    tp.setHeight("100%");
     
     usersAndRolesPanel.setWidth("100%");
     usersAndRolesPanel.setHeight("100%");
@@ -89,35 +86,32 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener {
 
     RootPanel.get().add(dockPanel);    
     deckPanel.showWidget(0);
+    homeToggleBtn.setDown(true);
   }
 
 
 public void onClick(Widget sender) {
-	if (sender == homeToggleBtn) {
-        if (homeToggleBtn.isDown()) {
-            Window.alert("I have been toggled down");
-            adminToggleBtn.setDown(false);
-            testToggleBtn.setDown(false);
-            deckPanel.showWidget(0);
-          } else {
-            Window.alert("I have been toggled up");
-          }
-	} else if (sender == adminToggleBtn) {
-        if (adminToggleBtn.isDown()) {
-            Window.alert("I have been toggled down");
-            homeToggleBtn.setDown(false);
-            testToggleBtn.setDown(false);
-            deckPanel.showWidget(1);            
-          } else if(sender == testToggleBtn){
-            Window.alert("I have been toggled down");
-            homeToggleBtn.setDown(false);
-            adminToggleBtn.setDown(false);
-          } else {
-              Window.alert("I have been toggled up");        	  
-          }
-	}
-	
-}
+    if (sender == homeToggleBtn) {
+      if (homeToggleBtn.isDown()) {
+        adminToggleBtn.setDown(false);
+        testToggleBtn.setDown(false);
+        deckPanel.showWidget(0);
+      } else {
+        homeToggleBtn.setDown(true);
+      }
+    } else if (sender == adminToggleBtn) {
+      if (adminToggleBtn.isDown()) {
+        homeToggleBtn.setDown(false);
+        testToggleBtn.setDown(false);
+        deckPanel.showWidget(1);
+      } else {
+        adminToggleBtn.setDown(true);
+      }
+    } else if (sender == testToggleBtn) {
+      homeToggleBtn.setDown(false);
+      adminToggleBtn.setDown(false);
+    }
+  }
   
 }
  
