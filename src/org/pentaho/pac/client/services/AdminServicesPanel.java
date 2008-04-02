@@ -65,8 +65,9 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
     add(grid);
   }
 
-  public void onClick(Widget sender) {
+  public void onClick(final Widget sender) {
     AsyncCallback callback = new AsyncCallback() {
+      
       public void onSuccess(Object result) {
         final DialogBox dialogBox = new DialogBox();
         dialogBox.setText("Services");
@@ -74,9 +75,10 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
         okButton.addClickListener(new ClickListener() {
           public void onClick(Widget sender) {
             dialogBox.hide();
-          }
-          
+          }  
         });
+        
+        ((Button)sender).setEnabled(true);
         HorizontalPanel footerPanel = new HorizontalPanel();
         footerPanel.add(okButton);
         
@@ -95,10 +97,9 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
         okButton.addClickListener(new ClickListener() {
           public void onClick(Widget sender) {
             dialogBox.hide();
-            
           }
-          
         });
+        ((Button)sender).setEnabled(true);
         HorizontalPanel footerPanel = new HorizontalPanel();
         footerPanel.add(okButton);
         
@@ -109,9 +110,11 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
         dialogBox.setWidget(verticalPanel);
         dialogBox.center();
       }
-    };
+    }; // end AsyncCallback
 
     PacServiceAsync pacServiceAsync = PacServiceFactory.getPacService();
+    
+    ((Button)sender).setEnabled(false);
     if (sender == refreshSolutionRepositoryBtn) {
       pacServiceAsync.refreshSolutionRepository(callback);
     } else if (sender == cleanRepositoryBtn) {
