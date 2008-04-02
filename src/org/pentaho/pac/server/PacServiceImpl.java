@@ -352,23 +352,23 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   
   private void initConfiguration()
   {
-    InputStream s = this.getClass().getResourceAsStream( "/" + PROPERTIES_FILE_NAME );
+    InputStream s = this.getClass().getResourceAsStream( "/" + PROPERTIES_FILE_NAME ); //$NON-NLS-1$
     Properties p = new Properties();
     if ( null != s ) {
       try {
         p.load( s );
       } catch (IOException e) {
-        logger.error( "Failed to load properties file: " + PROPERTIES_FILE_NAME );
+        logger.error( Messages.getString( "PacService.LOAD_PROPS_FAILED", PROPERTIES_FILE_NAME ) ); //$NON-NLS-1$
       }
     } else {
-      logger.warn( "Failed to open properties file: " + PROPERTIES_FILE_NAME );
+      logger.warn( Messages.getString( "PacService.OPEN_PROPS_FAILED", PROPERTIES_FILE_NAME ) ); //$NON-NLS-1$
     }
-    jmxHostName = StringUtils.defaultIfEmpty( p.getProperty("jmxHostName"), System.getProperty("jmxHostName") );
-    jmxPortNumber = StringUtils.defaultIfEmpty( p.getProperty("jmxPortNumber"), System.getProperty("jmxPortNumber") );
-    password = StringUtils.defaultIfEmpty( p.getProperty("pentaho.platform.password"), System.getProperty("pentaho.platform.password") );
-    username = StringUtils.defaultIfEmpty( p.getProperty("pentaho.platform.username"), System.getProperty("pentaho.platform.username") );
-    pciContextPath = StringUtils.defaultIfEmpty( p.getProperty("pciContextPath"), System.getProperty("pciContextPath") );
-    biServerBaseURL = StringUtils.defaultIfEmpty( p.getProperty("biServerBaseURL"), System.getProperty("biServerBaseURL") );
+    jmxHostName = StringUtils.defaultIfEmpty( p.getProperty("jmxHostName"), System.getProperty("jmxHostName") ); //$NON-NLS-1$ //$NON-NLS-2$
+    jmxPortNumber = StringUtils.defaultIfEmpty( p.getProperty("jmxPortNumber"), System.getProperty("jmxPortNumber") ); //$NON-NLS-1$ //$NON-NLS-2$
+    password = StringUtils.defaultIfEmpty( p.getProperty("pentaho.platform.password"), System.getProperty("pentaho.platform.password") ); //$NON-NLS-1$ //$NON-NLS-2$
+    username = StringUtils.defaultIfEmpty( p.getProperty("pentaho.platform.username"), System.getProperty("pentaho.platform.username") ); //$NON-NLS-1$ //$NON-NLS-2$
+    pciContextPath = StringUtils.defaultIfEmpty( p.getProperty("pciContextPath"), System.getProperty("pciContextPath") ); //$NON-NLS-1$ //$NON-NLS-2$
+    biServerBaseURL = StringUtils.defaultIfEmpty( p.getProperty("biServerBaseURL"), System.getProperty("biServerBaseURL") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public String getJmxHostName() {
