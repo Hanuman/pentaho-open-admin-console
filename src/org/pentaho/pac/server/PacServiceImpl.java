@@ -36,7 +36,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class PacServiceImpl extends RemoteServiceServlet implements PacService {
 
   private IUserRoleMgmtService userRoleMgmtService = new UserRoleMgmtService();
-  private static final String PROPERTIES_FILE_NAME = "pac.properties";
+  private static final String PROPERTIES_FILE_NAME = "pac.properties"; //$NON-NLS-1$
   private static final Log logger = LogFactory.getLog(PacServiceImpl.class);
   
   private String jmxHostName = null;
