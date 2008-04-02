@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -21,6 +22,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
   SimpleDataSource[] dataSources = null;
   DataSourceDetailsPanel dataSourceDetailsPanel = new DataSourceDetailsPanel();
   Button updateDataSourceBtn = new Button("Update");
+  Button testDataSourceBtn = new Button("Test");
   Button addDataSourceBtn = new Button("+");
   Button deleteDataSourceBtn = new Button("-");
   NewDataSourceDialogBox newDataSourceDialogBox = new NewDataSourceDialogBox();
@@ -45,24 +47,30 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
     
     dataSourceDetailsPanel.setEnabled(false);
     updateDataSourceBtn.setEnabled(false);
-    
+    testDataSourceBtn.setEnabled(false);
     newDataSourceDialogBox.addPopupListener(this);
  	}
 
 	public DockPanel buildDataSourceDetailsDockPanel() {
 	  DockPanel dockPanel = new DockPanel();
-	  dockPanel.add(dataSourceDetailsPanel, DockPanel.CENTER);
-	  dockPanel.add(updateDataSourceBtn, DockPanel.SOUTH);
-	  dockPanel.setCellHeight(dataSourceDetailsPanel, "100%");
-	  dockPanel.setCellWidth(dataSourceDetailsPanel, "100%");
-	  dataSourceDetailsPanel.setWidth("100%");
-	  dataSourceDetailsPanel.setHeight("100%");
-	  dockPanel.setCellHorizontalAlignment(updateDataSourceBtn, HasHorizontalAlignment.ALIGN_RIGHT);
+    HorizontalPanel horizontalPanel = new  HorizontalPanel();
+    horizontalPanel.add(testDataSourceBtn);
+    horizontalPanel.add(updateDataSourceBtn);
+    dockPanel.add(dataSourceDetailsPanel, DockPanel.CENTER);
+    dockPanel.add(horizontalPanel, DockPanel.SOUTH);
+    dockPanel.setCellHeight(dataSourceDetailsPanel, "100%");
+    dockPanel.setCellWidth(dataSourceDetailsPanel, "100%");
+    dataSourceDetailsPanel.setWidth("100%");
+    dataSourceDetailsPanel.setHeight("100%");
+    dockPanel.setCellHorizontalAlignment(horizontalPanel, HasHorizontalAlignment.ALIGN_RIGHT);
     updateDataSourceBtn.addClickListener(this);
-	  return dockPanel;
+    testDataSourceBtn.addClickListener(this);
+    return dockPanel;
+
 	}
 	
 	public DockPanel buildDataSourcesListPanel() {
+	  refresh();
 	  DockPanel headerDockPanel = new DockPanel();
     headerDockPanel.add(deleteDataSourceBtn, DockPanel.EAST);
 	  headerDockPanel.add(addDataSourceBtn, DockPanel.EAST);
@@ -91,16 +99,18 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 	
 	
 	
-	public void onClick(Widget sender) {
-	  if (sender == updateDataSourceBtn) {
-	    updateDataSourceDetails( sender );
-	  } else if (sender == deleteDataSourceBtn) {
-	    deleteSelectedDataSources();
-	  } else if (sender == addDataSourceBtn) {
-	    addNewDataSource();
-	  }
-	}
 
+  public void onClick(Widget sender) {
+    if (sender == updateDataSourceBtn) {
+      updateDataSourceDetails( sender );;
+    } else if (sender == testDataSourceBtn) {
+      testDataSourceConnection();
+    } else if (sender == deleteDataSourceBtn) {
+      deleteSelectedDataSources();
+    } else if (sender == addDataSourceBtn) {
+      addNewDataSource();
+    }
+  }
 
 	private void addNewDataSource() {
 	  newDataSourceDialogBox.setDataSource(null);
@@ -133,7 +143,9 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
    }
     dataSourceDetailsPanel.setEnabled(selectedDataSources.length == 1);
     updateDataSourceBtn.setEnabled(selectedDataSources.length == 1);
+    testDataSourceBtn.setEnabled(selectedDataSources.length == 1);
     deleteDataSourceBtn.setEnabled(selectedDataSources.length > 0);
+    
 	}
 	
 	private void updateDataSourceDetails( final Widget sender ) {
@@ -172,6 +184,27 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
       PacServiceFactory.getPacService().updateDataSource(dataSource, callback);
     }
 	}
+	
+	 private void testDataSourceConnection() {
+	    final SimpleDataSource dataSource = dataSourceDetailsPanel.getDataSource();
+	    AsyncCallback callback = new AsyncCallback() {
+	      public void onSuccess(Object result) {
+	        messageDialog.setText("Test Conneciton");
+	        messageDialog.setMessage("Connection Test Successful.");
+	        messageDialog.center();
+	      }
+
+	      public void onFailure(Throwable caught) {
+	        int x = 1;
+	        messageDialog.setText("Test Conneciton");
+	        messageDialog.setMessage("Connection Test Failed.");
+	        messageDialog.center();
+	      }
+	    };
+	    PacServiceFactory.getPacService().testDataSourceConnection(dataSource, callback);
+	    
+	  }
+
 	
 	public boolean validate() {return true;}
 

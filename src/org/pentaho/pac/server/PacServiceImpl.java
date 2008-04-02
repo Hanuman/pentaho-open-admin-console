@@ -2,6 +2,12 @@ package org.pentaho.pac.server;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
@@ -16,17 +22,16 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.pentaho.pac.client.PacService;
 import org.pentaho.pac.client.PacServiceException;
 import org.pentaho.pac.client.PentahoSecurityException;
 import org.pentaho.pac.client.datasources.Constants;
+import org.pentaho.pac.client.datasources.DataSourceManagementException;
 import org.pentaho.pac.client.datasources.IDataSource;
 import org.pentaho.pac.client.roles.ProxyPentahoRole;
 import org.pentaho.pac.client.users.DuplicateUserException;
 import org.pentaho.pac.client.users.NonExistingUserException;
 import org.pentaho.pac.client.users.ProxyPentahoUser;
-import org.pentaho.pac.server.datasources.DataSourceManagementException;
 import org.pentaho.pac.server.datasources.DataSourceManagerFacade;
 import org.pentaho.pac.server.datasources.IDataSourceManager;
 import org.pentaho.pac.server.datasources.NamedParameter;
@@ -298,7 +303,108 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return dsMgr;
   }
   
-  
+  /**
+   * NOTE: caller is responsible for closing connection
+   * 
+   * @param ds
+   * @return
+   * @throws DataSourceManagementException
+   */
+   private static Connection getDataSourceConnection(IDataSource ds) throws DataSourceManagementException {
+     Connection conn = null;
+
+     String driverClass = ds.getDriverClass();
+     if (StringUtils.isEmpty(driverClass)) {
+       throw new DataSourceManagementException("Connection attempt failed, no driver class available: " + driverClass);
+     }
+     Class<?> driverC = null;
+
+     try {
+       driverC = Class.forName(driverClass);
+     } catch (ClassNotFoundException e) {
+       throw new DataSourceManagementException("Connection attempt failed, driver class " + driverClass
+           + " not in classpath: ");
+     }
+     if (!Driver.class.isAssignableFrom(driverC)) {
+       throw new DataSourceManagementException("Connection attempt failed, driver class " + driverClass
+           + " not in classpath: ");
+     }
+
+     Driver driver = null;
+
+     try {
+       driver = driverC.asSubclass(Driver.class).newInstance();
+     } catch (InstantiationException e) {
+       throw new DataSourceManagementException("Connection attempt failed, unable to create driver class instance: "
+           + driverClass, e);
+     } catch (IllegalAccessException e) {
+       throw new DataSourceManagementException("Connection attempt failed, unable to create driver class instance: "
+           + driverClass, e);
+     }
+
+     try {
+       DriverManager.registerDriver(driver);
+       conn = DriverManager.getConnection(ds.getUrl(), ds.getUserName(), ds.getPassword());
+       return conn;
+     } catch (SQLException e) {
+       throw new DataSourceManagementException("Connection attempt failed. " + e.getMessage(), e);
+     }
+   }
+
+   public boolean testDataSourceConnection(IDataSource ds) throws PacServiceException {
+     Connection conn = null;
+     try {
+       conn = getDataSourceConnection(ds);
+     } catch (DataSourceManagementException dme) {
+       throw new PacServiceException("Test connection failed.", dme);
+     } finally {
+       try {
+         if (conn != null) {
+           conn.close();
+         }
+       } catch (SQLException e) {
+         throw new PacServiceException(e);
+       }
+     }
+     return true;
+   }
+
+   public boolean testDataSourceValidationQuery(IDataSource ds) throws PacServiceException {
+     Connection conn = null;
+     Statement stmt = null;
+     ResultSet rs = null;
+     try {
+       conn = getDataSourceConnection(ds);
+
+       if (!StringUtils.isEmpty(ds.getValidationQuery())) {
+         stmt = conn.createStatement();
+         rs = stmt.executeQuery(ds.getValidationQuery());
+       } else {
+         throw new PacServiceException("Data Source configuration does not contain a validation query.");
+       }
+     } catch (DataSourceManagementException dme) {
+
+       throw new PacServiceException("Data Source validation query failed.", dme);
+     } catch (SQLException e) {
+       throw new PacServiceException("Data Source validation query failed.", e);
+     } finally {
+       try {
+         if (rs != null) {
+           rs.close();
+         }
+         if (stmt != null) {
+           stmt.close();
+         }
+         if (conn != null) {
+           conn.close();
+         }
+       } catch (SQLException e) {
+         throw new PacServiceException(e);
+       }
+     }
+     return true;
+   }
+
   private void rollbackTransaction()
   {
     try {

@@ -18,6 +18,9 @@ public interface PacService extends RemoteService {
   public boolean createUser(ProxyPentahoUser user) throws DuplicateUserException, PentahoSecurityException, PacServiceException;
   public boolean deleteUsers(ProxyPentahoUser[] users) throws NonExistingUserException, PentahoSecurityException, PacServiceException;
   public boolean updateUser(ProxyPentahoUser user) throws NonExistingUserException, PentahoSecurityException, PacServiceException;
+  public boolean testDataSourceConnection(IDataSource dataSource) throws PacServiceException;
+  public boolean testDataSourceValidationQuery(IDataSource dataSource) throws PacServiceException;
+
   public ProxyPentahoUser[] getUsers() throws PacServiceException;
   
   public boolean createDataSource(IDataSource dataSource) throws PacServiceException;

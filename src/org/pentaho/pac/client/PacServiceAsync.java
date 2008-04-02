@@ -20,6 +20,8 @@ public interface PacServiceAsync {
   public void createDataSource(IDataSource dataSource, AsyncCallback callback);
   public void deleteDataSources(IDataSource[] dataSources, AsyncCallback callback);
   public void updateDataSource(IDataSource dataSource, AsyncCallback callback);
+  public void testDataSourceConnection(IDataSource dataSource, AsyncCallback callback);
+  public void testDataSourceValidationQuery(IDataSource dataSource, AsyncCallback callback);
   public void getDataSources(AsyncCallback callback);
   
   public void refreshSolutionRepository(AsyncCallback callback);
