@@ -19,7 +19,7 @@ import org.pentaho.pac.client.users.NonExistingUserException;
         getSession().save(newUser);
       } catch (HibernateException ex) {
         getSession().evict(newUser);
-        throw new DAOException(ex);
+        throw new DAOException( ex.getMessage(), ex );
       }
     } else {
       throw new DuplicateUserException(newUser.getName());
@@ -39,7 +39,7 @@ import org.pentaho.pac.client.users.NonExistingUserException;
         }
         getSession().delete(tmpUser);
       } catch (HibernateException ex) {
-        throw new DAOException(ex);
+        throw new DAOException( ex.getMessage(), ex );
       }
     } else {
       throw new NonExistingUserException(user.getName());
@@ -50,7 +50,7 @@ import org.pentaho.pac.client.users.NonExistingUserException;
     try {
       return (IPentahoUser) getSession().get(PentahoUser.class.getName(), name);
     } catch (HibernateException ex) {
-      throw new DAOException(ex);
+      throw new DAOException(ex.getMessage(), ex);
     }
   }
 
@@ -60,7 +60,7 @@ import org.pentaho.pac.client.users.NonExistingUserException;
       Query queryObject = getSession().createQuery(queryString);
       return queryObject.list();
     } catch (HibernateException ex) {
-      throw new DAOException(ex);
+      throw new DAOException( ex.getMessage(), ex );
     }
   }
 
@@ -69,7 +69,7 @@ import org.pentaho.pac.client.users.NonExistingUserException;
       try {
         getSession().update(user);
       } catch (HibernateException ex) {
-        throw new DAOException(ex);
+        throw new DAOException( ex.getMessage(), ex );
       }
     } else {
       throw new NonExistingUserException(user.getName());
@@ -82,7 +82,7 @@ import org.pentaho.pac.client.users.NonExistingUserException;
         getSession().save(newRole);
       } catch (HibernateException ex) {
         getSession().evict(newRole);
-        throw new DAOException(ex);
+        throw new DAOException( ex.getMessage(), ex );
       }
     } else {
       throw new DuplicateRoleException(newRole.getName());
@@ -102,7 +102,7 @@ import org.pentaho.pac.client.users.NonExistingUserException;
         }
         getSession().delete(tmpRole);
       } catch (HibernateException ex) {
-        throw new DAOException(ex);
+        throw new DAOException( ex.getMessage(), ex );
       }
     } else {
       throw new NonExistingRoleException (role.getName());
@@ -113,7 +113,7 @@ import org.pentaho.pac.client.users.NonExistingUserException;
     try {
       return (IPentahoRole) getSession().get(PentahoRole.class.getName(), name);
     } catch (HibernateException ex) {
-      throw new DAOException(ex);
+      throw new DAOException( ex.getMessage(), ex );
     }
   }
 
@@ -123,7 +123,7 @@ import org.pentaho.pac.client.users.NonExistingUserException;
       Query queryObject = getSession().createQuery(queryString);
       return queryObject.list();
     } catch (HibernateException ex) {
-      throw new DAOException(ex);
+      throw new DAOException( ex.getMessage(), ex );
     }
   }
 
@@ -132,7 +132,7 @@ import org.pentaho.pac.client.users.NonExistingUserException;
       try {
         getSession().update(role);
       } catch (HibernateException ex) {
-        throw new DAOException(ex);
+        throw new DAOException( ex.getMessage(), ex );
       }
     } else {
       throw new NonExistingRoleException(role.getName());
