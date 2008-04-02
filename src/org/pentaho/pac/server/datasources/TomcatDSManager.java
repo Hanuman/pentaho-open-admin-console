@@ -19,6 +19,7 @@ import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 
 import org.pentaho.pac.client.datasources.Constants;
+import org.pentaho.pac.client.datasources.DataSourceManagementException;
 import org.pentaho.pac.client.datasources.IDataSource;
 import org.pentaho.pac.client.datasources.SimpleDataSource;
 

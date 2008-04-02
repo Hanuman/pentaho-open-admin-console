@@ -1,5 +1,7 @@
 package org.pentaho.pac.server.datasources;
 
+import org.pentaho.pac.client.datasources.DataSourceManagementException;
+
 
 
 public class DataSourceManagerFacade {

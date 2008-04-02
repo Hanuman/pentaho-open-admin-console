@@ -1,5 +1,7 @@
 package org.pentaho.pac.server.datasources;
 
+import org.pentaho.pac.client.datasources.DataSourceManagementException;
+
 
 /**
  * A factory which uses class names to instantiate ds manager objects.

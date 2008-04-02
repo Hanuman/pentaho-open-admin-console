@@ -6,6 +6,7 @@ import java.util.Properties;
 import javax.management.MBeanServerConnection;
 import javax.naming.InitialContext;
 
+import org.pentaho.pac.client.datasources.DataSourceManagementException;
 import org.pentaho.pac.client.datasources.IDataSource;
 
 /**

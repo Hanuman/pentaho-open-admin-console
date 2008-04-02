@@ -2,6 +2,7 @@ package org.pentaho.pac.server.datasources;
 
 import java.util.Collection;
 
+import org.pentaho.pac.client.datasources.DataSourceManagementException;
 import org.pentaho.pac.client.datasources.IDataSource;
 
 /**

@@ -1,5 +1,7 @@
 package org.pentaho.pac.server.datasources;
 
+import org.pentaho.pac.client.datasources.DataSourceManagementException;
+
 /**
  * Factory interface to encapsulate object creation from client.
  * @author Alex Silva
