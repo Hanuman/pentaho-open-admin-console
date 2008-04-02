@@ -20,6 +20,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class UsersPanel extends DockPanel implements ClickListener, ChangeListener, PopupListener {
 
+  MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN});
   UsersList usersList = new UsersList();
   ListBox userRolesList = new ListBox(true);
   ProxyPentahoUser[] users = null;
@@ -56,6 +57,10 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     
     confirmUserDeleteDialog.setText("Delete User");
     confirmUserDeleteDialog.addPopupListener(this);
+    
+    userDetailsPanel.getUserNameTextBox().setEnabled(false);
+    
+    messageDialog.setText("Update User");
  	}
 
 	public DockPanel buildUserDetailsDockPanel() {
@@ -166,21 +171,28 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     userDetailsPanel.setEnabled(selectedUsers.length == 1);
     updateUserBtn.setEnabled(selectedUsers.length == 1);
     deleteUserBtn.setEnabled(selectedUsers.length > 0);
+    
+    userDetailsPanel.getUserNameTextBox().setEnabled(false);
 	}
 	
 	private void updateUserDetails() {
-    final ProxyPentahoUser user = userDetailsPanel.getUser();
-    final int index = usersList.getSelectedIndex();
-    AsyncCallback callback = new AsyncCallback() {
-      public void onSuccess(Object result) {
-        usersList.setUser(index, user);
-      }
+	  if (!userDetailsPanel.getPassword().equals(userDetailsPanel.getPasswordConfirmation())) { 
+      messageDialog.setMessage("Password does not match password confirmation.");
+      messageDialog.center();
+	  } else {
+	    final ProxyPentahoUser user = userDetailsPanel.getUser();
+	    final int index = usersList.getSelectedIndex();
+	    AsyncCallback callback = new AsyncCallback() {
+	      public void onSuccess(Object result) {
+	        usersList.setUser(index, user);
+	      }
 
-      public void onFailure(Throwable caught) {
-        int x = 1;
-      }
-    };
-    getPacService().updateUser(user, callback);
+	      public void onFailure(Throwable caught) {
+	        int x = 1;
+	      }
+	    };
+	    getPacService().updateUser(user, callback);
+	  }
 	}
 	
 	public boolean validate() {return true;}
