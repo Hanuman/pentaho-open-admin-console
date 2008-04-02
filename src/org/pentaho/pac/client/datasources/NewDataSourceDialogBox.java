@@ -1,6 +1,10 @@
 package org.pentaho.pac.client.datasources;
 
+import org.pentaho.pac.client.MessageDialog;
+import org.pentaho.pac.client.PacServiceException;
 import org.pentaho.pac.client.PacServiceFactory;
+import org.pentaho.pac.client.PentahoSecurityException;
+import org.pentaho.pac.client.users.DuplicateUserException;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -18,6 +22,7 @@ public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
   Button cancelButton = new Button("Cancel");
   DataSourceDetailsPanel dataSourceDetailsPanel = new DataSourceDetailsPanel();
   boolean dataSourceCreated = false;
+  MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN});
   
   public NewDataSourceDialogBox() {
     super();
@@ -30,7 +35,12 @@ public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
     verticalPanel.add(footerPanel);
     
     setText("Add Data Source");
+    
+    verticalPanel.setWidth("250px");
+    dataSourceDetailsPanel.setWidth("100%");
+    
     setWidget(verticalPanel);
+    
     okButton.addClickListener(this);
     cancelButton.addClickListener(this);
   }
@@ -48,6 +58,10 @@ public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
     return dataSourceCreated;
   }
 
+  public void setText(String text) {
+    messageDialog.setText(text);
+    super.setText(text);
+  }
 
   public SimpleDataSource getDataSource() {
     return dataSourceDetailsPanel.getDataSource();
@@ -180,22 +194,36 @@ public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
   }
   
   private boolean createDataSource() {
-    boolean result = false;
-    SimpleDataSource dataSource = getDataSource();
-    if (dataSource != null) {
-      AsyncCallback callback = new AsyncCallback() {
-        public void onSuccess(Object result) {
-          dataSourceCreated = true;
-          hide();
-        }
+    if (getJndiName().trim().length() == 0) {
+      messageDialog.setMessage("Invalid connection name.");
+      messageDialog.center();
+    } else if (getUrl().trim().length() == 0) { 
+      messageDialog.setMessage("Missing database URL.");
+      messageDialog.center();
+    } else if (getDriverClass().trim().length() == 0) { 
+      messageDialog.setMessage("Missing database driver class.");
+      messageDialog.center();
+    } else if (getUserName().trim().length() == 0) { 
+      messageDialog.setMessage("Missing user name.");
+      messageDialog.center();
+    } else {
+      SimpleDataSource dataSource = getDataSource();
+      if (dataSource != null) {
+        AsyncCallback callback = new AsyncCallback() {
+          public void onSuccess(Object result) {
+            dataSourceCreated = true;
+            hide();
+          }
 
-        public void onFailure(Throwable caught) {
-          int x = 1;
-        }
-      };
-      PacServiceFactory.getPacService().createDataSource(dataSource, callback);
+          public void onFailure(Throwable caught) {
+            messageDialog.setMessage("Unable to create data source connection: " + caught.getMessage());
+            messageDialog.center();
+          }
+        };
+        PacServiceFactory.getPacService().createDataSource(dataSource, callback);
+      }
     }
-    return result;
+    return dataSourceCreated;
   }
   
   public void onClick(Widget sender) {

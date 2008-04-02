@@ -1,5 +1,6 @@
 package org.pentaho.pac.client.datasources;
 
+import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacServiceFactory;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -15,6 +16,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class DataSourcesPanel extends DockPanel implements ClickListener, ChangeListener, PopupListener {
 
+  MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN});
   DataSourcesList dataSourcesList = new DataSourcesList();
   SimpleDataSource[] dataSources = null;
   DataSourceDetailsPanel dataSourceDetailsPanel = new DataSourceDetailsPanel();
@@ -135,18 +137,36 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 	}
 	
 	private void updateDataSourceDetails() {
-    final SimpleDataSource dataSource = dataSourceDetailsPanel.getDataSource();
-    final int index = dataSourcesList.getSelectedIndex();
-    AsyncCallback callback = new AsyncCallback() {
-      public void onSuccess(Object result) {
-        dataSourcesList.setDataSource(index, dataSource);
-      }
+    if (dataSourceDetailsPanel.getJndiName().trim().length() == 0) {
+      messageDialog.setText("Update User");
+      messageDialog.setMessage("Invalid connection name.");
+      messageDialog.center();
+    } else if (dataSourceDetailsPanel.getUrl().trim().length() == 0) { 
+      messageDialog.setText("Update User");
+      messageDialog.setMessage("Missing database URL.");
+      messageDialog.center();
+    } else if (dataSourceDetailsPanel.getDriverClass().trim().length() == 0) { 
+      messageDialog.setText("Update User");
+      messageDialog.setMessage("Missing database driver class.");
+      messageDialog.center();
+    } else if (dataSourceDetailsPanel.getUserName().trim().length() == 0) { 
+      messageDialog.setText("Update User");
+      messageDialog.setMessage("Missing user name.");
+      messageDialog.center();
+    } else {
+      final SimpleDataSource dataSource = dataSourceDetailsPanel.getDataSource();
+      final int index = dataSourcesList.getSelectedIndex();
+      AsyncCallback callback = new AsyncCallback() {
+        public void onSuccess(Object result) {
+          dataSourcesList.setDataSource(index, dataSource);
+        }
 
-      public void onFailure(Throwable caught) {
-        int x = 1;
-      }
-    };
-    PacServiceFactory.getPacService().updateDataSource(dataSource, callback);
+        public void onFailure(Throwable caught) {
+          int x = 1;
+        }
+      };
+      PacServiceFactory.getPacService().updateDataSource(dataSource, callback);
+    }
 	}
 	
 	public boolean validate() {return true;}

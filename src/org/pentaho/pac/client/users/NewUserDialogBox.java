@@ -104,8 +104,8 @@ public class NewUserDialogBox extends DialogBox implements ClickListener {
     messageDialog.setText(text);
     super.setText(text);
   }
+  
   private boolean createUser() {
-    boolean result = false;
     if (getUserName().trim().length() == 0) {
       messageDialog.setMessage("Invalid user name.");
       messageDialog.center();
@@ -136,7 +136,7 @@ public class NewUserDialogBox extends DialogBox implements ClickListener {
       }
     }
     
-    return result;
+    return userCreated;
   }
   
   private PacServiceAsync getPacService() {
