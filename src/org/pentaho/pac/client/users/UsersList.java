@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import org.pentaho.pac.client.PacService;
 import org.pentaho.pac.client.PacServiceAsync;
+import org.pentaho.pac.client.PacServiceFactory;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -113,12 +114,6 @@ public class UsersList extends ListBox {
   }
   
   public void refresh() {
-    if (pacService == null) {
-      pacService = (PacServiceAsync) GWT.create(PacService.class);
-      ServiceDefTarget endpoint = (ServiceDefTarget) pacService;
-      String moduleRelativeURL = GWT.getModuleBaseURL() + "pacsvc";
-      endpoint.setServiceEntryPoint(moduleRelativeURL);
-    }
 
     AsyncCallback callback = new AsyncCallback() {
       public void onSuccess(Object result) {
@@ -130,7 +125,7 @@ public class UsersList extends ListBox {
       }
     };
     
-    pacService.getUsers(callback);
+    PacServiceFactory.getPacService().getUsers(callback);
   }
   
   public boolean addUser(ProxyPentahoUser user) {
