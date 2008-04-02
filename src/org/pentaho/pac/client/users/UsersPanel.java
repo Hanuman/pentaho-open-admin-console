@@ -137,7 +137,7 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	
 	public void onClick(Widget sender) {
 	  if (sender == updateUserBtn) {
-	    updateUserDetails();
+	    updateUserDetails( sender );
 	  } else if (sender == deleteUserBtn) {
 	    if (usersList.getSelectedUsers().length > 0) {
 	      confirmUserDeleteDialog.center();
@@ -193,17 +193,20 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     userDetailsPanel.getUserNameTextBox().setEnabled(false);
 	}
 	
-	private void updateUserDetails() {
+	private void updateUserDetails( final Widget sender ) {
 	  if (!userDetailsPanel.getPassword().equals(userDetailsPanel.getPasswordConfirmation())) { 
 	    messageDialog.setText("Update User");
       messageDialog.setMessage("Password does not match password confirmation.");
       messageDialog.center();
 	  } else {
+      ((Button)sender).setEnabled( false );
 	    final ProxyPentahoUser user = userDetailsPanel.getUser();
 	    final int index = usersList.getSelectedIndex();
+	    
 	    AsyncCallback callback = new AsyncCallback() {
 	      public void onSuccess(Object result) {
 	        usersList.setUser(index, user);
+	        ((Button)sender).setEnabled( true );
 	      }
 
 	      public void onFailure(Throwable caught) {
@@ -216,8 +219,9 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
             messageDialog.setMessage(caught.getMessage());
           }
           messageDialog.center();
+          ((Button)sender).setEnabled( true );
 	      }
-	    };
+	    }; // end AsyncCallback
 	    getPacService().updateUser(user, callback);
 	  }
 	}
