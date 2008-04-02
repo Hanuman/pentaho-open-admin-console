@@ -178,8 +178,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       userRoleMgmtService.commitTransaction();
       result = true;
     } catch (DAOException e) {
-      throw new PacServiceException(
-          Messages.getString("PacService.USER_UPDATE_FAILED_NO_PERMISSION", proxyPentahoUser.getName() ), e ); //$NON-NLS-1$
+      throw new PacServiceException( e.getMessage()); //$NON-NLS-1$
     }
     finally {
       if (!result) {
@@ -271,7 +270,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       dsMgr.commitChanges();
       result = true;
     } catch (DataSourceManagementException e) {
-      e.printStackTrace();
+      throw new PacServiceException(e);
     }
     return result;
   }
@@ -409,7 +408,8 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   {
     try {
       userRoleMgmtService.rollbackTransaction();
-    } catch (DAOException e) {
+    } catch (Exception e) {
+      logger.error( "Failed to rollback transaction.");
     }
   }
   
