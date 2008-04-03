@@ -216,7 +216,8 @@ public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
           }
 
           public void onFailure(Throwable caught) {
-            messageDialog.setMessage("Unable to create data source connection: " + caught.getMessage());
+            messageDialog.setText("Error Create Data Source");
+            messageDialog.setMessage(caught.getMessage());
             messageDialog.center();
           }
         };

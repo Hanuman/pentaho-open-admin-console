@@ -1,6 +1,5 @@
 package org.pentaho.pac.server.datasources;
 
-import org.pentaho.pac.client.datasources.DataSourceManagementException;
 
 /**
  * Factory interface to encapsulate object creation from client.
@@ -15,5 +14,5 @@ interface IDataSourceManagerFactory {
    * @return a valid <Code>DataSourceManager</code> object.
    * @throws DataSourceManagementException If the object cannot be instantiated.
    */
-  IDataSourceManager create(String hint) throws DataSourceManagementException;
+  IDataSourceManager create(String hint) throws DataSourceManagerCreationException;
 }

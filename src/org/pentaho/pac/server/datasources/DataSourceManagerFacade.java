@@ -1,11 +1,8 @@
 package org.pentaho.pac.server.datasources;
 
-import org.pentaho.pac.client.datasources.DataSourceManagementException;
-
-
 
 public class DataSourceManagerFacade {
-  private static final IDataSourceManagerFactory fact = new ClassNameDSMgrFactory();
+  private static final IDataSourceManagerFactory dsMgrFactory = new ClassNameDSMgrFactory();
 
   public enum Type {
     TOMCAT(TomcatDSManager.class), JBOSS(JBossDSManager.class), OTHER(null);
@@ -25,11 +22,11 @@ public class DataSourceManagerFacade {
    * @return
    * @throws DataSourceManagementException
    */
-  public IDataSourceManager getDSManager(Type type, NamedParameter... parms) throws DataSourceManagementException {
+  public IDataSourceManager getDSManager(Type type, NamedParameter... parms) throws DataSourceManagerCreationException {
     switch (type) {
       case TOMCAT:
       case JBOSS:
-        IDataSourceManager mgr = fact.create(type.impl.getName());
+        IDataSourceManager mgr = dsMgrFactory.create(type.impl.getName());
 
         for (NamedParameter parm : parms) {
           mgr.addInitParameter(parm.getName(), parm.getValue());
@@ -40,14 +37,14 @@ public class DataSourceManagerFacade {
 
       case OTHER:
       default:
-        throw new DataSourceManagementException("'OTHER' is not supported with this method!");
+        throw new DataSourceManagerCreationException("Unrecognized data source type: " + type );
 
     }
   }
 
   public IDataSourceManager getDSManager(String className, NamedParameter... parms)
-      throws DataSourceManagementException {
-    IDataSourceManager mgr = fact.create(className);
+      throws DataSourceManagerCreationException {
+    IDataSourceManager mgr = dsMgrFactory.create(className);
 
     for (NamedParameter parm : parms) {
       mgr.addInitParameter(parm.getName(), parm.getValue());
@@ -60,3 +57,4 @@ public class DataSourceManagerFacade {
   }
 
 }
+

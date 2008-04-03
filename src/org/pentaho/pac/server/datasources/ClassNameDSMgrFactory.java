@@ -1,6 +1,5 @@
 package org.pentaho.pac.server.datasources;
 
-import org.pentaho.pac.client.datasources.DataSourceManagementException;
 
 
 /**
@@ -13,24 +12,24 @@ class ClassNameDSMgrFactory implements IDataSourceManagerFactory {
   /**
    * Retrieves a <code>DataSourceManager</code> implementation based on the className supplied to this method.
    */
-  public IDataSourceManager create(String className) throws DataSourceManagementException {
+  public IDataSourceManager create(String className) throws DataSourceManagerCreationException {
     Class<?> clazz = null;
 
     try {
       clazz = Class.forName(className);
     } catch (ClassNotFoundException e) {
-      throw new DataSourceManagementException("Unable to load class " + className);
+      throw new DataSourceManagerCreationException("Unable to load class " + className);
     }
 
     if (!IDataSourceManager.class.isAssignableFrom(clazz))
-      throw new DataSourceManagementException("Invalid datasource manager class.");
+      throw new DataSourceManagerCreationException("Invalid datasource manager class.");
 
     Class<? extends IDataSourceManager> mgrc = clazz.asSubclass(IDataSourceManager.class);
 
     try {
       return mgrc.newInstance();
     } catch (Exception e) {
-      throw new DataSourceManagementException("Unable to instantiate data source manager", e);
+      throw new DataSourceManagerCreationException("Unable to instantiate data source manager", e);
     }
 
   }

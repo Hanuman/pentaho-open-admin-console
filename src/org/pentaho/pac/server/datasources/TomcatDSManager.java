@@ -19,7 +19,6 @@ import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 
 import org.pentaho.pac.client.datasources.Constants;
-import org.pentaho.pac.client.datasources.DataSourceManagementException;
 import org.pentaho.pac.client.datasources.IDataSource;
 import org.pentaho.pac.client.datasources.SimpleDataSource;
 
@@ -99,16 +98,16 @@ public class TomcatDSManager extends BaseDSManager {
    * Initializes this manager implementation by trying to establish a remote JMX connection.
    * @throws DataSourceManagementException if the connection cannot be established. (Invalid port, host, credentials, etc.)
    */
-  public void init() throws DataSourceManagementException {
+  public void init() throws DataSourceManagerCreationException {
     Object port = getInitParameter(Constants.JMX_PORT);
 
     if (port == null)
-      throw new DataSourceManagementException("No remote JXM port specified.");
+      throw new DataSourceManagerCreationException("Unable to create data source manager. JMX port number missing from console configuration.");
 
     Object host = getInitParameter(Constants.JMX_HOST);
 
     if (host == null)
-      throw new DataSourceManagementException("No remote JXM host specified.");
+      throw new DataSourceManagerCreationException("Unable to create data source manager. JMX host name missing from console configuration.");
 
     String urlForJMX = TOMCAT_JMX_URL_BEGIN + host + ":" + port + TOMCAT_JMX_URL_END; //$NON-NLS-1$
 
@@ -121,7 +120,7 @@ public class TomcatDSManager extends BaseDSManager {
     try {
       mserver = JMXConnectorFactory.connect(new JMXServiceURL(urlForJMX), map).getMBeanServerConnection();
     } catch (IOException e) {
-      throw new DataSourceManagementException("Unable to connect to Tomcat JMX Server: " + e.getMessage(), e);
+      throw new DataSourceManagerCreationException("Unable to connect to Tomcat JMX Server: " + e.getMessage(), e);
     }
   }
 

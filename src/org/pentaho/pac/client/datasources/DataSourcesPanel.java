@@ -97,9 +97,6 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
     return dataSourceListPanel;
 	}
 	
-	
-	
-
   public void onClick(Widget sender) {
     if (sender == updateDataSourceBtn) {
       updateDataSourceDetails( sender );;
@@ -127,7 +124,9 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 	      }
 
 	      public void onFailure(Throwable caught) {
-	        int x = 1;
+          messageDialog.setText("Error Delete Data Source");
+          messageDialog.setMessage(caught.getMessage());
+          messageDialog.center();
 	      }
 	    };
 	    PacServiceFactory.getPacService().deleteDataSources(selectedDataSources, callback);
@@ -177,8 +176,10 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
         }
 
         public void onFailure(Throwable caught) {
+          messageDialog.setText("Error Update Data Source");
+          messageDialog.setMessage(caught.getMessage());
+          messageDialog.center();
           ((Button)sender).setEnabled( true );
-          int x = 1;
         }
       };
       PacServiceFactory.getPacService().updateDataSource(dataSource, callback);
@@ -195,9 +196,8 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 	      }
 
 	      public void onFailure(Throwable caught) {
-	        int x = 1;
 	        messageDialog.setText("Test Conneciton");
-	        messageDialog.setMessage("Connection Test Failed.");
+	        messageDialog.setMessage( caught.getMessage() );
 	        messageDialog.center();
 	      }
 	    };

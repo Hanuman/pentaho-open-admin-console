@@ -26,12 +26,13 @@ import org.pentaho.pac.client.PacService;
 import org.pentaho.pac.client.PacServiceException;
 import org.pentaho.pac.client.PentahoSecurityException;
 import org.pentaho.pac.client.datasources.Constants;
-import org.pentaho.pac.client.datasources.DataSourceManagementException;
 import org.pentaho.pac.client.datasources.IDataSource;
 import org.pentaho.pac.client.roles.ProxyPentahoRole;
 import org.pentaho.pac.client.users.DuplicateUserException;
 import org.pentaho.pac.client.users.NonExistingUserException;
 import org.pentaho.pac.client.users.ProxyPentahoUser;
+import org.pentaho.pac.server.datasources.DataSourceManagementException;
+import org.pentaho.pac.server.datasources.DataSourceManagerCreationException;
 import org.pentaho.pac.server.datasources.DataSourceManagerFacade;
 import org.pentaho.pac.server.datasources.IDataSourceManager;
 import org.pentaho.pac.server.datasources.NamedParameter;
@@ -69,8 +70,9 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       userRoleMgmtService.commitTransaction();
       result = true;
     } catch ( DAOException e) {
-      throw new PacServiceException( 
-          Messages.getErrorString( "PacService.ERROR_0004_USER_CREATION_FAILED", proxyUser.getName() ), e ); //$NON-NLS-1$
+      String msg = Messages.getString( "PacService.ERROR_0004_USER_CREATION_FAILED", proxyUser.getName() ) //$NON-NLS-1$
+        + " " + e.getMessage(); //$NON-NLS-1$
+      throw new PacServiceException( msg, e );
     }
     finally {
       if (!result) {
@@ -161,24 +163,26 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return proxyUsers;
   }
   
-  public boolean updateUser(ProxyPentahoUser proxyPentahoUser) throws NonExistingUserException, PentahoSecurityException, PacServiceException
+  public boolean updateUser(ProxyPentahoUser proxyUser) throws NonExistingUserException, PentahoSecurityException, PacServiceException
   {
     boolean result = false;
     try {
-      IPentahoUser user = userRoleMgmtService.getUser(proxyPentahoUser.getName());
+      IPentahoUser user = userRoleMgmtService.getUser(proxyUser.getName());
       if ( null == user )
       {
-        throw new NonExistingUserException(proxyPentahoUser.getName());
+        throw new NonExistingUserException(proxyUser.getName());
       }
       userRoleMgmtService.beginTransaction();
-      user.setPassword(proxyPentahoUser.getPassword());
-      user.setEnabled(proxyPentahoUser.getEnabled());
-      user.setDescription(proxyPentahoUser.getDescription());
+      user.setPassword(proxyUser.getPassword());
+      user.setEnabled(proxyUser.getEnabled());
+      user.setDescription(proxyUser.getDescription());
       userRoleMgmtService.updateUser( user );
       userRoleMgmtService.commitTransaction();
       result = true;
     } catch (DAOException e) {
-      throw new PacServiceException( e.getMessage()); //$NON-NLS-1$
+      String msg = Messages.getString( "PacService.USER_UPDATE_FAILED", proxyUser.getName() ) //$NON-NLS-1$
+        + " " + e.getMessage(); //$NON-NLS-1$
+      throw new PacServiceException( msg, e );
     }
     finally {
       if (!result) {
@@ -226,6 +230,16 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     }
   }
 
+  private String createDSManagerCreationErrorMsg()
+  {
+    StringBuilder sb = new StringBuilder();
+    sb.append( "Requested operation failed. Unable to create data source manager. Data source manager configuration info: " )
+      .append( " host name: " ).append( this.getJmxHostName() )
+      .append( " port #: " ).append( this.getJmxPortNumber() );
+    
+    return sb.toString();
+  }
+  
   public boolean createDataSource(IDataSource dataSource) throws PacServiceException {
     boolean result = false;
     try {
@@ -236,6 +250,8 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       result = true;
     } catch (DataSourceManagementException e) {
       throw new PacServiceException(e);
+    } catch (DataSourceManagerCreationException e) {
+      throw new PacServiceException(createDSManagerCreationErrorMsg());
     }
     return result;
   }
@@ -257,6 +273,8 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       result = true;
     } catch (DataSourceManagementException e) {
       throw new PacServiceException(e);
+    } catch (DataSourceManagerCreationException e) {
+      throw new PacServiceException(createDSManagerCreationErrorMsg());
     }
     return result;
   }
@@ -271,10 +289,13 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       result = true;
     } catch (DataSourceManagementException e) {
       throw new PacServiceException(e);
+    } catch (DataSourceManagerCreationException e) {
+      Exception e2 = e;
+      throw new PacServiceException( createDSManagerCreationErrorMsg() );
     }
     return result;
   }
-  
+
   public IDataSource[] getDataSources() throws PacServiceException {
     IDataSource[] dataSources;
     try {
@@ -287,11 +308,13 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       }
     } catch (DataSourceManagementException e) {
       throw new PacServiceException(e);
+    } catch (DataSourceManagerCreationException e) {
+      throw new PacServiceException(createDSManagerCreationErrorMsg());
     }
     return dataSources;
   }
   
-  private IDataSourceManager getDataSourceMgr() throws DataSourceManagementException
+  private IDataSourceManager getDataSourceMgr() throws DataSourceManagerCreationException
   {
     IDataSourceManager dsMgr = null;
 
@@ -322,11 +345,11 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
        driverC = Class.forName(driverClass);
      } catch (ClassNotFoundException e) {
        throw new DataSourceManagementException("Connection attempt failed, driver class " + driverClass
-           + " not in classpath: ");
+           + " not in classpath. ");
      }
      if (!Driver.class.isAssignableFrom(driverC)) {
        throw new DataSourceManagementException("Connection attempt failed, driver class " + driverClass
-           + " not in classpath: ");
+           + " not in classpath. ");
      }
 
      Driver driver = null;
@@ -355,7 +378,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
      try {
        conn = getDataSourceConnection(ds);
      } catch (DataSourceManagementException dme) {
-       throw new PacServiceException("Test connection failed.", dme);
+       throw new PacServiceException( dme.getMessage(), dme );
      } finally {
        try {
          if (conn != null) {
@@ -382,10 +405,11 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
          throw new PacServiceException("Data Source configuration does not contain a validation query.");
        }
      } catch (DataSourceManagementException dme) {
-
-       throw new PacServiceException("Data Source validation query failed.", dme);
+       throw new PacServiceException("Data Source validation query failed. Query: "
+           + ds.getValidationQuery(), dme);
      } catch (SQLException e) {
-       throw new PacServiceException("Data Source validation query failed.", e);
+       throw new PacServiceException("Data Source validation query failed. Query: "
+           + ds.getValidationQuery(), e);
      } finally {
        try {
          if (rs != null) {

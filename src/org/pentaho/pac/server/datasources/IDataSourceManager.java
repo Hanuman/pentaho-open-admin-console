@@ -2,7 +2,6 @@ package org.pentaho.pac.server.datasources;
 
 import java.util.Collection;
 
-import org.pentaho.pac.client.datasources.DataSourceManagementException;
 import org.pentaho.pac.client.datasources.IDataSource;
 
 /**
@@ -69,7 +68,7 @@ public interface IDataSourceManager {
    * It is expected that this method will be invoked before any of the operations above are performed.
    * @throws DataSourceManagementException
    */
-  void init() throws DataSourceManagementException;
+  void init() throws DataSourceManagerCreationException;
 
   /**
    * Destroy this manager implementation, releasing any temporary resources allocated.

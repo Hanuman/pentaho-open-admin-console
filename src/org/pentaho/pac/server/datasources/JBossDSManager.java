@@ -6,7 +6,6 @@ import java.util.Properties;
 import javax.management.MBeanServerConnection;
 import javax.naming.InitialContext;
 
-import org.pentaho.pac.client.datasources.DataSourceManagementException;
 import org.pentaho.pac.client.datasources.IDataSource;
 
 /**
@@ -20,7 +19,7 @@ import org.pentaho.pac.client.datasources.IDataSource;
  */
 public class JBossDSManager extends BaseDSManager {
 
-  public void init() throws DataSourceManagementException {
+  public void init() throws DataSourceManagerCreationException {
     Properties props = new Properties();
     props.put("java.naming.factory.initial", "org.jnp.interfaces.NamingContextFactory"); //$NON-NLS-1$ //$NON-NLS-2$
     props.put("java.naming.factory.url.pkgs", "org.jboss.naming:org.jnp.interfaces"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -31,7 +30,7 @@ public class JBossDSManager extends BaseDSManager {
       InitialContext ctx = new InitialContext(props);
       mserver = (MBeanServerConnection) ctx.lookup("jmx/invoker/RMIAdaptor"); //$NON-NLS-1$
     } catch (Exception e) {
-      throw new DataSourceManagementException(e);
+      throw new DataSourceManagerCreationException(e);
     }
 
   }
