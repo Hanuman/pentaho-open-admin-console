@@ -2,8 +2,6 @@ package org.pentaho.pac.client.datasources;
 
 import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacServiceFactory;
-import org.pentaho.pac.client.PentahoSecurityException;
-import org.pentaho.pac.client.users.NonExistingUserException;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -129,7 +127,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 	      }
 
 	      public void onFailure(Throwable caught) {
-          messageDialog.setText("Error Delete Data Source");
+          messageDialog.setText("Error Deleting Data Source");
           messageDialog.setMessage(caught.getMessage());
           messageDialog.center();
 	      }
@@ -181,7 +179,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
         }
 
         public void onFailure(Throwable caught) {
-          messageDialog.setText("Error Update Data Source");
+          messageDialog.setText("Error Updating Data Source");
           messageDialog.setMessage(caught.getMessage());
           messageDialog.center();
           ((Button)sender).setEnabled( true );

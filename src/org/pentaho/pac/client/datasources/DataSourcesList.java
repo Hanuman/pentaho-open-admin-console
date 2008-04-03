@@ -124,6 +124,7 @@ public class DataSourcesList extends ListBox {
       }
 
       public void onFailure(Throwable caught) {
+        messageDialog.setText("Error Loading Data Sources");
         messageDialog.setMessage("Unable to refresh data sources list: " + caught.getMessage());
         messageDialog.center();
       }

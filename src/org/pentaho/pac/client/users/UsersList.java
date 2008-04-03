@@ -150,6 +150,7 @@ public class UsersList extends ListBox {
       }
 
       public void onFailure(Throwable caught) {
+        messageDialog.setText("Error Loading Users");
         messageDialog.setMessage("Unable to refresh users list: " + caught.getMessage());
         messageDialog.center();
       }
