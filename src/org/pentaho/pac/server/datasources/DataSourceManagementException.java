@@ -1,4 +1,4 @@
-package org.pentaho.pac.client.datasources;
+package org.pentaho.pac.server.datasources;
 
 import org.pentaho.pac.client.CheckedException;
 
