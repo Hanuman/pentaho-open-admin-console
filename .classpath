@@ -16,7 +16,14 @@
 	<classpathentry kind="lib" path="lib/javassist.jar"/>
 	<classpathentry kind="lib" path="lib/jta.jar"/>
 	<classpathentry kind="lib" path="lib/pentaho-messages-1.6.1.jar"/>
-	<classpathentry kind="lib" path="lib/gwt-user.jar"/>
+
+	<classpathentry kind="lib" path="lib/gwt/windows/gwt-benchmark-viewer.jar"/>
+	<classpathentry kind="lib" path="lib/gwt/windows/gwt-dev-windows.jar"/>
+	<classpathentry kind="lib" path="lib/gwt/windows/gwt-servlet.jar"/>
+	<classpathentry kind="lib" path="lib/gwt/windows/gwt-user.jar"/>
+	<classpathentry kind="lib" path="lib/commons-lang-2.2.jar"/>
+
 	<classpathentry kind="lib" path="lib/jdbc/mysql-connector-java-5.1.5-bin.jar"/>
+
 	<classpathentry kind="output" path="bin"/>
 </classpath>
