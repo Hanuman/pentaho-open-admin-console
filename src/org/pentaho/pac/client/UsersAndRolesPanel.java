@@ -2,19 +2,31 @@ package org.pentaho.pac.client;
 
 import org.pentaho.pac.client.roles.RolesPanel;
 import org.pentaho.pac.client.users.UsersPanel;
+import org.pentaho.pac.client.utils.PacImageBundle;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 
 public class UsersAndRolesPanel extends DockPanel implements ClickListener {
   
-  ToggleButton usersButton = new ToggleButton("Users");
-  ToggleButton rolesButton = new ToggleButton("Roles");
+//  PacImageBundle pacImageBundle = (PacImageBundle) GWT.create(PacImageBundle.class);
+//
+//  ToggleButton usersButton = new ToggleButton( 
+//      pacImageBundle.usersOffIcon().createImage(),
+//      pacImageBundle.usersSelectedIcon().createImage() );
+//  ToggleButton rolesButton = new ToggleButton( 
+//      pacImageBundle.rolesOffIcon().createImage(),
+//      pacImageBundle.rolesSelectedIcon().createImage() );
+  
+  ToggleButton usersButton = new ToggleButton();
+  ToggleButton rolesButton = new ToggleButton();
   DeckPanel deckPanel = new DeckPanel();
   UsersPanel usersPanel = new UsersPanel();
   RolesPanel rolesPanel = new RolesPanel();
@@ -28,6 +40,9 @@ public class UsersAndRolesPanel extends DockPanel implements ClickListener {
     horizontalPanel.add(rolesButton);
     add(horizontalPanel, DockPanel.NORTH);
     setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+    
+    usersButton.setStylePrimaryName( "usersToggleBtn" );
+    rolesButton.setStylePrimaryName( "rolesToggleBtn" );
    
     deckPanel.add(usersPanel);
     deckPanel.add(rolesPanel);

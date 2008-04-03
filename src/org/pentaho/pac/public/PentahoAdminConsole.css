@@ -615,3 +615,87 @@ a:visited {
   padding: 2px;
 }
 
+/* users toggle button */
+.usersToggleBtn {
+  background-image:url(style/images/users_off.png);
+  width: 36px;
+  height: 36px;
+  border-top: 2px solid #CCCCCC;
+  border-right: 2px solid #777777;
+  border-bottom: 2px solid #777777;
+  border-left: 2px solid #CCCCCC;
+  margin: 5px 0px 5px 10px; // top right bottom left
+}
+.usersToggleBtn-up-hovering {
+  background-image:url(style/images/users_over.png);
+  width: 36px;
+  height: 36px;
+  border-top: 2px solid #CCCCCC;
+  border-right: 2px solid #777777;
+  border-bottom: 2px solid #777777;
+  border-left: 2px solid #CCCCCC;
+  margin: 5px 0px 5px 10px; // top right bottom left
+}
+.usersToggleBtn-down {
+  background-image:url(style/images/users_selected.png);
+  width: 36px;
+  height: 36px;
+  border-top: 2px solid #777777;
+  border-right: 2px solid #CCCCCC;
+  border-bottom: 2px solid #CCCCCC;
+  border-left: 2px solid #777777;
+  margin: 5px 0px 5px 10px; // top right bottom left
+}
+.usersToggleBtn-down-hovering {
+  background-image:url(style/images/users_selected.png);
+  width: 36px;
+  height: 36px;
+  border-top: 2px solid #777777;
+  border-right: 2px solid #CCCCCC;
+  border-bottom: 2px solid #CCCCCC;
+  border-left: 2px solid #777777;
+  margin: 5px 0px 5px 10px; // top right bottom left
+}
+
+
+/* roles toggle button */
+.rolesToggleBtn {
+  background-image:url(style/images/roles_off.png);
+  width: 36px;
+  height: 36px;
+  border-top: 2px solid #CCCCCC;
+  border-right: 2px solid #777777;
+  border-bottom: 2px solid #777777;
+  border-left: 2px solid #CCCCCC;
+  margin: 5px 0px 5px 5px; // top right bottom left
+}
+.rolesToggleBtn-up-hovering {
+  background-image:url(style/images/roles_over.png);
+  width: 36px;
+  height: 36px;
+  border-top: 2px solid #CCCCCC;
+  border-right: 2px solid #777777;
+  border-bottom: 2px solid #777777;
+  border-left: 2px solid #CCCCCC;
+  margin: 5px 0px 5px 5px; // top right bottom left
+}
+.rolesToggleBtn-down {
+  background-image:url(style/images/roles_selected.png);
+  width: 36px;
+  height: 36px;
+  border-top: 2px solid #777777;
+  border-right: 2px solid #CCCCCC;
+  border-bottom: 2px solid #CCCCCC;
+  border-left: 2px solid #777777;
+  margin: 5px 0px 5px 5px; // top right bottom left
+}
+.rolesToggleBtn-down-hovering {
+  background-image:url(style/images/roles_selected.png);
+  width: 36px;
+  height: 36px;
+  border-top: 2px solid #777777;
+  border-right: 2px solid #CCCCCC;
+  border-bottom: 2px solid #CCCCCC;
+  border-left: 2px solid #777777;
+  margin: 5px 0px 5px 5px; // top right bottom left
+}
