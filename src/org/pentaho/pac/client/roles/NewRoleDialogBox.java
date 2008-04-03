@@ -1,5 +1,6 @@
 package org.pentaho.pac.client.roles;
 
+import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacServiceFactory;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -87,7 +88,10 @@ public class NewRoleDialogBox extends DialogBox implements ClickListener {
         }
 
         public void onFailure(Throwable caught) {
-          int x = 1;
+          MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN});
+          messageDialog.setText("Error Creating Role");
+          messageDialog.setMessage(caught.getMessage());
+          messageDialog.center();
         }
       };
       PacServiceFactory.getPacService().createRole(role, callback);
