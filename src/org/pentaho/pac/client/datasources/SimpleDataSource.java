@@ -2,9 +2,7 @@ package org.pentaho.pac.client.datasources;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.Map;
 
 /**
  * A base data source implementation, nothing but a POJO.
@@ -13,7 +11,10 @@ import java.util.Set;
  *
  */
 public class SimpleDataSource implements IDataSource, Serializable {
-  private HashMap parms = new HashMap();
+  /**
+   * @gwt.typeArgs <java.lang.String>
+   */
+  private Map parms = new HashMap();
 
   private String url;
 
