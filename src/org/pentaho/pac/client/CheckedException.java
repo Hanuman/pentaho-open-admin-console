@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 public class CheckedException extends Exception implements Serializable {
 
+  /*
+   * kludge to work with GWT's exception serialization
+   */
   private String msg = null;
   /**
    * 
@@ -26,6 +29,7 @@ public class CheckedException extends Exception implements Serializable {
 
   public CheckedException(Throwable cause) {
     super(cause);
+    msg = cause.getMessage();
   }    
   
   public String getMessage() {
