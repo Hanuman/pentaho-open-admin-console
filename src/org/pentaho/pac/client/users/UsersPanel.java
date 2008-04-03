@@ -155,7 +155,6 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	private void deleteSelectedUsers() {
 	  final ProxyPentahoUser[] selectedUsers = usersList.getSelectedUsers();
 	  if (selectedUsers.length > 0) {
-	    final int index = usersList.getSelectedIndex();
 	    AsyncCallback callback = new AsyncCallback() {
 	      public void onSuccess(Object result) {
 	        usersList.removeUsers(selectedUsers);
