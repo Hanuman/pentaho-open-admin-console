@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.exception.JDBCConnectionException;
 import org.pentaho.pac.client.users.DuplicateUserException;
 import org.pentaho.pac.client.users.NonExistingUserException;
 
@@ -143,16 +144,31 @@ import org.pentaho.pac.client.users.NonExistingUserException;
     return HibernateSessionFactory.getSession();
   }
   
-  public void beginTransaction() {
-    getSession().beginTransaction();
+  public void beginTransaction() throws DAOException {
+    try {
+      getSession().beginTransaction(); 
+    } catch ( JDBCConnectionException ex )
+    {
+      throw new DAOException( ex.getMessage(), ex );
+    }
   }
   
-  public void commitTransaction() {
-    getSession().getTransaction().commit();
+  public void commitTransaction() throws DAOException {
+    try {
+      getSession().getTransaction().commit();
+    } catch ( JDBCConnectionException ex )
+    {
+      throw new DAOException( ex.getMessage(), ex );
+    }
   }
   
-  public void rollbackTransaction() {
-    getSession().getTransaction().rollback();
+  public void rollbackTransaction() throws DAOException {
+    try {
+      getSession().getTransaction().rollback();
+    } catch ( JDBCConnectionException ex )
+    {
+      throw new DAOException( ex.getMessage(), ex );
+    }
   }
   
   public void closeSession() {
