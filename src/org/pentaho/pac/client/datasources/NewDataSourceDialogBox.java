@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
   
   Button okButton = new Button("OK");
+  Button testButton = new Button("Test");
   Button cancelButton = new Button("Cancel");
   DataSourceDetailsPanel dataSourceDetailsPanel = new DataSourceDetailsPanel();
   boolean dataSourceCreated = false;
@@ -28,6 +29,7 @@ public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
     super();
     HorizontalPanel footerPanel = new HorizontalPanel();
     footerPanel.add(okButton);
+    footerPanel.add(testButton);    
     footerPanel.add(cancelButton);
     
     VerticalPanel verticalPanel = new VerticalPanel();
@@ -42,12 +44,17 @@ public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
     setWidget(verticalPanel);
     
     okButton.addClickListener(this);
+    testButton.addClickListener(this);        
     cancelButton.addClickListener(this);
   }
 
 
   public Button getOkButton() {
     return okButton;
+  }
+
+  public Button getTestButton() {
+    return testButton;
   }
 
   public Button getCancelButton() {
@@ -232,6 +239,28 @@ public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
       createDataSource();
     } else if (sender == cancelButton) {
       hide();
+    } else if(sender == testButton) {
+      testDataSourceConnection();      
     }
   }
+  
+  private void testDataSourceConnection() {
+    final SimpleDataSource dataSource = dataSourceDetailsPanel.getDataSource();
+    AsyncCallback callback = new AsyncCallback() {
+      public void onSuccess(Object result) {
+        messageDialog.setText("Test Conneciton");
+        messageDialog.setMessage("Connection Test Successful.");
+        messageDialog.center();
+      }
+
+      public void onFailure(Throwable caught) {
+        messageDialog.setText("Test Conneciton");
+        messageDialog.setMessage( caught.getMessage() );
+        messageDialog.center();
+      }
+    };
+    PacServiceFactory.getPacService().testDataSourceConnection(dataSource, callback);
+    
+  }
+  
 }
