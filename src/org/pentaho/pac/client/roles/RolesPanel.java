@@ -145,7 +145,10 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 	      }
 
 	      public void onFailure(Throwable caught) {
-	        int x = 1;
+	        MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN});
+	        messageDialog.setText("Error Deleting Roles");
+	        messageDialog.setMessage(caught.getMessage());
+	        messageDialog.center();
 	      }
 	    };
 	    PacServiceFactory.getPacService().deleteRoles(selectedRoles, callback);
@@ -173,7 +176,10 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
       }
 
       public void onFailure(Throwable caught) {
-        int x = 1;
+        MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN});
+        messageDialog.setText("Error Updating Role");
+        messageDialog.setMessage(caught.getMessage());
+        messageDialog.center();
       }
     };
     PacServiceFactory.getPacService().updateRole(role, callback);

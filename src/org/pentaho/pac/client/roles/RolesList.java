@@ -126,6 +126,7 @@ public class RolesList extends ListBox {
       }
 
       public void onFailure(Throwable caught) {
+        messageDialog.setText("Error Loading Roles");
         messageDialog.setMessage("Unable to refresh roles list: " + caught.getMessage());
         messageDialog.center();
       }
