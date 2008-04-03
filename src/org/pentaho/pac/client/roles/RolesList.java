@@ -3,8 +3,10 @@ package org.pentaho.pac.client.roles;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacService;
 import org.pentaho.pac.client.PacServiceFactory;
+import org.pentaho.pac.client.users.ProxyPentahoUser;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -13,6 +15,8 @@ import com.google.gwt.user.client.ui.ListBox;
 
 public class RolesList extends ListBox {
   ArrayList roles = new ArrayList();
+  MessageDialog messageDialog = new MessageDialog("Roles", "", new int[]{MessageDialog.OK_BTN});
+  boolean isInitialized = false;
   
   public RolesList() {
     super(true);
@@ -30,6 +34,7 @@ public class RolesList extends ListBox {
     for (int i = 0; i < roles.length; i++) {
       addItem(roles[i].getName());
     }
+    isInitialized = true;
   }
   
   public void setRole(int index, ProxyPentahoRole role) {
@@ -112,13 +117,17 @@ public class RolesList extends ListBox {
   }
   
   public void refresh() {
+    setRoles(new ProxyPentahoRole[0]);
+    isInitialized = false;
     AsyncCallback callback = new AsyncCallback() {
       public void onSuccess(Object result) {
         setRoles((ProxyPentahoRole[])result);
+        isInitialized = true;
       }
 
       public void onFailure(Throwable caught) {
-        int x = 1;
+        messageDialog.setMessage("Unable to refresh roles list: " + caught.getMessage());
+        messageDialog.center();
       }
     };
     
@@ -133,5 +142,14 @@ public class RolesList extends ListBox {
       result = true;
     }
     return result;
+  }
+  
+  public boolean isInitialized() {
+    return isInitialized;
+  }
+  
+  public void clearRolesCache() {
+    setRoles(new ProxyPentahoRole[0]);
+    isInitialized = false;
   }
 }

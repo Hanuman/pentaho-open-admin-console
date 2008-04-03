@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.users.ProxyPentahoUser;
 
@@ -11,7 +12,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ListBox;
 
 public class DataSourcesList extends ListBox {
+  MessageDialog messageDialog = new MessageDialog("Data Sources", "", new int[]{MessageDialog.OK_BTN});
   ArrayList dataSources = new ArrayList();
+  boolean isInitialized = false;
   
   public DataSourcesList() {
     super(true);
@@ -29,6 +32,7 @@ public class DataSourcesList extends ListBox {
     for (int i = 0; i < dataSources.length; i++) {
       addItem(dataSources[i].getJndiName());
     }
+    isInitialized = true;
   }
   
   public void setDataSource(int index, SimpleDataSource dataSource) {
@@ -111,13 +115,17 @@ public class DataSourcesList extends ListBox {
   }
   
   public void refresh() {
+    setDataSources(new SimpleDataSource[0]);
+    isInitialized = false;
     AsyncCallback callback = new AsyncCallback() {
       public void onSuccess(Object result) {
         setDataSources((IDataSource[])result);
+        isInitialized = true;
       }
 
       public void onFailure(Throwable caught) {
-        int x = 1;
+        messageDialog.setMessage("Unable to refresh data sources list: " + caught.getMessage());
+        messageDialog.center();
       }
     };
     
@@ -137,5 +145,14 @@ public class DataSourcesList extends ListBox {
       result = true;
     }
     return result;
+  }
+  
+  public boolean isInitialized() {
+    return isInitialized;
+  }
+  
+  public void clearDataSourcesCache() {
+    setDataSources(new SimpleDataSource[0]);
+    isInitialized = false;
   }
 }

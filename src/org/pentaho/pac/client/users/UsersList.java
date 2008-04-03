@@ -7,18 +7,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.pentaho.pac.client.PacService;
-import org.pentaho.pac.client.PacServiceAsync;
+import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacServiceFactory;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.ui.ListBox;
 
 public class UsersList extends ListBox {
+  MessageDialog messageDialog = new MessageDialog("Users", "", new int[]{MessageDialog.OK_BTN});
   List users = new ArrayList();
-  PacServiceAsync pacService;
+  boolean isInitialized = false;
   
   public UsersList() {
     super(true);
@@ -36,6 +34,7 @@ public class UsersList extends ListBox {
     for (int i = 0; i < users.length; i++) {
       addItem(users[i].getName());
     }
+    isInitialized = true;
   }
 
   public void setUser(int index, ProxyPentahoUser user) {
@@ -142,14 +141,17 @@ public class UsersList extends ListBox {
   }
   
   public void refresh() {
-
+    setUsers(new ProxyPentahoUser[0]);
+    isInitialized = false;
     AsyncCallback callback = new AsyncCallback() {
       public void onSuccess(Object result) {
         setUsers((ProxyPentahoUser[])result);
+        isInitialized = true;
       }
 
       public void onFailure(Throwable caught) {
-        int x = 1;
+        messageDialog.setMessage("Unable to refresh users list: " + caught.getMessage());
+        messageDialog.center();
       }
     };
     
@@ -193,5 +195,14 @@ public class UsersList extends ListBox {
     return ( filterLen <= filterTarget.length() )
       && filterValue.toLowerCase().substring( 0, filterLen )
         .equals( filterTarget.toLowerCase().substring( 0, filterLen ) ); 
+  }
+
+  public boolean isInitialized() {
+    return isInitialized;
+  }
+  
+  public void clearUsersCache() {
+    setUsers(new ProxyPentahoUser[0]);
+    isInitialized = false;
   }
 }

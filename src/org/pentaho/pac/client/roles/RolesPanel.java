@@ -1,5 +1,6 @@
 package org.pentaho.pac.client.roles;
 
+import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacService;
 import org.pentaho.pac.client.PacServiceAsync;
 import org.pentaho.pac.client.PacServiceFactory;
@@ -28,6 +29,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
   Button addRoleBtn = new Button("+");
   Button deleteRoleBtn = new Button("-");
   NewRoleDialogBox newRoleDialogBox = new NewRoleDialogBox();
+  MessageDialog confirmRoleDeleteDialog = new MessageDialog("Delete Roles", "Are your sure you want to delete the selected roles.", new int[] {MessageDialog.OK_BTN, MessageDialog.CANCEL_BTN});
   
 	public RolesPanel() {
 	  add(new Label("Roles go here."), DockPanel.NORTH);
@@ -185,6 +187,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 	
 	public void refresh() {
 //	  rolesList.refresh();
+//	  roleSelectionChanged();
 	}
 	
   public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
@@ -197,5 +200,11 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     }
   }
   
+  public boolean isInitialized() {
+    return rolesList.isInitialized();
+  }
 
+  public void clearRolesCache() {
+    rolesList.clearRolesCache();
+  }
 }

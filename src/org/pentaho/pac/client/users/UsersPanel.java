@@ -25,7 +25,7 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 
   MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN});
   UsersList usersList = new UsersList();
-  ListBox userRolesList = new ListBox(true);
+  ListBox assignedRolesList = new ListBox(true);
   ProxyPentahoUser[] users = null;
   UserDetailsPanel userDetailsPanel = new UserDetailsPanel();
   Button updateUserBtn = new Button("Update");
@@ -34,7 +34,7 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
   Button deleteUserBtn = new Button("-");
   TextBox filterTextBox = new TextBox();
   NewUserDialogBox newUserDialogBox = new NewUserDialogBox();
-  MessageDialog confirmUserDeleteDialog = new MessageDialog("Are your sure you want to delete the selected users.", new int[] {MessageDialog.OK_BTN, MessageDialog.CANCEL_BTN});
+  MessageDialog confirmUserDeleteDialog = new MessageDialog("Delete Users", "Are your sure you want to delete the selected users.", new int[] {MessageDialog.OK_BTN, MessageDialog.CANCEL_BTN});
   
 	public UsersPanel() {
 	  DockPanel userListPanel = buildUsersListPanel();
@@ -59,7 +59,6 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     
     newUserDialogBox.addPopupListener(this);
     
-    confirmUserDeleteDialog.setText("Delete User");
     confirmUserDeleteDialog.addPopupListener(this);
     
     userDetailsPanel.getUserNameTextBox().setEnabled(false);
@@ -126,11 +125,11 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	public DockPanel buildAssignedRolesPanel() {
 	  DockPanel assignedRolesPanel = new DockPanel();
 	  assignedRolesPanel.add(new Label("Assigned Roles"), DockPanel.NORTH);
-	  assignedRolesPanel.add(userRolesList, DockPanel.CENTER);
-	  assignedRolesPanel.setCellHeight(userRolesList, "100%");
-	  assignedRolesPanel.setCellWidth(userRolesList, "100%");
-	  userRolesList.setHeight("100%");
-	  userRolesList.setWidth("100%");
+	  assignedRolesPanel.add(assignedRolesList, DockPanel.CENTER);
+	  assignedRolesPanel.setCellHeight(assignedRolesList, "100%");
+	  assignedRolesPanel.setCellWidth(assignedRolesList, "100%");
+	  assignedRolesList.setHeight("100%");
+	  assignedRolesList.setWidth("100%");
 	  return assignedRolesPanel;
 	}
 	
@@ -234,6 +233,7 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	
 	public void refresh() {
 	  usersList.refresh();
+	  userSelectionChanged();
 	}
 	
 	private PacServiceAsync getPacService() {
@@ -270,6 +270,13 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
       usersList.filterList( filterTextBox.getText() );
       userSelectionChanged();
     }
-    
+  }
+  
+  public boolean isInitialized() {
+    return usersList.isInitialized();
+  }
+  
+  public void clearUsersCache() {
+    usersList.clearUsersCache();
   }
 }

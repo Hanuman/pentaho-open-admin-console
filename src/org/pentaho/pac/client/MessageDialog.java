@@ -23,6 +23,10 @@ public class MessageDialog extends DialogBox implements ClickListener {
   public Button noBtn = new Button("No");
   
   public MessageDialog(String msg, int[] buttons) {
+    this("", msg, buttons);
+  }
+  
+  public MessageDialog(String title, String msg, int[] buttons) {
     super();
     
     msgLabel = new Label(msg);
@@ -54,6 +58,7 @@ public class MessageDialog extends DialogBox implements ClickListener {
     verticalPanel.add(horizontalPanel);
     
     setWidget(verticalPanel);
+    setText(title);
   }
   
   public MessageDialog(String msg) {

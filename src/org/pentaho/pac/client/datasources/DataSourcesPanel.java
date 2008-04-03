@@ -2,6 +2,8 @@ package org.pentaho.pac.client.datasources;
 
 import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacServiceFactory;
+import org.pentaho.pac.client.PentahoSecurityException;
+import org.pentaho.pac.client.users.NonExistingUserException;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -26,6 +28,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
   Button addDataSourceBtn = new Button("+");
   Button deleteDataSourceBtn = new Button("-");
   NewDataSourceDialogBox newDataSourceDialogBox = new NewDataSourceDialogBox();
+  MessageDialog confirmDataSourceDeleteDialog = new MessageDialog("Delete Data Sources", "Are your sure you want to delete the selected data sources.", new int[] {MessageDialog.OK_BTN, MessageDialog.CANCEL_BTN});
   
 	public DataSourcesPanel() {
 	  DockPanel dataSourcesListPanel = buildDataSourcesListPanel();
@@ -49,6 +52,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
     updateDataSourceBtn.setEnabled(false);
     testDataSourceBtn.setEnabled(false);
     newDataSourceDialogBox.addPopupListener(this);
+    confirmDataSourceDeleteDialog.addPopupListener(this);
  	}
 
 	public DockPanel buildDataSourceDetailsDockPanel() {
@@ -70,7 +74,6 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 	}
 	
 	public DockPanel buildDataSourcesListPanel() {
-	  refresh();
 	  DockPanel headerDockPanel = new DockPanel();
     headerDockPanel.add(deleteDataSourceBtn, DockPanel.EAST);
 	  headerDockPanel.add(addDataSourceBtn, DockPanel.EAST);
@@ -103,7 +106,9 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
     } else if (sender == testDataSourceBtn) {
       testDataSourceConnection();
     } else if (sender == deleteDataSourceBtn) {
-      deleteSelectedDataSources();
+      if (dataSourcesList.getSelectedDataSources().length > 0) {
+        confirmDataSourceDeleteDialog.center();
+      }
     } else if (sender == addDataSourceBtn) {
       addNewDataSource();
     }
@@ -214,17 +219,27 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 	
 	public void refresh() {
 	  dataSourcesList.refresh();
+	  dataSourceSelectionChanged();
 	}
 	
   public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
-    if (newDataSourceDialogBox.isDataSourceCreated()) {
+    if ((sender == newDataSourceDialogBox) && newDataSourceDialogBox.isDataSourceCreated()) {
       SimpleDataSource dataSource = newDataSourceDialogBox.getDataSource();
       if (dataSourcesList.addDataSource(dataSource)) {
         dataSourcesList.setSelectedDataSource(dataSource);
         dataSourceSelectionChanged();
       }
-    }
+    } else if ((sender == confirmDataSourceDeleteDialog) && (confirmDataSourceDeleteDialog.getButtonPressed() == MessageDialog.OK_BTN)) {
+      deleteSelectedDataSources();
+    }      
+
   }
   
-
+  public boolean isInitialized() {
+    return dataSourcesList.isInitialized();
+  }
+  
+  public void clearDataSourcesCache() {
+    dataSourcesList.clearDataSourcesCache();
+  }
 }

@@ -3,14 +3,14 @@ package org.pentaho.pac.client;
 import org.pentaho.pac.client.datasources.DataSourcesPanel;
 import org.pentaho.pac.client.home.HomePanel;
 import org.pentaho.pac.client.services.AdminServicesPanel;
-import org.pentaho.pac.client.users.UsersPanel;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SourcesTabEvents;
+import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -19,7 +19,7 @@ import com.google.gwt.user.client.ui.Widget;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class PentahoAdminConsole implements EntryPoint, ClickListener {
+public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListener {
   ToggleButton adminToggleBtn = new ToggleButton("Administration");
   ToggleButton homeToggleBtn = new ToggleButton("Home");
   ToggleButton testToggleBtn = new ToggleButton("Test");
@@ -27,11 +27,15 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener {
   TabPanel rightTabPanel = new TabPanel();
   DockPanel dockPanel = new DockPanel();
   DeckPanel deckPanel = new DeckPanel();
-  DockPanel principalsPanel = new DockPanel();
   AdminServicesPanel servicesPanel = new AdminServicesPanel();
   UsersAndRolesPanel usersAndRolesPanel = new UsersAndRolesPanel();
   //HomePanel homePanel = new HomePanel();
   DataSourcesPanel dataSourcesPanel = new DataSourcesPanel();
+  TabPanel adminTabPanel = new TabPanel();
+  
+  public static final int ADMIN_PRINCIPALS_TAB_INDEX = 0;
+  public static final int ADMIN_DATA_SORUCES_TAB_INDEX = 1;
+  public static final int ADMIN_SERVICES_TAB_INDEX = 2;
   
 
   /**
@@ -49,15 +53,17 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener {
     leftVerticalPanel.add(adminToggleBtn);
     leftVerticalPanel.add(testToggleBtn);
     
-
-    TabPanel tp = new TabPanel();
-    tp.add(usersAndRolesPanel, "Principals");
-    tp.add(dataSourcesPanel, "Data Sources");
-    tp.add(servicesPanel, "Services");
+    // Order that things are placed in the tab panel is important. There are
+    // static constants defined within this class that assume a given tab position
+    // for each of the panels on the tab panel.
+    adminTabPanel.add(usersAndRolesPanel, "Principals");
+    adminTabPanel.add(dataSourcesPanel, "Data Sources");
+    adminTabPanel.add(servicesPanel, "Services");
+    
     usersAndRolesPanel.setBorderWidth(2);    
     HomePanel homePanel = new HomePanel("http://www.pentaho.com/console_home");
     deckPanel.add(homePanel);
-    deckPanel.add(tp);
+    deckPanel.add(adminTabPanel);
 
     
     dockPanel.add(leftVerticalPanel, DockPanel.WEST);
@@ -71,8 +77,8 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener {
     
     dockPanel.setWidth("100%");
     dockPanel.setHeight("100%");
-    tp.setWidth("100%");
-    tp.setHeight("100%");
+    adminTabPanel.setWidth("100%");
+    adminTabPanel.setHeight("100%");
     
     usersAndRolesPanel.setWidth("100%");
     usersAndRolesPanel.setHeight("100%");
@@ -82,11 +88,13 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener {
     servicesPanel.setHeight("100%");
     deckPanel.setWidth("100%");
     deckPanel.setHeight("100%");
-    tp.selectTab(1);
+    adminTabPanel.selectTab(ADMIN_PRINCIPALS_TAB_INDEX);
 
     RootPanel.get().add(dockPanel);    
     deckPanel.showWidget(0);
     homeToggleBtn.setDown(true);
+    
+    adminTabPanel.addTabListener(this);
   }
 
 
@@ -104,6 +112,19 @@ public void onClick(Widget sender) {
         homeToggleBtn.setDown(false);
         testToggleBtn.setDown(false);
         deckPanel.showWidget(1);
+        int selectedTab = adminTabPanel.getDeckPanel().getVisibleWidget();
+        switch (selectedTab) {
+          case ADMIN_PRINCIPALS_TAB_INDEX:
+            if (!usersAndRolesPanel.isInitialized()) {
+              usersAndRolesPanel.refresh();
+            }
+            break;
+          case ADMIN_DATA_SORUCES_TAB_INDEX: 
+            if (!dataSourcesPanel.isInitialized()) {
+              dataSourcesPanel.refresh();
+            }
+            break;
+        }   
       } else {
         adminToggleBtn.setDown(true);
       }
@@ -111,6 +132,27 @@ public void onClick(Widget sender) {
       homeToggleBtn.setDown(false);
       adminToggleBtn.setDown(false);
     }
+  }
+
+
+  public boolean onBeforeTabSelected(SourcesTabEvents sender, int tabIndex) {
+    return true;
+  }
+  
+  
+  public void onTabSelected(SourcesTabEvents sender, int tabIndex) {
+    switch (tabIndex) {
+      case ADMIN_PRINCIPALS_TAB_INDEX:
+        if (!usersAndRolesPanel.isInitialized()) {
+          usersAndRolesPanel.refresh();
+        }
+        break;
+      case ADMIN_DATA_SORUCES_TAB_INDEX: 
+        if (!dataSourcesPanel.isInitialized()) {
+          dataSourcesPanel.refresh();
+        }
+        break;
+    }   
   }
   
 }

@@ -18,7 +18,6 @@ public class UsersAndRolesPanel extends DockPanel implements ClickListener {
   DeckPanel deckPanel = new DeckPanel();
   UsersPanel usersPanel = new UsersPanel();
   RolesPanel rolesPanel = new RolesPanel();
-  boolean rolesInitialized = false;
   
   public static final int USER_PANEL_ID = 0;
   public static final int ROLE_PANEL_ID = 1;
@@ -45,8 +44,6 @@ public class UsersAndRolesPanel extends DockPanel implements ClickListener {
     rolesButton.setDown(false);
     usersButton.addClickListener(this);
     rolesButton.addClickListener(this);
-    
-    usersPanel.refresh();
   }
 
   public void onClick(Widget sender) {
@@ -56,9 +53,8 @@ public class UsersAndRolesPanel extends DockPanel implements ClickListener {
       } else {
         rolesButton.setDown(false);
         deckPanel.showWidget(USER_PANEL_ID);
-        if (!rolesInitialized) {
-          rolesPanel.refresh();
-          rolesInitialized = true;
+        if (!usersPanel.isInitialized()) {
+          usersPanel.refresh();
         }
       }
     } else if (sender == rolesButton) {
@@ -67,6 +63,9 @@ public class UsersAndRolesPanel extends DockPanel implements ClickListener {
       } else {
         usersButton.setDown(false);
         deckPanel.showWidget(ROLE_PANEL_ID);
+        if (!rolesPanel.isInitialized()) {
+          rolesPanel.refresh();
+        }
       }
     }    
   }
@@ -86,5 +85,29 @@ public class UsersAndRolesPanel extends DockPanel implements ClickListener {
   public RolesPanel getRolesPanel() {
     return rolesPanel;
   }
+  
+  public void refresh() {
+    if (deckPanel.getVisibleWidget() == USER_PANEL_ID) {
+      usersPanel.refresh();
+      rolesPanel.clearRolesCache();
+    } else if (deckPanel.getVisibleWidget() == ROLE_PANEL_ID) {
+      rolesPanel.refresh();
+      usersPanel.clearUsersCache();
+    }
+  }
+  
+  public boolean isInitialized() {
+    boolean result = false;
+    if (deckPanel.getVisibleWidget() == USER_PANEL_ID) {
+      result = usersPanel.isInitialized();
+    } else if (deckPanel.getVisibleWidget() == ROLE_PANEL_ID) {
+      result = rolesPanel.isInitialized();
+    }
+    return result;
+  }
 
+  public void clearCache() {
+    usersPanel.clearUsersCache();
+    rolesPanel.clearRolesCache();
+  }
 }
