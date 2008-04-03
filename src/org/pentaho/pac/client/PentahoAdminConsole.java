@@ -33,7 +33,7 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
   DataSourcesPanel dataSourcesPanel = new DataSourcesPanel();
   TabPanel adminTabPanel = new TabPanel();
   
-  public static final int ADMIN_PRINCIPALS_TAB_INDEX = 0;
+  public static final int ADMIN_USERS_ROLES_TAB_INDEX = 0;
   public static final int ADMIN_DATA_SORUCES_TAB_INDEX = 1;
   public static final int ADMIN_SERVICES_TAB_INDEX = 2;
   
@@ -56,7 +56,7 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
     // Order that things are placed in the tab panel is important. There are
     // static constants defined within this class that assume a given tab position
     // for each of the panels on the tab panel.
-    adminTabPanel.add(usersAndRolesPanel, "Principals");
+    adminTabPanel.add(usersAndRolesPanel, "Users & Roles");
     adminTabPanel.add(dataSourcesPanel, "Data Sources");
     adminTabPanel.add(servicesPanel, "Services");
     
@@ -88,7 +88,7 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
     servicesPanel.setHeight("100%");
     deckPanel.setWidth("100%");
     deckPanel.setHeight("100%");
-    adminTabPanel.selectTab(ADMIN_PRINCIPALS_TAB_INDEX);
+    adminTabPanel.selectTab(ADMIN_USERS_ROLES_TAB_INDEX);
 
     RootPanel.get().add(dockPanel);    
     deckPanel.showWidget(0);
@@ -114,7 +114,7 @@ public void onClick(Widget sender) {
         deckPanel.showWidget(1);
         int selectedTab = adminTabPanel.getDeckPanel().getVisibleWidget();
         switch (selectedTab) {
-          case ADMIN_PRINCIPALS_TAB_INDEX:
+          case ADMIN_USERS_ROLES_TAB_INDEX:
             if (!usersAndRolesPanel.isInitialized()) {
               usersAndRolesPanel.refresh();
             }
@@ -142,7 +142,7 @@ public void onClick(Widget sender) {
   
   public void onTabSelected(SourcesTabEvents sender, int tabIndex) {
     switch (tabIndex) {
-      case ADMIN_PRINCIPALS_TAB_INDEX:
+      case ADMIN_USERS_ROLES_TAB_INDEX:
         if (!usersAndRolesPanel.isInitialized()) {
           usersAndRolesPanel.refresh();
         }
