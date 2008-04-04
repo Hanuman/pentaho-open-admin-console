@@ -1,4 +1,4 @@
-package org.pentaho.pac.client.datasources;
+package org.pentaho.pac.common.datasources;
 
 public interface IDataSource {
   public abstract String getJndiName();

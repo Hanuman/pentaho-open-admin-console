@@ -1,4 +1,4 @@
-package org.pentaho.pac.client;
+package org.pentaho.pac.common;
 
 import java.io.Serializable;
 

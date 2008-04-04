@@ -1,8 +1,9 @@
-package org.pentaho.pac.client.datasources;
+package org.pentaho.pac.common.datasources;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+
 
 /**
  * A base data source implementation, nothing but a POJO.

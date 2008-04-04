@@ -1,4 +1,4 @@
-package org.pentaho.pac.client.roles;
+package org.pentaho.pac.common.roles;
 
 import java.io.Serializable;
 

@@ -1,9 +1,9 @@
-package org.pentaho.pac.client.datasources;
+package org.pentaho.pac.common.users;
 
 import java.io.Serializable;
 
 
-public class ProxyDataSource implements Serializable {
+public class ProxyPentahoUser implements Serializable {
 
   private String name;
 
@@ -13,7 +13,7 @@ public class ProxyDataSource implements Serializable {
 
   private boolean enabled = true;
 
-  public ProxyDataSource() {
+  public ProxyPentahoUser() {
   }
 
   public String getName() {
@@ -49,7 +49,7 @@ public class ProxyDataSource implements Serializable {
   }
 
   public boolean equals(Object o) {
-    return ((o instanceof ProxyDataSource) ? name.equals(((ProxyDataSource) o).getName()) : false);
+    return ((o instanceof ProxyPentahoUser) ? name.equals(((ProxyPentahoUser) o).getName()) : false);
   }
 
   public int hashCode() {

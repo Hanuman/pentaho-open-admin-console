@@ -1,5 +1,7 @@
 package org.pentaho.pac.client.users;
 
+import org.pentaho.pac.common.users.ProxyPentahoUser;
+
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;

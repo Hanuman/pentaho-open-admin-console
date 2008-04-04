@@ -6,7 +6,7 @@ import java.util.Properties;
 import javax.management.MBeanServerConnection;
 import javax.naming.InitialContext;
 
-import org.pentaho.pac.client.datasources.IDataSource;
+import org.pentaho.pac.common.datasources.IDataSource;
 
 /**
  * Add the following options to catalina.bat -Dcom.sun.management.jmxremote

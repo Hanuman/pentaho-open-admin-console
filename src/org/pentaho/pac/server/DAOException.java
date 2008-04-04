@@ -1,6 +1,6 @@
 package org.pentaho.pac.server;
 
-import org.pentaho.pac.client.CheckedException;
+import org.pentaho.pac.common.CheckedException;
 
 
 public class DAOException extends CheckedException {

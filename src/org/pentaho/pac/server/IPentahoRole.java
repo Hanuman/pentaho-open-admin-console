@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import org.pentaho.pac.client.users.NonExistingUserException;
+import org.pentaho.pac.common.users.NonExistingUserException;
 
 public interface IPentahoRole {
 

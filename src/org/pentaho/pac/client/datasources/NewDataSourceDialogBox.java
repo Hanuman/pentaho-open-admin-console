@@ -1,10 +1,11 @@
 package org.pentaho.pac.client.datasources;
 
 import org.pentaho.pac.client.MessageDialog;
-import org.pentaho.pac.client.PacServiceException;
 import org.pentaho.pac.client.PacServiceFactory;
-import org.pentaho.pac.client.PentahoSecurityException;
-import org.pentaho.pac.client.users.DuplicateUserException;
+import org.pentaho.pac.common.PacServiceException;
+import org.pentaho.pac.common.PentahoSecurityException;
+import org.pentaho.pac.common.datasources.SimpleDataSource;
+import org.pentaho.pac.common.users.DuplicateUserException;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;

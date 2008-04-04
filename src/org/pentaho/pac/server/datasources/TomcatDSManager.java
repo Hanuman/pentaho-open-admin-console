@@ -18,9 +18,9 @@ import javax.management.ObjectName;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 
-import org.pentaho.pac.client.datasources.Constants;
-import org.pentaho.pac.client.datasources.IDataSource;
-import org.pentaho.pac.client.datasources.SimpleDataSource;
+import org.pentaho.pac.common.datasources.Constants;
+import org.pentaho.pac.common.datasources.IDataSource;
+import org.pentaho.pac.common.datasources.SimpleDataSource;
 
 /**
  * A Tomcat specific DataSourceManager.

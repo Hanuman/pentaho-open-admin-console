@@ -1,4 +1,4 @@
-package org.pentaho.pac.client.datasources;
+package org.pentaho.pac.common.datasources;
 
 public class Constants {
   public final static String PATH = "ds.path"; //$NON-NLS-1$

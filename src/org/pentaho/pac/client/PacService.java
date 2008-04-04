@@ -1,11 +1,13 @@
 package org.pentaho.pac.client;
 
 
-import org.pentaho.pac.client.datasources.IDataSource;
-import org.pentaho.pac.client.roles.ProxyPentahoRole;
-import org.pentaho.pac.client.users.DuplicateUserException;
-import org.pentaho.pac.client.users.NonExistingUserException;
-import org.pentaho.pac.client.users.ProxyPentahoUser;
+import org.pentaho.pac.common.PacServiceException;
+import org.pentaho.pac.common.PentahoSecurityException;
+import org.pentaho.pac.common.datasources.IDataSource;
+import org.pentaho.pac.common.roles.ProxyPentahoRole;
+import org.pentaho.pac.common.users.DuplicateUserException;
+import org.pentaho.pac.common.users.NonExistingUserException;
+import org.pentaho.pac.common.users.ProxyPentahoUser;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 

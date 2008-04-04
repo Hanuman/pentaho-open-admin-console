@@ -2,7 +2,7 @@ package org.pentaho.pac.server.datasources;
 
 import java.util.Collection;
 
-import org.pentaho.pac.client.datasources.IDataSource;
+import org.pentaho.pac.common.datasources.IDataSource;
 
 /**
  * Interface that encapsulates the steps/operations required to communicate to an underlying server and perform datasource 

@@ -3,7 +3,9 @@ package org.pentaho.pac.client.users;
 import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacService;
 import org.pentaho.pac.client.PacServiceAsync;
-import org.pentaho.pac.client.PentahoSecurityException;
+import org.pentaho.pac.common.PentahoSecurityException;
+import org.pentaho.pac.common.users.NonExistingUserException;
+import org.pentaho.pac.common.users.ProxyPentahoUser;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;

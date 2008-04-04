@@ -7,5 +7,7 @@
 	<entry-point class='org.pentaho.pac.client.PentahoAdminConsole'/>
     <servlet path='/pacsvc' class='org.pentaho.pac.server.PacServiceImpl'/>  
     <stylesheet src='PentahoAdminConsole.css'/>
+    <source path="client"/>
+    <source path="common"/>
    
 </module>

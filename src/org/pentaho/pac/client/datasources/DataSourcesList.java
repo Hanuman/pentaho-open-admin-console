@@ -6,7 +6,9 @@ import java.util.Iterator;
 
 import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacServiceFactory;
-import org.pentaho.pac.client.users.ProxyPentahoUser;
+import org.pentaho.pac.common.datasources.IDataSource;
+import org.pentaho.pac.common.datasources.SimpleDataSource;
+import org.pentaho.pac.common.users.ProxyPentahoUser;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ListBox;

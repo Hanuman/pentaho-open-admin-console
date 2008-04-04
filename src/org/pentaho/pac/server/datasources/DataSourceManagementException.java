@@ -1,6 +1,6 @@
 package org.pentaho.pac.server.datasources;
 
-import org.pentaho.pac.client.CheckedException;
+import org.pentaho.pac.common.CheckedException;
 
 public class DataSourceManagementException extends CheckedException
 {

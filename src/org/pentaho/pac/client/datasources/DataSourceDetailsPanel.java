@@ -1,5 +1,7 @@
 package org.pentaho.pac.client.datasources;
 
+import org.pentaho.pac.common.datasources.SimpleDataSource;
+
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;

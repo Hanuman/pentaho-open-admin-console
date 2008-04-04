@@ -6,7 +6,8 @@ import java.util.Arrays;
 import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacService;
 import org.pentaho.pac.client.PacServiceFactory;
-import org.pentaho.pac.client.users.ProxyPentahoUser;
+import org.pentaho.pac.common.roles.ProxyPentahoRole;
+import org.pentaho.pac.common.users.ProxyPentahoUser;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;

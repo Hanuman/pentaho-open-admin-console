@@ -2,9 +2,9 @@ package org.pentaho.pac.server;
 
 import java.util.List;
 
-import org.pentaho.pac.client.PentahoSecurityException;
-import org.pentaho.pac.client.users.DuplicateUserException;
-import org.pentaho.pac.client.users.NonExistingUserException;
+import org.pentaho.pac.common.PentahoSecurityException;
+import org.pentaho.pac.common.users.DuplicateUserException;
+import org.pentaho.pac.common.users.NonExistingUserException;
 
 /*package private */ interface IUserRoleMgmtService {
 
