@@ -3,6 +3,7 @@ package org.pentaho.pac.client;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -11,7 +12,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class MessageDialog extends DialogBox implements ClickListener {
   
   int result = 0;
-  Label msgLabel = null;
+  HTML msgLabel = null;
   
   public static final int OK_BTN = 1;
   public static final int CANCEL_BTN = 2;
@@ -29,7 +30,7 @@ public class MessageDialog extends DialogBox implements ClickListener {
   public MessageDialog(String title, String msg, int[] buttons) {
     super();
     
-    msgLabel = new Label(msg);
+    msgLabel = new HTML(msg);
     VerticalPanel verticalPanel = new VerticalPanel();
     verticalPanel.add(msgLabel);
     HorizontalPanel horizontalPanel = new HorizontalPanel();

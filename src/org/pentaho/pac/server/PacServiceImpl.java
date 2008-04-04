@@ -31,6 +31,7 @@ import org.pentaho.pac.client.roles.ProxyPentahoRole;
 import org.pentaho.pac.client.users.DuplicateUserException;
 import org.pentaho.pac.client.users.NonExistingUserException;
 import org.pentaho.pac.client.users.ProxyPentahoUser;
+import org.pentaho.pac.messages.Messages;
 import org.pentaho.pac.server.datasources.DataSourceManagementException;
 import org.pentaho.pac.server.datasources.DataSourceManagerCreationException;
 import org.pentaho.pac.server.datasources.DataSourceManagerFacade;
