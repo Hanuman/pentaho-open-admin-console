@@ -1,0 +1,1 @@
+@java -Dgwt.args="-web -out www-test" -cp "%~dp0\src;%~dp0\test;%~dp0\bin;c:\Program Files\MyEclipse 6.0\eclipse\plugins\org.junit_3.8.2.v200706111738\junit.jar;C:/gwt-windows-1.4.61/gwt-user.jar;C:/gwt-windows-1.4.61/gwt-dev-windows.jar" junit.textui.TestRunner org.pentaho.pac.client.PentahoAdminConsoleTest %*
