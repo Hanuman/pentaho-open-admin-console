@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="{module}" default="deploy" basedir=".">
-	<description>Pentaho Administration Console build process..</description>
+	<description>Pentaho Administration Console Development Build process..</description>
 	<property file="override.properties" />
 	<property file="version.properties" />
 	<property file="build.properties" />
