@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="org.pentaho.pac.server.PentahoUser" table="USERS" schema="PUBLIC">
+        <id name="name" type="java.lang.String">
+            <column name="USERNAME" />
+            <generator class="assigned" />
+        </id>
+        <property name="password" type="java.lang.String">
+            <column name="PASSWORD" length="50" not-null="true" />
+        </property>
+        <property name="description" type="java.lang.String">
+            <column name="DESCRIPTION" length="128" not-null="true" />
+        </property>
+        <property name="enabled">
+            <column name="ENABLED" not-null="true" />
+        </property>
+        <set name="assignedRoles" table="GRANTED_AUTHORITIES" inverse="true">
+        	<key column="USERNAME"/>
+        	<many-to-many column="AUTHORITY" class="org.pentaho.pac.server.PentahoRole"/>
+        </set>
+    </class>
+</hibernate-mapping>
