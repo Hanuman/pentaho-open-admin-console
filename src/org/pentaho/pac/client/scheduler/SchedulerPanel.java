@@ -15,31 +15,10 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
 
   //Button testBtn = new Button("Test");
   private FlexTable jobsTable = null;
+  private boolean isInitialized = false;
   
   public SchedulerPanel()
   {
-    PacServiceFactory.getPacService().getJobNames(
-      new AsyncCallback() {
-        public void onSuccess( Object oJobList ) {
-          try {
-          List/*<Job>*/ jobList = (List/*<Job>*/)oJobList;
-          addJobsTable( jobList );
-          
-          }catch( Exception e )
-          {
-            Object x = e;
-            int ii =0;
-          }
-        }
-  
-        public void onFailure(Throwable caught) {
-//          messageDialog.setText("Error Deleting Data Source");
-//          messageDialog.setMessage(caught.getMessage());
-//          messageDialog.center();
-          int ii=0;
-        }
-      }
-    );
   }
   public void onClick( Widget sender ) {
     int x=0;
@@ -47,12 +26,30 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
 
 
   public void refresh() {
-    int ii=0;
+    if ( !isInitialized ) {
+      PacServiceFactory.getPacService().getJobNames(
+          new AsyncCallback() {
+            public void onSuccess( Object oJobList ) {
+              List/*<Job>*/ jobList = (List/*<Job>*/)oJobList;
+              addJobsTable( jobList );
+              isInitialized = true;
+            }
+      
+            public void onFailure(Throwable caught) {
+              // TODO sbarkdull
+  //            messageDialog.setText("Error Deleting Data Source");
+  //            messageDialog.setMessage(caught.getMessage());
+  //            messageDialog.center();
+              int ii=0;
+            }
+          }
+        );
+    } // end if (!isInitialized)
   }
   
 
   public boolean isInitialized() {
-    return false;
+    return isInitialized;
   }
   
   private void addJobsTable( List/*<Job>*/ jobList )
@@ -108,6 +105,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
               }
         
               public void onFailure(Throwable caught) {
+                // TODO sbarkdull
                 int ii=0;
               }
             }
@@ -133,6 +131,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
               }
         
               public void onFailure(Throwable caught) {
+                // TODO sbarkdull
                 int ii=0;
               }
             }
@@ -158,6 +157,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
               }
         
               public void onFailure(Throwable caught) {
+                // TODO sbarkdull
                 int ii=0;
               }
             }

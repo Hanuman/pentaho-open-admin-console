@@ -135,11 +135,6 @@ public void onClick(Widget sender) {
               dataSourcesPanel.refresh();
             }
             break;
-          case ADMIN_SCHEDULER_TAB_INDEX: 
-            if (!schedulerPanel.isInitialized()) {
-              schedulerPanel.refresh();
-            }
-            break;
         }   
       } else {
         adminToggleBtn.setDown(true);
@@ -168,6 +163,13 @@ public void onClick(Widget sender) {
           dataSourcesPanel.refresh();
         }
         break;
+      case ADMIN_SCHEDULER_TAB_INDEX: 
+        if (!schedulerPanel.isInitialized()) {
+          schedulerPanel.refresh();
+        }
+        break;
+      default:
+        throw new RuntimeException( "Invalid tabIndex: " + tabIndex );
     }   
   }
   
