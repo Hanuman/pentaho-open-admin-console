@@ -811,9 +811,8 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
    * query string: schedulerAction=isSchedulerPaused
    * @throws PacServiceException 
    */
-  public void isSchedulerPaused() throws PacServiceException {
-    schedulerProxy.isSchedulerPaused();
-    //return 
+  public boolean isSchedulerPaused() throws PacServiceException {
+    return schedulerProxy.isSchedulerPaused();
   }
 
   /**

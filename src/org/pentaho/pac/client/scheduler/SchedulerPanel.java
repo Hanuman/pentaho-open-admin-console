@@ -8,6 +8,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -15,7 +16,9 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
 
   //Button testBtn = new Button("Test");
   private FlexTable jobsTable = null;
+  private FlexTable allActionsTable = null;
   private boolean isInitialized = false;
+  private static final String USER_INSTRUCTION = "You can use the pages to suspend or resume the scheduler. You can check the status of the scheduler and get a list of the current jobs that are scheduled.";
   
   public SchedulerPanel()
   {
@@ -31,7 +34,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
           new AsyncCallback() {
             public void onSuccess( Object oJobList ) {
               List/*<Job>*/ jobList = (List/*<Job>*/)oJobList;
-              addJobsTable( jobList );
+              createUI( jobList );
               isInitialized = true;
             }
       
@@ -44,6 +47,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
             }
           }
         );
+      updateSchedulerPausedStatus();
     } // end if (!isInitialized)
   }
   
@@ -52,11 +56,16 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
     return isInitialized;
   }
   
-  private void addJobsTable( List/*<Job>*/ jobList )
+  private void createUI( List/*<Job>*/ jobList )
   {
+    Label l = new Label( USER_INSTRUCTION );
+    add( l );
+    
+    allActionsTable = createAllActionsTable();
+    add( allActionsTable );
+    
     jobsTable = createJobsTable( jobList );
     add( jobsTable );
-    addJobListToTable( jobList, jobsTable );
   }
   
   private void addJobListToTable( List/*<Job>*/ jobList, FlexTable jobsTable )
@@ -76,7 +85,33 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
     }
   }
   
-  private VerticalPanel createActionPanel( final Job job, int rowNum ) {
+  private FlexTable createAllActionsTable()
+  {
+    FlexTable t = new FlexTable();
+
+    int rowNum = 0;
+    Label l = new Label( "Actions: " );
+    t.setWidget( rowNum, 0, l );
+    t.setText( rowNum, 1, "" );
+    
+    rowNum++; // 1
+    Hyperlink statusHyper = createSchedulerStatusHyperlink();
+    t.setWidget( rowNum, 0, statusHyper );
+    t.setText( rowNum, 1, "" );
+
+    rowNum++; // 2
+    Hyperlink resumeHyper = createResumeAllHyperlink();
+    Hyperlink suspendHyper = createSuspendAllHyperlink();
+    VerticalPanel p = new VerticalPanel();
+    p.add( resumeHyper );
+    p.add( suspendHyper );
+    t.setWidget( rowNum, 0, p );
+    t.setText( rowNum, 1, "" );
+    
+    return t;
+  }
+  
+  private VerticalPanel createActionPanel( Job job, int rowNum ) {
     VerticalPanel p = new VerticalPanel();
 
     Hyperlink a = createSuspendHyperlink( job.getJobName(), job.getJobGroup() );
@@ -87,8 +122,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
     p.add( a );
     return p;
   }
-  
-  
+   
   private Hyperlink createSuspendHyperlink( final String jobName, final String jobGroup ) {
     Hyperlink a = new Hyperlink();
     a.setText(  "Suspend" );
@@ -100,6 +134,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
             jobGroup,
             new AsyncCallback() {
               public void onSuccess( Object o ) {
+                // TODO sbarkdull
                 Object x = o;
                 int ii=0;
               }
@@ -127,6 +162,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
             jobGroup,
             new AsyncCallback() {
               public void onSuccess( Object o ) {
+                // TODO sbarkdull
                 jobsTable.removeRow( rowNum );
               }
         
@@ -152,6 +188,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
             jobGroup,
             new AsyncCallback() {
               public void onSuccess( Object o ) {
+                // TODO sbarkdull
                 Object x = o;
                 int ii=0;
               }
@@ -167,13 +204,96 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
     
     return a;
   }
+
+  
+  private Hyperlink createSuspendAllHyperlink() {
+    Hyperlink a = new Hyperlink();
+    a.setText( "Suspend All Jobs" );
+    // TODO sbarkdull, yuk
+    a.addClickListener( new ClickListener() {
+      public void onClick( Widget sender ) {
+        PacServiceFactory.getPacService().pauseAll(
+            new AsyncCallback() {
+              public void onSuccess( Object o ) {
+                // TODO sbarkdull
+                allActionsTable.setText( 2, 1, "All Jobs Suspended" );
+              }
+        
+              public void onFailure(Throwable caught) {
+                // TODO sbarkdull
+                int ii=0;
+              }
+            }
+          );
+      }
+    } );
+    
+    return a;
+  }
+  private Hyperlink createResumeAllHyperlink() {
+    Hyperlink a = new Hyperlink();
+    a.setText( "Resume All Jobs" );
+    // TODO sbarkdull, yuk
+    a.addClickListener( new ClickListener() {
+      public void onClick( Widget sender ) {
+        PacServiceFactory.getPacService().resumeAll(
+            new AsyncCallback() {
+              public void onSuccess( Object o ) {
+                // TODO sbarkdull
+                int ii=0;
+                allActionsTable.setText( 2, 1, "All Jobs Resumed" );
+              }
+        
+              public void onFailure(Throwable caught) {
+                // TODO sbarkdull
+                int ii=0;
+              }
+            }
+          );
+      }
+    } );
+    
+    return a;
+  }
+  
+  private Hyperlink createSchedulerStatusHyperlink() {
+    Hyperlink a = new Hyperlink();
+    a.setText( "Scheduler Status" );
+    // TODO sbarkdull, yuk
+    a.addClickListener( new ClickListener() {
+      public void onClick( Widget sender ) {
+        updateSchedulerPausedStatus();
+      }
+    } );
+    
+    return a;
+  }
+  
+  private void updateSchedulerPausedStatus()
+  {
+    PacServiceFactory.getPacService().isSchedulerPaused(
+        new AsyncCallback() {
+          public void onSuccess( Object oIsRunning ) {
+            boolean isRunning = ((Boolean)oIsRunning).booleanValue();
+            allActionsTable.setText( 1, 1, isRunning ? "Running" : "Suspended" );
+          }
+    
+          public void onFailure(Throwable caught) {
+            // TODO sbarkdull
+            int ii=0;
+          }
+        }
+      );
+  }
   
   private FlexTable createJobsTable( List/*<Job>*/ jobList ) {
     
-    FlexTable t = new FlexTable();
-    addJobsTableHeader( t );
+    FlexTable jobsTable = new FlexTable();
+    addJobsTableHeader( jobsTable );
     
-    return t;
+    addJobListToTable( jobList, jobsTable );
+    
+    return jobsTable;
   }
   
   private static final String[] COLUMN_HEADER_TITLE = {

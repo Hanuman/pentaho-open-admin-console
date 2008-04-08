@@ -50,7 +50,7 @@ public interface PacService extends RemoteService {
    * @gwt.typeArgs <org.pentaho.pac.client.scheduler.Job>
    */
   public List/*<Job>*/ getJobNames() throws PacServiceException;
-  public void isSchedulerPaused() throws PacServiceException;
+  public boolean isSchedulerPaused() throws PacServiceException;
   public void pauseAll() throws PacServiceException;
   public void pauseJob( String jobName, String jobGroup ) throws PacServiceException;
   public void resumeAll() throws PacServiceException;

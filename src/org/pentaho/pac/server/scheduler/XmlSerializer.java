@@ -35,7 +35,6 @@ public class XmlSerializer {
     return h.jobList;
   }
   
-  
   private JobsParserHandler parseJobNamesXml( String strXml ) throws SAXException, IOException, ParserConfigurationException
   {
 
@@ -113,6 +112,8 @@ public class XmlSerializer {
       }
     }
   }
+  
+  // TODO sbarkdull, threading?
   /**
    * Get a SAX Parser Factory. This method implements a thread-relative
    * singleton.
@@ -121,7 +122,7 @@ public class XmlSerializer {
    * See: http://java.sun.com/j2se/1.5.0/docs/api/javax/xml/parsers/SAXParserFactory.html
    * @return
    */
-  public static SAXParserFactory getSAXParserFactory() {
+  private static SAXParserFactory getSAXParserFactory() {
     SAXParserFactory threadLocalSAXParserFactory = SAX_FACTORY.get();
     if ( null == threadLocalSAXParserFactory )
     {
@@ -129,5 +130,9 @@ public class XmlSerializer {
       SAX_FACTORY.set( threadLocalSAXParserFactory );
     }
     return threadLocalSAXParserFactory;
+  }
+  
+  public boolean getSchedulerStatusFromXml( String strXml ) {
+    return strXml.contains( "Running" );
   }
 }

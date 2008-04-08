@@ -123,12 +123,16 @@ public class SchedulerAdminUIComponentProxy {
    * query string: schedulerAction=isSchedulerPaused
    * @throws PacServiceException 
    */
-  public void isSchedulerPaused() throws PacServiceException {
+  public boolean isSchedulerPaused() throws PacServiceException {
     NameValuePair[] params = new NameValuePair[2];
     params[0] = new NameValuePair("schedulerAction", "isSchedulerPaused" ); //$NON-NLS-1$
     params[1] = new NameValuePair( TRUSTED_USER_KEY, userName ); //$NON-NLS-1$
 
     String responseStrXml= biServerProxy.proxyRemoteMethod( SCHEDULER_SERVICE_NAME, params );
+    XmlSerializer s = new XmlSerializer();
+    boolean isRunning = s.getSchedulerStatusFromXml( responseStrXml );
+    
+    return isRunning;
   }
 
   /**
