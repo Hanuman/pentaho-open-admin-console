@@ -2,6 +2,7 @@ package org.pentaho.pac.client;
 
 import org.pentaho.pac.client.datasources.DataSourcesPanel;
 import org.pentaho.pac.client.home.HomePanel;
+import org.pentaho.pac.client.scheduler.SchedulerPanel;
 import org.pentaho.pac.client.services.AdminServicesPanel;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -23,19 +24,24 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
   ToggleButton adminToggleBtn = new ToggleButton("Administration");
   ToggleButton homeToggleBtn = new ToggleButton("Home");
   ToggleButton testToggleBtn = new ToggleButton("Test");
+  
   VerticalPanel leftVerticalPanel = new VerticalPanel();
   TabPanel rightTabPanel = new TabPanel();
   DockPanel dockPanel = new DockPanel();
   DeckPanel deckPanel = new DeckPanel();
+  
   AdminServicesPanel servicesPanel = new AdminServicesPanel();
   UsersAndRolesPanel usersAndRolesPanel = new UsersAndRolesPanel();
   //HomePanel homePanel = new HomePanel();
   DataSourcesPanel dataSourcesPanel = new DataSourcesPanel();
+  SchedulerPanel schedulerPanel = new SchedulerPanel();
   TabPanel adminTabPanel = new TabPanel();
   
+  // TODO can this be a "real" Java 5 enum?
   public static final int ADMIN_USERS_ROLES_TAB_INDEX = 0;
-  public static final int ADMIN_DATA_SORUCES_TAB_INDEX = 1;
+  public static final int ADMIN_DATA_SOURCES_TAB_INDEX = 1;
   public static final int ADMIN_SERVICES_TAB_INDEX = 2;
+  public static final int ADMIN_SCHEDULER_TAB_INDEX = 3;
   
 
   /**
@@ -59,6 +65,7 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
     adminTabPanel.add(usersAndRolesPanel, "Users & Roles");
     adminTabPanel.add(dataSourcesPanel, "Data Sources");
     adminTabPanel.add(servicesPanel, "Services");
+    adminTabPanel.add(schedulerPanel, "Scheduler");
     
     usersAndRolesPanel.setBorderWidth(2);    
     HomePanel homePanel = new HomePanel("http://www.pentaho.com/console_home");
@@ -86,6 +93,10 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
     dataSourcesPanel.setHeight("100%");
     servicesPanel.setWidth("100%");
     servicesPanel.setHeight("100%");
+    
+    schedulerPanel.setWidth("100%");
+    schedulerPanel.setHeight("100%");
+    
     deckPanel.setWidth("100%");
     deckPanel.setHeight("100%");
     adminTabPanel.selectTab(ADMIN_USERS_ROLES_TAB_INDEX);
@@ -119,9 +130,14 @@ public void onClick(Widget sender) {
               usersAndRolesPanel.refresh();
             }
             break;
-          case ADMIN_DATA_SORUCES_TAB_INDEX: 
+          case ADMIN_DATA_SOURCES_TAB_INDEX: 
             if (!dataSourcesPanel.isInitialized()) {
               dataSourcesPanel.refresh();
+            }
+            break;
+          case ADMIN_SCHEDULER_TAB_INDEX: 
+            if (!schedulerPanel.isInitialized()) {
+              schedulerPanel.refresh();
             }
             break;
         }   
@@ -147,7 +163,7 @@ public void onClick(Widget sender) {
           usersAndRolesPanel.refresh();
         }
         break;
-      case ADMIN_DATA_SORUCES_TAB_INDEX: 
+      case ADMIN_DATA_SOURCES_TAB_INDEX: 
         if (!dataSourcesPanel.isInitialized()) {
           dataSourcesPanel.refresh();
         }
