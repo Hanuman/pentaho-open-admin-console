@@ -3,6 +3,7 @@ package org.pentaho.pac.client.datasources;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacServiceFactory;
@@ -15,7 +16,7 @@ import com.google.gwt.user.client.ui.ListBox;
 
 public class DataSourcesList extends ListBox {
   MessageDialog messageDialog = new MessageDialog("Data Sources", "", new int[]{MessageDialog.OK_BTN});
-  ArrayList dataSources = new ArrayList();
+  List dataSources = new ArrayList();
   boolean isInitialized = false;
   
   public DataSourcesList() {
@@ -43,7 +44,7 @@ public class DataSourcesList extends ListBox {
   }
   
   public SimpleDataSource[] getSelectedDataSources() {
-    ArrayList selectedDataSources = new ArrayList();
+    List selectedDataSources = new ArrayList();
     int itemCount = getItemCount();
     for (int i = 0; i < itemCount; i++) {
       if (isItemSelected(i)) {
@@ -58,7 +59,7 @@ public class DataSourcesList extends ListBox {
   }
   
   public void setSelectedDataSources(SimpleDataSource[] dataSources) {
-    ArrayList dataSourceNames = new ArrayList();
+    List dataSourceNames = new ArrayList();
     for (int i = 0; i < dataSources.length; i++) {
       dataSourceNames.add(dataSources[i].getJndiName());
     }
