@@ -2,20 +2,17 @@ package org.pentaho.pac.client.roles;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.pentaho.pac.client.MessageDialog;
-import org.pentaho.pac.client.PacService;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
-import org.pentaho.pac.common.users.ProxyPentahoUser;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.ui.ListBox;
 
 public class RolesList extends ListBox {
-  ArrayList roles = new ArrayList();
+  List roles = new ArrayList();
   MessageDialog messageDialog = new MessageDialog("Roles", "", new int[]{MessageDialog.OK_BTN});
   boolean isInitialized = false;
   
@@ -44,7 +41,7 @@ public class RolesList extends ListBox {
   }
   
   public ProxyPentahoRole[] getSelectedRoles() {
-    ArrayList selectedRoles = new ArrayList();
+    List selectedRoles = new ArrayList();
     int itemCount = getItemCount();
     for (int i = 0; i < itemCount; i++) {
       if (isItemSelected(i)) {
@@ -59,7 +56,7 @@ public class RolesList extends ListBox {
   }
   
   public void setSelectedRoles(ProxyPentahoRole[] roles) {
-    ArrayList roleNames = new ArrayList();
+    List roleNames = new ArrayList();
     for (int i = 0; i < roles.length; i++) {
       roleNames.add(roles[i].getName());
     }
