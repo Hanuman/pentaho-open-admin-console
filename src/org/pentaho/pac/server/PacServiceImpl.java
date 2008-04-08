@@ -19,6 +19,7 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,6 +38,7 @@ import org.pentaho.pac.server.datasources.DataSourceManagerCreationException;
 import org.pentaho.pac.server.datasources.DataSourceManagerFacade;
 import org.pentaho.pac.server.datasources.IDataSourceManager;
 import org.pentaho.pac.server.datasources.NamedParameter;
+import org.pentaho.pac.server.scheduler.SchedulerAdminUIComponentProxy;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -45,6 +47,8 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   private IUserRoleMgmtService userRoleMgmtService = new UserRoleMgmtService();
   private static final String PROPERTIES_FILE_NAME = "pac.properties"; //$NON-NLS-1$
   private static final Log logger = LogFactory.getLog(PacServiceImpl.class);
+  // TODO sbarkdull, damn it would be nice to inject this with Spring (and some of these other props)
+  private static SchedulerAdminUIComponentProxy schedulerProxy = null;
   
   private String jmxHostName = null;
   private String jmxPortNumber = null;
@@ -55,7 +59,8 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   
   public PacServiceImpl()
   {
-    initConfiguration();
+    initFromConfigFile();
+    schedulerProxy = new SchedulerAdminUIComponentProxy( getBIServerBaseUrl(), getUserName() );
   }
   
   public boolean createUser( ProxyPentahoUser proxyUser ) throws DuplicateUserException, PentahoSecurityException, PacServiceException
@@ -481,7 +486,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return executePublishRequest("org.pentaho.plugin.mql.MetadataPublisher", getUserName(), getPassword()); //$NON-NLS-1$
   }
   
-  private void initConfiguration()
+  private void initFromConfigFile()
   {
     InputStream s = this.getClass().getResourceAsStream( "/" + PROPERTIES_FILE_NAME ); //$NON-NLS-1$
     Properties p = new Properties();
@@ -526,6 +531,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return biServerBaseURL;
   }
   
+  // TODO sbarkdull, refactor to call through executeRemoteMethod()?
   private String executeXAction(String solution, String path, String xAction, String userid, String password) throws PacServiceException{
     
     String result = "Action Failed";
@@ -742,47 +748,105 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   }
   
   public String getHomePage(String url) throws PacServiceException {
-	    String html = null;
-	    HttpClient client = new HttpClient();
-	    HttpMethod method = new GetMethod(url);
-	    method.getParams().setParameter("http.socket.timeout", new Integer(15000));
-	    
-	    try{
-	      int statusCode = client.executeMethod(method);
+    String html = null;
+    HttpClient client = new HttpClient();
+    HttpMethod method = new GetMethod(url);
+    method.getParams().setParameter("http.socket.timeout", new Integer(15000));
+    
+    try{
+      int statusCode = client.executeMethod(method);
 
-	      if (statusCode != HttpStatus.SC_OK) {
-	    	  throw new PacServiceException(Messages.getString("PacService.ERROR_ACCESSING_URL", url )); //$NON-NLS-1$	        
-	      }
-	      
-	      byte[] responseBody = method.getResponseBody();
-	      html = new String(responseBody);
-	      html = html.substring(html.indexOf("<body>")+6);
-	      html = html.substring(0, html.indexOf("</body>"));
-	    } catch(Exception e){
-	        return showStatic();
-	    } finally {
-	      method.releaseConnection();
-	    }
-	    
-	    return html.toString();
-	  }
-	  
-private String showStatic(){
-  InputStream flatFile = getClass().getResourceAsStream("defaultHome.ftl");
-  StringBuffer sb = new StringBuffer(8096);
-  int i = 0;
-  try {
-  	while (i != -1) {
-  		i = flatFile.read();
-  		sb.append((char) i);
+      if (statusCode != HttpStatus.SC_OK) {
+    	  throw new PacServiceException(Messages.getString("PacService.ERROR_ACCESSING_URL", url )); //$NON-NLS-1$	        
       }
-  } catch (IOException io) {
-            	                  	  
+      
+      byte[] responseBody = method.getResponseBody();
+      html = new String(responseBody);
+      html = html.substring(html.indexOf("<body>")+6);
+      html = html.substring(0, html.indexOf("</body>"));
+    } catch(Exception e){
+        return showStatic();
+    } finally {
+      method.releaseConnection();
+    }
+    
+    return html.toString();
   }
-  return sb.toString();
-}
-
+	  
+  private String showStatic(){
+    String templateFileName = "defaultHome.ftl"; //$NON-NLS-1$
+    InputStream flatFile = getClass().getResourceAsStream( templateFileName );
+    try {
+      return IOUtils.toString(flatFile);
+    } catch (IOException e) {
+      logger.error("IO Error loading " + templateFileName,e);
+      return ""; //$NON-NLS-1$
+    }
+  }
   
 
+  // begin Scheduler Admin interfaces -----------------------------------------------------
+  public void deleteJob( String jobName, String jobGroup ) throws PacServiceException {
+    schedulerProxy.deleteJob(jobName, jobGroup);
+  }
+
+  /**
+   * query string: schedulerAction=executeJob&jobName=PentahoSystemVersionCheck&jobGroup=DEFAULT
+   * @throws PacServiceException 
+   */
+  public void executeJobNow( String jobName, String jobGroup ) throws PacServiceException {
+    schedulerProxy.executeJobNow( jobName, jobGroup );
+  }
+
+  /**
+   * query string: schedulerAction=getJobNames
+   * @throws PacServiceException 
+   */
+  public List/*<Job>*/ getJobNames() throws PacServiceException {
+    List l = schedulerProxy.getJobNames();
+    return l;
+  }
+
+  /**
+   * query string: schedulerAction=isSchedulerPaused
+   * @throws PacServiceException 
+   */
+  public void isSchedulerPaused() throws PacServiceException {
+    schedulerProxy.isSchedulerPaused();
+    //return 
+  }
+
+  /**
+   * query string: schedulerAction=pauseAll
+   * @throws PacServiceException 
+   */
+  public void pauseAll() throws PacServiceException {
+    schedulerProxy.pauseAll();
+  }
+
+  /**
+   * query string: schedulerAction=pauseJob&jobName=PentahoSystemVersionCheck&jobGroup=DEFAULT
+   * @throws PacServiceException 
+   */
+  public void pauseJob( String jobName, String jobGroup ) throws PacServiceException {
+    schedulerProxy.pauseJob(jobName, jobGroup);
+  }
+
+  /**
+   * query string: schedulerAction=resumeAll
+   * @throws PacServiceException 
+   */
+  public void resumeAll() throws PacServiceException {
+    schedulerProxy.resumeAll();
+  }
+
+  /**
+   * query string: schedulerAction=resumeJob&jobName=PentahoSystemVersionCheck&jobGroup=DEFAULT
+   * @throws PacServiceException 
+   */
+  public void resumeJob( String jobName, String jobGroup ) throws PacServiceException {
+    schedulerProxy.pauseJob(jobName, jobGroup);
+  }
+  // end Scheduler Admin interfaces -----------------------------------------------------
   
 }
