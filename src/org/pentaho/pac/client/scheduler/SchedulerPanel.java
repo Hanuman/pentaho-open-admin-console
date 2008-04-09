@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class SchedulerPanel extends VerticalPanel implements ClickListener {
 
   private ScrollPanel jobsTableScrollPanel = null;
+  private FlexTable jobsTable = null;
   private FlexTable allActionsTable = null;
   private Label userInstructionLabel = null;
   private boolean isInitialized = false;
@@ -87,7 +88,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
     allActionsTable = createAllActionsTable();
     add( allActionsTable );
 
-    FlexTable jobsTable = createJobsTable( jobList );
+    jobsTable = createJobsTable( jobList );
     jobsTableScrollPanel = new ScrollPanel( jobsTable );
     jobsTableScrollPanel.setHeight( "450px" );
     add( jobsTableScrollPanel );
@@ -105,7 +106,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
       jobsTable.setHTML( rowNum, 3, job.prevFireTime + "<br/>" + job.getNextFireTime() );
       jobsTable.setHTML( rowNum, 4, job.triggerState );
       
-      VerticalPanel actionPanel = createActionPanel( job, job.triggerState );
+      VerticalPanel actionPanel = createActionPanel( job, rowNum, job.triggerState );
       jobsTable.setWidget( rowNum, 5, actionPanel );
     }
   }
@@ -154,7 +155,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
     return t;
   }
   
-  private VerticalPanel createActionPanel( Job job, String triggerState ) {
+  private VerticalPanel createActionPanel( Job job, int rowNum, String triggerState ) {
     VerticalPanel p = new VerticalPanel();
     p.setStylePrimaryName( "actionCellPanel" );
     p.setSpacing(0);
@@ -163,7 +164,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
       ? createResumeHyperlink( job.getJobName(), job.getJobGroup() )
       : createSuspendHyperlink( job.getJobName(), job.getJobGroup() );
     p.add( a );
-    a = createDeleteHyperlink( job.getJobName(), job.getJobGroup() );
+    a = createDeleteHyperlink( job.getJobName(), job.getJobGroup(), rowNum );
     p.add( a );
     a = createRunNowHyperlink( job.getJobName(), job.getJobGroup() );
     p.add( a );
@@ -226,10 +227,11 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
     
     return a;
   }
-  private Hyperlink createDeleteHyperlink( final String jobName, final String jobGroup ) {
+  private Hyperlink createDeleteHyperlink( final String jobName, final String jobGroup, int rowNum ) {
     Hyperlink a = new Hyperlink();
     a.setText( "Delete" );
     // TODO sbarkdull, yuk
+    final int localRowNum = rowNum;
     a.addClickListener( new ClickListener() {
       public void onClick( Widget sender ) {
         ((Hyperlink)sender).setText( "Working..." );
@@ -239,6 +241,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
             new AsyncCallback() {
               public void onSuccess( Object o ) {
                 forceRefresh();
+                jobsTable.removeRow( localRowNum );
               }
         
               public void onFailure(Throwable caught) {
