@@ -1,39 +1,40 @@
 package org.pentaho.pac.client.roles;
 
 import org.pentaho.pac.client.MessageDialog;
-import org.pentaho.pac.client.PacService;
-import org.pentaho.pac.client.PacServiceAsync;
 import org.pentaho.pac.client.PacServiceFactory;
+import org.pentaho.pac.client.users.AssignedUsersList;
+import org.pentaho.pac.common.PentahoSecurityException;
+import org.pentaho.pac.common.roles.NonExistingRoleException;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
+import org.pentaho.pac.common.users.NonExistingUserException;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-public class RolesPanel extends DockPanel implements ClickListener, ChangeListener, PopupListener {
+public class RolesPanel extends DockPanel implements ClickListener, ChangeListener, PopupListener, KeyboardListener {
 
-  RolesList rolesList = new RolesList();
-  ListBox assignedUsersList = new ListBox(true);
-  ProxyPentahoRole[] roles = null;
+  MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN});
+  AllRolesList rolesList = new AllRolesList();
+  AssignedUsersList assignedUsersList = new AssignedUsersList();
   RoleDetailsPanel roleDetailsPanel = new RoleDetailsPanel();
   Button updateRoleBtn = new Button("Update");
   Button addRoleBtn = new Button("+");
   Button deleteRoleBtn = new Button("-");
+  TextBox filterTextBox = new TextBox();
   NewRoleDialogBox newRoleDialogBox = new NewRoleDialogBox();
   MessageDialog confirmRoleDeleteDialog = new MessageDialog("Delete Roles", "Are your sure you want to delete the selected roles.", new int[] {MessageDialog.OK_BTN, MessageDialog.CANCEL_BTN});
   
 	public RolesPanel() {
-	  add(new Label("Roles go here."), DockPanel.NORTH);
 	  DockPanel roleListPanel = buildRolesListPanel();
 	  
 	  DockPanel roleDetailsDockPanel = buildRoleDetailsPanel();
@@ -55,6 +56,9 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     updateRoleBtn.setEnabled(false);
     
     newRoleDialogBox.addPopupListener(this);
+    confirmRoleDeleteDialog.addPopupListener(this);
+    
+    roleDetailsPanel.getRoleNameTextBox().setEnabled(false);
  	}
 
 	public DockPanel buildRoleDetailsPanel() {
@@ -90,6 +94,9 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     DockPanel roleListPanel = new DockPanel();
     roleListPanel.add(headerDockPanel, DockPanel.NORTH);
     roleListPanel.add(rolesList, DockPanel.CENTER);
+    roleListPanel.add(filterTextBox, DockPanel.SOUTH  );
+    roleListPanel.add(new Label("User List Filter:"), DockPanel.SOUTH );
+
     roleListPanel.setCellHeight(rolesList, "100%");
     roleListPanel.setCellWidth(rolesList, "100%");
     roleListPanel.setHeight("100%");
@@ -100,7 +107,10 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     deleteRoleBtn.setWidth("20px");
     addRoleBtn.setHeight("20px");
     deleteRoleBtn.setHeight("20px");
+    filterTextBox.setWidth( "100%" );
     deleteRoleBtn.setEnabled(false);
+    
+    filterTextBox.addKeyboardListener( this );
     rolesList.addChangeListener(this);
     addRoleBtn.addClickListener(this);
     deleteRoleBtn.addClickListener(this);
@@ -121,9 +131,11 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 	
 	public void onClick(Widget sender) {
 	  if (sender == updateRoleBtn) {
-	    updateRoleDetails();
+	    updateRoleDetails(sender);
 	  } else if (sender == deleteRoleBtn) {
-	    deleteSelectedRoles();
+      if (rolesList.getSelectedRoles().length > 0) {
+        confirmRoleDeleteDialog.center();
+      }
 	  } else if (sender == addRoleBtn) {
 	    addNewRole();
 	  }
@@ -138,7 +150,6 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 	private void deleteSelectedRoles() {
 	  final ProxyPentahoRole[] selectedRoles = rolesList.getSelectedRoles();
 	  if (selectedRoles.length > 0) {
-	    final int index = rolesList.getSelectedIndex();
 	    AsyncCallback callback = new AsyncCallback() {
 	      public void onSuccess(Object result) {
 	        rolesList.removeRoles(selectedRoles);
@@ -146,10 +157,15 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 	      }
 
 	      public void onFailure(Throwable caught) {
-	        MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN});
-	        messageDialog.setText("Error Deleting Roles");
-	        messageDialog.setMessage(caught.getMessage());
-	        messageDialog.center();
+          messageDialog.setText("Delete Roles");
+          if (caught instanceof PentahoSecurityException) {
+            messageDialog.setMessage("Insufficient privileges.");
+          } else if (caught instanceof NonExistingRoleException) {
+            messageDialog.setMessage("Role does not exist: " + caught.getMessage());
+          } else {
+            messageDialog.setMessage(caught.getMessage());
+          }
+          messageDialog.center();
 	      }
 	    };
 	    PacServiceFactory.getPacService().deleteRoles(selectedRoles, callback);
@@ -160,34 +176,44 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     ProxyPentahoRole[] selectedRoles = rolesList.getSelectedRoles();
     if (selectedRoles.length == 1) {
       roleDetailsPanel.setRole(selectedRoles[0]);
-   } else {
+      assignedUsersList.setRole(selectedRoles[0]);
+    } else {
       roleDetailsPanel.setRole(null);
+      assignedUsersList.setRole(null);
     }
     roleDetailsPanel.setEnabled(selectedRoles.length == 1);
     updateRoleBtn.setEnabled(selectedRoles.length == 1);
     deleteRoleBtn.setEnabled(selectedRoles.length > 0);
+    
+    roleDetailsPanel.getRoleNameTextBox().setEnabled(false);
 	}
 	
-	private void updateRoleDetails() {
+	private void updateRoleDetails(final Widget sender) {
     final ProxyPentahoRole role = roleDetailsPanel.getRole();
     final int index = rolesList.getSelectedIndex();
     AsyncCallback callback = new AsyncCallback() {
       public void onSuccess(Object result) {
-        rolesList.setRole(index, role);
+        rolesList.addRole(role);
       }
 
       public void onFailure(Throwable caught) {
-        MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN});
-        messageDialog.setText("Error Updating Role");
-        messageDialog.setMessage(caught.getMessage());
+        messageDialog.setText("Update Role");
+        if (caught instanceof PentahoSecurityException) {
+          messageDialog.setMessage("Insufficient privileges.");
+        } else if (caught instanceof NonExistingRoleException) {
+          messageDialog.setMessage("Role does not exist: " + caught.getMessage());
+        } else if (caught instanceof NonExistingUserException) {
+          messageDialog.setMessage("Can not assign not existing user to role: " + caught.getMessage());
+        } else {
+          messageDialog.setMessage(caught.getMessage());
+        }
         messageDialog.center();
+        ((Button)sender).setEnabled( true );
       }
     };
     PacServiceFactory.getPacService().updateRole(role, callback);
 	}
 	
-	public boolean validate() {return true;}
-
 	public void onChange(Widget sender) {
 	  roleSelectionChanged();
 	}
@@ -198,12 +224,26 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 	}
 	
   public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
-    if (newRoleDialogBox.isUserCreated()) {
+    if ((sender == newRoleDialogBox) && newRoleDialogBox.isRoleCreated()) {
       ProxyPentahoRole newRole = newRoleDialogBox.getRole();
-      if (rolesList.addRole(newRole)) {
-        rolesList.setSelectedRole(newRole);
-        roleSelectionChanged();
-      }
+      rolesList.addRole(newRole);
+      rolesList.setSelectedRole(newRole);
+      roleSelectionChanged();
+    } else if ((sender == confirmRoleDeleteDialog) && (confirmRoleDeleteDialog.getButtonPressed() == MessageDialog.OK_BTN)) {
+      deleteSelectedRoles();
+    }
+  }
+  
+  public void onKeyDown(Widget sender, char keyCode, int modifiers) {
+  }
+
+  public void onKeyPress(Widget sender, char keyCode, int modifiers) {
+  }
+
+  public void onKeyUp(Widget sender, char keyCode, int modifiers) {
+    if (filterTextBox == sender) {
+      rolesList.setRoleNameFilter(filterTextBox.getText());
+      roleSelectionChanged();
     }
   }
   

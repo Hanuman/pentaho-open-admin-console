@@ -3,6 +3,8 @@ package org.pentaho.pac.server;
 import java.util.List;
 
 import org.pentaho.pac.common.PentahoSecurityException;
+import org.pentaho.pac.common.roles.DuplicateRoleException;
+import org.pentaho.pac.common.roles.NonExistingRoleException;
 import org.pentaho.pac.common.users.DuplicateUserException;
 import org.pentaho.pac.common.users.NonExistingUserException;
 
@@ -13,7 +15,7 @@ import org.pentaho.pac.common.users.NonExistingUserException;
     userRoleDAO = UserRoleDAOFactory.getDAO();
   }
   
-  public void createRole(IPentahoRole newRole) throws DAOException, PentahoSecurityException {
+  public void createRole(IPentahoRole newRole) throws DuplicateRoleException, DAOException, PentahoSecurityException {
     if (hasCreateRolePerm(newRole)) {
       userRoleDAO.createRole(newRole);
     } else {

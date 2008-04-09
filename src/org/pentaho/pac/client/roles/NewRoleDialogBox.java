@@ -2,7 +2,9 @@ package org.pentaho.pac.client.roles;
 
 import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacServiceFactory;
+import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
+import org.pentaho.pac.common.users.DuplicateUserException;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -19,6 +21,7 @@ public class NewRoleDialogBox extends DialogBox implements ClickListener {
   Button cancelButton = new Button("Cancel");
   RoleDetailsPanel roleDetailsPanel = new RoleDetailsPanel();
   boolean roleCreated = false;
+  MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN});
   
   public NewRoleDialogBox() {
     super();
@@ -31,6 +34,10 @@ public class NewRoleDialogBox extends DialogBox implements ClickListener {
     verticalPanel.add(footerPanel);
     
     setText("Add Role");
+    
+    verticalPanel.setWidth("250px");
+    roleDetailsPanel.setWidth("100%");
+    
     setWidget(verticalPanel);
     okButton.addClickListener(this);
     cancelButton.addClickListener(this);
@@ -60,7 +67,7 @@ public class NewRoleDialogBox extends DialogBox implements ClickListener {
     return cancelButton;
   }
 
-  public boolean isUserCreated() {
+  public boolean isRoleCreated() {
     return roleCreated;
   }
 
@@ -78,26 +85,39 @@ public class NewRoleDialogBox extends DialogBox implements ClickListener {
     super.show();
   }
   
+  public void setText(String text) {
+    messageDialog.setText(text);
+    super.setText(text);
+  }
+  
   private boolean createRole() {
-    boolean result = false;
-    ProxyPentahoRole role = getRole();
-    if (role != null) {
-      AsyncCallback callback = new AsyncCallback() {
-        public void onSuccess(Object result) {
-          roleCreated = true;
-          hide();
-        }
+    if (getRoleName().trim().length() == 0) {
+      messageDialog.setMessage("Invalid role name.");
+      messageDialog.center();
+    } else {
+      ProxyPentahoRole role = getRole();
+      if (role != null) {
+        AsyncCallback callback = new AsyncCallback() {
+          public void onSuccess(Object result) {
+            roleCreated = true;
+            hide();
+          }
 
-        public void onFailure(Throwable caught) {
-          MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN});
-          messageDialog.setText("Error Creating Role");
-          messageDialog.setMessage(caught.getMessage());
-          messageDialog.center();
-        }
-      };
-      PacServiceFactory.getPacService().createRole(role, callback);
+          public void onFailure(Throwable caught) {
+            if (caught instanceof PentahoSecurityException) {
+              messageDialog.setMessage("Insufficient privileges.");
+            } else if (caught instanceof DuplicateUserException) {
+              messageDialog.setMessage("Role already exists.");
+            } else {
+              messageDialog.setMessage(caught.getMessage());
+            }
+            messageDialog.center();
+          }
+        };
+        PacServiceFactory.getPacService().createRole(role, callback);
+      }
     }
-    return result;
+    return roleCreated;
   }
   
   public void onClick(Widget sender) {

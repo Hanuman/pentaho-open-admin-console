@@ -11,11 +11,13 @@ public interface PacServiceAsync {
   public void deleteUsers(ProxyPentahoUser[] users, AsyncCallback callback);
   public void updateUser(ProxyPentahoUser user, AsyncCallback callback);
   public void getUsers(AsyncCallback callback);
+  public void getUsers(ProxyPentahoRole role, AsyncCallback callback);
   
   public void createRole(ProxyPentahoRole role, AsyncCallback callback);
   public void deleteRoles(ProxyPentahoRole[] roles, AsyncCallback callback);
   public void updateRole(ProxyPentahoRole role, AsyncCallback callback);
   public void getRoles(AsyncCallback callback);
+  public void getRoles(ProxyPentahoUser user, AsyncCallback callback);
   
   public void createDataSource(IDataSource dataSource, AsyncCallback callback);
   public void deleteDataSources(IDataSource[] dataSources, AsyncCallback callback);

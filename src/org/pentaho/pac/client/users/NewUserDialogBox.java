@@ -3,6 +3,7 @@ package org.pentaho.pac.client.users;
 import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacService;
 import org.pentaho.pac.client.PacServiceAsync;
+import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.users.DuplicateUserException;
 import org.pentaho.pac.common.users.ProxyPentahoUser;
@@ -25,7 +26,6 @@ public class NewUserDialogBox extends DialogBox implements ClickListener {
   Button cancelButton = new Button("Cancel");
   UserDetailsPanel userDetailsPanel = new UserDetailsPanel();
   boolean userCreated = false;
-  PacServiceAsync pacService;
   MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN});
   
   public NewUserDialogBox() {
@@ -134,21 +134,11 @@ public class NewUserDialogBox extends DialogBox implements ClickListener {
             messageDialog.center();
           }
         };
-        getPacService().createUser(user, callback);
+        PacServiceFactory.getPacService().createUser(user, callback);
       }
     }
     
     return userCreated;
-  }
-  
-  private PacServiceAsync getPacService() {
-    if (pacService == null) {
-      pacService = (PacServiceAsync) GWT.create(PacService.class);
-      ServiceDefTarget endpoint = (ServiceDefTarget) pacService;
-      String moduleRelativeURL = GWT.getModuleBaseURL() + "pacsvc";
-      endpoint.setServiceEntryPoint(moduleRelativeURL);
-    }
-    return pacService;
   }
   
   public void onClick(Widget sender) {

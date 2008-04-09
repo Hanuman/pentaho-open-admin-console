@@ -54,8 +54,7 @@ public class RoleDetailsPanel extends VerticalPanel {
   }
   
   public ProxyPentahoRole getRole() {
-    ProxyPentahoRole role = null;
-    role = new ProxyPentahoRole();
+    ProxyPentahoRole role = new ProxyPentahoRole();
     role.setName(getRoleName());
     role.setDescription(getDescription());
     return role;

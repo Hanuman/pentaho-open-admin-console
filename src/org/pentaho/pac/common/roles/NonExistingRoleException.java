@@ -1,4 +1,4 @@
-package org.pentaho.pac.server;
+package org.pentaho.pac.common.roles;
 
 import org.pentaho.pac.common.CheckedException;
 

@@ -9,18 +9,18 @@ import java.util.Map;
 
 import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacServiceFactory;
+import org.pentaho.pac.common.roles.ProxyPentahoRole;
 import org.pentaho.pac.common.users.ProxyPentahoUser;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ListBox;
 
-public class UsersList extends ListBox {
-  MessageDialog messageDialog = new MessageDialog("Users", "", new int[]{MessageDialog.OK_BTN});
+public class BasicUsersList extends ListBox {
   List users = new ArrayList();
-  boolean isInitialized = false;
+  String userNameFilter;
   
-  public UsersList() {
-    super(true);
+  public BasicUsersList(boolean isMultiSelect) {
+    super(isMultiSelect);
   }
 
   public ProxyPentahoUser[] getUsers() {
@@ -32,37 +32,19 @@ public class UsersList extends ListBox {
     this.users.clear();
     this.users.addAll(Arrays.asList(users));
     clear();
-    for (int i = 0; i < users.length; i++) {
-      addItem(users[i].getName());
-    }
-    isInitialized = true;
+    applyFilter();
   }
 
-  public void setUser(int index, ProxyPentahoUser user) {
-    users.set(index, user);
-    setItemText(index, user.getName());
-  }
-  
-  private Map getSelectedUsersAsMap() {
-    Map m = new HashMap();
-    ProxyPentahoUser[] users = getSelectedUsers();
-    for ( int ii=0; ii<users.length; ++ii ) {
-      ProxyPentahoUser u = users[ ii ];
-      m.put(u.getName(), u );
-    }
-    return m;
-  }
-  
-  private ProxyPentahoUser getUserByName( String name )
-  {
-    for ( int ii=0; ii<users.size(); ++ii )
-    {
-      ProxyPentahoUser u = (ProxyPentahoUser)users.get( ii );
-      if ( u.getName().equals( name ) ) {
-        return u;
+  public void addUser(ProxyPentahoUser user) {
+    int index = users.indexOf(user);
+    if (index >= 0) {
+      users.set(index, user);
+    } else {
+      users.add(user);
+      if (doesFilterMatch(user.getName())) {
+        addItem(user.getName());
       }
     }
-    return null;
   }
   
   public ProxyPentahoUser[] getSelectedUsers() {
@@ -96,11 +78,13 @@ public class UsersList extends ListBox {
   
   public void removeSelectedUsers() {
     int numUsersDeleted = 0;
-    int closingSelection = -1;
     int selectedIndex = -1;
     for (int i = getItemCount() - 1; i >= 0; i--) {
       if (isItemSelected(i)) {
-        users.remove(i);
+        ProxyPentahoUser  proxyPentahoUser = getUserByName(getItemText(i));
+        if (proxyPentahoUser != null) {
+          users.remove(i);
+        }
         removeItem(i);
         numUsersDeleted++;
         selectedIndex = i;
@@ -119,15 +103,16 @@ public class UsersList extends ListBox {
   public void removeUsers(ProxyPentahoUser[] usersToRemove) {
     int numUsersDeleted = 0;
     int selectedIndex = -1;
+    users.removeAll(Arrays.asList(usersToRemove));
     for (int i = getItemCount() - 1; i >= 0; i--) {
       if (isItemSelected(i)) {
         selectedIndex = i;
       }
       for (int j = 0; j < usersToRemove.length; j++) {
-        if (users.get(i).equals(usersToRemove[j])) {
-          users.remove(i);
+        if (getItemText(i).equals(usersToRemove[j].getName())) {
           removeItem(i);
           numUsersDeleted++;
+          break;
         }
       }
     }
@@ -141,70 +126,52 @@ public class UsersList extends ListBox {
     }
   }
   
-  public void refresh() {
-    setUsers(new ProxyPentahoUser[0]);
-    isInitialized = false;
-    AsyncCallback callback = new AsyncCallback() {
-      public void onSuccess(Object result) {
-        setUsers((ProxyPentahoUser[])result);
-        isInitialized = true;
-      }
-
-      public void onFailure(Throwable caught) {
-        messageDialog.setText("Error Loading Users");
-        messageDialog.setMessage("Unable to refresh users list: " + caught.getMessage());
-        messageDialog.center();
-      }
-    };
-    
-    PacServiceFactory.getPacService().getUsers(callback);
-  }
-  
-  public boolean addUser(ProxyPentahoUser user) {
-    boolean result = false;
-    if (!users.contains(user)) {
-      users.add(user);
-      addItem(user.getName());
-      result = true;
+  public void setUserNameFilter(String userNameFilter) {
+    if (userNameFilter != null) {
+      this.userNameFilter = userNameFilter.trim();
+    } else {
+      this.userNameFilter = userNameFilter;
     }
-    return result;
+    applyFilter();
   }
   
-  public void filterList( String filter )
-  {
-    List newSelUsers = new ArrayList();
-    Map previouslySelUsersMap = getSelectedUsersAsMap();
-    this.clear();
+  private void applyFilter() {
+    ProxyPentahoUser[] selectedUsers = getSelectedUsers();
+    clear();
     Iterator userIt = users.iterator();
     while ( userIt.hasNext() )
     {
       ProxyPentahoUser user = (ProxyPentahoUser)userIt.next();
-      boolean doesMatch = doesFilterMatch( filter, user.getName() );
+      boolean doesMatch = doesFilterMatch( user.getName() );
       if ( doesMatch ) {
-        this.addItem( user.getName() );
-        if( previouslySelUsersMap.containsKey( user.getName())) {
-          newSelUsers.add( user );
-        }
+        addItem( user.getName() );
       }
     }
-    setSelectedUsers( (ProxyPentahoUser[])newSelUsers.toArray( new ProxyPentahoUser[0] ) );
+    setSelectedUsers(selectedUsers);
   }
-
   
-  private boolean doesFilterMatch( String filterValue, String filterTarget )
+  private boolean doesFilterMatch( String filterTarget )
   {
-    int filterLen = filterValue.length();
-    return ( filterLen <= filterTarget.length() )
-      && filterValue.toLowerCase().substring( 0, filterLen )
-        .equals( filterTarget.toLowerCase().substring( 0, filterLen ) ); 
+    boolean result = ((userNameFilter == null) || (userNameFilter.length() == 0));
+    if (!result) {
+      int filterLen = userNameFilter.length();
+      result = ( filterLen <= filterTarget.length() )
+        && userNameFilter.toLowerCase().substring( 0, filterLen )
+          .equals( filterTarget.toLowerCase().substring( 0, filterLen ) ); 
+    }
+    return result;
   }
 
-  public boolean isInitialized() {
-    return isInitialized;
+  private ProxyPentahoUser getUserByName( String name )
+  {
+    for ( int ii=0; ii<users.size(); ++ii )
+    {
+      ProxyPentahoUser u = (ProxyPentahoUser)users.get( ii );
+      if ( u.getName().equals( name ) ) {
+        return u;
+      }
+    }
+    return null;
   }
   
-  public void clearUsersCache() {
-    setUsers(new ProxyPentahoUser[0]);
-    isInitialized = false;
-  }
 }

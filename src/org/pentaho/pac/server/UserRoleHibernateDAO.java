@@ -6,6 +6,8 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.exception.JDBCConnectionException;
+import org.pentaho.pac.common.roles.DuplicateRoleException;
+import org.pentaho.pac.common.roles.NonExistingRoleException;
 import org.pentaho.pac.common.users.DuplicateUserException;
 import org.pentaho.pac.common.users.NonExistingUserException;
 

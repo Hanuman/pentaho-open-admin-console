@@ -1,15 +1,13 @@
 package org.pentaho.pac.client.users;
 
 import org.pentaho.pac.client.MessageDialog;
-import org.pentaho.pac.client.PacService;
-import org.pentaho.pac.client.PacServiceAsync;
+import org.pentaho.pac.client.PacServiceFactory;
+import org.pentaho.pac.client.roles.AssignedRolesList;
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.users.NonExistingUserException;
 import org.pentaho.pac.common.users.ProxyPentahoUser;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -17,7 +15,6 @@ import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -26,12 +23,10 @@ import com.google.gwt.user.client.ui.Widget;
 public class UsersPanel extends DockPanel implements ClickListener, ChangeListener, PopupListener, KeyboardListener {
 
   MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN});
-  UsersList usersList = new UsersList();
-  ListBox assignedRolesList = new ListBox(true);
-  ProxyPentahoUser[] users = null;
+  AllUsersList usersList = new AllUsersList();
+  AssignedRolesList assignedRolesList = new AssignedRolesList();
   UserDetailsPanel userDetailsPanel = new UserDetailsPanel();
   Button updateUserBtn = new Button("Update");
-  PacServiceAsync pacService;
   Button addUserBtn = new Button("+");
   Button deleteUserBtn = new Button("-");
   TextBox filterTextBox = new TextBox();
@@ -99,11 +94,9 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	  headerDockPanel.setCellWidth(label, "100%");
     DockPanel userListPanel = new DockPanel();
     userListPanel.add(headerDockPanel, DockPanel.NORTH);
-    userListPanel.add(usersList, DockPanel.CENTER);
-    
+    userListPanel.add(usersList, DockPanel.CENTER);    
     userListPanel.add(filterTextBox, DockPanel.SOUTH  );
     userListPanel.add(new Label("User List Filter:"), DockPanel.SOUTH );
-    filterTextBox.addKeyboardListener( this );
     
     userListPanel.setCellHeight(usersList, "100%");
     userListPanel.setCellWidth(usersList, "100%");
@@ -118,6 +111,7 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     filterTextBox.setWidth( "100%" );
     deleteUserBtn.setEnabled(false);
     
+    filterTextBox.addKeyboardListener( this );
     usersList.addChangeListener(this);
     addUserBtn.addClickListener(this);
     deleteUserBtn.addClickListener(this);
@@ -175,7 +169,7 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
           messageDialog.center();
 	      }
 	    };
-	    getPacService().deleteUsers(selectedUsers, callback);
+	    PacServiceFactory.getPacService().deleteUsers(selectedUsers, callback);
 	  }
 	}
 	
@@ -183,8 +177,10 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     ProxyPentahoUser[] selectedUsers = usersList.getSelectedUsers();
     if (selectedUsers.length == 1) {
       userDetailsPanel.setUser(selectedUsers[0]);
-   } else {
+      assignedRolesList.setUser(selectedUsers[0]);
+    } else {
       userDetailsPanel.setUser(null);
+      assignedRolesList.setUser(null);
     }
     userDetailsPanel.setEnabled(selectedUsers.length == 1);
     updateUserBtn.setEnabled(selectedUsers.length == 1);
@@ -205,7 +201,7 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	    
 	    AsyncCallback callback = new AsyncCallback() {
 	      public void onSuccess(Object result) {
-	        usersList.setUser(index, user);
+	        usersList.addUser(user);
 	        ((Button)sender).setEnabled( true );
 	      }
 
@@ -222,12 +218,10 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
           ((Button)sender).setEnabled( true );
 	      }
 	    }; // end AsyncCallback
-	    getPacService().updateUser(user, callback);
+	    PacServiceFactory.getPacService().updateUser(user, callback);
 	  }
 	}
 	
-	public boolean validate() {return true;}
-
 	public void onChange(Widget sender) {
 	  userSelectionChanged();
 	}
@@ -237,24 +231,12 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	  userSelectionChanged();
 	}
 	
-	private PacServiceAsync getPacService() {
-	  if (pacService == null) {
-	    pacService = (PacServiceAsync) GWT.create(PacService.class);
-	    ServiceDefTarget endpoint = (ServiceDefTarget) pacService;
-	    String moduleRelativeURL = GWT.getModuleBaseURL() + "pacsvc";
-	    endpoint.setServiceEntryPoint(moduleRelativeURL);
-	  }
-	  return pacService;
-
-	}
-
   public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
     if ((sender == newUserDialogBox) && newUserDialogBox.isUserCreated()) {
       ProxyPentahoUser newUser = newUserDialogBox.getUser();
-      if (usersList.addUser(newUser)) {
-        usersList.setSelectedUser(newUser);
-        userSelectionChanged();
-      }
+      usersList.addUser(newUser);
+      usersList.setSelectedUser(newUser);
+      userSelectionChanged();
     } else if ((sender == confirmUserDeleteDialog) && (confirmUserDeleteDialog.getButtonPressed() == MessageDialog.OK_BTN)) {
       deleteSelectedUsers();
     }
@@ -267,8 +249,8 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
   }
 
   public void onKeyUp(Widget sender, char keyCode, int modifiers) {
-    if ( filterTextBox == sender ) {
-      usersList.filterList( filterTextBox.getText() );
+    if (filterTextBox == sender) {
+      usersList.setUserNameFilter(filterTextBox.getText());
       userSelectionChanged();
     }
   }

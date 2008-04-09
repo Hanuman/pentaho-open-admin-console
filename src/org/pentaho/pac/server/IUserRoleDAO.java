@@ -2,6 +2,8 @@ package org.pentaho.pac.server;
 
 import java.util.List;
 
+import org.pentaho.pac.common.roles.DuplicateRoleException;
+import org.pentaho.pac.common.roles.NonExistingRoleException;
 import org.pentaho.pac.common.users.DuplicateUserException;
 import org.pentaho.pac.common.users.NonExistingUserException;
 
@@ -17,7 +19,7 @@ import org.pentaho.pac.common.users.NonExistingUserException;
 
   public void updateUser(IPentahoUser user) throws NonExistingUserException, DAOException;
 
-  public void createRole(IPentahoRole newRole) throws DAOException;
+  public void createRole(IPentahoRole newRole) throws DuplicateRoleException, DAOException;
   
   public void deleteRole(IPentahoRole role) throws NonExistingRoleException, DAOException;
 
