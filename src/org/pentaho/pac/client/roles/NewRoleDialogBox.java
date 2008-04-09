@@ -2,6 +2,7 @@ package org.pentaho.pac.client.roles;
 
 import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacServiceFactory;
+import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
 import org.pentaho.pac.common.users.DuplicateUserException;
@@ -114,7 +115,7 @@ public class NewRoleDialogBox extends DialogBox implements ClickListener {
             messageDialog.center();
           }
         };
-        PacServiceFactory.getPacService().createRole(role, callback);
+        UserAndRoleMgmtService.instance().createRole(role, callback);
       }
     }
     return roleCreated;

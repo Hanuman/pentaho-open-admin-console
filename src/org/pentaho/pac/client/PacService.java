@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.pentaho.pac.common.PacServiceException;
 import org.pentaho.pac.common.PentahoSecurityException;
+import org.pentaho.pac.common.UserRoleSecurityInfo;
 import org.pentaho.pac.common.datasources.IDataSource;
 import org.pentaho.pac.common.roles.DuplicateRoleException;
 import org.pentaho.pac.common.roles.NonExistingRoleException;
@@ -17,6 +18,8 @@ import org.pentaho.pac.common.users.ProxyPentahoUser;
 import com.google.gwt.user.client.rpc.RemoteService;
 
 public interface PacService extends RemoteService {
+  public UserRoleSecurityInfo getUserRoleSecurityInfo() throws PacServiceException;
+  
   public boolean createRole(ProxyPentahoRole role) throws DuplicateRoleException, PentahoSecurityException, PacServiceException;
   public boolean deleteRoles(ProxyPentahoRole[] roles) throws NonExistingRoleException, PentahoSecurityException, PacServiceException;
   public boolean updateRole(ProxyPentahoRole role) throws NonExistingRoleException, NonExistingUserException, PentahoSecurityException, PacServiceException;

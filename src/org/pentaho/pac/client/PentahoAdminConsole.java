@@ -6,6 +6,7 @@ import org.pentaho.pac.client.scheduler.SchedulerPanel;
 import org.pentaho.pac.client.services.AdminServicesPanel;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DockPanel;
@@ -36,6 +37,9 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
   DataSourcesPanel dataSourcesPanel = new DataSourcesPanel();
   SchedulerPanel schedulerPanel = new SchedulerPanel();
   TabPanel adminTabPanel = new TabPanel();
+  
+  boolean securityInfoInitialized = false;
+  MessageDialog messageDialog = new MessageDialog("Security", "", new int[]{MessageDialog.OK_BTN});
   
   // TODO can this be a "real" Java 5 enum?
   public static final int ADMIN_USERS_ROLES_TAB_INDEX = 0;
@@ -126,8 +130,8 @@ public void onClick(Widget sender) {
         int selectedTab = adminTabPanel.getDeckPanel().getVisibleWidget();
         switch (selectedTab) {
           case ADMIN_USERS_ROLES_TAB_INDEX:
-            if (!usersAndRolesPanel.isInitialized()) {
-              usersAndRolesPanel.refresh();
+            if (!securityInfoInitialized) {
+              initializeSecurityInfo();
             }
             break;
           case ADMIN_DATA_SOURCES_TAB_INDEX: 
@@ -145,6 +149,21 @@ public void onClick(Widget sender) {
     }
   }
 
+  private void initializeSecurityInfo() {
+    AsyncCallback callback = new AsyncCallback() {
+      public void onSuccess(Object result) {
+        usersAndRolesPanel.refresh();
+        securityInfoInitialized = true;
+      }
+    
+      public void onFailure(Throwable caught) {
+        messageDialog.setMessage("Unable to refresh security information: " + caught.getMessage());
+        messageDialog.center();
+      }
+    };
+    UserAndRoleMgmtService.instance().refreshSecurityInfo(callback);
+
+  }
 
   public boolean onBeforeTabSelected(SourcesTabEvents sender, int tabIndex) {
     return true;
@@ -154,8 +173,8 @@ public void onClick(Widget sender) {
   public void onTabSelected(SourcesTabEvents sender, int tabIndex) {
     switch (tabIndex) {
       case ADMIN_USERS_ROLES_TAB_INDEX:
-        if (!usersAndRolesPanel.isInitialized()) {
-          usersAndRolesPanel.refresh();
+        if (!securityInfoInitialized) {
+          initializeSecurityInfo();
         }
         break;
       case ADMIN_DATA_SOURCES_TAB_INDEX: 

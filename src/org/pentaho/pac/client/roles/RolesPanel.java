@@ -1,12 +1,13 @@
 package org.pentaho.pac.client.roles;
 
 import org.pentaho.pac.client.MessageDialog;
-import org.pentaho.pac.client.PacServiceFactory;
-import org.pentaho.pac.client.users.AssignedUsersList;
+import org.pentaho.pac.client.UserAndRoleMgmtService;
+import org.pentaho.pac.client.users.UsersList;
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.roles.NonExistingRoleException;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
 import org.pentaho.pac.common.users.NonExistingUserException;
+import org.pentaho.pac.common.users.ProxyPentahoUser;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -24,8 +25,8 @@ import com.google.gwt.user.client.ui.Widget;
 public class RolesPanel extends DockPanel implements ClickListener, ChangeListener, PopupListener, KeyboardListener {
 
   MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN});
-  AllRolesList rolesList = new AllRolesList();
-  AssignedUsersList assignedUsersList = new AssignedUsersList();
+  RolesList rolesList = new RolesList(true);
+  UsersList assignedUsersList = new UsersList(true);
   RoleDetailsPanel roleDetailsPanel = new RoleDetailsPanel();
   Button updateRoleBtn = new Button("Update");
   Button addRoleBtn = new Button("+");
@@ -168,7 +169,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
           messageDialog.center();
 	      }
 	    };
-	    PacServiceFactory.getPacService().deleteRoles(selectedRoles, callback);
+	    UserAndRoleMgmtService.instance().deleteRoles(selectedRoles, callback);
 	  }
 	}
 	
@@ -176,10 +177,10 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     ProxyPentahoRole[] selectedRoles = rolesList.getSelectedRoles();
     if (selectedRoles.length == 1) {
       roleDetailsPanel.setRole(selectedRoles[0]);
-      assignedUsersList.setRole(selectedRoles[0]);
+      assignedUsersList.setUsers(UserAndRoleMgmtService.instance().getUsers(selectedRoles[0]));
     } else {
       roleDetailsPanel.setRole(null);
-      assignedUsersList.setRole(null);
+      assignedUsersList.setUsers(new ProxyPentahoUser[0]);
     }
     roleDetailsPanel.setEnabled(selectedRoles.length == 1);
     updateRoleBtn.setEnabled(selectedRoles.length == 1);
@@ -211,7 +212,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
         ((Button)sender).setEnabled( true );
       }
     };
-    PacServiceFactory.getPacService().updateRole(role, callback);
+    UserAndRoleMgmtService.instance().updateRole(role, callback);
 	}
 	
 	public void onChange(Widget sender) {
@@ -219,7 +220,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 	}
 	
 	public void refresh() {
-	  rolesList.refresh();
+	  rolesList.setRoles(UserAndRoleMgmtService.instance().getRoles());
 	  roleSelectionChanged();
 	}
 	
@@ -247,11 +248,11 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     }
   }
   
-  public boolean isInitialized() {
-    return rolesList.isInitialized();
-  }
+//  public boolean isInitialized() {
+//    return rolesList.isInitialized();
+//  }
 
-  public void clearRolesCache() {
-    rolesList.clearRolesCache();
-  }
+//  public void clearRolesCache() {
+//    rolesList.clearRolesCache();
+//  }
 }

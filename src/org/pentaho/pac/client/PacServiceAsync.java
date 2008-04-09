@@ -7,6 +7,8 @@ import org.pentaho.pac.common.users.ProxyPentahoUser;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface PacServiceAsync {
+  public void getUserRoleSecurityInfo(AsyncCallback callback);
+  
   public void createUser(ProxyPentahoUser user, AsyncCallback callback);
   public void deleteUsers(ProxyPentahoUser[] users, AsyncCallback callback);
   public void updateUser(ProxyPentahoUser user, AsyncCallback callback);

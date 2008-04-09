@@ -2,15 +2,13 @@ package org.pentaho.pac.client;
 
 import org.pentaho.pac.client.roles.RolesPanel;
 import org.pentaho.pac.client.users.UsersPanel;
-import org.pentaho.pac.client.utils.PacImageBundle;
 
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -68,9 +66,6 @@ public class UsersAndRolesPanel extends DockPanel implements ClickListener {
       } else {
         rolesButton.setDown(false);
         deckPanel.showWidget(USER_PANEL_ID);
-        if (!usersPanel.isInitialized()) {
-          usersPanel.refresh();
-        }
       }
     } else if (sender == rolesButton) {
       if (!rolesButton.isDown()) {
@@ -78,9 +73,6 @@ public class UsersAndRolesPanel extends DockPanel implements ClickListener {
       } else {
         usersButton.setDown(false);
         deckPanel.showWidget(ROLE_PANEL_ID);
-        if (!rolesPanel.isInitialized()) {
-          rolesPanel.refresh();
-        }
       }
     }    
   }
@@ -102,27 +94,8 @@ public class UsersAndRolesPanel extends DockPanel implements ClickListener {
   }
   
   public void refresh() {
-    if (deckPanel.getVisibleWidget() == USER_PANEL_ID) {
-      usersPanel.refresh();
-      rolesPanel.clearRolesCache();
-    } else if (deckPanel.getVisibleWidget() == ROLE_PANEL_ID) {
-      rolesPanel.refresh();
-      usersPanel.clearUsersCache();
-    }
-  }
-  
-  public boolean isInitialized() {
-    boolean result = false;
-    if (deckPanel.getVisibleWidget() == USER_PANEL_ID) {
-      result = usersPanel.isInitialized();
-    } else if (deckPanel.getVisibleWidget() == ROLE_PANEL_ID) {
-      result = rolesPanel.isInitialized();
-    }
-    return result;
+    usersPanel.refresh();
+    rolesPanel.refresh();
   }
 
-  public void clearCache() {
-    usersPanel.clearUsersCache();
-    rolesPanel.clearRolesCache();
-  }
 }

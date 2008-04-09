@@ -13,11 +13,11 @@ import org.pentaho.pac.common.users.ProxyPentahoUser;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ListBox;
 
-public class BasicRolesList extends ListBox {
+public class RolesList extends ListBox {
   ArrayList roles = new ArrayList();
   String roleNameFilter;
   
-  public BasicRolesList(boolean isMultiSelect) {
+  public RolesList(boolean isMultiSelect) {
     super(isMultiSelect);
   }
 

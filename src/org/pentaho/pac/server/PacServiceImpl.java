@@ -12,9 +12,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
@@ -30,6 +32,8 @@ import org.apache.commons.logging.LogFactory;
 import org.pentaho.pac.client.PacService;
 import org.pentaho.pac.common.PacServiceException;
 import org.pentaho.pac.common.PentahoSecurityException;
+import org.pentaho.pac.common.UserRoleSecurityInfo;
+import org.pentaho.pac.common.UserToRoleAssignment;
 import org.pentaho.pac.common.datasources.Constants;
 import org.pentaho.pac.common.datasources.IDataSource;
 import org.pentaho.pac.common.roles.DuplicateRoleException;
@@ -67,6 +71,34 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   {
     initFromConfigFile();
     schedulerProxy = new SchedulerAdminUIComponentProxy( getBIServerBaseUrl(), getUserName() );
+  }
+  
+  public UserRoleSecurityInfo getUserRoleSecurityInfo() throws PacServiceException{
+    UserRoleSecurityInfo userRoleSecurityInfo = new UserRoleSecurityInfo();
+    try {
+      List<IPentahoUser> users = userRoleMgmtService.getUsers();
+      for (IPentahoUser user : users) {       
+        ProxyPentahoUser proxyPentahoUser = new ProxyPentahoUser();
+        proxyPentahoUser.setName(user.getName());
+        proxyPentahoUser.setDescription(user.getDescription());
+        proxyPentahoUser.setEnabled(user.getEnabled());
+        proxyPentahoUser.setPassword(user.getPassword());
+        userRoleSecurityInfo.getUsers().add(proxyPentahoUser);
+        
+        Set<IPentahoRole> roles = user.getRoles();
+        for (IPentahoRole role : roles) {
+          userRoleSecurityInfo.getAssignments().add(new UserToRoleAssignment(user.getName(), role.getName()));
+        }
+      }
+      userRoleSecurityInfo.getRoles().addAll(Arrays.asList(getRoles()));
+    } catch (DAOException e) {
+      throw new PacServiceException(
+          Messages.getString("PacService.FAILED_TO_GET_USER_NAME" ), e ); //$NON-NLS-1$
+    }    
+    finally {
+      userRoleMgmtService.closeSession();
+    }
+    return userRoleSecurityInfo;
   }
   
   public boolean createUser( ProxyPentahoUser proxyUser ) throws DuplicateUserException, PentahoSecurityException, PacServiceException

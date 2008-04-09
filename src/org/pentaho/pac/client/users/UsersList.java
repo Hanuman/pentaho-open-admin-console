@@ -15,11 +15,11 @@ import org.pentaho.pac.common.users.ProxyPentahoUser;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ListBox;
 
-public class BasicUsersList extends ListBox {
+public class UsersList extends ListBox {
   List users = new ArrayList();
   String userNameFilter;
   
-  public BasicUsersList(boolean isMultiSelect) {
+  public UsersList(boolean isMultiSelect) {
     super(isMultiSelect);
   }
 

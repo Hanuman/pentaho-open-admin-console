@@ -4,6 +4,7 @@ import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacService;
 import org.pentaho.pac.client.PacServiceAsync;
 import org.pentaho.pac.client.PacServiceFactory;
+import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.users.DuplicateUserException;
 import org.pentaho.pac.common.users.ProxyPentahoUser;
@@ -134,7 +135,7 @@ public class NewUserDialogBox extends DialogBox implements ClickListener {
             messageDialog.center();
           }
         };
-        PacServiceFactory.getPacService().createUser(user, callback);
+        UserAndRoleMgmtService.instance().createUser(user, callback);
       }
     }
     
