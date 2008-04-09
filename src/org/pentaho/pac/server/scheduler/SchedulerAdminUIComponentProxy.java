@@ -80,10 +80,10 @@ public class SchedulerAdminUIComponentProxy {
    */
   public void deleteJob( String jobName, String jobGroup ) throws PacServiceException {
     NameValuePair[] params = new NameValuePair[4];
-    params[0] = new NameValuePair("schedulerAction", "deleteJob" ); //$NON-NLS-1$
+    params[0] = new NameValuePair("schedulerAction", "deleteJob" ); //$NON-NLS-1$  //$NON-NLS-2$
     params[1] = new NameValuePair("jobName", jobName); //$NON-NLS-1$
     params[2] = new NameValuePair("jobGroup", jobGroup); //$NON-NLS-1$
-    params[3] = new NameValuePair( TRUSTED_USER_KEY, userName ); //$NON-NLS-1$
+    params[3] = new NameValuePair( TRUSTED_USER_KEY, userName );
 
     String responseStrXml= biServerProxy.proxyRemoteMethod( SCHEDULER_SERVICE_NAME, params );
   }
@@ -94,10 +94,10 @@ public class SchedulerAdminUIComponentProxy {
    */
   public void executeJobNow( String jobName, String jobGroup ) throws PacServiceException {
     NameValuePair[] params = new NameValuePair[4];
-    params[0] = new NameValuePair("schedulerAction", "executeJob" ); //$NON-NLS-1$
+    params[0] = new NameValuePair("schedulerAction", "executeJob" ); //$NON-NLS-1$  //$NON-NLS-2$
     params[1] = new NameValuePair("jobName", jobName); //$NON-NLS-1$
     params[2] = new NameValuePair("jobGroup", jobGroup); //$NON-NLS-1$
-    params[3] = new NameValuePair( TRUSTED_USER_KEY, userName ); //$NON-NLS-1$
+    params[3] = new NameValuePair( TRUSTED_USER_KEY, userName );
 
     String responseStrXml= biServerProxy.proxyRemoteMethod( SCHEDULER_SERVICE_NAME, params );
   }
@@ -108,8 +108,8 @@ public class SchedulerAdminUIComponentProxy {
    */
   public List<Job> getJobNames() throws PacServiceException {
     NameValuePair[] params = new NameValuePair[2];
-    params[0] = new NameValuePair("schedulerAction", "getJobNames" ); //$NON-NLS-1$
-    params[1] = new NameValuePair( TRUSTED_USER_KEY, userName ); //$NON-NLS-1$
+    params[0] = new NameValuePair("schedulerAction", "getJobNames" ); //$NON-NLS-1$  //$NON-NLS-2$
+    params[1] = new NameValuePair( TRUSTED_USER_KEY, userName );
 
     String responseStrXml = biServerProxy.proxyRemoteMethod( SCHEDULER_SERVICE_NAME, params );
 
@@ -125,8 +125,8 @@ public class SchedulerAdminUIComponentProxy {
    */
   public boolean isSchedulerPaused() throws PacServiceException {
     NameValuePair[] params = new NameValuePair[2];
-    params[0] = new NameValuePair("schedulerAction", "isSchedulerPaused" ); //$NON-NLS-1$
-    params[1] = new NameValuePair( TRUSTED_USER_KEY, userName ); //$NON-NLS-1$
+    params[0] = new NameValuePair("schedulerAction", "isSchedulerPaused" ); //$NON-NLS-1$  //$NON-NLS-2$
+    params[1] = new NameValuePair( TRUSTED_USER_KEY, userName );
 
     String responseStrXml= biServerProxy.proxyRemoteMethod( SCHEDULER_SERVICE_NAME, params );
     XmlSerializer s = new XmlSerializer();
@@ -136,13 +136,13 @@ public class SchedulerAdminUIComponentProxy {
   }
 
   /**
-   * query string: schedulerAction=pauseAll
+   * query string: schedulerAction=suspendScheduler
    * @throws PacServiceException 
    */
   public void pauseAll() throws PacServiceException {
     NameValuePair[] params = new NameValuePair[2];
-    params[0] = new NameValuePair("schedulerAction", "pauseAll" ); //$NON-NLS-1$
-    params[1] = new NameValuePair( TRUSTED_USER_KEY, userName ); //$NON-NLS-1$
+    params[0] = new NameValuePair("schedulerAction", "suspendScheduler" ); //$NON-NLS-1$  //$NON-NLS-2$
+    params[1] = new NameValuePair( TRUSTED_USER_KEY, userName );
 
     String responseStrXml= biServerProxy.proxyRemoteMethod( SCHEDULER_SERVICE_NAME, params );
   }
@@ -153,22 +153,22 @@ public class SchedulerAdminUIComponentProxy {
    */
   public void pauseJob( String jobName, String jobGroup ) throws PacServiceException {
     NameValuePair[] params = new NameValuePair[4];
-    params[0] = new NameValuePair("schedulerAction", "pauseJob" ); //$NON-NLS-1$
+    params[0] = new NameValuePair("schedulerAction", "pauseJob" ); //$NON-NLS-1$  //$NON-NLS-2$
     params[1] = new NameValuePair("jobName", jobName); //$NON-NLS-1$
     params[2] = new NameValuePair("jobGroup", jobGroup); //$NON-NLS-1$
-    params[3] = new NameValuePair( TRUSTED_USER_KEY, userName ); //$NON-NLS-1$
+    params[3] = new NameValuePair( TRUSTED_USER_KEY, userName );
 
     String responseStrXml= biServerProxy.proxyRemoteMethod( SCHEDULER_SERVICE_NAME, params );
   }
 
   /**
-   * query string: schedulerAction=resumeAll
+   * query string: schedulerAction=resumeScheduler
    * @throws PacServiceException 
    */
   public void resumeAll() throws PacServiceException {
     NameValuePair[] params = new NameValuePair[2];
-    params[0] = new NameValuePair("schedulerAction", "resumeAll" ); //$NON-NLS-1$
-    params[1] = new NameValuePair( TRUSTED_USER_KEY, userName ); //$NON-NLS-1$
+    params[0] = new NameValuePair("schedulerAction", "resumeScheduler" ); //$NON-NLS-1$  //$NON-NLS-2$
+    params[1] = new NameValuePair( TRUSTED_USER_KEY, userName );
 
     String responseStrXml= biServerProxy.proxyRemoteMethod( SCHEDULER_SERVICE_NAME, params );
   }
@@ -179,10 +179,10 @@ public class SchedulerAdminUIComponentProxy {
    */
   public void resumeJob( String jobName, String jobGroup ) throws PacServiceException {
     NameValuePair[] params = new NameValuePair[4];
-    params[0] = new NameValuePair("schedulerAction", "resumeJob" ); //$NON-NLS-1$
+    params[0] = new NameValuePair("schedulerAction", "resumeJob" ); //$NON-NLS-1$  //$NON-NLS-2$
     params[1] = new NameValuePair("jobName", jobName); //$NON-NLS-1$
     params[2] = new NameValuePair("jobGroup", jobGroup); //$NON-NLS-1$
-    params[3] = new NameValuePair( TRUSTED_USER_KEY, userName ); //$NON-NLS-1$
+    params[3] = new NameValuePair( TRUSTED_USER_KEY, userName );
 
     String responseStrXml=  biServerProxy.proxyRemoteMethod( SCHEDULER_SERVICE_NAME, params );
   }
