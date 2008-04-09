@@ -172,7 +172,8 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
     a.setText( "Suspend" );
     // TODO sbarkdull, yuk
     a.addClickListener( new ClickListener() {
-      public void onClick( Widget sender ) {
+      public void onClick( final Widget sender ) {
+        ((Hyperlink)sender).setText( "Working..." );
         PacServiceFactory.getPacService().pauseJob(
             jobName,
             jobGroup,
@@ -200,6 +201,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
     // TODO sbarkdull, yuk
     a.addClickListener( new ClickListener() {
       public void onClick( Widget sender ) {
+        ((Hyperlink)sender).setText( "Working..." );
         PacServiceFactory.getPacService().resumeJob(
             jobName,
             jobGroup,
@@ -254,6 +256,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
     // TODO sbarkdull, yuk
     a.addClickListener( new ClickListener() {
       public void onClick( Widget sender ) {
+        ((Hyperlink)sender).setText( "Working..." );
         PacServiceFactory.getPacService().executeJobNow( 
             jobName,
             jobGroup,
