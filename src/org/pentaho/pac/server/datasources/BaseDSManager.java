@@ -1,6 +1,5 @@
 package org.pentaho.pac.server.datasources;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
