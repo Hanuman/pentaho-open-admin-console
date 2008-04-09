@@ -76,6 +76,11 @@
 				<include name="**/locale/**" />
 			</fileset>
 		</copy>
+		<copy todir="${build.classes.dir}">
+			<fileset dir="${src.dir}" excludes="**/*.java">
+				<include name="**/*.xml" />
+			</fileset>
+		</copy>
 	 </target>
 	<!-- ===================================================================
         target: compile-pac
@@ -109,6 +114,7 @@
 			<fileset dir="${build.classes.dir}">
 				<!-- include only core -->
 				<include name="**/*.class" />
+				<include name="**/*.xml" />
 			</fileset>
 			<fileset dir="${gwt.output.dir}">
 				<include name="**/*" />
