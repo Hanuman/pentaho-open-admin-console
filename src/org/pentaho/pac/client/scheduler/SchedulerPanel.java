@@ -2,6 +2,7 @@ package org.pentaho.pac.client.scheduler;
 
 import java.util.List;
 
+import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacServiceFactory;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -17,14 +18,27 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
   //Button testBtn = new Button("Test");
   private FlexTable jobsTable = null;
   private FlexTable allActionsTable = null;
+  private Label userInstructionLabel = null;
   private boolean isInitialized = false;
+  private String resumeSuspendState = "&nbsp;";
+  
   private static final String USER_INSTRUCTION = "You can use the pages to suspend or resume the scheduler. You can check the status of the scheduler and get a list of the current jobs that are scheduled.";
+
+  private static final String[] COLUMN_HEADER_TITLE = {
+    "Job - Group / Name",
+    "Trigger - Group / Name",
+    "Description",
+    "Fire Time - Last / Next",
+    "State",
+    "Action"
+  };
   
   public SchedulerPanel()
   {
+    this.setStylePrimaryName( "schedulerPanel" );
   }
+  
   public void onClick( Widget sender ) {
-    int x=0;
   }
 
 
@@ -35,22 +49,25 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
             public void onSuccess( Object oJobList ) {
               List/*<Job>*/ jobList = (List/*<Job>*/)oJobList;
               createUI( jobList );
+              allActionsTable.setHTML( 2, 1, resumeSuspendState );
               isInitialized = true;
             }
       
             public void onFailure(Throwable caught) {
-              // TODO sbarkdull
-  //            messageDialog.setText("Error Deleting Data Source");
-  //            messageDialog.setMessage(caught.getMessage());
-  //            messageDialog.center();
-              int ii=0;
+              MessageDialog messageDialog = new MessageDialog("", 
+                  caught.getMessage(), new int[]{MessageDialog.OK_BTN});
+              messageDialog.center();
             }
           }
         );
       updateSchedulerPausedStatus();
     } // end if (!isInitialized)
   }
-  
+
+  public void forceRefresh() {
+    isInitialized = false;
+    refresh();
+  }
 
   public boolean isInitialized() {
     return isInitialized;
@@ -58,8 +75,14 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
   
   private void createUI( List/*<Job>*/ jobList )
   {
-    Label l = new Label( USER_INSTRUCTION );
-    add( l );
+    if ( null != userInstructionLabel ) {
+      remove( userInstructionLabel );
+      remove( allActionsTable );
+      remove( jobsTable );
+    }
+    userInstructionLabel = new Label( USER_INSTRUCTION );
+    userInstructionLabel.setStylePrimaryName( "schedulerInstructionLabel" );
+    add( userInstructionLabel );
     
     allActionsTable = createAllActionsTable();
     add( allActionsTable );
@@ -76,45 +99,66 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
       int rowNum = jobIdx+1;
       jobsTable.setHTML( rowNum, 0, job.jobGroup + "<br/>" + job.jobName );
       jobsTable.setHTML( rowNum, 1, job.triggerGroup + "<br/>" + job.triggerName );
-      jobsTable.setHTML( rowNum, 2, job.description );
-      jobsTable.setHTML( rowNum, 3, job.jobGroup );
-      jobsTable.setHTML( rowNum, 4, job.prevFireTime + "<br/>" + job.getNextFireTime() );
+      jobsTable.setHTML( rowNum, 2, defaultIfEmpty( job.description ) );
+      jobsTable.setHTML( rowNum, 3, job.prevFireTime + "<br/>" + job.getNextFireTime() );
+      jobsTable.setHTML( rowNum, 4, job.triggerState );
       
-      VerticalPanel actionPanel = createActionPanel( job, rowNum );
+      VerticalPanel actionPanel = createActionPanel( job, rowNum, job.triggerState );
       jobsTable.setWidget( rowNum, 5, actionPanel );
     }
+  }
+  
+  /**
+   * mimics StringUtils.defaultIfEmpty()
+   * @param str
+   * @return
+   */
+  private static String defaultIfEmpty( String str )
+  {
+    return ( null == str || "".equals( str ) ) ? "&nbsp;" : str;
   }
   
   private FlexTable createAllActionsTable()
   {
     FlexTable t = new FlexTable();
-
+    t.setStylePrimaryName( "allActionTable");
+    t.setCellPadding( 0 );
+    t.setCellSpacing( 0 );
+    
     int rowNum = 0;
     Label l = new Label( "Actions: " );
     t.setWidget( rowNum, 0, l );
-    t.setText( rowNum, 1, "" );
+    t.setHTML( rowNum, 1, "&nbsp;" );
+    t.getRowFormatter().setStylePrimaryName( 0, "allActionTableHeader" );
     
     rowNum++; // 1
     Hyperlink statusHyper = createSchedulerStatusHyperlink();
     t.setWidget( rowNum, 0, statusHyper );
-    t.setText( rowNum, 1, "" );
+    t.setHTML( rowNum, 1, "&nbsp;" );
 
     rowNum++; // 2
     Hyperlink resumeHyper = createResumeAllHyperlink();
     Hyperlink suspendHyper = createSuspendAllHyperlink();
     VerticalPanel p = new VerticalPanel();
+    p.setStylePrimaryName( "resumeSuspendPanel" );
+    p.setSpacing(0);
+    
     p.add( resumeHyper );
     p.add( suspendHyper );
     t.setWidget( rowNum, 0, p );
-    t.setText( rowNum, 1, "" );
+    t.setHTML( rowNum, 1, resumeSuspendState );
     
     return t;
   }
   
-  private VerticalPanel createActionPanel( Job job, int rowNum ) {
+  private VerticalPanel createActionPanel( Job job, int rowNum, String triggerState ) {
     VerticalPanel p = new VerticalPanel();
-
-    Hyperlink a = createSuspendHyperlink( job.getJobName(), job.getJobGroup() );
+    p.setStylePrimaryName( "actionCellPanel" );
+    p.setSpacing(0);
+    
+    Hyperlink a = "Suspended".equals( triggerState )
+      ? createResumeHyperlink( job.getJobName(), job.getJobGroup() )
+      : createSuspendHyperlink( job.getJobName(), job.getJobGroup() );
     p.add( a );
     a = createDeleteHyperlink( job.getJobName(), job.getJobGroup(), rowNum );
     p.add( a );
@@ -125,7 +169,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
    
   private Hyperlink createSuspendHyperlink( final String jobName, final String jobGroup ) {
     Hyperlink a = new Hyperlink();
-    a.setText(  "Suspend" );
+    a.setText( "Suspend" );
     // TODO sbarkdull, yuk
     a.addClickListener( new ClickListener() {
       public void onClick( Widget sender ) {
@@ -134,14 +178,41 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
             jobGroup,
             new AsyncCallback() {
               public void onSuccess( Object o ) {
-                // TODO sbarkdull
-                Object x = o;
-                int ii=0;
+                forceRefresh();
+              }
+        
+              public void onFailure(Throwable caught) {
+                MessageDialog messageDialog = new MessageDialog("", 
+                    caught.getMessage(), new int[]{MessageDialog.OK_BTN});
+                messageDialog.center();
+              }
+            }
+          );
+      }
+    } );
+    
+    return a;
+  }
+   
+  private Hyperlink createResumeHyperlink( final String jobName, final String jobGroup ) {
+    Hyperlink a = new Hyperlink();
+    a.setText(  "Resume" );
+    // TODO sbarkdull, yuk
+    a.addClickListener( new ClickListener() {
+      public void onClick( Widget sender ) {
+        PacServiceFactory.getPacService().resumeJob(
+            jobName,
+            jobGroup,
+            new AsyncCallback() {
+              public void onSuccess( Object o ) {
+                forceRefresh();
               }
         
               public void onFailure(Throwable caught) {
                 // TODO sbarkdull
-                int ii=0;
+                MessageDialog messageDialog = new MessageDialog("", 
+                    caught.getMessage(), new int[]{MessageDialog.OK_BTN});
+                messageDialog.center();
               }
             }
           );
@@ -162,13 +233,13 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
             jobGroup,
             new AsyncCallback() {
               public void onSuccess( Object o ) {
-                // TODO sbarkdull
                 jobsTable.removeRow( rowNum );
               }
         
               public void onFailure(Throwable caught) {
-                // TODO sbarkdull
-                int ii=0;
+                MessageDialog messageDialog = new MessageDialog("", 
+                    caught.getMessage(), new int[]{MessageDialog.OK_BTN});
+                messageDialog.center();
               }
             }
           );
@@ -188,14 +259,13 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
             jobGroup,
             new AsyncCallback() {
               public void onSuccess( Object o ) {
-                // TODO sbarkdull
-                Object x = o;
-                int ii=0;
+                forceRefresh();
               }
         
               public void onFailure(Throwable caught) {
-                // TODO sbarkdull
-                int ii=0;
+                MessageDialog messageDialog = new MessageDialog("", 
+                    caught.getMessage(), new int[]{MessageDialog.OK_BTN});
+                messageDialog.center();
               }
             }
           );
@@ -212,16 +282,18 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
     // TODO sbarkdull, yuk
     a.addClickListener( new ClickListener() {
       public void onClick( Widget sender ) {
+        allActionsTable.setHTML( 2, 1, "Working..." );
         PacServiceFactory.getPacService().pauseAll(
             new AsyncCallback() {
               public void onSuccess( Object o ) {
-                // TODO sbarkdull
-                allActionsTable.setText( 2, 1, "All Jobs Suspended" );
+                resumeSuspendState = "All Jobs Suspended";
+                forceRefresh();
               }
         
               public void onFailure(Throwable caught) {
-                // TODO sbarkdull
-                int ii=0;
+                MessageDialog messageDialog = new MessageDialog("", 
+                    caught.getMessage(), new int[]{MessageDialog.OK_BTN});
+                messageDialog.center();
               }
             }
           );
@@ -236,17 +308,18 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
     // TODO sbarkdull, yuk
     a.addClickListener( new ClickListener() {
       public void onClick( Widget sender ) {
+        allActionsTable.setHTML( 2, 1, "Working..." );
         PacServiceFactory.getPacService().resumeAll(
             new AsyncCallback() {
               public void onSuccess( Object o ) {
-                // TODO sbarkdull
-                int ii=0;
-                allActionsTable.setText( 2, 1, "All Jobs Resumed" );
+                resumeSuspendState = "All Jobs Resumed";
+                forceRefresh();
               }
         
               public void onFailure(Throwable caught) {
-                // TODO sbarkdull
-                int ii=0;
+                MessageDialog messageDialog = new MessageDialog("", 
+                    caught.getMessage(), new int[]{MessageDialog.OK_BTN});
+                messageDialog.center();
               }
             }
           );
@@ -262,6 +335,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
     // TODO sbarkdull, yuk
     a.addClickListener( new ClickListener() {
       public void onClick( Widget sender ) {
+        allActionsTable.setHTML( 1, 1, "Working..." );
         updateSchedulerPausedStatus();
       }
     } );
@@ -275,12 +349,13 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
         new AsyncCallback() {
           public void onSuccess( Object oIsRunning ) {
             boolean isRunning = ((Boolean)oIsRunning).booleanValue();
-            allActionsTable.setText( 1, 1, isRunning ? "Running" : "Suspended" );
+            allActionsTable.setHTML( 1, 1, isRunning ? "Running" : "Suspended" );
           }
     
           public void onFailure(Throwable caught) {
-            // TODO sbarkdull
-            int ii=0;
+            MessageDialog messageDialog = new MessageDialog("", 
+                caught.getMessage(), new int[]{MessageDialog.OK_BTN});
+            messageDialog.center();
           }
         }
       );
@@ -289,21 +364,15 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
   private FlexTable createJobsTable( List/*<Job>*/ jobList ) {
     
     FlexTable jobsTable = new FlexTable();
+    jobsTable.setStylePrimaryName( "jobsTable" );
+    jobsTable.setCellPadding( 0 );
+    jobsTable.setCellSpacing( 0 );
     addJobsTableHeader( jobsTable );
     
     addJobListToTable( jobList, jobsTable );
     
     return jobsTable;
   }
-  
-  private static final String[] COLUMN_HEADER_TITLE = {
-    "Job - Group / Name",
-    "Trigger - Group / Name",
-    "Description",
-    "Fire Time - Last / Next",
-    "State",
-    "Action"
-  };
   
   private void addJobsTableHeader( FlexTable t )
   {
@@ -312,5 +381,6 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
       //t.addCell( 0 );
       t.setText(0, ii, title );
     }
+    t.getRowFormatter().setStylePrimaryName( 0, "jobsTableHeader" );
   }
 }
