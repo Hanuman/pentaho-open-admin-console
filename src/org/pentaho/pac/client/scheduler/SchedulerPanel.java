@@ -45,6 +45,12 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
 
   public void refresh() {
     if ( !isInitialized ) {
+      
+      if ( !hasUIBeenCreated() ) {
+        loading = new Label( "Loading..." );
+        add( loading );
+      }
+      
       PacServiceFactory.getPacService().getJobNames(
           new AsyncCallback() {
             public void onSuccess( Object oJobList ) {
@@ -74,12 +80,21 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
     return isInitialized;
   }
   
+  private boolean hasUIBeenCreated()
+  {
+    return null != userInstructionLabel;
+  }
+  
+  Label loading = null;
+  
   private void createUI( List/*<Job>*/ jobList )
   {
-    if ( null != userInstructionLabel ) {
+    if ( hasUIBeenCreated() ) {
       remove( userInstructionLabel );
       remove( allActionsTable );
       remove( jobsTableScrollPanel );
+    } else {
+      remove( loading );
     }
     userInstructionLabel = new Label( USER_INSTRUCTION );
     userInstructionLabel.setStylePrimaryName( "schedulerInstructionLabel" );
@@ -104,7 +119,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
       jobsTable.setHTML( rowNum, 1, job.triggerGroup + "<br/>" + job.triggerName );
       jobsTable.setHTML( rowNum, 2, defaultIfEmpty( job.description ) );
       jobsTable.setHTML( rowNum, 3, job.prevFireTime + "<br/>" + job.getNextFireTime() );
-      jobsTable.setHTML( rowNum, 4, job.triggerState );
+      jobsTable.setHTML( rowNum, 4, defaultIfEmpty( job.triggerState ) );
       
       VerticalPanel actionPanel = createActionPanel( job, rowNum, job.triggerState );
       jobsTable.setWidget( rowNum, 5, actionPanel );
