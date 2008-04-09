@@ -709,8 +709,34 @@ a:visited {
 .schedulerPanel a {
 	cursor: hand;
 	cursor: pointer;
-};
-	
+	color:#949E3E;
+	font-family:  Tahoma,"Trebuchet MS",Arial;
+	font-size:1em;
+	font-size-adjust:none;
+	font-stretch:normal;
+	font-style:normal;
+	font-variant:normal;
+	font-weight:normal;
+	line-height:normal;
+	text-decoration:none;
+}
+
+/* TODO doesnt seem to get picked up */
+.schedulerPanel a:hover {
+	cursor: hand;
+	cursor: pointer;
+	color:#EF8033;
+	font-family:Tahoma,"Trebuchet MS",Arial;
+	font-size:1em;
+	font-size-adjust:none;
+	font-stretch:normal;
+	font-style:normal;
+	font-variant:normal;
+	font-weight:normal;
+	line-height:normal;
+	text-decoration:none;
+}
+
 .allActionTable {
 	border-top: 1px solid #808080;
 	border-left: 1px solid #808080;
@@ -731,8 +757,7 @@ a:visited {
 .allActionTable td {
 	border-right: 1px solid #808080;
 	border-bottom: 1px solid #808080;
-	padding-left: 5px;
-	padding-top: 5px;
+	padding: 5px;
 	vertical-align: top;
 }
 
@@ -759,8 +784,7 @@ a:visited {
 }
 .resumeSuspendPanel td {
 	border: 0px solid purple;
-	padding-left: 0px;
-	padding-top: 0px;
+	padding: 0px;
 }
 
 /* begin jobs table */
@@ -783,8 +807,7 @@ a:visited {
 .jobsTable td {
 	border-right: 1px solid #808080;
 	border-bottom: 1px solid #808080;
-	padding-left: 5px;
-	padding-top: 5px;
+	padding: 5px;
 	vertical-align: top;
 }
 
@@ -811,8 +834,7 @@ a:visited {
 }
 .actionCellPanel td {
 	border: 0px solid purple;
-	padding-left: 0px;
-	padding-top: 0px;
+	padding: 0px;
 }
 /* end jobs table */
 
