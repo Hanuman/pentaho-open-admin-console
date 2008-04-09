@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -86,9 +87,11 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
     
     allActionsTable = createAllActionsTable();
     add( allActionsTable );
-    
+
     jobsTable = createJobsTable( jobList );
-    add( jobsTable );
+    ScrollPanel sp = new ScrollPanel( jobsTable );
+    sp.setHeight( "450px" );
+    add( sp );
   }
   
   private void addJobListToTable( List/*<Job>*/ jobList, FlexTable jobsTable )
@@ -108,6 +111,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
     }
   }
   
+//TODO move to a client side utils class
   /**
    * mimics StringUtils.defaultIfEmpty()
    * @param str
