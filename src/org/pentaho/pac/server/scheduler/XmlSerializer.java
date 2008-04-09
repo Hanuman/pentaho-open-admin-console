@@ -4,7 +4,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -97,7 +99,7 @@ public class XmlSerializer {
         val = attributes.getValue( "triggerGroup" );
         currentJob.triggerGroup = val;
         val = attributes.getValue( "triggerState" );
-        currentJob.triggerState = val;
+        currentJob.triggerState = triggerInt2Name( val );
         val = attributes.getValue( "nextFireTime" );
         currentJob.nextFireTime = val;
         val = attributes.getValue( "prevFireTime" );
@@ -111,6 +113,26 @@ public class XmlSerializer {
         // TODO sbarkdull, error
       }
     }
+  }
+
+  /**
+   * NOTE: see messages.properties in pentaho project for valid strings.
+   * Locate the keys in messages.properties by looking for:
+   * UI.USER_TRIGGER_STATE_<the state>
+   */
+  private static final Map STATE_STRINGS = new HashMap();
+  static {
+    STATE_STRINGS.put( "0", "Normal" );
+    STATE_STRINGS.put( "1", "Suspended" );
+    STATE_STRINGS.put( "2", "Complete" );
+    STATE_STRINGS.put( "3", "Error" );
+    STATE_STRINGS.put( "4", "Blocked" );
+    STATE_STRINGS.put( "5", "None" );
+  }
+  
+  private static String triggerInt2Name( String strInt )
+  {
+    return (String)STATE_STRINGS.get( strInt );
   }
   
   // TODO sbarkdull, threading?
