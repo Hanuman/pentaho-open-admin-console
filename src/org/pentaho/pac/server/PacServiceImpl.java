@@ -888,7 +888,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
    * @throws PacServiceException 
    */
   public void resumeJob( String jobName, String jobGroup ) throws PacServiceException {
-    schedulerProxy.pauseJob(jobName, jobGroup);
+    schedulerProxy.resumeJob(jobName, jobGroup);
   }
   // end Scheduler Admin interfaces -----------------------------------------------------
   
