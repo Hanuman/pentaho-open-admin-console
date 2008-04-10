@@ -719,6 +719,7 @@ a:visited {
 	font-weight:normal;
 	line-height:normal;
 	text-decoration:none;
+	white-space:nowrap;
 }
 
 /* TODO doesnt seem to get picked up */
@@ -735,6 +736,7 @@ a:visited {
 	font-weight:normal;
 	line-height:normal;
 	text-decoration:none;
+	white-space:nowrap;
 }
 
 .allActionTable {
