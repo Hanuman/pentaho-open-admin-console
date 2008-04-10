@@ -18,13 +18,13 @@ public class MessageDialog extends DialogBox implements ClickListener {
   public static final int CANCEL_BTN = 2;
   public static final int YES_BTN = 4;
   public static final int NO_BTN = 8;
-  public Button okBtn = new Button("OK");
-  public Button cancelBtn = new Button("Cancel");
-  public Button yesBtn = new Button("Yes");
-  public Button noBtn = new Button("No");
+  public Button okBtn = new Button(PentahoAdminConsole.getLocalizedMessages().ok());
+  public Button cancelBtn = new Button(PentahoAdminConsole.getLocalizedMessages().cancel());
+  public Button yesBtn = new Button(PentahoAdminConsole.getLocalizedMessages().yes());
+  public Button noBtn = new Button(PentahoAdminConsole.getLocalizedMessages().no());
   
   public MessageDialog(String msg, int[] buttons) {
-    this("", msg, buttons);
+    this("", msg, buttons); //$NON-NLS-1$
   }
   
   public MessageDialog(String title, String msg, int[] buttons) {
@@ -50,11 +50,11 @@ public class MessageDialog extends DialogBox implements ClickListener {
       }
     }
     
-    verticalPanel.setCellWidth(msgLabel, "100%");
-    verticalPanel.setCellHeight(msgLabel, "100%");
+    verticalPanel.setCellWidth(msgLabel, "100%"); //$NON-NLS-1$
+    verticalPanel.setCellHeight(msgLabel, "100%"); //$NON-NLS-1$
     verticalPanel.setSpacing(10);
-    verticalPanel.setWidth("250px");
-    verticalPanel.setHeight("150px");
+    verticalPanel.setWidth("250px"); //$NON-NLS-1$
+    verticalPanel.setHeight("150px"); //$NON-NLS-1$
     
     verticalPanel.add(horizontalPanel);
     
@@ -67,7 +67,7 @@ public class MessageDialog extends DialogBox implements ClickListener {
   }
   
   public MessageDialog() {
-    this("");
+    this(""); //$NON-NLS-1$
   }
 
   public String getMessage() {

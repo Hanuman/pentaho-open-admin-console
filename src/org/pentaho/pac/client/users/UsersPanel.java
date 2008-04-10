@@ -1,6 +1,7 @@
 package org.pentaho.pac.client.users;
 
 import org.pentaho.pac.client.MessageDialog;
+import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.client.roles.RolesList;
 import org.pentaho.pac.common.PentahoSecurityException;
@@ -23,16 +24,16 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class UsersPanel extends DockPanel implements ClickListener, ChangeListener, PopupListener, KeyboardListener {
 
-  MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN});
+  MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN}); //$NON-NLS-1$
   UsersList usersList = new UsersList(true);
   RolesList assignedRolesList = new RolesList(true);
   UserDetailsPanel userDetailsPanel = new UserDetailsPanel();
-  Button updateUserBtn = new Button("Update");
-  Button addUserBtn = new Button("+");
-  Button deleteUserBtn = new Button("-");
+  Button updateUserBtn = new Button(PentahoAdminConsole.getLocalizedMessages().update());
+  Button addUserBtn = new Button("+"); //$NON-NLS-1$
+  Button deleteUserBtn = new Button("-"); //$NON-NLS-1$
   TextBox filterTextBox = new TextBox();
   NewUserDialogBox newUserDialogBox = new NewUserDialogBox();
-  MessageDialog confirmUserDeleteDialog = new MessageDialog("Delete Users", "Are your sure you want to delete the selected users.", new int[] {MessageDialog.OK_BTN, MessageDialog.CANCEL_BTN});
+  MessageDialog confirmUserDeleteDialog = new MessageDialog(PentahoAdminConsole.getLocalizedMessages().deleteUsers(), PentahoAdminConsole.getLocalizedMessages().confirmUserDeletionMsg(), new int[] {MessageDialog.OK_BTN, MessageDialog.CANCEL_BTN});
   
 	public UsersPanel() {
 	  DockPanel userListPanel = buildUsersListPanel();
@@ -43,14 +44,14 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     
     setSpacing(10);
     
-    setCellWidth(userListPanel, "30%");
-    setCellWidth(userDetailsDockPanel, "70%");
-    setCellHeight(userListPanel, "100%");
-    setCellHeight(userDetailsDockPanel, "100%");
-    userListPanel.setWidth("100%");
-    userListPanel.setHeight("100%");
-    userDetailsDockPanel.setWidth("100%");
-    userDetailsDockPanel.setHeight("100%");
+    setCellWidth(userListPanel, "30%"); //$NON-NLS-1$
+    setCellWidth(userDetailsDockPanel, "70%"); //$NON-NLS-1$
+    setCellHeight(userListPanel, "100%"); //$NON-NLS-1$
+    setCellHeight(userDetailsDockPanel, "100%"); //$NON-NLS-1$
+    userListPanel.setWidth("100%"); //$NON-NLS-1$
+    userListPanel.setHeight("100%"); //$NON-NLS-1$
+    userDetailsDockPanel.setWidth("100%"); //$NON-NLS-1$
+    userDetailsDockPanel.setHeight("100%"); //$NON-NLS-1$
     
     userDetailsPanel.setEnabled(false);
     updateUserBtn.setEnabled(false);
@@ -74,13 +75,13 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	  
 	  dockPanel.setCellHorizontalAlignment(updateUserBtn, HasHorizontalAlignment.ALIGN_RIGHT);
     
-	  dockPanel.setCellWidth(userDetailsPanel, "100%");
-	  dockPanel.setCellHeight(assignedRolesPanel, "100%");
-	  dockPanel.setCellWidth(assignedRolesPanel, "100%");
+	  dockPanel.setCellWidth(userDetailsPanel, "100%"); //$NON-NLS-1$
+	  dockPanel.setCellHeight(assignedRolesPanel, "100%"); //$NON-NLS-1$
+	  dockPanel.setCellWidth(assignedRolesPanel, "100%"); //$NON-NLS-1$
 	  
-	  userDetailsPanel.setWidth("100%");
-    assignedRolesPanel.setWidth("100%");
-    assignedRolesPanel.setHeight("100%");
+	  userDetailsPanel.setWidth("100%"); //$NON-NLS-1$
+    assignedRolesPanel.setWidth("100%"); //$NON-NLS-1$
+    assignedRolesPanel.setHeight("100%"); //$NON-NLS-1$
 	  
     updateUserBtn.addClickListener(this);
 	  return dockPanel;
@@ -90,26 +91,26 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	  DockPanel headerDockPanel = new DockPanel();
     headerDockPanel.add(deleteUserBtn, DockPanel.EAST);
 	  headerDockPanel.add(addUserBtn, DockPanel.EAST);
-    Label label = new Label("Users");
+    Label label = new Label("Users"); //$NON-NLS-1$
 	  headerDockPanel.add(label, DockPanel.WEST);
-	  headerDockPanel.setCellWidth(label, "100%");
+	  headerDockPanel.setCellWidth(label, "100%"); //$NON-NLS-1$
     DockPanel userListPanel = new DockPanel();
     userListPanel.add(headerDockPanel, DockPanel.NORTH);
     userListPanel.add(usersList, DockPanel.CENTER);    
     userListPanel.add(filterTextBox, DockPanel.SOUTH  );
-    userListPanel.add(new Label("User List Filter:"), DockPanel.SOUTH );
+    userListPanel.add(new Label(PentahoAdminConsole.getLocalizedMessages().userListFilter()), DockPanel.SOUTH );
     
-    userListPanel.setCellHeight(usersList, "100%");
-    userListPanel.setCellWidth(usersList, "100%");
-    userListPanel.setHeight("100%");
-    userListPanel.setWidth("100%");
-    usersList.setHeight("100%");
-    usersList.setWidth("100%");
-    addUserBtn.setWidth("20px");
-    deleteUserBtn.setWidth("20px");
-    addUserBtn.setHeight("20px");
-    deleteUserBtn.setHeight("20px");
-    filterTextBox.setWidth( "100%" );
+    userListPanel.setCellHeight(usersList, "100%"); //$NON-NLS-1$
+    userListPanel.setCellWidth(usersList, "100%"); //$NON-NLS-1$
+    userListPanel.setHeight("100%"); //$NON-NLS-1$
+    userListPanel.setWidth("100%"); //$NON-NLS-1$
+    usersList.setHeight("100%"); //$NON-NLS-1$
+    usersList.setWidth("100%"); //$NON-NLS-1$
+    addUserBtn.setWidth("20px"); //$NON-NLS-1$
+    deleteUserBtn.setWidth("20px"); //$NON-NLS-1$
+    addUserBtn.setHeight("20px"); //$NON-NLS-1$
+    deleteUserBtn.setHeight("20px"); //$NON-NLS-1$
+    filterTextBox.setWidth( "100%" ); //$NON-NLS-1$
     deleteUserBtn.setEnabled(false);
     
     filterTextBox.addKeyboardListener( this );
@@ -121,12 +122,12 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	
 	public DockPanel buildAssignedRolesPanel() {
 	  DockPanel assignedRolesPanel = new DockPanel();
-	  assignedRolesPanel.add(new Label("Assigned Roles"), DockPanel.NORTH);
+	  assignedRolesPanel.add(new Label(PentahoAdminConsole.getLocalizedMessages().assignedRoles()), DockPanel.NORTH);
 	  assignedRolesPanel.add(assignedRolesList, DockPanel.CENTER);
-	  assignedRolesPanel.setCellHeight(assignedRolesList, "100%");
-	  assignedRolesPanel.setCellWidth(assignedRolesList, "100%");
-	  assignedRolesList.setHeight("100%");
-	  assignedRolesList.setWidth("100%");
+	  assignedRolesPanel.setCellHeight(assignedRolesList, "100%"); //$NON-NLS-1$
+	  assignedRolesPanel.setCellWidth(assignedRolesList, "100%"); //$NON-NLS-1$
+	  assignedRolesList.setHeight("100%"); //$NON-NLS-1$
+	  assignedRolesList.setWidth("100%"); //$NON-NLS-1$
 	  return assignedRolesPanel;
 	}
 	
@@ -159,11 +160,11 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	      }
 
 	      public void onFailure(Throwable caught) {
-	        messageDialog.setText("Delete Users");
+	        messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().deleteUsers());
           if (caught instanceof PentahoSecurityException) {
-            messageDialog.setMessage("Insufficient privileges.");
+            messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().insufficientPrivileges());
           } else if (caught instanceof NonExistingUserException) {
-            messageDialog.setMessage("User does not exist: " + caught.getMessage());
+            messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().userDoesNotExist(caught.getMessage()));
           } else {
             messageDialog.setMessage(caught.getMessage());
           }
@@ -192,8 +193,8 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	
 	private void updateUserDetails( final Widget sender ) {
 	  if (!userDetailsPanel.getPassword().equals(userDetailsPanel.getPasswordConfirmation())) { 
-	    messageDialog.setText("Update User");
-      messageDialog.setMessage("Password does not match password confirmation.");
+	    messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().updateUser());
+      messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().passwordConfirmationFailed());
       messageDialog.center();
 	  } else {
       ((Button)sender).setEnabled( false );
@@ -207,11 +208,11 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	      }
 
 	      public void onFailure(Throwable caught) {
-          messageDialog.setText("Update User");
+          messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().updateUser());
           if (caught instanceof PentahoSecurityException) {
-            messageDialog.setMessage("Insufficient privileges.");
+            messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().insufficientPrivileges());
           } else if (caught instanceof NonExistingUserException) {
-            messageDialog.setMessage("User does not exist: " + caught.getMessage());
+            messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().userDoesNotExist(caught.getMessage()));
           } else {
             messageDialog.setMessage(caught.getMessage());
           }
@@ -256,11 +257,4 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     }
   }
   
-//  public boolean isInitialized() {
-//    return usersList.isInitialized();
-//  }
-  
-//  public void clearUsersCache() {
-//    usersList.clearUsersCache();
-//  }
 }

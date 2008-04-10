@@ -1,12 +1,10 @@
 package org.pentaho.pac.client.services;
 
-import org.pentaho.pac.client.PacService;
 import org.pentaho.pac.client.PacServiceAsync;
 import org.pentaho.pac.client.PacServiceFactory;
+import org.pentaho.pac.client.PentahoAdminConsole;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -18,19 +16,19 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class AdminServicesPanel extends VerticalPanel implements ClickListener {
 
-  Button refreshSolutionRepositoryBtn = new Button("Refresh Solution Repository");
-  Button cleanRepositoryBtn = new Button("Remove Stale Conent");
-  Button clearMondrianDataCacheBtn = new Button("Purge Mondrian Data Cache");
-  Button clearMondrianSchemaCacheBtn = new Button("Purge Mondrian Schema Cahce");
-  Button scheduleRepositoryCleaningBtn = new Button("Schedule Daily Repository Cleaning");
-  Button resetRepositoryBtn = new Button("Restore Default File Permissions");
-  Button refreshSystemSettingsBtn = new Button("Refresh System Settings");
-  Button executeGlobalActionsBtn = new Button("Execute Global Actions");
-  Button refreshReportingMetadataBtn = new Button("Refresh Reporting Metadata");
+  Button refreshSolutionRepositoryBtn = new Button(PentahoAdminConsole.getLocalizedMessages().refreshSolutionRepository());
+  Button cleanRepositoryBtn = new Button(PentahoAdminConsole.getLocalizedMessages().removeStaleContent());
+  Button clearMondrianDataCacheBtn = new Button(PentahoAdminConsole.getLocalizedMessages().purgeMondrianDataCache());
+  Button clearMondrianSchemaCacheBtn = new Button(PentahoAdminConsole.getLocalizedMessages().purgeMondrianSchemaCache());
+  Button scheduleRepositoryCleaningBtn = new Button(PentahoAdminConsole.getLocalizedMessages().scheduleDailyRepositoryCleaning());
+  Button resetRepositoryBtn = new Button(PentahoAdminConsole.getLocalizedMessages().restoreDefaultFilePermissions());
+  Button refreshSystemSettingsBtn = new Button(PentahoAdminConsole.getLocalizedMessages().refreshSystemSettings());
+  Button executeGlobalActionsBtn = new Button(PentahoAdminConsole.getLocalizedMessages().executeGlobalActions());
+  Button refreshReportingMetadataBtn = new Button(PentahoAdminConsole.getLocalizedMessages().refreshReportingMetadata());
   
   public AdminServicesPanel() {
     Grid grid = new Grid(5, 2);
-    grid.setWidth("100%");
+    grid.setWidth("100%"); //$NON-NLS-1$
     
     grid.setWidget(0, 0, refreshSolutionRepositoryBtn);
     grid.setWidget(0, 1, cleanRepositoryBtn);
@@ -42,15 +40,15 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
     grid.setWidget(3, 1, executeGlobalActionsBtn);
     grid.setWidget(4, 0, refreshReportingMetadataBtn);
     
-    refreshSolutionRepositoryBtn.setWidth("100%");
-    cleanRepositoryBtn.setWidth("100%");
-    clearMondrianDataCacheBtn.setWidth("100%");
-    clearMondrianSchemaCacheBtn.setWidth("100%");
-    scheduleRepositoryCleaningBtn.setWidth("100%");
-    resetRepositoryBtn.setWidth("100%");
-    refreshSystemSettingsBtn.setWidth("100%");
-    executeGlobalActionsBtn.setWidth("100%");
-    refreshReportingMetadataBtn.setWidth("100%");
+    refreshSolutionRepositoryBtn.setWidth("100%"); //$NON-NLS-1$
+    cleanRepositoryBtn.setWidth("100%"); //$NON-NLS-1$
+    clearMondrianDataCacheBtn.setWidth("100%"); //$NON-NLS-1$
+    clearMondrianSchemaCacheBtn.setWidth("100%"); //$NON-NLS-1$
+    scheduleRepositoryCleaningBtn.setWidth("100%"); //$NON-NLS-1$
+    resetRepositoryBtn.setWidth("100%"); //$NON-NLS-1$
+    refreshSystemSettingsBtn.setWidth("100%"); //$NON-NLS-1$
+    executeGlobalActionsBtn.setWidth("100%"); //$NON-NLS-1$
+    refreshReportingMetadataBtn.setWidth("100%"); //$NON-NLS-1$
     
     refreshSolutionRepositoryBtn.addClickListener(this);
     cleanRepositoryBtn.addClickListener(this);
@@ -70,8 +68,8 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
       
       public void onSuccess(Object result) {
         final DialogBox dialogBox = new DialogBox();
-        dialogBox.setText("Services");
-        Button okButton = new Button("OK");
+        dialogBox.setText(PentahoAdminConsole.getLocalizedMessages().services());
+        Button okButton = new Button(PentahoAdminConsole.getLocalizedMessages().ok());
         okButton.addClickListener(new ClickListener() {
           public void onClick(Widget sender) {
             dialogBox.hide();
@@ -92,8 +90,8 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
 
       public void onFailure(Throwable caught) {
         final DialogBox dialogBox = new DialogBox();
-        dialogBox.setText("Services");
-        Button okButton = new Button("OK");
+        dialogBox.setText(PentahoAdminConsole.getLocalizedMessages().services());
+        Button okButton = new Button(PentahoAdminConsole.getLocalizedMessages().ok());
         okButton.addClickListener(new ClickListener() {
           public void onClick(Widget sender) {
             dialogBox.hide();

@@ -1,6 +1,7 @@
 package org.pentaho.pac.client.roles;
 
 import org.pentaho.pac.client.MessageDialog;
+import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.client.users.UsersList;
 import org.pentaho.pac.common.PentahoSecurityException;
@@ -24,16 +25,16 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class RolesPanel extends DockPanel implements ClickListener, ChangeListener, PopupListener, KeyboardListener {
 
-  MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN});
+  MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN}); //$NON-NLS-1$
   RolesList rolesList = new RolesList(true);
   UsersList assignedUsersList = new UsersList(true);
   RoleDetailsPanel roleDetailsPanel = new RoleDetailsPanel();
-  Button updateRoleBtn = new Button("Update");
-  Button addRoleBtn = new Button("+");
-  Button deleteRoleBtn = new Button("-");
+  Button updateRoleBtn = new Button(PentahoAdminConsole.getLocalizedMessages().update());
+  Button addRoleBtn = new Button("+"); //$NON-NLS-1$
+  Button deleteRoleBtn = new Button("-"); //$NON-NLS-1$
   TextBox filterTextBox = new TextBox();
   NewRoleDialogBox newRoleDialogBox = new NewRoleDialogBox();
-  MessageDialog confirmRoleDeleteDialog = new MessageDialog("Delete Roles", "Are your sure you want to delete the selected roles.", new int[] {MessageDialog.OK_BTN, MessageDialog.CANCEL_BTN});
+  MessageDialog confirmRoleDeleteDialog = new MessageDialog(PentahoAdminConsole.getLocalizedMessages().deleteRoles(), PentahoAdminConsole.getLocalizedMessages().confirmRoleDeletionMsg(), new int[] {MessageDialog.OK_BTN, MessageDialog.CANCEL_BTN});
   
 	public RolesPanel() {
 	  DockPanel roleListPanel = buildRolesListPanel();
@@ -44,14 +45,14 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     
     setSpacing(10);
     
-    setCellWidth(roleListPanel, "30%");
-    setCellWidth(roleDetailsDockPanel, "70%");
-    setCellHeight(roleListPanel, "100%");
-    setCellHeight(roleDetailsDockPanel, "100%");
-    roleListPanel.setWidth("100%");
-    roleListPanel.setHeight("100%");
-    roleDetailsDockPanel.setWidth("100%");
-    roleDetailsDockPanel.setHeight("100%");
+    setCellWidth(roleListPanel, "30%"); //$NON-NLS-1$
+    setCellWidth(roleDetailsDockPanel, "70%"); //$NON-NLS-1$
+    setCellHeight(roleListPanel, "100%"); //$NON-NLS-1$
+    setCellHeight(roleDetailsDockPanel, "100%"); //$NON-NLS-1$
+    roleListPanel.setWidth("100%"); //$NON-NLS-1$
+    roleListPanel.setHeight("100%"); //$NON-NLS-1$
+    roleDetailsDockPanel.setWidth("100%"); //$NON-NLS-1$
+    roleDetailsDockPanel.setHeight("100%"); //$NON-NLS-1$
     
     roleDetailsPanel.setEnabled(false);
     updateRoleBtn.setEnabled(false);
@@ -73,13 +74,13 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 	  
 	  dockPanel.setCellHorizontalAlignment(updateRoleBtn, HasHorizontalAlignment.ALIGN_RIGHT);
     
-	  dockPanel.setCellWidth(roleDetailsPanel, "100%");
-	  dockPanel.setCellHeight(assignedRolesPanel, "100%");
-	  dockPanel.setCellWidth(assignedRolesPanel, "100%");
+	  dockPanel.setCellWidth(roleDetailsPanel, "100%"); //$NON-NLS-1$
+	  dockPanel.setCellHeight(assignedRolesPanel, "100%"); //$NON-NLS-1$
+	  dockPanel.setCellWidth(assignedRolesPanel, "100%"); //$NON-NLS-1$
 	  
-	  roleDetailsPanel.setWidth("100%");
-    assignedRolesPanel.setWidth("100%");
-    assignedRolesPanel.setHeight("100%");
+	  roleDetailsPanel.setWidth("100%"); //$NON-NLS-1$
+    assignedRolesPanel.setWidth("100%"); //$NON-NLS-1$
+    assignedRolesPanel.setHeight("100%"); //$NON-NLS-1$
 	  
     updateRoleBtn.addClickListener(this);
 	  return dockPanel;
@@ -89,26 +90,26 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 	  DockPanel headerDockPanel = new DockPanel();
     headerDockPanel.add(deleteRoleBtn, DockPanel.EAST);
 	  headerDockPanel.add(addRoleBtn, DockPanel.EAST);
-    Label label = new Label("Roles");
+    Label label = new Label(PentahoAdminConsole.getLocalizedMessages().roles());
 	  headerDockPanel.add(label, DockPanel.WEST);
-	  headerDockPanel.setCellWidth(label, "100%");
+	  headerDockPanel.setCellWidth(label, "100%"); //$NON-NLS-1$
     DockPanel roleListPanel = new DockPanel();
     roleListPanel.add(headerDockPanel, DockPanel.NORTH);
     roleListPanel.add(rolesList, DockPanel.CENTER);
     roleListPanel.add(filterTextBox, DockPanel.SOUTH  );
-    roleListPanel.add(new Label("User List Filter:"), DockPanel.SOUTH );
+    roleListPanel.add(new Label(PentahoAdminConsole.getLocalizedMessages().roleListFilter()), DockPanel.SOUTH );
 
-    roleListPanel.setCellHeight(rolesList, "100%");
-    roleListPanel.setCellWidth(rolesList, "100%");
-    roleListPanel.setHeight("100%");
-    roleListPanel.setWidth("100%");
-    rolesList.setHeight("100%");
-    rolesList.setWidth("100%");
-    addRoleBtn.setWidth("20px");
-    deleteRoleBtn.setWidth("20px");
-    addRoleBtn.setHeight("20px");
-    deleteRoleBtn.setHeight("20px");
-    filterTextBox.setWidth( "100%" );
+    roleListPanel.setCellHeight(rolesList, "100%"); //$NON-NLS-1$
+    roleListPanel.setCellWidth(rolesList, "100%"); //$NON-NLS-1$
+    roleListPanel.setHeight("100%"); //$NON-NLS-1$
+    roleListPanel.setWidth("100%"); //$NON-NLS-1$
+    rolesList.setHeight("100%"); //$NON-NLS-1$
+    rolesList.setWidth("100%"); //$NON-NLS-1$
+    addRoleBtn.setWidth("20px"); //$NON-NLS-1$
+    deleteRoleBtn.setWidth("20px"); //$NON-NLS-1$
+    addRoleBtn.setHeight("20px"); //$NON-NLS-1$
+    deleteRoleBtn.setHeight("20px"); //$NON-NLS-1$
+    filterTextBox.setWidth( "100%" ); //$NON-NLS-1$
     deleteRoleBtn.setEnabled(false);
     
     filterTextBox.addKeyboardListener( this );
@@ -120,12 +121,12 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 	
 	public DockPanel buildAssignedUsersPanel() {
 	  DockPanel assignedRolesPanel = new DockPanel();
-	  assignedRolesPanel.add(new Label("Assigned Users"), DockPanel.NORTH);
+	  assignedRolesPanel.add(new Label(PentahoAdminConsole.getLocalizedMessages().assignedUsers()), DockPanel.NORTH);
 	  assignedRolesPanel.add(assignedUsersList, DockPanel.CENTER);
-	  assignedRolesPanel.setCellHeight(assignedUsersList, "100%");
-	  assignedRolesPanel.setCellWidth(assignedUsersList, "100%");
-	  assignedUsersList.setHeight("100%");
-	  assignedUsersList.setWidth("100%");
+	  assignedRolesPanel.setCellHeight(assignedUsersList, "100%"); //$NON-NLS-1$
+	  assignedRolesPanel.setCellWidth(assignedUsersList, "100%"); //$NON-NLS-1$
+	  assignedUsersList.setHeight("100%"); //$NON-NLS-1$
+	  assignedUsersList.setWidth("100%"); //$NON-NLS-1$
 	  return assignedRolesPanel;
 	}
 	
@@ -158,11 +159,11 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 	      }
 
 	      public void onFailure(Throwable caught) {
-          messageDialog.setText("Delete Roles");
+          messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().deleteRoles());
           if (caught instanceof PentahoSecurityException) {
-            messageDialog.setMessage("Insufficient privileges.");
+            messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().insufficientPrivileges());
           } else if (caught instanceof NonExistingRoleException) {
-            messageDialog.setMessage("Role does not exist: " + caught.getMessage());
+            messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().roleDoesNotExist(caught.getMessage()));
           } else {
             messageDialog.setMessage(caught.getMessage());
           }
@@ -198,13 +199,13 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
       }
 
       public void onFailure(Throwable caught) {
-        messageDialog.setText("Update Role");
+        messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().updateRole());
         if (caught instanceof PentahoSecurityException) {
-          messageDialog.setMessage("Insufficient privileges.");
+          messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().insufficientPrivileges());
         } else if (caught instanceof NonExistingRoleException) {
-          messageDialog.setMessage("Role does not exist: " + caught.getMessage());
+          messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().roleDoesNotExist(caught.getMessage()));
         } else if (caught instanceof NonExistingUserException) {
-          messageDialog.setMessage("Can not assign not existing user to role: " + caught.getMessage());
+          messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().cantAssignNonexistingUserToRole(caught.getMessage()));
         } else {
           messageDialog.setMessage(caught.getMessage());
         }
@@ -248,11 +249,4 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     }
   }
   
-//  public boolean isInitialized() {
-//    return rolesList.isInitialized();
-//  }
-
-//  public void clearRolesCache() {
-//    rolesList.clearRolesCache();
-//  }
 }

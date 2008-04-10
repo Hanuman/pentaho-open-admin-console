@@ -24,9 +24,9 @@ import com.google.gwt.user.client.ui.Widget;
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListener {
-  ToggleButton adminToggleBtn = new ToggleButton("Administration");
-  ToggleButton homeToggleBtn = new ToggleButton("Home");
-  ToggleButton testToggleBtn = new ToggleButton("Test");
+  ToggleButton adminToggleBtn = new ToggleButton(PentahoAdminConsole.getLocalizedMessages().administration());
+  ToggleButton homeToggleBtn = new ToggleButton(PentahoAdminConsole.getLocalizedMessages().home());
+  ToggleButton testToggleBtn = new ToggleButton(PentahoAdminConsole.getLocalizedMessages().test());
   
   VerticalPanel leftVerticalPanel = new VerticalPanel();
   TabPanel rightTabPanel = new TabPanel();
@@ -41,7 +41,7 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
   TabPanel adminTabPanel = new TabPanel();
   
   boolean securityInfoInitialized = false;
-  MessageDialog messageDialog = new MessageDialog("Security", "", new int[]{MessageDialog.OK_BTN});
+  MessageDialog messageDialog = new MessageDialog(PentahoAdminConsole.getLocalizedMessages().security(), "", new int[]{MessageDialog.OK_BTN}); //$NON-NLS-1$
   
   // TODO can this be a "real" Java 5 enum?
   public static final int ADMIN_USERS_ROLES_TAB_INDEX = 0;
@@ -75,7 +75,7 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
     adminTabPanel.add(schedulerPanel, getLocalizedMessages().scheduler());
     
     usersAndRolesPanel.setBorderWidth(2);    
-    HomePanel homePanel = new HomePanel("http://www.pentaho.com/console_home");
+    HomePanel homePanel = new HomePanel("http://www.pentaho.com/console_home"); //$NON-NLS-1$
     deckPanel.add(homePanel);
     deckPanel.add(adminTabPanel);
 
@@ -84,28 +84,28 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
     dockPanel.add(deckPanel, DockPanel.CENTER);
     
     
-    dockPanel.setCellWidth(deckPanel, "100%");
-    dockPanel.setCellHeight(deckPanel, "100%");
+    dockPanel.setCellWidth(deckPanel, "100%"); //$NON-NLS-1$
+    dockPanel.setCellHeight(deckPanel, "100%"); //$NON-NLS-1$
     
     dockPanel.setSpacing(10);
     
-    dockPanel.setWidth("100%");
-    dockPanel.setHeight("100%");
-    adminTabPanel.setWidth("100%");
-    adminTabPanel.setHeight("100%");
+    dockPanel.setWidth("100%"); //$NON-NLS-1$
+    dockPanel.setHeight("100%"); //$NON-NLS-1$
+    adminTabPanel.setWidth("100%"); //$NON-NLS-1$
+    adminTabPanel.setHeight("100%"); //$NON-NLS-1$
     
-    usersAndRolesPanel.setWidth("100%");
-    usersAndRolesPanel.setHeight("100%");
-    dataSourcesPanel.setWidth("100%");
-    dataSourcesPanel.setHeight("100%");
-    servicesPanel.setWidth("100%");
-    servicesPanel.setHeight("100%");
+    usersAndRolesPanel.setWidth("100%"); //$NON-NLS-1$
+    usersAndRolesPanel.setHeight("100%"); //$NON-NLS-1$
+    dataSourcesPanel.setWidth("100%"); //$NON-NLS-1$
+    dataSourcesPanel.setHeight("100%"); //$NON-NLS-1$
+    servicesPanel.setWidth("100%"); //$NON-NLS-1$
+    servicesPanel.setHeight("100%"); //$NON-NLS-1$
     
-    schedulerPanel.setWidth("100%");
-    schedulerPanel.setHeight("100%");
+    schedulerPanel.setWidth("100%"); //$NON-NLS-1$
+    schedulerPanel.setHeight("100%"); //$NON-NLS-1$
     
-    deckPanel.setWidth("100%");
-    deckPanel.setHeight("100%");
+    deckPanel.setWidth("100%"); //$NON-NLS-1$
+    deckPanel.setHeight("100%"); //$NON-NLS-1$
     adminTabPanel.selectTab(ADMIN_USERS_ROLES_TAB_INDEX);
 
     RootPanel.get().add(dockPanel);    
@@ -160,7 +160,7 @@ public void onClick(Widget sender) {
       }
     
       public void onFailure(Throwable caught) {
-        messageDialog.setMessage("Unable to refresh security information: " + caught.getMessage());
+        messageDialog.setMessage(getLocalizedMessages().securityRefreshError(caught.getMessage()));
         messageDialog.center();
       }
     };
@@ -191,7 +191,7 @@ public void onClick(Widget sender) {
         }
         break;
       default:
-        throw new RuntimeException( "Invalid tabIndex: " + tabIndex );
+        throw new RuntimeException(getLocalizedMessages().invalidTabIndex(tabIndex));
     }   
   }
   

@@ -1,5 +1,6 @@
 package org.pentaho.pac.client.roles;
 
+import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
 
 import com.google.gwt.user.client.ui.Label;
@@ -11,12 +12,12 @@ public class RoleDetailsPanel extends VerticalPanel {
   TextBox descriptionTextBox = new TextBox();
   
   public RoleDetailsPanel() {
-    add(new Label("Role Name"));
+    add(new Label(PentahoAdminConsole.getLocalizedMessages().roleName()));
     add(roleNameTextBox);
-    add(new Label("Description"));
+    add(new Label(PentahoAdminConsole.getLocalizedMessages().description()));
     add(descriptionTextBox);
-    roleNameTextBox.setWidth("100%");
-    descriptionTextBox.setWidth("100%");
+    roleNameTextBox.setWidth("100%"); //$NON-NLS-1$
+    descriptionTextBox.setWidth("100%"); //$NON-NLS-1$
   }
 
   public String getRoleName() {
@@ -45,8 +46,8 @@ public class RoleDetailsPanel extends VerticalPanel {
 
   public void setRole(ProxyPentahoRole role) {
     if (role == null) {
-      setRoleName("");
-      setDescription("");
+      setRoleName(""); //$NON-NLS-1$
+      setDescription(""); //$NON-NLS-1$
     } else {
       setRoleName(role.getName());
       setDescription(role.getDescription());

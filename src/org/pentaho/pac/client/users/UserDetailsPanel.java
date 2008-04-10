@@ -1,5 +1,6 @@
 package org.pentaho.pac.client.users;
 
+import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.common.users.ProxyPentahoUser;
 
 import com.google.gwt.user.client.ui.Label;
@@ -14,18 +15,18 @@ public class UserDetailsPanel extends VerticalPanel {
   TextBox descriptionTextBox = new TextBox();
   
   public UserDetailsPanel() {
-    add(new Label("User Name"));
+    add(new Label(PentahoAdminConsole.getLocalizedMessages().userName()));
     add(userNameTextBox);
-    add(new Label("Password"));
+    add(new Label(PentahoAdminConsole.getLocalizedMessages().password()));
     add(passwordTextBox);
-    add(new Label("Password Confirmation"));
+    add(new Label(PentahoAdminConsole.getLocalizedMessages().passwordConfirmation()));
     add(passwordConfirmationTextBox);
-    add(new Label("Description"));
+    add(new Label(PentahoAdminConsole.getLocalizedMessages().description()));
     add(descriptionTextBox);
-    userNameTextBox.setWidth("100%");
-    passwordTextBox.setWidth("100%");
-    passwordConfirmationTextBox.setWidth("100%");
-    descriptionTextBox.setWidth("100%");
+    userNameTextBox.setWidth("100%"); //$NON-NLS-1$
+    passwordTextBox.setWidth("100%"); //$NON-NLS-1$
+    passwordConfirmationTextBox.setWidth("100%"); //$NON-NLS-1$
+    descriptionTextBox.setWidth("100%"); //$NON-NLS-1$
   }
 
   public String getUserName() {
@@ -78,10 +79,10 @@ public class UserDetailsPanel extends VerticalPanel {
 
   public void setUser(ProxyPentahoUser user) {
     if (user == null) {
-      setUserName("");
-      setPassword("");
-      setPasswordConfirmation("");
-      setDescription("");
+      setUserName(""); //$NON-NLS-1$
+      setPassword(""); //$NON-NLS-1$
+      setPasswordConfirmation(""); //$NON-NLS-1$
+      setDescription(""); //$NON-NLS-1$
     } else {
       setUserName(user.getName());
       setPassword(user.getPassword());

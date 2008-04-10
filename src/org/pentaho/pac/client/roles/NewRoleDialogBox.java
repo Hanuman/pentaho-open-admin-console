@@ -1,7 +1,7 @@
 package org.pentaho.pac.client.roles;
 
 import org.pentaho.pac.client.MessageDialog;
-import org.pentaho.pac.client.PacServiceFactory;
+import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
@@ -18,11 +18,11 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class NewRoleDialogBox extends DialogBox implements ClickListener {
   
-  Button okButton = new Button("OK");
-  Button cancelButton = new Button("Cancel");
+  Button okButton = new Button(PentahoAdminConsole.getLocalizedMessages().ok());
+  Button cancelButton = new Button(PentahoAdminConsole.getLocalizedMessages().cancel());
   RoleDetailsPanel roleDetailsPanel = new RoleDetailsPanel();
   boolean roleCreated = false;
-  MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN});
+  MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN}); //$NON-NLS-1$
   
   public NewRoleDialogBox() {
     super();
@@ -34,10 +34,10 @@ public class NewRoleDialogBox extends DialogBox implements ClickListener {
     verticalPanel.add(roleDetailsPanel);
     verticalPanel.add(footerPanel);
     
-    setText("Add Role");
+    setText(PentahoAdminConsole.getLocalizedMessages().addRole());
     
-    verticalPanel.setWidth("250px");
-    roleDetailsPanel.setWidth("100%");
+    verticalPanel.setWidth("250px"); //$NON-NLS-1$
+    roleDetailsPanel.setWidth("100%"); //$NON-NLS-1$
     
     setWidget(verticalPanel);
     okButton.addClickListener(this);
@@ -93,7 +93,7 @@ public class NewRoleDialogBox extends DialogBox implements ClickListener {
   
   private boolean createRole() {
     if (getRoleName().trim().length() == 0) {
-      messageDialog.setMessage("Invalid role name.");
+      messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().invalidRoleName());
       messageDialog.center();
     } else {
       ProxyPentahoRole role = getRole();
@@ -106,9 +106,9 @@ public class NewRoleDialogBox extends DialogBox implements ClickListener {
 
           public void onFailure(Throwable caught) {
             if (caught instanceof PentahoSecurityException) {
-              messageDialog.setMessage("Insufficient privileges.");
+              messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().insufficientPrivileges());
             } else if (caught instanceof DuplicateUserException) {
-              messageDialog.setMessage("Role already exists.");
+              messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().roleAlreadyExists());
             } else {
               messageDialog.setMessage(caught.getMessage());
             }
