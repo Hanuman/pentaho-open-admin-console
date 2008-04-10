@@ -2,7 +2,6 @@ package org.pentaho.pac.client;
 
 import org.pentaho.pac.client.datasources.DataSourcesPanel;
 import org.pentaho.pac.client.home.HomePanel;
-import org.pentaho.pac.client.i18n.PacLocalizedConstants;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.scheduler.SchedulerPanel;
 import org.pentaho.pac.client.services.AdminServicesPanel;
