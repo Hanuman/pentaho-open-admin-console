@@ -365,7 +365,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
     // TODO sbarkdull, yuk
     a.addClickListener( new ClickListener() {
       public void onClick( Widget sender ) {
-        allActionsTable.setHTML( 1, 1, MSGS.working() );
+        setSchedulerStatusMsg( MSGS.working() );
         updateSchedulerPausedStatus();
       }
     } );
@@ -379,7 +379,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
         new AsyncCallback() {
           public void onSuccess( Object oIsRunning ) {
             boolean isRunning = ((Boolean)oIsRunning).booleanValue();
-            allActionsTable.setHTML( 1, 1, isRunning ? MSGS.running() : MSGS.suspended() );
+            setSchedulerStatusMsg( isRunning ? MSGS.running() : MSGS.suspended() );
           }
     
           public void onFailure(Throwable caught) {
@@ -391,6 +391,10 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
       );
   }
   
+  private void setSchedulerStatusMsg( String statusMsg )
+  {
+    allActionsTable.setHTML( 1, 1, statusMsg );
+  }
   private FlexTable createJobsTable( List/*<Job>*/ jobList ) {
     
     FlexTable table = new FlexTable();
