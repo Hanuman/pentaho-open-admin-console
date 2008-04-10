@@ -48,6 +48,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String errorDeletingDataSource();
 
   /**
+   * Translated "None".
+   * 
+   * @return translated "None"
+   * @gwt.key XmlSerializer.stateNone
+   */
+  String XmlSerializer_stateNone();
+
+  /**
    * Translated "Error Creating Data Source".
    * 
    * @return translated "Error Creating Data Source"
@@ -62,14 +70,6 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key invalidTabIndex
    */
   String invalidTabIndex(String arg0);
-
-  /**
-   * Translated "Complete".
-   * 
-   * @return translated "Complete"
-   * @gwt.key stateComplete
-   */
-  String stateComplete();
 
   /**
    * Translated "User List Filter:".
@@ -224,14 +224,6 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String updateUser();
 
   /**
-   * Translated "None".
-   * 
-   * @return translated "None"
-   * @gwt.key stateNone
-   */
-  String stateNone();
-
-  /**
    * Translated "Purge Mondrian Schema Cache".
    * 
    * @return translated "Purge Mondrian Schema Cache"
@@ -336,14 +328,6 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String dataSourcesRefreshError(String arg0);
 
   /**
-   * Translated "normal".
-   * 
-   * @return translated "normal"
-   * @gwt.key stateNormal
-   */
-  String stateNormal();
-
-  /**
    * Translated "Update Data Source".
    * 
    * @return translated "Update Data Source"
@@ -384,14 +368,6 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String refreshSolutionRepository();
 
   /**
-   * Translated "Blocked".
-   * 
-   * @return translated "Blocked"
-   * @gwt.key stateBlocked
-   */
-  String stateBlocked();
-
-  /**
    * Translated "Insufficient privileges.".
    * 
    * @return translated "Insufficient privileges."
@@ -406,14 +382,6 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key jdbcDriverClass
    */
   String jdbcDriverClass();
-
-  /**
-   * Translated "Error".
-   * 
-   * @return translated "Error"
-   * @gwt.key stateError
-   */
-  String stateError();
 
   /**
    * Translated "Error Loading Data Sources".
@@ -680,28 +648,12 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String missingDbUrl();
 
   /**
-   * Translated "Description".
-   * 
-   * @return translated "Description"
-   * @gwt.key descriptin
-   */
-  String descriptin();
-
-  /**
    * Translated "Add Data Source".
    * 
    * @return translated "Add Data Source"
    * @gwt.key addDataSource
    */
   String addDataSource();
-
-  /**
-   * Translated "Suspended".
-   * 
-   * @return translated "Suspended"
-   * @gwt.key stateSuspended
-   */
-  String stateSuspended();
 
   /**
    * Translated "Yes".
@@ -718,6 +670,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key confirmDataSourceDeletionMsg
    */
   String confirmDataSourceDeletionMsg();
+
+  /**
+   * Translated "Suspended".
+   * 
+   * @return translated "Suspended"
+   * @gwt.key stateSuspended
+   */
+  String stateSuspended();
 
   /**
    * Translated "All Jobs Resumed".

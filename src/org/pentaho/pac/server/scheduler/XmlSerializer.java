@@ -12,9 +12,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.scheduler.Job;
+import org.pentaho.pac.messages.Messages;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -23,8 +22,21 @@ public class XmlSerializer {
   
   private static final ThreadLocal<SAXParserFactory> SAX_FACTORY = new ThreadLocal<SAXParserFactory>();
 
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
-  
+  /**
+   * NOTE: see messages.properties in pentaho project for valid strings.
+   * Locate the keys in messages.properties by looking for:
+   * UI.USER_TRIGGER_STATE_<the state>
+   */
+  private static final Map STATE_STRINGS = new HashMap();
+  static {
+    STATE_STRINGS.put( "0", Messages.getString( "XmlSerializer.stateNormal" ) ); //$NON-NLS-1$
+    STATE_STRINGS.put( "1", Messages.getString( "XmlSerializer.stateSuspended" ) ); //$NON-NLS-1$
+    STATE_STRINGS.put( "2", Messages.getString( "XmlSerializer.stateComplete" ) ); //$NON-NLS-1$
+    STATE_STRINGS.put( "3", Messages.getString( "XmlSerializer.stateError" ) ); //$NON-NLS-1$
+    STATE_STRINGS.put( "4", Messages.getString( "XmlSerializer.stateBlocked" ) ); //$NON-NLS-1$
+    STATE_STRINGS.put( "5", Messages.getString( "XmlSerializer.stateNone" ) ); //$NON-NLS-1$
+  }
+  private static String x = Messages.getString( "bart");
   public List<Job> getJobNamesFromXml( String strXml )
   {
     JobsParserHandler h = null;
@@ -117,21 +129,6 @@ public class XmlSerializer {
         // TODO sbarkdull, error
       }
     }
-  }
-
-  /**
-   * NOTE: see messages.properties in pentaho project for valid strings.
-   * Locate the keys in messages.properties by looking for:
-   * UI.USER_TRIGGER_STATE_<the state>
-   */
-  private static final Map STATE_STRINGS = new HashMap();
-  static {
-    STATE_STRINGS.put( "0", MSGS.stateNormal() ); //$NON-NLS-1$
-    STATE_STRINGS.put( "1", MSGS.stateSuspended() ); //$NON-NLS-1$
-    STATE_STRINGS.put( "2", MSGS.stateComplete() ); //$NON-NLS-1$
-    STATE_STRINGS.put( "3", MSGS.stateError() ); //$NON-NLS-1$
-    STATE_STRINGS.put( "4", MSGS.stateBlocked() ); //$NON-NLS-1$
-    STATE_STRINGS.put( "5", MSGS.stateNone() ); //$NON-NLS-1$
   }
   
   private static String triggerInt2Name( String strInt )

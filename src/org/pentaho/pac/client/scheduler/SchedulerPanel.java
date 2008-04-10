@@ -31,7 +31,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
   private static final String[] COLUMN_HEADER_TITLE = {
     MSGS.jobGroupName(),
     MSGS.triggerGroupName(),
-    MSGS.descriptin(),
+    MSGS.description(),
     MSGS.fireTimeLastNext(),
     MSGS.state(),
     MSGS.action()
@@ -67,6 +67,8 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
               MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
                   caught.getMessage(), new int[]{MessageDialog.OK_BTN});
               messageDialog.center();
+              remove( loading );
+              isInitialized = false;
             }
           }
         );
