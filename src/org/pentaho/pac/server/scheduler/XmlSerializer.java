@@ -12,6 +12,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.pentaho.pac.client.PentahoAdminConsole;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.scheduler.Job;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -21,6 +23,8 @@ public class XmlSerializer {
   
   private static final ThreadLocal<SAXParserFactory> SAX_FACTORY = new ThreadLocal<SAXParserFactory>();
 
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
+  
   public List<Job> getJobNamesFromXml( String strXml )
   {
     JobsParserHandler h = null;
@@ -45,7 +49,7 @@ public class XmlSerializer {
       // TODO sbarkdull, need to set encoding
 //      String encoding = CleanXmlHelper.getEncoding( strXml );
 //      InputStream is = new ByteArrayInputStream( strXml.getBytes( encoding ) );
-      InputStream is = new ByteArrayInputStream( strXml.getBytes( "UTF-8") );
+      InputStream is = new ByteArrayInputStream( strXml.getBytes( "UTF-8") ); //$NON-NLS-1$
      
       parser.parse( is, h );
       return h;
@@ -94,19 +98,19 @@ public class XmlSerializer {
 
         currentJob = new Job();
         jobList.add( currentJob );
-        String val = attributes.getValue( "triggerName" );
+        String val = attributes.getValue( "triggerName" ); //$NON-NLS-1$
         currentJob.triggerName = val;
-        val = attributes.getValue( "triggerGroup" );
+        val = attributes.getValue( "triggerGroup" ); //$NON-NLS-1$
         currentJob.triggerGroup = val;
-        val = attributes.getValue( "triggerState" );
+        val = attributes.getValue( "triggerState" ); //$NON-NLS-1$
         currentJob.triggerState = triggerInt2Name( val );
-        val = attributes.getValue( "nextFireTime" );
+        val = attributes.getValue( "nextFireTime" ); //$NON-NLS-1$
         currentJob.nextFireTime = val;
-        val = attributes.getValue( "prevFireTime" );
+        val = attributes.getValue( "prevFireTime" ); //$NON-NLS-1$
         currentJob.prevFireTime = val;
-        val = attributes.getValue( "jobName" );
+        val = attributes.getValue( "jobName" ); //$NON-NLS-1$
         currentJob.jobName = val;
-        val = attributes.getValue( "jobGroup" );
+        val = attributes.getValue( "jobGroup" ); //$NON-NLS-1$
         currentJob.jobGroup = val;
       } else if ( qName.equals( "description" ) ) { //$NON-NLS-1$
       } else {
@@ -122,12 +126,12 @@ public class XmlSerializer {
    */
   private static final Map STATE_STRINGS = new HashMap();
   static {
-    STATE_STRINGS.put( "0", "Normal" );
-    STATE_STRINGS.put( "1", "Suspended" );
-    STATE_STRINGS.put( "2", "Complete" );
-    STATE_STRINGS.put( "3", "Error" );
-    STATE_STRINGS.put( "4", "Blocked" );
-    STATE_STRINGS.put( "5", "None" );
+    STATE_STRINGS.put( "0", MSGS.stateNormal() ); //$NON-NLS-1$
+    STATE_STRINGS.put( "1", MSGS.stateSuspended() ); //$NON-NLS-1$
+    STATE_STRINGS.put( "2", MSGS.stateComplete() ); //$NON-NLS-1$
+    STATE_STRINGS.put( "3", MSGS.stateError() ); //$NON-NLS-1$
+    STATE_STRINGS.put( "4", MSGS.stateBlocked() ); //$NON-NLS-1$
+    STATE_STRINGS.put( "5", MSGS.stateNone() ); //$NON-NLS-1$
   }
   
   private static String triggerInt2Name( String strInt )
@@ -155,6 +159,6 @@ public class XmlSerializer {
   }
   
   public boolean getSchedulerStatusFromXml( String strXml ) {
-    return strXml.contains( "Running" );
+    return strXml.contains( "Running" ); //$NON-NLS-1$
   }
 }

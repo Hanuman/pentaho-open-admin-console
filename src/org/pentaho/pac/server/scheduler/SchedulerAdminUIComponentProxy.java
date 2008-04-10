@@ -16,9 +16,9 @@ import org.pentaho.pac.server.common.BiServerAdminProxy;
 
 public class SchedulerAdminUIComponentProxy {
 
-  private static final String SCHEDULER_SERVICE_NAME = "SchedulerAdmin";
+  private static final String SCHEDULER_SERVICE_NAME = "SchedulerAdmin"; //$NON-NLS-1$
   private static final int NUM_RETRIES = 3;
-  private static final String TRUSTED_USER_KEY = "_TRUST_USER_";
+  private static final String TRUSTED_USER_KEY = "_TRUST_USER_"; //$NON-NLS-1$
   private String baseUrl = null;
   private String userName = null;
   // TODO sbarkdull, is this thread safe enough?
@@ -31,7 +31,39 @@ public class SchedulerAdminUIComponentProxy {
 
   // TODO sbarkdull, probably need to throw a different exception
   // move to utils class
+  // TODO, need to have a single instance of HTTP client (as opposed to
+  // creating a new one on each method call, to maintain an ongoing session w/ the remote server
+  // to understand threading issues:
+  // http://hc.apache.org/httpclient-3.x/performance.html
+  // http://hc.apache.org/httpclient-3.x/threading.html
   /**
+   * Configuration note: In order to use this method to contact the pentaho bi server,
+   * the bi server must be configured to trust the host (ie IP address) that this 
+   * method is executing on. To do that:
+   * Edit the bi server application's (ie the PCI) web.xml file and add this
+   * filter definition:
+   *   <filter>
+   *       <filter-name>Proxy Trusting Filter</filter-name>
+   *       <filter-class>org.pentaho.ui.servlet.ProxyTrustingFilter</filter-class>
+   *       <init-param>
+   *         <param-name>TrustedIpAddrs</param-name>
+   *         <param-value>127.0.0.1</param-value>
+   *         <description>Comma separated list of IP addresses of a trusted hosts.</description>
+   *       </init-param>
+   *     </filter>
+   *  The param-value for the param named TrustedIpAddrs is a comma separater list of
+   *  IP addresses/hostnames that the bi server will trust. The hostname or IP address
+   *  of the machine running this method must be in the TrustedIpAddrs list.
+   *  
+   *  In addition, you must have a filter mapping that maps the above filter name
+   *  (Proxy Trusting Filter) to a url that this method will be accessing on
+   *  the bi server.
+   *  
+   *    <filter-mapping>
+   *      <filter-name>Proxy Trusting Filter</filter-name>
+   *      <url-pattern>/SchedulerAdmin</url-pattern>
+   *    </filter-mapping>
+   * 
    * @param baseUrl base url of server, for instance: http://localhost:8080/pentaho
    * @param serviceName name of service on server, for instance: SchedulerAdmin
    * @param params params to pass with request

@@ -24,6 +24,7 @@ public class BiServerAdminProxy {
   // TODO sbarkdull, need to be init params, not hardcoded
   String proxyURL = "http://localhost:8080/pentaho"; // "http://localhost:8080/pentaho";
   String errorURL = null; // The URL to redirect to if the user is invalid
+  // TODO
   String userName = "joe";
 
   /**
@@ -66,7 +67,7 @@ public class BiServerAdminProxy {
       // Create a method instance.
       method = new GetMethod(proxyURL + "/" + serviceName); //$NON-NLS-1$
 
-      method.addRequestHeader( "Content-Type", "text/xml" );
+      method.addRequestHeader( "Content-Type", "text/xml" ); //$NON-NLS-1$ //$NON-NLS-2$
       method.setQueryString(params);
 // TODO sbarkdull, clean up
 //      method.setQueryString( method.getQueryString()
