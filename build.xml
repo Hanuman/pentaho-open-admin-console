@@ -53,7 +53,7 @@
     =================================================================== -->
 
 	<target name="clean-test" description="deletes all generated test files">
-		<delete dir="test"/>
+		<delete dir="${test.reports.dir}"/>
 	</target>
 	<!-- ===================================================================
         target: compile              
@@ -169,25 +169,25 @@
 
 	<target name="test" depends="clean-test,compile"
 	    description="runs all JUnit tests">
-		<mkdir dir="test"/>
+		<mkdir dir="${test.reports.dir}"/>
 		<junit fork="yes" printsummary="yes">
 			<!-- next line is only for Mac OS X -->
 			<jvmarg value="-XstartOnFirstThread"/>
 			<classpath refid="classpath"/>
-			<batchtest todir="test">
+			<batchtest todir="${test.reports.dir}">
 				<fileset dir="src" includes="**/${test}Test.java"/>
 			</batchtest>
 			<formatter type="xml"/>
 		</junit>
-		<junitreport toDir="test">
-			<fileset dir="test"/>
-			<report format="frames" todir="test"/>
+		<junitreport toDir="${test.reports.dir}">
+			<fileset dir="${test.reports.dir}"/>
+			<report format="frames" todir="${test.reports.dir}"/>
 		</junitreport>
 		<exec os="Windows" executable="cmd.exe">
-			<arg line="/c start test/index.html"/>
+			<arg line="/c start test/reports/index.html"/>
 		</exec>
 		<exec os="Mac OS X" executable="open">
-			<arg line="-a /Applications/Safari.app test/index.html"/>
+			<arg line="-a /Applications/Safari.app test/reports/index.html"/>
 		</exec>
 	</target>
 
