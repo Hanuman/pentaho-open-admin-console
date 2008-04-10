@@ -24,44 +24,12 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String refreshSystemSettings();
 
   /**
-   * Translated "Delete Data Sources".
-   * 
-   * @return translated "Delete Data Sources"
-   * @gwt.key deleteDataSources
-   */
-  String deleteDataSources();
-
-  /**
-   * Translated "OK".
-   * 
-   * @return translated "OK"
-   * @gwt.key ok
-   */
-  String ok();
-
-  /**
-   * Translated "Add User".
-   * 
-   * @return translated "Add User"
-   * @gwt.key addUser
-   */
-  String addUser();
-
-  /**
    * Translated "Are your sure you want to delete the selected roles?".
    * 
    * @return translated "Are your sure you want to delete the selected roles?"
    * @gwt.key confirmRoleDeletionMsg
    */
   String confirmRoleDeletionMsg();
-
-  /**
-   * Translated "Role List Filter:".
-   * 
-   * @return translated "Role List Filter:"
-   * @gwt.key roleListFilter
-   */
-  String roleListFilter();
 
   /**
    * Translated "Schedule Daily Repository Cleaning".
@@ -80,30 +48,6 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String errorDeletingDataSource();
 
   /**
-   * Translated "Restore Default File Permissions".
-   * 
-   * @return translated "Restore Default File Permissions"
-   * @gwt.key restoreDefaultFilePermissions
-   */
-  String restoreDefaultFilePermissions();
-
-  /**
-   * Translated "User Name:".
-   * 
-   * @return translated "User Name:"
-   * @gwt.key dbUserName
-   */
-  String dbUserName();
-
-  /**
-   * Translated "Home".
-   * 
-   * @return translated "Home"
-   * @gwt.key home
-   */
-  String home();
-
-  /**
    * Translated "Error Creating Data Source".
    * 
    * @return translated "Error Creating Data Source"
@@ -120,20 +64,12 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String invalidTabIndex(String arg0);
 
   /**
-   * Translated "Role Name".
+   * Translated "Complete".
    * 
-   * @return translated "Role Name"
-   * @gwt.key roleName
+   * @return translated "Complete"
+   * @gwt.key stateComplete
    */
-  String roleName();
-
-  /**
-   * Translated "Delete Users".
-   * 
-   * @return translated "Delete Users"
-   * @gwt.key deleteUsers
-   */
-  String deleteUsers();
+  String stateComplete();
 
   /**
    * Translated "User List Filter:".
@@ -144,20 +80,12 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String userListFilter();
 
   /**
-   * Translated "User already exists.".
+   * Translated "Running".
    * 
-   * @return translated "User already exists."
-   * @gwt.key userAlreadyExist
+   * @return translated "Running"
+   * @gwt.key running
    */
-  String userAlreadyExist();
-
-  /**
-   * Translated "Security".
-   * 
-   * @return translated "Security"
-   * @gwt.key security
-   */
-  String security();
+  String running();
 
   /**
    * Translated "URL:".
@@ -168,14 +96,6 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String dbUrl();
 
   /**
-   * Translated "Wait:".
-   * 
-   * @return translated "Wait:"
-   * @gwt.key dbWaitTime
-   */
-  String dbWaitTime();
-
-  /**
    * Translated "Password Confirmation".
    * 
    * @return translated "Password Confirmation"
@@ -184,12 +104,12 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String passwordConfirmation();
 
   /**
-   * Translated "Cancel".
+   * Translated "Wait:".
    * 
-   * @return translated "Cancel"
-   * @gwt.key cancel
+   * @return translated "Wait:"
+   * @gwt.key dbWaitTime
    */
-  String cancel();
+  String dbWaitTime();
 
   /**
    * Translated "Test".
@@ -200,20 +120,12 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String test();
 
   /**
-   * Translated "Password does not match password confirmation.".
+   * Translated "Cancel".
    * 
-   * @return translated "Password does not match password confirmation."
-   * @gwt.key passwordConfirmationFailed
+   * @return translated "Cancel"
+   * @gwt.key cancel
    */
-  String passwordConfirmationFailed();
-
-  /**
-   * Translated "User Name".
-   * 
-   * @return translated "User Name"
-   * @gwt.key userName
-   */
-  String userName();
+  String cancel();
 
   /**
    * Translated "No".
@@ -224,20 +136,12 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String no();
 
   /**
-   * Translated "Missing user name.".
+   * Translated "Actions".
    * 
-   * @return translated "Missing user name."
-   * @gwt.key missingDbUserName
+   * @return translated "Actions"
+   * @gwt.key actions
    */
-  String missingDbUserName();
-
-  /**
-   * Translated "User does not exist: {0}".
-   * 
-   * @return translated "User does not exist: {0}"
-   * @gwt.key userDoesNotExist
-   */
-  String userDoesNotExist(String arg0);
+  String actions();
 
   /**
    * Translated "Administration".
@@ -256,12 +160,12 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String roles();
 
   /**
-   * Translated "Execute Global Actions".
+   * Translated "Error".
    * 
-   * @return translated "Execute Global Actions"
-   * @gwt.key executeGlobalActions
+   * @return translated "Error"
+   * @gwt.key error
    */
-  String executeGlobalActions();
+  String error();
 
   /**
    * Translated "#Idle Conn:".
@@ -280,20 +184,36 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String connectionTestSuccessful();
 
   /**
-   * Translated "Invalid connection name.".
+   * Translated "Scheduler Status".
    * 
-   * @return translated "Invalid connection name."
-   * @gwt.key invalidConnectionName
+   * @return translated "Scheduler Status"
+   * @gwt.key schedulerStatus
    */
-  String invalidConnectionName();
+  String schedulerStatus();
 
   /**
-   * Translated "Are your sure you want to delete the selected users?".
+   * Translated "Loading...".
    * 
-   * @return translated "Are your sure you want to delete the selected users?"
-   * @gwt.key confirmUserDeletionMsg
+   * @return translated "Loading..."
+   * @gwt.key loading
    */
-  String confirmUserDeletionMsg();
+  String loading();
+
+  /**
+   * Translated "State".
+   * 
+   * @return translated "State"
+   * @gwt.key state
+   */
+  String state();
+
+  /**
+   * Translated "Trigger - Group / Name".
+   * 
+   * @return translated "Trigger - Group / Name"
+   * @gwt.key triggerGroupName
+   */
+  String triggerGroupName();
 
   /**
    * Translated "Update User".
@@ -304,44 +224,20 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String updateUser();
 
   /**
+   * Translated "None".
+   * 
+   * @return translated "None"
+   * @gwt.key stateNone
+   */
+  String stateNone();
+
+  /**
    * Translated "Purge Mondrian Schema Cache".
    * 
    * @return translated "Purge Mondrian Schema Cache"
    * @gwt.key purgeMondrianSchemaCache
    */
   String purgeMondrianSchemaCache();
-
-  /**
-   * Translated "Error Updating Data Source".
-   * 
-   * @return translated "Error Updating Data Source"
-   * @gwt.key errorUpdatingDataSource
-   */
-  String errorUpdatingDataSource();
-
-  /**
-   * Translated "JNDI Name:".
-   * 
-   * @return translated "JNDI Name:"
-   * @gwt.key jndiName
-   */
-  String jndiName();
-
-  /**
-   * Translated "Update".
-   * 
-   * @return translated "Update"
-   * @gwt.key update
-   */
-  String update();
-
-  /**
-   * Translated "Add Role".
-   * 
-   * @return translated "Add Role"
-   * @gwt.key addRole
-   */
-  String addRole();
 
   /**
    * Translated "Assigned Users".
@@ -352,20 +248,36 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String assignedUsers();
 
   /**
-   * Translated "Missing database URL.".
+   * Translated "Add Role".
    * 
-   * @return translated "Missing database URL."
-   * @gwt.key missingDbUrl
+   * @return translated "Add Role"
+   * @gwt.key addRole
    */
-  String missingDbUrl();
+  String addRole();
 
   /**
-   * Translated "Add Data Source".
+   * Translated "Update".
    * 
-   * @return translated "Add Data Source"
-   * @gwt.key addDataSource
+   * @return translated "Update"
+   * @gwt.key update
    */
-  String addDataSource();
+  String update();
+
+  /**
+   * Translated "All Jobs Suspended".
+   * 
+   * @return translated "All Jobs Suspended"
+   * @gwt.key allJobsSuspended
+   */
+  String allJobsSuspended();
+
+  /**
+   * Translated "Fire Time - Last / Next".
+   * 
+   * @return translated "Fire Time - Last / Next"
+   * @gwt.key fireTimeLastNext
+   */
+  String fireTimeLastNext();
 
   /**
    * Translated "Refresh Reporting Metadata".
@@ -400,28 +312,12 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String deleteRoles();
 
   /**
-   * Translated ""Are your sure you want to delete the selected data sources?"".
+   * Translated "Run Now".
    * 
-   * @return translated ""Are your sure you want to delete the selected data sources?""
-   * @gwt.key confirmDataSourceDeletionMsg
+   * @return translated "Run Now"
+   * @gwt.key runNow
    */
-  String confirmDataSourceDeletionMsg();
-
-  /**
-   * Translated "Yes".
-   * 
-   * @return translated "Yes"
-   * @gwt.key yes
-   */
-  String yes();
-
-  /**
-   * Translated "Unable to refresh data sources list: {0}".
-   * 
-   * @return translated "Unable to refresh data sources list: {0}"
-   * @gwt.key dataSourcesRefreshError
-   */
-  String dataSourcesRefreshError(String arg0);
+  String runNow();
 
   /**
    * Translated "Remove Stale Conent".
@@ -432,12 +328,20 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String removeStaleContent();
 
   /**
-   * Translated "Password".
+   * Translated "Unable to refresh data sources list: {0}".
    * 
-   * @return translated "Password"
-   * @gwt.key password
+   * @return translated "Unable to refresh data sources list: {0}"
+   * @gwt.key dataSourcesRefreshError
    */
-  String password();
+  String dataSourcesRefreshError(String arg0);
+
+  /**
+   * Translated "normal".
+   * 
+   * @return translated "normal"
+   * @gwt.key stateNormal
+   */
+  String stateNormal();
 
   /**
    * Translated "Update Data Source".
@@ -448,12 +352,12 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String updateDataSource();
 
   /**
-   * Translated "Can not assign non-existing user to role: {0}".
+   * Translated "Action".
    * 
-   * @return translated "Can not assign non-existing user to role: {0}"
-   * @gwt.key cantAssignNonexistingUserToRole
+   * @return translated "Action"
+   * @gwt.key action
    */
-  String cantAssignNonexistingUserToRole(String arg0);
+  String action();
 
   /**
    * Translated "Invalid role name.;".
@@ -464,20 +368,12 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String invalidRoleName();
 
   /**
-   * Translated "Data Sources".
+   * Translated "Delete".
    * 
-   * @return translated "Data Sources"
-   * @gwt.key dataSources
+   * @return translated "Delete"
+   * @gwt.key delete
    */
-  String dataSources();
-
-  /**
-   * Translated "Scheduler".
-   * 
-   * @return translated "Scheduler"
-   * @gwt.key scheduler
-   */
-  String scheduler();
+  String delete();
 
   /**
    * Translated "Refresh Solution Repository".
@@ -488,20 +384,12 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String refreshSolutionRepository();
 
   /**
-   * Translated "Purge Mondrian Data Cache".
+   * Translated "Blocked".
    * 
-   * @return translated "Purge Mondrian Data Cache"
-   * @gwt.key purgeMondrianDataCache
+   * @return translated "Blocked"
+   * @gwt.key stateBlocked
    */
-  String purgeMondrianDataCache();
-
-  /**
-   * Translated "Driver Class:".
-   * 
-   * @return translated "Driver Class:"
-   * @gwt.key jdbcDriverClass
-   */
-  String jdbcDriverClass();
+  String stateBlocked();
 
   /**
    * Translated "Insufficient privileges.".
@@ -512,12 +400,20 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String insufficientPrivileges();
 
   /**
-   * Translated "Role does not exist: {0} ".
+   * Translated "Driver Class:".
    * 
-   * @return translated "Role does not exist: {0} "
-   * @gwt.key roleDoesNotExist
+   * @return translated "Driver Class:"
+   * @gwt.key jdbcDriverClass
    */
-  String roleDoesNotExist(String arg0);
+  String jdbcDriverClass();
+
+  /**
+   * Translated "Error".
+   * 
+   * @return translated "Error"
+   * @gwt.key stateError
+   */
+  String stateError();
 
   /**
    * Translated "Error Loading Data Sources".
@@ -528,14 +424,6 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String errorLoadingDataSources();
 
   /**
-   * Translated "Max Active Conn:".
-   * 
-   * @return translated "Max Active Conn:"
-   * @gwt.key maxActiveDbConnections
-   */
-  String maxActiveDbConnections();
-
-  /**
    * Translated "Unable to refresh security information: {0}".
    * 
    * @return translated "Unable to refresh security information: {0}"
@@ -544,12 +432,20 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String securityRefreshError(String arg0);
 
   /**
-   * Translated "Users & Roles".
+   * Translated "Max Active Conn:".
    * 
-   * @return translated "Users & Roles"
-   * @gwt.key usersAndRoles
+   * @return translated "Max Active Conn:"
+   * @gwt.key maxActiveDbConnections
    */
-  String usersAndRoles();
+  String maxActiveDbConnections();
+
+  /**
+   * Translated "Suspended".
+   * 
+   * @return translated "Suspended"
+   * @gwt.key suspended
+   */
+  String suspended();
 
   /**
    * Translated "Test Connection".
@@ -560,12 +456,356 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String testConnection();
 
   /**
+   * Translated "Resume".
+   * 
+   * @return translated "Resume"
+   * @gwt.key resume
+   */
+  String resume();
+
+  /**
+   * Translated "Role already exists.".
+   * 
+   * @return translated "Role already exists."
+   * @gwt.key roleAlreadyExists
+   */
+  String roleAlreadyExists();
+
+  /**
+   * Translated "Missing database driver class.".
+   * 
+   * @return translated "Missing database driver class."
+   * @gwt.key missingDbDriver
+   */
+  String missingDbDriver();
+
+  /**
+   * Translated "Delete Data Sources".
+   * 
+   * @return translated "Delete Data Sources"
+   * @gwt.key deleteDataSources
+   */
+  String deleteDataSources();
+
+  /**
+   * Translated "Add User".
+   * 
+   * @return translated "Add User"
+   * @gwt.key addUser
+   */
+  String addUser();
+
+  /**
+   * Translated "OK".
+   * 
+   * @return translated "OK"
+   * @gwt.key ok
+   */
+  String ok();
+
+  /**
+   * Translated "Role List Filter:".
+   * 
+   * @return translated "Role List Filter:"
+   * @gwt.key roleListFilter
+   */
+  String roleListFilter();
+
+  /**
+   * Translated "Job - Group / Name".
+   * 
+   * @return translated "Job - Group / Name"
+   * @gwt.key jobGroupName
+   */
+  String jobGroupName();
+
+  /**
+   * Translated "Restore Default File Permissions".
+   * 
+   * @return translated "Restore Default File Permissions"
+   * @gwt.key restoreDefaultFilePermissions
+   */
+  String restoreDefaultFilePermissions();
+
+  /**
+   * Translated "User Name:".
+   * 
+   * @return translated "User Name:"
+   * @gwt.key dbUserName
+   */
+  String dbUserName();
+
+  /**
+   * Translated "Home".
+   * 
+   * @return translated "Home"
+   * @gwt.key home
+   */
+  String home();
+
+  /**
+   * Translated "Role Name".
+   * 
+   * @return translated "Role Name"
+   * @gwt.key roleName
+   */
+  String roleName();
+
+  /**
+   * Translated "Delete Users".
+   * 
+   * @return translated "Delete Users"
+   * @gwt.key deleteUsers
+   */
+  String deleteUsers();
+
+  /**
+   * Translated "Resume All Jobs".
+   * 
+   * @return translated "Resume All Jobs"
+   * @gwt.key resumeAllJobs
+   */
+  String resumeAllJobs();
+
+  /**
+   * Translated "User already exists.".
+   * 
+   * @return translated "User already exists."
+   * @gwt.key userAlreadyExist
+   */
+  String userAlreadyExist();
+
+  /**
+   * Translated "Security".
+   * 
+   * @return translated "Security"
+   * @gwt.key security
+   */
+  String security();
+
+  /**
+   * Translated "You can use the pages to suspend or resume the scheduler. You can check the status of the scheduler and get a list of the current jobs that are scheduled.".
+   * 
+   * @return translated "You can use the pages to suspend or resume the scheduler. You can check the status of the scheduler and get a list of the current jobs that are scheduled."
+   * @gwt.key schedulerUserInstruction
+   */
+  String schedulerUserInstruction();
+
+  /**
+   * Translated "Working...".
+   * 
+   * @return translated "Working..."
+   * @gwt.key working
+   */
+  String working();
+
+  /**
+   * Translated "User Name".
+   * 
+   * @return translated "User Name"
+   * @gwt.key userName
+   */
+  String userName();
+
+  /**
+   * Translated "Password does not match password confirmation.".
+   * 
+   * @return translated "Password does not match password confirmation."
+   * @gwt.key passwordConfirmationFailed
+   */
+  String passwordConfirmationFailed();
+
+  /**
+   * Translated "Missing user name.".
+   * 
+   * @return translated "Missing user name."
+   * @gwt.key missingDbUserName
+   */
+  String missingDbUserName();
+
+  /**
+   * Translated "User does not exist: {0}".
+   * 
+   * @return translated "User does not exist: {0}"
+   * @gwt.key userDoesNotExist
+   */
+  String userDoesNotExist(String arg0);
+
+  /**
+   * Translated "Execute Global Actions".
+   * 
+   * @return translated "Execute Global Actions"
+   * @gwt.key executeGlobalActions
+   */
+  String executeGlobalActions();
+
+  /**
+   * Translated "Invalid connection name.".
+   * 
+   * @return translated "Invalid connection name."
+   * @gwt.key invalidConnectionName
+   */
+  String invalidConnectionName();
+
+  /**
+   * Translated "Are your sure you want to delete the selected users?".
+   * 
+   * @return translated "Are your sure you want to delete the selected users?"
+   * @gwt.key confirmUserDeletionMsg
+   */
+  String confirmUserDeletionMsg();
+
+  /**
+   * Translated "JNDI Name:".
+   * 
+   * @return translated "JNDI Name:"
+   * @gwt.key jndiName
+   */
+  String jndiName();
+
+  /**
+   * Translated "Error Updating Data Source".
+   * 
+   * @return translated "Error Updating Data Source"
+   * @gwt.key errorUpdatingDataSource
+   */
+  String errorUpdatingDataSource();
+
+  /**
+   * Translated "Missing database URL.".
+   * 
+   * @return translated "Missing database URL."
+   * @gwt.key missingDbUrl
+   */
+  String missingDbUrl();
+
+  /**
+   * Translated "Description".
+   * 
+   * @return translated "Description"
+   * @gwt.key descriptin
+   */
+  String descriptin();
+
+  /**
+   * Translated "Add Data Source".
+   * 
+   * @return translated "Add Data Source"
+   * @gwt.key addDataSource
+   */
+  String addDataSource();
+
+  /**
+   * Translated "Suspended".
+   * 
+   * @return translated "Suspended"
+   * @gwt.key stateSuspended
+   */
+  String stateSuspended();
+
+  /**
+   * Translated "Yes".
+   * 
+   * @return translated "Yes"
+   * @gwt.key yes
+   */
+  String yes();
+
+  /**
+   * Translated ""Are your sure you want to delete the selected data sources?"".
+   * 
+   * @return translated ""Are your sure you want to delete the selected data sources?""
+   * @gwt.key confirmDataSourceDeletionMsg
+   */
+  String confirmDataSourceDeletionMsg();
+
+  /**
+   * Translated "All Jobs Resumed".
+   * 
+   * @return translated "All Jobs Resumed"
+   * @gwt.key allJobsResumed
+   */
+  String allJobsResumed();
+
+  /**
+   * Translated "Password".
+   * 
+   * @return translated "Password"
+   * @gwt.key password
+   */
+  String password();
+
+  /**
+   * Translated "Can not assign non-existing user to role: {0}".
+   * 
+   * @return translated "Can not assign non-existing user to role: {0}"
+   * @gwt.key cantAssignNonexistingUserToRole
+   */
+  String cantAssignNonexistingUserToRole(String arg0);
+
+  /**
+   * Translated "Data Sources".
+   * 
+   * @return translated "Data Sources"
+   * @gwt.key dataSources
+   */
+  String dataSources();
+
+  /**
+   * Translated "Status".
+   * 
+   * @return translated "Status"
+   * @gwt.key status
+   */
+  String status();
+
+  /**
+   * Translated "Scheduler".
+   * 
+   * @return translated "Scheduler"
+   * @gwt.key scheduler
+   */
+  String scheduler();
+
+  /**
+   * Translated "Purge Mondrian Data Cache".
+   * 
+   * @return translated "Purge Mondrian Data Cache"
+   * @gwt.key purgeMondrianDataCache
+   */
+  String purgeMondrianDataCache();
+
+  /**
+   * Translated "Role does not exist: {0} ".
+   * 
+   * @return translated "Role does not exist: {0} "
+   * @gwt.key roleDoesNotExist
+   */
+  String roleDoesNotExist(String arg0);
+
+  /**
+   * Translated "Users & Roles".
+   * 
+   * @return translated "Users & Roles"
+   * @gwt.key usersAndRoles
+   */
+  String usersAndRoles();
+
+  /**
    * Translated "Description".
    * 
    * @return translated "Description"
    * @gwt.key description
    */
   String description();
+
+  /**
+   * Translated "Suspend All Jobs".
+   * 
+   * @return translated "Suspend All Jobs"
+   * @gwt.key suspendAllJobs
+   */
+  String suspendAllJobs();
 
   /**
    * Translated "Update Role".
@@ -582,22 +822,6 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key assignedRoles
    */
   String assignedRoles();
-
-  /**
-   * Translated "Missing database driver class.".
-   * 
-   * @return translated "Missing database driver class."
-   * @gwt.key missingDbDriver
-   */
-  String missingDbDriver();
-
-  /**
-   * Translated "Role already exists.".
-   * 
-   * @return translated "Role already exists."
-   * @gwt.key roleAlreadyExists
-   */
-  String roleAlreadyExists();
 
   /**
    * Translated "Services".
