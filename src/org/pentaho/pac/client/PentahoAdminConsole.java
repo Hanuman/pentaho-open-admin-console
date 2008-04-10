@@ -2,10 +2,13 @@ package org.pentaho.pac.client;
 
 import org.pentaho.pac.client.datasources.DataSourcesPanel;
 import org.pentaho.pac.client.home.HomePanel;
+import org.pentaho.pac.client.i18n.PacLocalizedConstants;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.scheduler.SchedulerPanel;
 import org.pentaho.pac.client.services.AdminServicesPanel;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DeckPanel;
@@ -46,13 +49,14 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
   public static final int ADMIN_DATA_SOURCES_TAB_INDEX = 1;
   public static final int ADMIN_SERVICES_TAB_INDEX = 2;
   public static final int ADMIN_SCHEDULER_TAB_INDEX = 3;
+  public static PacLocalizedMessages pacLocalizedMessages = (PacLocalizedMessages)GWT.create(PacLocalizedMessages.class);
   
 
   /**
    * This is the entry point method.
    */
   public void onModuleLoad() {
-
+    
     homeToggleBtn.addClickListener(this);
     
     adminToggleBtn.addClickListener(this);
@@ -66,10 +70,10 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
     // Order that things are placed in the tab panel is important. There are
     // static constants defined within this class that assume a given tab position
     // for each of the panels on the tab panel.
-    adminTabPanel.add(usersAndRolesPanel, "Users & Roles");
-    adminTabPanel.add(dataSourcesPanel, "Data Sources");
-    adminTabPanel.add(servicesPanel, "Services");
-    adminTabPanel.add(schedulerPanel, "Scheduler");
+    adminTabPanel.add(usersAndRolesPanel, getLocalizedMessages().usersAndRoles());
+    adminTabPanel.add(dataSourcesPanel, getLocalizedMessages().dataSources());
+    adminTabPanel.add(servicesPanel, getLocalizedMessages().services());
+    adminTabPanel.add(schedulerPanel, getLocalizedMessages().scheduler());
     
     usersAndRolesPanel.setBorderWidth(2);    
     HomePanel homePanel = new HomePanel("http://www.pentaho.com/console_home");
@@ -192,5 +196,8 @@ public void onClick(Widget sender) {
     }   
   }
   
+  static public PacLocalizedMessages getLocalizedMessages() {
+    return pacLocalizedMessages;
+  }
 }
  
