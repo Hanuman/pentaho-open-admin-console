@@ -1,58 +1,37 @@
 package org.pentaho.pac.server.common;
 
 import java.io.IOException;
-import java.net.URL;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.pentaho.messages.Messages;
 import org.pentaho.pac.common.PacServiceException;
 
 public class BiServerAdminProxy {
   private static final Log logger = LogFactory.getLog(BiServerAdminProxy.class);
-
-  private static final int NUM_RETRIES = 3;
   
-  // TODO sbarkdull, need to be init params, not hardcoded
-  String proxyURL = "http://localhost:8080/pentaho"; // "http://localhost:8080/pentaho";
-  String errorURL = null; // The URL to redirect to if the user is invalid
-  // TODO
-  String userName = "joe";
-
+  /*
+   * see: http://hc.apache.org/httpclient-3.x/threading.html
+   */
+  private static final HttpClient CLIENT;
+  static {
+    MultiThreadedHttpConnectionManager connectionManager = 
+      new MultiThreadedHttpConnectionManager();
+    CLIENT = new HttpClient( connectionManager );
+  }
+  private String proxyUrl = null;
+  
   /**
    * Base Constructor
    */
-  public BiServerAdminProxy() {
+  public BiServerAdminProxy( String proxyUrl ) {
     super();
-  }
-
-  public void init(ServletConfig servletConfig) throws ServletException {
-    // TODO sbarkdull
-    proxyURL = "http://localhost:8080/pentaho";
-    if ((proxyURL == null)) {
-      logger.error(Messages.getString("ProxyServlet.ERROR_0001_NO_PROXY_URL_SPECIFIED")); //$NON-NLS-1$
-    } else {
-      // TODO sbarkdull, is trim necessary?
-      proxyURL.trim();
-      try {
-        URL url = new URL(proxyURL); // Just doing this to verify
-        // it's good
-        logger.info(Messages.getString("ProxyServlet.INFO_0001_URL_SELECTED", url.toExternalForm())); // using 'url' to get rid of unused var compiler warning //$NON-NLS-1$
-      } catch (Throwable t) {
-        logger.error(Messages.getErrorString("ProxyServlet.ERROR_0002_INVALID_URL", proxyURL)); //$NON-NLS-1$
-        proxyURL = null;
-      }
-    }
-
-    errorURL = "http://www.yahoo.com"; // TODO sbarkdull
+    this.proxyUrl = proxyUrl;
   }
 
   // TODO sbarkdull, better name?
@@ -60,26 +39,13 @@ public class BiServerAdminProxy {
       throws PacServiceException {
 
     GetMethod method = null;
-
     try {
-      HttpClient client = new HttpClient();
-
       // Create a method instance.
-      method = new GetMethod(proxyURL + "/" + serviceName); //$NON-NLS-1$
+      method = new GetMethod( proxyUrl + "/" + serviceName ); //$NON-NLS-1$
 
       method.addRequestHeader( "Content-Type", "text/xml" ); //$NON-NLS-1$ //$NON-NLS-2$
       method.setQueryString(params);
-// TODO sbarkdull, clean up
-//      method.setQueryString( method.getQueryString()
-//          + "&_TRUST_USER_=" + "joe" );
-      
-      //method.addParameter("_TRUST_USER_", userName );
-      
-//      method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
-//          new DefaultHttpMethodRetryHandler(NUM_RETRIES, false));
-
-      
-      if (client.executeMethod(method) != HttpStatus.SC_OK) {
+      if (CLIENT.executeMethod(method) != HttpStatus.SC_OK) {
         String status = method.getStatusLine().toString();
         throw new PacServiceException(status);
       }
