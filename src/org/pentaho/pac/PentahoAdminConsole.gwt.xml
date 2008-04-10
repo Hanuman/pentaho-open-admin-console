@@ -9,5 +9,7 @@
     <stylesheet src='PentahoAdminConsole.css'/>
     <source path="client"/>
     <source path="common"/>
+    
+    <extend-property name="locale" values="es"/>
    
 </module>
