@@ -7,4 +7,8 @@ public interface PacLocalizedMessages extends Messages {
   String dataSources();
   String services();
   String scheduler();
+  String ok();
+  String cancel();
+  String yes();
+  String no();
 }
