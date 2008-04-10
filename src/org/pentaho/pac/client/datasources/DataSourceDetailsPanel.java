@@ -1,5 +1,6 @@
 package org.pentaho.pac.client.datasources;
 
+import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.common.datasources.SimpleDataSource;
 
 import com.google.gwt.user.client.ui.Label;
@@ -19,33 +20,33 @@ public class DataSourceDetailsPanel extends VerticalPanel {
   TextBox waitTextBox = new TextBox();
   
   public DataSourceDetailsPanel() {
-    add(new Label("JNDI Name:"));
+    add(new Label(PentahoAdminConsole.getLocalizedMessages().jndiName()));
     add(jndiNameTextBox);
-    add(new Label("Max Active Conn:"));
+    add(new Label(PentahoAdminConsole.getLocalizedMessages().maxActiveDbConnections()));
     add(maxActiveConnTextBox);
-    add(new Label("Driver Class:"));
+    add(new Label(PentahoAdminConsole.getLocalizedMessages().jdbcDriverClass()));
     add(driverClassTextBox);
-    add(new Label("#Idle Conn:"));
+    add(new Label(PentahoAdminConsole.getLocalizedMessages().numIdleDbConnnections()));
     add(idleConnTextBox);
-    add(new Label("User Name:"));
+    add(new Label(PentahoAdminConsole.getLocalizedMessages().dbUserName()));
     add(userNameTextBox);
-    add(new Label("Password:"));
+    add(new Label(PentahoAdminConsole.getLocalizedMessages().dbPassword()));
     add(passwordTextBox);
-    add(new Label("URL:"));
+    add(new Label(PentahoAdminConsole.getLocalizedMessages().dbUrl()));
     add(urlTextBox);
-    add(new Label("Validation Query:"));
+    add(new Label(PentahoAdminConsole.getLocalizedMessages().dbValidationQuery()));
     add(validationQueryTextBox);
-    add(new Label("Wait:"));
+    add(new Label(PentahoAdminConsole.getLocalizedMessages().dbWaitTime()));
     add(waitTextBox);
-    jndiNameTextBox.setWidth("100%");
-    maxActiveConnTextBox.setWidth("100%");
-    driverClassTextBox.setWidth("100%");
-    idleConnTextBox.setWidth("100%");
-    userNameTextBox.setWidth("100%");
-    passwordTextBox.setWidth("100%");
-    urlTextBox.setWidth("100%");
-    validationQueryTextBox.setWidth("100%");
-    waitTextBox.setWidth("100%");
+    jndiNameTextBox.setWidth("100%"); //$NON-NLS-1$
+    maxActiveConnTextBox.setWidth("100%"); //$NON-NLS-1$
+    driverClassTextBox.setWidth("100%"); //$NON-NLS-1$
+    idleConnTextBox.setWidth("100%"); //$NON-NLS-1$
+    userNameTextBox.setWidth("100%"); //$NON-NLS-1$
+    passwordTextBox.setWidth("100%"); //$NON-NLS-1$
+    urlTextBox.setWidth("100%"); //$NON-NLS-1$
+    validationQueryTextBox.setWidth("100%"); //$NON-NLS-1$
+    waitTextBox.setWidth("100%"); //$NON-NLS-1$
   }
 
   public String getUserName() {
@@ -83,7 +84,7 @@ public class DataSourceDetailsPanel extends VerticalPanel {
   }
 
   public void setMaxActiveConnections(int count) {
-    maxActiveConnTextBox.setText(count > 0 ? Integer.toString(count) : "");
+    maxActiveConnTextBox.setText(count > 0 ? Integer.toString(count) : ""); //$NON-NLS-1$
   }
   
   public String getDriverClass() {
@@ -105,7 +106,7 @@ public class DataSourceDetailsPanel extends VerticalPanel {
   }
   
   public void setIdleConnections(int count) {
-    idleConnTextBox.setText(count > 0 ? Integer.toString(count) : "");
+    idleConnTextBox.setText(count > 0 ? Integer.toString(count) : ""); //$NON-NLS-1$
   }
   
   public String getUrl() {
@@ -135,7 +136,7 @@ public class DataSourceDetailsPanel extends VerticalPanel {
   }
   
   public void setWait(long count) {
-    waitTextBox.setText(count > 0 ? Long.toString(count) : "");
+    waitTextBox.setText(count > 0 ? Long.toString(count) : ""); //$NON-NLS-1$
  }
   
   public TextBox getUserNameTextBox() {
@@ -176,14 +177,14 @@ public class DataSourceDetailsPanel extends VerticalPanel {
   
   public void setDataSource(SimpleDataSource dataSource) {
     if (dataSource == null) {
-      setUserName("");
-      setPassword("");
-      setJndiName("");
+      setUserName(""); //$NON-NLS-1$
+      setPassword(""); //$NON-NLS-1$
+      setJndiName(""); //$NON-NLS-1$
       setMaxActiveConnections(-1);
-      setDriverClass("");
+      setDriverClass(""); //$NON-NLS-1$
       setIdleConnections(-1);
-      setUrl("");
-      setValidationQuery("");
+      setUrl(""); //$NON-NLS-1$
+      setValidationQuery(""); //$NON-NLS-1$
       setWait(-1);
     } else {
       setUserName(dataSource.getUserName());

@@ -2,6 +2,7 @@ package org.pentaho.pac.client.datasources;
 
 import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacServiceFactory;
+import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.common.datasources.SimpleDataSource;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -18,16 +19,16 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class DataSourcesPanel extends DockPanel implements ClickListener, ChangeListener, PopupListener {
 
-  MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN});
+  MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN}); //$NON-NLS-1$
   DataSourcesList dataSourcesList = new DataSourcesList();
   SimpleDataSource[] dataSources = null;
   DataSourceDetailsPanel dataSourceDetailsPanel = new DataSourceDetailsPanel();
-  Button updateDataSourceBtn = new Button("Update");
-  Button testDataSourceBtn = new Button("Test");
-  Button addDataSourceBtn = new Button("+");
-  Button deleteDataSourceBtn = new Button("-");
+  Button updateDataSourceBtn = new Button(PentahoAdminConsole.getLocalizedMessages().update());
+  Button testDataSourceBtn = new Button(PentahoAdminConsole.getLocalizedMessages().test());
+  Button addDataSourceBtn = new Button("+"); //$NON-NLS-1$
+  Button deleteDataSourceBtn = new Button("-"); //$NON-NLS-1$
   NewDataSourceDialogBox newDataSourceDialogBox = new NewDataSourceDialogBox();
-  MessageDialog confirmDataSourceDeleteDialog = new MessageDialog("Delete Data Sources", "Are your sure you want to delete the selected data sources.", new int[] {MessageDialog.OK_BTN, MessageDialog.CANCEL_BTN});
+  MessageDialog confirmDataSourceDeleteDialog = new MessageDialog(PentahoAdminConsole.getLocalizedMessages().deleteDataSources(), PentahoAdminConsole.getLocalizedMessages().confirmDataSourceDeletionMsg(), new int[] {MessageDialog.OK_BTN, MessageDialog.CANCEL_BTN});
   
 	public DataSourcesPanel() {
 	  DockPanel dataSourcesListPanel = buildDataSourcesListPanel();
@@ -38,14 +39,14 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
     
     setSpacing(10);
     
-    setCellWidth(dataSourcesListPanel, "30%");
-    setCellWidth(dataSourceDetailsDockPanel, "70%");
-    setCellHeight(dataSourcesListPanel, "100%");
-    setCellHeight(dataSourceDetailsDockPanel, "100%");
-    dataSourcesListPanel.setWidth("100%");
-    dataSourcesListPanel.setHeight("100%");
-    dataSourceDetailsDockPanel.setWidth("100%");
-    dataSourceDetailsDockPanel.setHeight("100%");
+    setCellWidth(dataSourcesListPanel, "30%"); //$NON-NLS-1$
+    setCellWidth(dataSourceDetailsDockPanel, "70%"); //$NON-NLS-1$
+    setCellHeight(dataSourcesListPanel, "100%"); //$NON-NLS-1$
+    setCellHeight(dataSourceDetailsDockPanel, "100%"); //$NON-NLS-1$
+    dataSourcesListPanel.setWidth("100%"); //$NON-NLS-1$
+    dataSourcesListPanel.setHeight("100%"); //$NON-NLS-1$
+    dataSourceDetailsDockPanel.setWidth("100%"); //$NON-NLS-1$
+    dataSourceDetailsDockPanel.setHeight("100%"); //$NON-NLS-1$
     
     dataSourceDetailsPanel.setEnabled(false);
     updateDataSourceBtn.setEnabled(false);
@@ -61,10 +62,10 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
     horizontalPanel.add(updateDataSourceBtn);
     dockPanel.add(dataSourceDetailsPanel, DockPanel.CENTER);
     dockPanel.add(horizontalPanel, DockPanel.SOUTH);
-    dockPanel.setCellHeight(dataSourceDetailsPanel, "100%");
-    dockPanel.setCellWidth(dataSourceDetailsPanel, "100%");
-    dataSourceDetailsPanel.setWidth("100%");
-    dataSourceDetailsPanel.setHeight("100%");
+    dockPanel.setCellHeight(dataSourceDetailsPanel, "100%"); //$NON-NLS-1$
+    dockPanel.setCellWidth(dataSourceDetailsPanel, "100%"); //$NON-NLS-1$
+    dataSourceDetailsPanel.setWidth("100%"); //$NON-NLS-1$
+    dataSourceDetailsPanel.setHeight("100%"); //$NON-NLS-1$
     dockPanel.setCellHorizontalAlignment(horizontalPanel, HasHorizontalAlignment.ALIGN_RIGHT);
     updateDataSourceBtn.addClickListener(this);
     testDataSourceBtn.addClickListener(this);
@@ -76,22 +77,22 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 	  DockPanel headerDockPanel = new DockPanel();
     headerDockPanel.add(deleteDataSourceBtn, DockPanel.EAST);
 	  headerDockPanel.add(addDataSourceBtn, DockPanel.EAST);
-    Label label = new Label("Data Sources");
+    Label label = new Label(PentahoAdminConsole.getLocalizedMessages().dataSources());
 	  headerDockPanel.add(label, DockPanel.WEST);
-	  headerDockPanel.setCellWidth(label, "100%");
+	  headerDockPanel.setCellWidth(label, "100%"); //$NON-NLS-1$
     DockPanel dataSourceListPanel = new DockPanel();
     dataSourceListPanel.add(headerDockPanel, DockPanel.NORTH);
     dataSourceListPanel.add(dataSourcesList, DockPanel.CENTER);
-    dataSourceListPanel.setCellHeight(dataSourcesList, "100%");
-    dataSourceListPanel.setCellWidth(dataSourcesList, "100%");
-    dataSourceListPanel.setHeight("100%");
-    dataSourceListPanel.setWidth("100%");
-    dataSourcesList.setHeight("100%");
-    dataSourcesList.setWidth("100%");
-    addDataSourceBtn.setWidth("20px");
-    deleteDataSourceBtn.setWidth("20px");
-    addDataSourceBtn.setHeight("20px");
-    deleteDataSourceBtn.setHeight("20px");
+    dataSourceListPanel.setCellHeight(dataSourcesList, "100%"); //$NON-NLS-1$
+    dataSourceListPanel.setCellWidth(dataSourcesList, "100%"); //$NON-NLS-1$
+    dataSourceListPanel.setHeight("100%"); //$NON-NLS-1$
+    dataSourceListPanel.setWidth("100%"); //$NON-NLS-1$
+    dataSourcesList.setHeight("100%"); //$NON-NLS-1$
+    dataSourcesList.setWidth("100%"); //$NON-NLS-1$
+    addDataSourceBtn.setWidth("20px"); //$NON-NLS-1$
+    deleteDataSourceBtn.setWidth("20px"); //$NON-NLS-1$
+    addDataSourceBtn.setHeight("20px"); //$NON-NLS-1$
+    deleteDataSourceBtn.setHeight("20px"); //$NON-NLS-1$
     deleteDataSourceBtn.setEnabled(false);
     dataSourcesList.addChangeListener(this);
     addDataSourceBtn.addClickListener(this);
@@ -128,7 +129,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 	      }
 
 	      public void onFailure(Throwable caught) {
-          messageDialog.setText("Error Deleting Data Source");
+          messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().errorDeletingDataSource());
           messageDialog.setMessage(caught.getMessage());
           messageDialog.center();
 	      }
@@ -152,21 +153,18 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 	}
 	
 	private void updateDataSourceDetails( final Widget sender ) {
+    messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().updateDataSource());
     if (dataSourceDetailsPanel.getJndiName().trim().length() == 0) {
-      messageDialog.setText("Update User");
-      messageDialog.setMessage("Invalid connection name.");
+      messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().invalidConnectionName());
       messageDialog.center();
     } else if (dataSourceDetailsPanel.getUrl().trim().length() == 0) { 
-      messageDialog.setText("Update User");
-      messageDialog.setMessage("Missing database URL.");
+      messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().missingDbUrl());
       messageDialog.center();
     } else if (dataSourceDetailsPanel.getDriverClass().trim().length() == 0) { 
-      messageDialog.setText("Update User");
-      messageDialog.setMessage("Missing database driver class.");
+      messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().missingDbDriver());
       messageDialog.center();
     } else if (dataSourceDetailsPanel.getUserName().trim().length() == 0) { 
-      messageDialog.setText("Update User");
-      messageDialog.setMessage("Missing user name.");
+      messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().missingDbUserName());
       messageDialog.center();
     } else {
       final SimpleDataSource dataSource = dataSourceDetailsPanel.getDataSource();
@@ -180,7 +178,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
         }
 
         public void onFailure(Throwable caught) {
-          messageDialog.setText("Error Updating Data Source");
+          messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().errorUpdatingDataSource());
           messageDialog.setMessage(caught.getMessage());
           messageDialog.center();
           ((Button)sender).setEnabled( true );
@@ -194,13 +192,13 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 	    final SimpleDataSource dataSource = dataSourceDetailsPanel.getDataSource();
 	    AsyncCallback callback = new AsyncCallback() {
 	      public void onSuccess(Object result) {
-	        messageDialog.setText("Test Conneciton");
-	        messageDialog.setMessage("Connection Test Successful.");
+	        messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().testConnection());
+	        messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().connectionTestSuccessful());
 	        messageDialog.center();
 	      }
 
 	      public void onFailure(Throwable caught) {
-	        messageDialog.setText("Test Conneciton");
+	        messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().testConnection());
 	        messageDialog.setMessage( caught.getMessage() );
 	        messageDialog.center();
 	      }

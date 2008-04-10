@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacServiceFactory;
+import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.common.datasources.IDataSource;
 import org.pentaho.pac.common.datasources.SimpleDataSource;
 import org.pentaho.pac.common.users.ProxyPentahoUser;
@@ -15,7 +16,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ListBox;
 
 public class DataSourcesList extends ListBox {
-  MessageDialog messageDialog = new MessageDialog("Data Sources", "", new int[]{MessageDialog.OK_BTN});
+  MessageDialog messageDialog = new MessageDialog(PentahoAdminConsole.getLocalizedMessages().dataSources(), "", new int[]{MessageDialog.OK_BTN}); //$NON-NLS-1$
   List dataSources = new ArrayList();
   boolean isInitialized = false;
   
@@ -127,8 +128,8 @@ public class DataSourcesList extends ListBox {
       }
 
       public void onFailure(Throwable caught) {
-        messageDialog.setText("Error Loading Data Sources");
-        messageDialog.setMessage("Unable to refresh data sources list: " + caught.getMessage());
+        messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().errorLoadingDataSources());
+        messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().dataSourcesRefreshError(caught.getMessage()));
         messageDialog.center();
       }
     };

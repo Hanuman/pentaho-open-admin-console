@@ -54,4 +54,29 @@ public interface PacLocalizedMessages extends Messages {
   String assignedRoles();
   String userDoesNotExist(String userName);
   String updateUser();
+  String jndiName();
+  String maxActiveDbConnections();
+  String jdbcDriverClass();
+  String numIdleDbConnnections();
+  String dbUserName();
+  String dbPassword();
+  String dbUrl();
+  String dbValidationQuery();
+  String dbWaitTime();
+  String errorLoadingDataSources();
+  String dataSourcesRefreshError(String cause);
+  String deleteDataSources();
+  String confirmDataSourceDeletionMsg();
+  String errorDeletingDataSource();
+  String updateDataSource();
+  String invalidConnectionName();
+  String missingDbUrl();
+  String missingDbDriver();
+  String missingDbUserName();
+  String errorUpdatingDataSource();
+  String testConnection();
+  String connectionTestSuccessful();
+  String addDataSource();
+  String errorCreatingDataSource();
+  
 }

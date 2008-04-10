@@ -2,10 +2,8 @@ package org.pentaho.pac.client.datasources;
 
 import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacServiceFactory;
-import org.pentaho.pac.common.PacServiceException;
-import org.pentaho.pac.common.PentahoSecurityException;
+import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.common.datasources.SimpleDataSource;
-import org.pentaho.pac.common.users.DuplicateUserException;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -19,9 +17,9 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
   
-  Button okButton = new Button("OK");
-  Button testButton = new Button("Test");
-  Button cancelButton = new Button("Cancel");
+  Button okButton = new Button(PentahoAdminConsole.getLocalizedMessages().ok());
+  Button testButton = new Button(PentahoAdminConsole.getLocalizedMessages().test());
+  Button cancelButton = new Button(PentahoAdminConsole.getLocalizedMessages().cancel());
   DataSourceDetailsPanel dataSourceDetailsPanel = new DataSourceDetailsPanel();
   boolean dataSourceCreated = false;
   MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN});
@@ -37,7 +35,7 @@ public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
     verticalPanel.add(dataSourceDetailsPanel);
     verticalPanel.add(footerPanel);
     
-    setText("Add Data Source");
+    setText(PentahoAdminConsole.getLocalizedMessages().addDataSource());
     
     verticalPanel.setWidth("250px");
     dataSourceDetailsPanel.setWidth("100%");
@@ -203,16 +201,16 @@ public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
   
   private boolean createDataSource() {
     if (getJndiName().trim().length() == 0) {
-      messageDialog.setMessage("Invalid connection name.");
+      messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().invalidConnectionName());
       messageDialog.center();
     } else if (getUrl().trim().length() == 0) { 
-      messageDialog.setMessage("Missing database URL.");
+      messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().missingDbUrl());
       messageDialog.center();
     } else if (getDriverClass().trim().length() == 0) { 
-      messageDialog.setMessage("Missing database driver class.");
+      messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().missingDbDriver());
       messageDialog.center();
     } else if (getUserName().trim().length() == 0) { 
-      messageDialog.setMessage("Missing user name.");
+      messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().missingDbUserName());
       messageDialog.center();
     } else {
       SimpleDataSource dataSource = getDataSource();
@@ -224,7 +222,7 @@ public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
           }
 
           public void onFailure(Throwable caught) {
-            messageDialog.setText("Error Creating Data Source");
+            messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().errorCreatingDataSource());
             messageDialog.setMessage(caught.getMessage());
             messageDialog.center();
           }
@@ -249,13 +247,13 @@ public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
     final SimpleDataSource dataSource = dataSourceDetailsPanel.getDataSource();
     AsyncCallback callback = new AsyncCallback() {
       public void onSuccess(Object result) {
-        messageDialog.setText("Test Conneciton");
-        messageDialog.setMessage("Connection Test Successful.");
+        messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().testConnection());
+        messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().connectionTestSuccessful());
         messageDialog.center();
       }
 
       public void onFailure(Throwable caught) {
-        messageDialog.setText("Test Conneciton");
+        messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().testConnection());
         messageDialog.setMessage( caught.getMessage() );
         messageDialog.center();
       }
