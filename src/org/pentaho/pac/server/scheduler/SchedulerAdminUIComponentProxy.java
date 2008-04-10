@@ -12,6 +12,7 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.io.IOUtils;
 import org.pentaho.pac.client.scheduler.Job;
 import org.pentaho.pac.common.PacServiceException;
+import org.pentaho.pac.server.PacServiceImpl;
 import org.pentaho.pac.server.common.BiServerAdminProxy;
 
 public class SchedulerAdminUIComponentProxy {
@@ -21,8 +22,13 @@ public class SchedulerAdminUIComponentProxy {
   private static final String TRUSTED_USER_KEY = "_TRUST_USER_"; //$NON-NLS-1$
   private String baseUrl = null;
   private String userName = null;
-  // TODO sbarkdull, is this thread safe enough?
-  private static BiServerAdminProxy biServerProxy = new BiServerAdminProxy();
+
+  private static BiServerAdminProxy biServerProxy;
+  static {
+    PacServiceImpl pacSvc = new PacServiceImpl();
+    String proxyUrl = pacSvc.getBIServerBaseUrl();
+    biServerProxy = new BiServerAdminProxy( proxyUrl );
+  }
   
   public SchedulerAdminUIComponentProxy( String baseUrl, String userName ) {
     this.baseUrl = baseUrl;
