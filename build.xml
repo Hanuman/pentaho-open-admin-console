@@ -175,7 +175,7 @@
 			<jvmarg value="-XstartOnFirstThread"/>
 			<classpath refid="classpath"/>
 			<batchtest todir="${test.reports.dir}">
-				<fileset dir="src" includes="**/${test}Test.java"/>
+				<fileset dir="src" includes="**/*Test.java"/>
 			</batchtest>
 			<formatter type="xml"/>
 		</junit>
