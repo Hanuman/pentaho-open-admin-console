@@ -191,7 +191,7 @@ public void onClick(Widget sender) {
         }
         break;
       default:
-        throw new RuntimeException(getLocalizedMessages().invalidTabIndex(tabIndex));
+        throw new RuntimeException(getLocalizedMessages().invalidTabIndex(Integer.toString(tabIndex)));
     }   
   }
   
