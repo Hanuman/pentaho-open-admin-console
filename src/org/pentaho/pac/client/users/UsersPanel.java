@@ -199,7 +199,6 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	  } else {
       ((Button)sender).setEnabled( false );
 	    final ProxyPentahoUser user = userDetailsPanel.getUser();
-	    final int index = usersList.getSelectedIndex();
 	    
 	    AsyncCallback callback = new AsyncCallback() {
 	      public void onSuccess(Object result) {
