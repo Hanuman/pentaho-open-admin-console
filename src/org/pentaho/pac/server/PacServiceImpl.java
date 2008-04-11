@@ -491,7 +491,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     try {
       userRoleMgmtService.rollbackTransaction();
     } catch (Exception e) {
-      logger.error( "Failed to rollback transaction.");
+      logger.error( Messages.getString( "PacService.rollbackFailed" ) );  //$NON-NLS-1$
     }
   }
   
@@ -573,7 +573,26 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return biServerBaseURL;
   }
   
-  // TODO sbarkdull, refactor to call through executeRemoteMethod()?
+  /*
+   * sample soap response on failure, need to fix:
+   * <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+ <SOAP-ENV:Body>
+<SOAP-ENV:Fault>
+<SOAP-ENV:faultcode>
+ <SOAP-ENV:Subcode>
+<SOAP-ENV:Value><![CDATA[Error: SolutionEngine.ERROR_0007 - Action sequence execution failed (org.pentaho.core.solution.SolutionEngine)]]></SOAP-ENV:Value>
+ </SOAP-ENV:Subcode>
+ </SOAP-ENV:faultcode><SOAP-ENV:faultactor>SOAP-ENV:Server</SOAP-ENV:faultactor>
+<SOAP-ENV:faultstring><SOAP-ENV:Text xml:lang="en_US"><![CDATA[Error: SolutionEngine.ERROR_0007 - Action sequence execution failed (org.pentaho.core.solution.SolutionEngine)]]></SOAP-ENV:Text>
+ </SOAP-ENV:faultstring>
+<SOAP-ENV:Detail><message name="trace"><![CDATA[Debug: Starting execute of admin/xx/clear_mondrian_data_cache.xactionxxxx (org.pentaho.core.solution.SolutionEngine)]]></message>
+<message name="trace"><![CDATA[Debug: Getting runtime context and data (org.pentaho.core.solution.SolutionEngine)]]></message>
+<message name="trace"><![CDATA[Debug: Loading action sequence definition file (org.pentaho.core.solution.SolutionEngine)]]></message>
+<message name="trace"><![CDATA[Error: SolutionEngine.ERROR_0007 - Action sequence execution failed (org.pentaho.core.solution.SolutionEngine)]]></message>
+</SOAP-ENV:Detail></SOAP-ENV:Fault>
+</SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+   */
   private String executeXAction(String solution, String path, String xAction ) throws PacServiceException{
 
     Map params = new HashMap();
@@ -581,7 +600,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     params.put( "path", path ); //$NON-NLS-1$
     params.put( "action", xAction ); //$NON-NLS-1$
     
-    String strResponse = biServerProxy.execRemoteMethod( "ViewAction", userName, params );
+    String strResponse = biServerProxy.execRemoteMethod( "ServiceAction", userName, params );
     return Messages.getString( "PacService.ACTION_COMPLETE" );
   }
   
@@ -767,7 +786,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     try {
       return IOUtils.toString(flatFile);
     } catch (IOException e) {
-      String msg = "IO Error loading " + templateFileName;
+      String msg = Messages.getString( "PacService.ioError", templateFileName ); //$NON-NLS-1$
       logger.error( msg,e);
       return "<span>" + msg + "</span>"; //$NON-NLS-1$ //$NON-NLS-2$
     }
