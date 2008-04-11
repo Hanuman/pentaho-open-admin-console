@@ -60,6 +60,7 @@ public class BiServerTrustedProxy extends ThreadSafeHttpClient {
    *      <filter-name>Proxy Trusting Filter</filter-name>
    *      <url-pattern>/SchedulerAdmin</url-pattern>
    *    </filter-mapping>
+   *  Currently the PAC console uses SchedulerAdmin, Publish, and ResetRepository
    * 
    * @param baseUrl base url of server, for instance: http://localhost:8080/pentaho
    * @param serviceName name of service on server, for instance: SchedulerAdmin
