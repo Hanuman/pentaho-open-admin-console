@@ -11,7 +11,7 @@ public class PacServiceFactory {
     if (pacService == null) {
       pacService = (PacServiceAsync) GWT.create(PacService.class);
       ServiceDefTarget endpoint = (ServiceDefTarget) pacService;
-      String moduleRelativeURL = GWT.getModuleBaseURL() + "pacsvc";
+      String moduleRelativeURL = GWT.getModuleBaseURL() + "pacsvc"; //$NON-NLS-1$
       endpoint.setServiceEntryPoint(moduleRelativeURL);
     }
     return pacService;
