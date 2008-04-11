@@ -578,9 +578,11 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     String strResponse = biServerProxy.execRemoteMethod( "ServiceAction", userName, params ); //$NON-NLS-1$
     XmlSerializer s = new XmlSerializer();
     String errorMsg = s.getXActionResponseStatusFromXml( strResponse );
-    return ( null == errorMsg )
-      ? Messages.getString( "PacService.ACTION_COMPLETE" ) //$NON-NLS-1$
-      : errorMsg;
+    if ( null != errorMsg ) {
+      throw new PacServiceException( errorMsg );
+    }
+    
+    return Messages.getString( "PacService.ACTION_COMPLETE" );
   }
   
   private String executePublishRequest(String publisherClassName ) throws PacServiceException {
@@ -591,7 +593,13 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     params.put( "class", publisherClassName ); //$NON-NLS-1$
     
     String strResponse = biServerProxy.execRemoteMethod( "Publish", userName, params ); //$NON-NLS-1$
-    return Messages.getString( "PacService.ACTION_COMPLETE" ); //$NON-NLS-1$
+    XmlSerializer s = new XmlSerializer();
+    String errorMsg = s.getPublishStatusFromXml( strResponse );
+    if ( null != errorMsg ) {
+      throw new PacServiceException( errorMsg );
+    }
+    
+    return Messages.getString( "PacService.ACTION_COMPLETE" );
   }
   
   private String resetSolutionRepository(String userid ) throws PacServiceException {
