@@ -56,15 +56,14 @@ public class HomePanel extends HorizontalPanel {
 	 PacServiceAsync pacService = PacServiceFactory.getPacService();
 	 pacService.getHomePage(url, new AsyncCallback() {
 		 public void onFailure(Throwable caught) {
-       MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN});
-       messageDialog.setText("Error");
-       messageDialog.setMessage(caught.getMessage());
+       MessageDialog messageDialog = new MessageDialog("Error", new int[]{MessageDialog.OK_BTN});
+       messageDialog.setMessage( "Unable to load Home page, reason: " + caught.getMessage());
        messageDialog.center();
 		 }
 		 public void onSuccess(Object result) {
-  		    htmlContent = (String) result;
-		    setElement(DOM.createDiv());
-		    DOM.setInnerHTML(getElement(), htmlContent);
+      htmlContent = (String) result;
+      setElement(DOM.createDiv());
+      DOM.setInnerHTML(getElement(), htmlContent);
 		 }
 	 });
 
