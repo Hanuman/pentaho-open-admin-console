@@ -44,6 +44,7 @@ import org.pentaho.pac.server.datasources.DataSourceManagerFacade;
 import org.pentaho.pac.server.datasources.IDataSourceManager;
 import org.pentaho.pac.server.datasources.NamedParameter;
 import org.pentaho.pac.server.scheduler.SchedulerAdminUIComponentProxy;
+import org.pentaho.pac.server.scheduler.XmlSerializer;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -566,27 +567,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   public String getBIServerBaseUrl() {
     return biServerBaseURL;
   }
-  
-  /*
-   * sample soap response on failure, need to fix:
-   * <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
- <SOAP-ENV:Body>
-<SOAP-ENV:Fault>
-<SOAP-ENV:faultcode>
- <SOAP-ENV:Subcode>
-<SOAP-ENV:Value><![CDATA[Error: SolutionEngine.ERROR_0007 - Action sequence execution failed (org.pentaho.core.solution.SolutionEngine)]]></SOAP-ENV:Value>
- </SOAP-ENV:Subcode>
- </SOAP-ENV:faultcode><SOAP-ENV:faultactor>SOAP-ENV:Server</SOAP-ENV:faultactor>
-<SOAP-ENV:faultstring><SOAP-ENV:Text xml:lang="en_US"><![CDATA[Error: SolutionEngine.ERROR_0007 - Action sequence execution failed (org.pentaho.core.solution.SolutionEngine)]]></SOAP-ENV:Text>
- </SOAP-ENV:faultstring>
-<SOAP-ENV:Detail><message name="trace"><![CDATA[Debug: Starting execute of admin/xx/clear_mondrian_data_cache.xactionxxxx (org.pentaho.core.solution.SolutionEngine)]]></message>
-<message name="trace"><![CDATA[Debug: Getting runtime context and data (org.pentaho.core.solution.SolutionEngine)]]></message>
-<message name="trace"><![CDATA[Debug: Loading action sequence definition file (org.pentaho.core.solution.SolutionEngine)]]></message>
-<message name="trace"><![CDATA[Error: SolutionEngine.ERROR_0007 - Action sequence execution failed (org.pentaho.core.solution.SolutionEngine)]]></message>
-</SOAP-ENV:Detail></SOAP-ENV:Fault>
-</SOAP-ENV:Body>
-</SOAP-ENV:Envelope>
-   */
+
   private String executeXAction(String solution, String path, String xAction ) throws PacServiceException{
 
     Map params = new HashMap();
@@ -595,7 +576,11 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     params.put( "action", xAction ); //$NON-NLS-1$
     
     String strResponse = biServerProxy.execRemoteMethod( "ServiceAction", userName, params ); //$NON-NLS-1$
-    return Messages.getString( "PacService.ACTION_COMPLETE" ); //$NON-NLS-1$
+    XmlSerializer s = new XmlSerializer();
+    String errorMsg = s.getXActionResponseStatusFromXml( strResponse );
+    return ( null == errorMsg )
+      ? Messages.getString( "PacService.ACTION_COMPLETE" ) //$NON-NLS-1$
+      : errorMsg;
   }
   
   private String executePublishRequest(String publisherClassName ) throws PacServiceException {

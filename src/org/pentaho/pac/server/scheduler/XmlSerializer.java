@@ -1,3 +1,19 @@
+/*
+ * Copyright 2005-2008 Pentaho Corporation.  All rights reserved. 
+ * This software was developed by Pentaho Corporation and is provided under the terms 
+ * of the Mozilla Public License, Version 1.1, or any later version. You may not use 
+ * this file except in compliance with the license. If you need a copy of the license, 
+ * please go to http://www.mozilla.org/MPL/MPL-1.1.txt. The Original Code is the Pentaho 
+ * BI Platform.  The Initial Developer is Pentaho Corporation.
+ *
+ * Software distributed under the Mozilla Public License is distributed on an "AS IS" 
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or  implied. Please refer to 
+ * the license for the specific language governing your rights and limitations.
+ *
+ * Created  
+ * @author Steven Barkdull
+ */
+
 package org.pentaho.pac.server.scheduler;
 
 import java.io.ByteArrayInputStream;
@@ -12,14 +28,18 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.pentaho.pac.client.scheduler.Job;
+import org.pentaho.pac.common.PacServiceException;
 import org.pentaho.pac.messages.Messages;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class XmlSerializer {
-  
+
+  private static final Log logger = LogFactory.getLog(XmlSerializer.class);
   private static final ThreadLocal<SAXParserFactory> SAX_FACTORY = new ThreadLocal<SAXParserFactory>();
 
   /**
@@ -36,19 +56,22 @@ public class XmlSerializer {
     STATE_STRINGS.put( "4", Messages.getString( "XmlSerializer.stateBlocked" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     STATE_STRINGS.put( "5", Messages.getString( "XmlSerializer.stateNone" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
-  private static String x = Messages.getString( "bart");
-  public List<Job> getJobNamesFromXml( String strXml )
+
+  public List<Job> getJobNamesFromXml( String strXml ) throws PacServiceException
   {
     JobsParserHandler h = null;
     // TODO sbarkdull, lets do something better
     try {
       h = parseJobNamesXml( strXml );
     } catch (SAXException e) {
-      e.printStackTrace();
+      logger.error( e.getMessage() );
+      throw new PacServiceException( e.getMessage() );
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error( e.getMessage() );
+      throw new PacServiceException( e.getMessage() );
     } catch (ParserConfigurationException e) {
-      e.printStackTrace();
+      logger.error( e.getMessage() );
+      throw new PacServiceException( e.getMessage() );
     }
     return h.jobList;
   }
@@ -67,7 +90,6 @@ public class XmlSerializer {
       return h;
   }
 
-  
   class JobsParserHandler extends DefaultHandler {
 
     public String currentText = null;
@@ -93,15 +115,7 @@ public class XmlSerializer {
         // TODO sbarkdull, error
       }
     }
-    
-    /**
-     * <role name="xx" description="xx">
-     *  <users>
-     *    <user name="xx"/>
-     *    <user name="yy"/>
-     *  </users>
-     * </role>
-     */
+
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException
     {
       if ( qName.equals( "getJobNames" ) ) { //$NON-NLS-1$
@@ -157,5 +171,106 @@ public class XmlSerializer {
   
   public boolean getSchedulerStatusFromXml( String strXml ) {
     return strXml.contains( "Running" ); //$NON-NLS-1$
+  }
+  
+  public String getXActionResponseStatusFromXml( String strXml ) throws PacServiceException {
+    XActionResponseParserHandler h = null;
+    // TODO sbarkdull, lets do something better
+    try {
+      h = parseXActionResponseXml( strXml );
+    } catch (SAXException e) {
+      logger.error( e.getMessage() );
+      throw new PacServiceException( e.getMessage() );
+    } catch (IOException e) {
+      logger.error( e.getMessage() );
+      throw new PacServiceException( e.getMessage() );
+    } catch (ParserConfigurationException e) {
+      logger.error( e.getMessage() );
+      throw new PacServiceException( e.getMessage() );
+    }
+    return h.getErrorMsg();
+  }
+  
+  private XActionResponseParserHandler parseXActionResponseXml( String strXml ) throws SAXException, IOException, ParserConfigurationException
+  {
+    SAXParser parser = getSAXParserFactory().newSAXParser();
+    XActionResponseParserHandler h = new XActionResponseParserHandler();
+    // TODO sbarkdull, need to set encoding
+  //      String encoding = CleanXmlHelper.getEncoding( strXml );
+  //      InputStream is = new ByteArrayInputStream( strXml.getBytes( encoding ) );
+    InputStream is = new ByteArrayInputStream( strXml.getBytes( "UTF-8") ); //$NON-NLS-1$
+   
+    parser.parse( is, h );
+    return h;
+  }
+
+  /**
+   * Sample error document:
+   * <SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+   *   <SOAP-ENV:Body>
+   *     <SOAP-ENV:Fault>
+   *       <SOAP-ENV:faultcode>
+   *         <SOAP-ENV:Subcode>
+   *           <SOAP-ENV:Value><![CDATA[Error: SolutionEngine.ERROR_0007 - Action sequence execution failed (org.pentaho.core.solution.SolutionEngine)]]></SOAP-ENV:Value>
+   *         </SOAP-ENV:Subcode>
+   *       </SOAP-ENV:faultcode>
+   *       <SOAP-ENV:faultactor>SOAP-ENV:Server</SOAP-ENV:faultactor>
+   *       <SOAP-ENV:faultstring>
+   *         <SOAP-ENV:Text xml:lang="en_US"><![CDATA[Error: SolutionEngine.ERROR_0007 - Action sequence execution failed (org.pentaho.core.solution.SolutionEngine)]]></SOAP-ENV:Text>
+   *       </SOAP-ENV:faultstring>
+   *       <SOAP-ENV:Detail>
+   *         <message name="trace"><![CDATA[Debug: Starting execute of admin/xx/clear_mondrian_data_cache.xactionxxxx (org.pentaho.core.solution.SolutionEngine)]]></message>
+   *         <message name="trace"><![CDATA[Debug: Getting runtime context and data (org.pentaho.core.solution.SolutionEngine)]]></message>
+   *         <message name="trace"><![CDATA[Debug: Loading action sequence definition file (org.pentaho.core.solution.SolutionEngine)]]></message>
+   *         <message name="trace"><![CDATA[Error: SolutionEngine.ERROR_0007 - Action sequence execution failed (org.pentaho.core.solution.SolutionEngine)]]></message>
+   *       </SOAP-ENV:Detail>
+   *     </SOAP-ENV:Fault>
+   *   </SOAP-ENV:Body>
+   * </SOAP-ENV:Envelope>
+   * 
+   * @author Steven Barkdull
+   *
+   */
+  class XActionResponseParserHandler extends DefaultHandler {
+
+    public String currentText = null;
+    private boolean foundFaultStr = false;
+    private String errorMsg = null;
+    
+    public XActionResponseParserHandler()
+    {
+    }
+  
+    /**
+     * if null, no error detected
+     * @return
+     */
+    public String getErrorMsg()
+    {
+      return errorMsg;
+    }
+    
+    public void characters( char[] ch, int startIdx, int length )
+    {
+      currentText = String.valueOf( ch, startIdx, length );
+    }
+    
+    public void endElement(String uri, String localName, String qName ) throws SAXException
+    {
+      if ( qName.equals( "SOAP-ENV:Text" ) ) { //$NON-NLS-1$
+        if ( foundFaultStr ) {
+          errorMsg = currentText;
+        }
+      } else if ( qName.equals( "SOAP-ENV:faultstring" ) ) { //$NON-NLS-1$
+        foundFaultStr = false;
+      }
+    }
+
+    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException
+    {
+      if ( qName.equals( "SOAP-ENV:faultstring" ) ) { //$NON-NLS-1$
+        foundFaultStr = true;
+      }
+    }
   }
 }
