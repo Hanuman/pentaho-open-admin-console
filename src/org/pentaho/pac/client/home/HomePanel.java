@@ -20,6 +20,7 @@ import java.util.NoSuchElementException;
 import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacServiceAsync;
 import org.pentaho.pac.client.PacServiceFactory;
+import org.pentaho.pac.client.PentahoAdminConsole;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -43,7 +44,7 @@ public class HomePanel extends HorizontalPanel {
    * @return a new unique identifier
    */
   public static String createUniqueId() {
-    return "HomePanel_" + (++sUid);
+    return "HomePanel_" + (++sUid); //$NON-NLS-1$
   }
 
   /**
@@ -56,8 +57,11 @@ public class HomePanel extends HorizontalPanel {
 	 PacServiceAsync pacService = PacServiceFactory.getPacService();
 	 pacService.getHomePage(url, new AsyncCallback() {
 		 public void onFailure(Throwable caught) {
-       MessageDialog messageDialog = new MessageDialog("Error", new int[]{MessageDialog.OK_BTN});
-       messageDialog.setMessage( "Unable to load Home page, reason: " + caught.getMessage());
+		   
+       MessageDialog messageDialog = new MessageDialog(
+           PentahoAdminConsole.getLocalizedMessages().error(),
+           PentahoAdminConsole.getLocalizedMessages().failedToLoadHome( caught.getMessage() ),
+           new int[]{MessageDialog.OK_BTN});
        messageDialog.center();
 		 }
 		 public void onSuccess(Object result) {
@@ -91,7 +95,7 @@ public class HomePanel extends HorizontalPanel {
    * panel is attached to the DOM, so {@link Dom#getElementById} won't yet work.
    */
   private Element getElementById(Element elem, String id) {
-    String elemId = DOM.getElementProperty(elem, "id");
+    String elemId = DOM.getElementProperty(elem, "id"); //$NON-NLS-1$
     if ((elemId != null) && elemId.equals(id)) {
       return elem;
     }
