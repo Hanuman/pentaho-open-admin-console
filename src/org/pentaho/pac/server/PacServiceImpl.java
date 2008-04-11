@@ -1,8 +1,5 @@
 package org.pentaho.pac.server;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -14,17 +11,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -43,6 +35,9 @@ import org.pentaho.pac.common.users.DuplicateUserException;
 import org.pentaho.pac.common.users.NonExistingUserException;
 import org.pentaho.pac.common.users.ProxyPentahoUser;
 import org.pentaho.pac.messages.Messages;
+import org.pentaho.pac.server.common.AppConfigProperties;
+import org.pentaho.pac.server.common.BiServerTrustedProxy;
+import org.pentaho.pac.server.common.ThreadSafeHttpClient;
 import org.pentaho.pac.server.datasources.DataSourceManagementException;
 import org.pentaho.pac.server.datasources.DataSourceManagerCreationException;
 import org.pentaho.pac.server.datasources.DataSourceManagerFacade;
@@ -59,18 +54,22 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   private static final Log logger = LogFactory.getLog(PacServiceImpl.class);
   // TODO sbarkdull, damn it would be nice to inject this with Spring (and some of these other props)
   private static SchedulerAdminUIComponentProxy schedulerProxy = null;
+  private static BiServerTrustedProxy biServerProxy;
+  static {
+    biServerProxy = BiServerTrustedProxy.getInstance();
+  }
   
   private String jmxHostName = null;
   private String jmxPortNumber = null;
   private String password = null;
-  private String username = null;
+  private String userName = null;
   private String pciContextPath = null;
   private String biServerBaseURL = null;
   
   public PacServiceImpl()
   {
-    initFromConfigFile();
-    schedulerProxy = new SchedulerAdminUIComponentProxy( getBIServerBaseUrl(), getUserName() );
+    initFromConfiguration();
+    schedulerProxy = new SchedulerAdminUIComponentProxy( getUserName() );
   }
   
   public UserRoleSecurityInfo getUserRoleSecurityInfo() throws PacServiceException{
@@ -497,26 +496,26 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   }
   
   public String refreshSolutionRepository() throws PacServiceException {
-    return executePublishRequest("org.pentaho.core.solution.SolutionPublisher", getUserName(), getPassword()); //$NON-NLS-1$
+    return executePublishRequest("org.pentaho.core.solution.SolutionPublisher" ); //$NON-NLS-1$
   }
   
   public String cleanRepository() throws PacServiceException {
-    return executeXAction("admin", "", "clean_repository.xaction", getUserName(), getPassword()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    return executeXAction("admin", "", "clean_repository.xaction" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
   
 
   public String clearMondrianDataCache() throws PacServiceException {
-    return executeXAction("admin", "", "clear_mondrian_data_cache.xaction", getUserName(), getPassword());
+    return executeXAction("admin", "", "clear_mondrian_data_cache.xaction" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
   
 
   public String clearMondrianSchemaCache() throws PacServiceException {
-    return executeXAction("admin", "", "clear_mondrian_schema_cache.xaction", getUserName(), getPassword());
+    return executeXAction("admin", "", "clear_mondrian_schema_cache.xaction" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
   
 
   public String scheduleRepositoryCleaning() throws PacServiceException {
-    return executeXAction("admin", "", "schedule-clean.xaction", getUserName(), getPassword()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    return executeXAction("admin", "", "schedule-clean.xaction" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
   
 
@@ -526,44 +525,28 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   
 
   public String refreshSystemSettings() throws PacServiceException {
-      return executePublishRequest("org.pentaho.core.system.SettingsPublisher", getUserName(), getPassword()); //$NON-NLS-1$
+      return executePublishRequest("org.pentaho.core.system.SettingsPublisher" ); //$NON-NLS-1$
   }
   
 
   public String executeGlobalActions() throws PacServiceException {
-    return executePublishRequest("org.pentaho.core.system.GlobalListsPublisher", getUserName(), getPassword()); //$NON-NLS-1$
+    return executePublishRequest("org.pentaho.core.system.GlobalListsPublisher" ); //$NON-NLS-1$
   }
   
 
   public String refreshReportingMetadata() throws PacServiceException {
-    return executePublishRequest("org.pentaho.plugin.mql.MetadataPublisher", getUserName(), getPassword()); //$NON-NLS-1$
+    return executePublishRequest("org.pentaho.plugin.mql.MetadataPublisher" ); //$NON-NLS-1$
   }
   
-  private void initFromConfigFile()
+  private void initFromConfiguration()
   {
-    try{
-      File propFile = new File( "./config/" + PROPERTIES_FILE_NAME ); //$NON-NLS-1$
-      InputStream s = new FileInputStream(propFile);
-      Properties p = new Properties();
-      if ( null != s ) {
-        try {
-          p.load( s );
-        } catch (IOException e) {
-          logger.error( Messages.getString( "PacService.LOAD_PROPS_FAILED", PROPERTIES_FILE_NAME ) ); //$NON-NLS-1$
-        }
-      } else {
-        logger.warn( Messages.getString( "PacService.OPEN_PROPS_FAILED", PROPERTIES_FILE_NAME ) ); //$NON-NLS-1$
-      }
-      jmxHostName = StringUtils.defaultIfEmpty( p.getProperty("jmxHostName"), System.getProperty("jmxHostName") ); //$NON-NLS-1$ //$NON-NLS-2$
-      jmxPortNumber = StringUtils.defaultIfEmpty( p.getProperty("jmxPortNumber"), System.getProperty("jmxPortNumber") ); //$NON-NLS-1$ //$NON-NLS-2$
-      password = StringUtils.defaultIfEmpty( p.getProperty("pentaho.platform.password"), System.getProperty("pentaho.platform.password") ); //$NON-NLS-1$ //$NON-NLS-2$
-      username = StringUtils.defaultIfEmpty( p.getProperty("pentaho.platform.username"), System.getProperty("pentaho.platform.username") ); //$NON-NLS-1$ //$NON-NLS-2$
-      pciContextPath = StringUtils.defaultIfEmpty( p.getProperty("pciContextPath"), System.getProperty("pciContextPath") ); //$NON-NLS-1$ //$NON-NLS-2$
-      biServerBaseURL = StringUtils.defaultIfEmpty( p.getProperty("biServerBaseURL"), System.getProperty("biServerBaseURL") ); //$NON-NLS-1$ //$NON-NLS-2$
-      
-    } catch(FileNotFoundException e){
-      logger.warn( Messages.getString( "PacService.OPEN_PROPS_FAILED", PROPERTIES_FILE_NAME ) ); //$NON-NLS-1$
-    }
+    Properties p = AppConfigProperties.getProperties();
+    jmxHostName = StringUtils.defaultIfEmpty( p.getProperty("jmxHostName"), System.getProperty("jmxHostName") ); //$NON-NLS-1$ //$NON-NLS-2$
+    jmxPortNumber = StringUtils.defaultIfEmpty( p.getProperty("jmxPortNumber"), System.getProperty("jmxPortNumber") ); //$NON-NLS-1$ //$NON-NLS-2$
+    password = StringUtils.defaultIfEmpty( p.getProperty("pentaho.platform.password"), System.getProperty("pentaho.platform.password") ); //$NON-NLS-1$ //$NON-NLS-2$
+    userName = StringUtils.defaultIfEmpty( p.getProperty("pentaho.platform.userName"), System.getProperty("pentaho.platform.userName") ); //$NON-NLS-1$ //$NON-NLS-2$
+    pciContextPath = StringUtils.defaultIfEmpty( p.getProperty("pciContextPath"), System.getProperty("pciContextPath") ); //$NON-NLS-1$ //$NON-NLS-2$
+    biServerBaseURL = StringUtils.defaultIfEmpty( p.getProperty("biServerBaseURL"), System.getProperty("biServerBaseURL") ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
   public String getJmxHostName() {
@@ -579,7 +562,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   }
 
   public String getUserName() {
-    return username;
+    return userName;
   }
   
   public String getPciContextPath() {
@@ -591,102 +574,32 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   }
   
   // TODO sbarkdull, refactor to call through executeRemoteMethod()?
-  private String executeXAction(String solution, String path, String xAction, String userid, String password) throws PacServiceException{
+  private String executeXAction(String solution, String path, String xAction ) throws PacServiceException{
+
+    Map params = new HashMap();
+    params.put( "solution", solution ); //$NON-NLS-1$
+    params.put( "path", path ); //$NON-NLS-1$
+    params.put( "action", xAction ); //$NON-NLS-1$
     
-    String result = "Action Failed";
-    GetMethod method = null;
-    try {
-      HttpClient client = new HttpClient();
-
-      // Create a method instance.
-      method = new GetMethod(getBIServerBaseUrl() + "/ViewAction"); //$NON-NLS-1$
-      NameValuePair nvp1 = new NameValuePair("solution", solution); //$NON-NLS-1$
-      NameValuePair nvp3 = new NameValuePair("path", path); //$NON-NLS-1$
-      NameValuePair nvp2 = new NameValuePair("action", xAction); //$NON-NLS-1$
-      NameValuePair nvp4 = new NameValuePair("userid", userid); //$NON-NLS-1$
-      NameValuePair nvp5 = new NameValuePair("password", password); //$NON-NLS-1$
-
-      method.setQueryString(new NameValuePair[] { nvp1, nvp2, nvp3, nvp4, nvp5 });
-      method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(3, false));
-
-      if (client.executeMethod(method) != HttpStatus.SC_OK) {
-        result = method.getStatusLine().toString();
-      } else {
-        result = "Action Complete";
-      }
-
-    } catch (Exception e) {
-      throw new PacServiceException(e);
-    } finally {
-      method.releaseConnection();
-    }
-    
-    return result;
+    String strResponse = biServerProxy.execRemoteMethod( "ViewAction", userName, params );
+    return Messages.getString( "PacService.ACTION_COMPLETE" );
   }
   
-  private String executePublishRequest(String publisherClassName, String userid, String password) throws PacServiceException {
-    // Create an instance of HttpClient.
-    HttpClient client = new HttpClient();
-    String result = "Action Failed";
-
-    // Create a method instance.
-    GetMethod method = new GetMethod(getBIServerBaseUrl() + "/Publish"); //$NON-NLS-1$
-    NameValuePair nvp1 = new NameValuePair("publish", "now"); //$NON-NLS-1$ //$NON-NLS-2$
-    NameValuePair nvp3 = new NameValuePair("style", "popup"); //$NON-NLS-1$ //$NON-NLS-2$
-    NameValuePair nvp2 = new NameValuePair("class", publisherClassName); //$NON-NLS-1$
-    NameValuePair nvp4 = new NameValuePair("userid", userid); //$NON-NLS-1$
-    NameValuePair nvp5 = new NameValuePair("password", password); //$NON-NLS-1$
-
-    method.setQueryString(new NameValuePair[] { nvp1, nvp2, nvp3, nvp4, nvp5 });
-    // Provide custom retry handler is necessary
-    method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(3, false));
-
-    try {
-      // Execute the method.
-      int statusCode = client.executeMethod(method);
-
-      if (client.executeMethod(method) != HttpStatus.SC_OK) {
-        result = method.getStatusLine().toString();
-      } else {
-        result = "Action Complete";
-      }
-    } catch (Exception e) {
-      throw new PacServiceException(e);
-    } finally {
-      // Release the connection.
-      method.releaseConnection();
-    }
-
-    return result;
+  private String executePublishRequest(String publisherClassName ) throws PacServiceException {
+    
+    Map params = new HashMap();
+    params.put( "publish", "now" ); //$NON-NLS-1$ //$NON-NLS-2$
+    params.put( "style", "popup" ); //$NON-NLS-1$ //$NON-NLS-2$
+    params.put( "class", publisherClassName ); //$NON-NLS-1$
+    
+    String strResponse = biServerProxy.execRemoteMethod( "Publish", userName, params );
+    return Messages.getString( "PacService.ACTION_COMPLETE" );
   }
   
   private String resetSolutionRepository(String userid, String password) throws PacServiceException {
-    HttpClient client = new HttpClient();
-    String result = "Action Failed";
 
-    GetMethod method = new GetMethod(getBIServerBaseUrl()+"/ResetRepository"); //$NON-NLS-1$
-    NameValuePair nvp1 = new NameValuePair("userid", userid); //$NON-NLS-1$
-    NameValuePair nvp2 = new NameValuePair("password", password); //$NON-NLS-1$
-
-    method.setQueryString(new NameValuePair[] { nvp1, nvp2 });
-    method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(3, false));
-
-    try {
-      int statusCode = client.executeMethod(method);
-
-      if (client.executeMethod(method) != HttpStatus.SC_OK) {
-        result = method.getStatusLine().toString();
-      } else {
-        result = "Action Complete";
-      }
-
-    } catch (Exception e) {
-      throw new PacServiceException(e);
-    } finally {
-      method.releaseConnection();
-    }
-
-    return result;
+    String strResponse = biServerProxy.execRemoteMethod( "ResetRepository", userName, /*params*/null );
+    return Messages.getString( "PacService.ACTION_COMPLETE" );
   }
 
   public boolean createRole(ProxyPentahoRole proxyRole) throws DuplicateRoleException, PentahoSecurityException, PacServiceException {
@@ -700,7 +613,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       result = true;
     } catch ( DAOException e) {
       throw new PacServiceException( 
-          Messages.getErrorString( "PacService.ERROR_0001_ROLE_CREATION_FAILED", proxyRole.getName() ), e ); //$NON-NLS-1$
+          Messages.getString( "PacService.ERROR_0001_ROLE_CREATION_FAILED", proxyRole.getName() ), e ); //$NON-NLS-1$
     }
     finally {
       if (!result) {
@@ -823,30 +736,29 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return result;
   }
   
-  public String getHomePage(String url) throws PacServiceException {
-    String html = null;
-    HttpClient client = new HttpClient();
-    HttpMethod method = new GetMethod(url);
-    method.getParams().setParameter("http.socket.timeout", new Integer(15000));
+  public String getHomePage(String url) {
     
-    try{
-      int statusCode = client.executeMethod(method);
+    ThreadSafeHttpClient client = new ThreadSafeHttpClient( url );
 
-      if (statusCode != HttpStatus.SC_OK) {
-    	  throw new PacServiceException(Messages.getString("PacService.ERROR_ACCESSING_URL", url )); //$NON-NLS-1$	        
-      }
-      
-      byte[] responseBody = method.getResponseBody();
-      html = new String(responseBody);
-      html = html.substring(html.indexOf("<body>")+6);
-      html = html.substring(0, html.indexOf("</body>"));
-    } catch(Exception e){
-        return showStatic();
-    } finally {
-      method.releaseConnection();
-    }
+    Map params = new HashMap();
+    // TODO sbarkdull, 15000 belongs in the config file
+    params.put( "http.socket.timeout", "15000" ); //$NON-NLS-1$ //$NON-NLS-2$
     
-    return html.toString();
+    String html = null;
+    try {
+      html = client.execRemoteMethod( null, params, "text/html" );
+    } catch (PacServiceException e) {
+      html = showStatic();
+    }
+    final String BODY_TAG = "<body>"; //$NON-NLS-1$
+    
+    int afterBodyIdx = html.indexOf(BODY_TAG);
+    if ( -1 != afterBodyIdx ) {
+      html = html.substring( html.indexOf(BODY_TAG) + BODY_TAG.length() );
+      html = html.substring(0, html.indexOf("</body>")); //$NON-NLS-1$
+    }
+      
+    return html;
   }
 	  
   private String showStatic(){
@@ -855,8 +767,9 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     try {
       return IOUtils.toString(flatFile);
     } catch (IOException e) {
-      logger.error("IO Error loading " + templateFileName,e);
-      return ""; //$NON-NLS-1$
+      String msg = "IO Error loading " + templateFileName;
+      logger.error( msg,e);
+      return "<span>" + msg + "</span>"; //$NON-NLS-1$ //$NON-NLS-2$
     }
   }
   
