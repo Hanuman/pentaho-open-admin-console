@@ -106,7 +106,7 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
 
       public void onFailure(Throwable caught) {
         final DialogBox dialogBox = new DialogBox();
-        dialogBox.setText(PentahoAdminConsole.getLocalizedMessages().services());
+        dialogBox.setText(PentahoAdminConsole.getLocalizedMessages().error());
         Button okButton = new Button(PentahoAdminConsole.getLocalizedMessages().ok());
         okButton.addClickListener(new ClickListener() {
           public void onClick(Widget sender) {
