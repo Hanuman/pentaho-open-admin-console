@@ -1,11 +1,7 @@
 package org.pentaho.pac.client;
 
-import org.pentaho.pac.common.PacServiceException;
-import org.pentaho.pac.common.PentahoSecurityException;
-import org.pentaho.pac.common.datasources.IDataSource;
-import org.pentaho.pac.common.roles.NonExistingRoleException;
+import org.pentaho.pac.common.datasources.IPentahoDataSource;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
-import org.pentaho.pac.common.users.NonExistingUserException;
 import org.pentaho.pac.common.users.ProxyPentahoUser;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -27,11 +23,11 @@ public interface PacServiceAsync {
   public void getRoles(ProxyPentahoUser user, AsyncCallback callback);
   public void setRoles(ProxyPentahoUser user, ProxyPentahoRole[] assignedRoles, AsyncCallback callback);
   
-  public void createDataSource(IDataSource dataSource, AsyncCallback callback);
-  public void deleteDataSources(IDataSource[] dataSources, AsyncCallback callback);
-  public void updateDataSource(IDataSource dataSource, AsyncCallback callback);
-  public void testDataSourceConnection(IDataSource dataSource, AsyncCallback callback);
-  public void testDataSourceValidationQuery(IDataSource dataSource, AsyncCallback callback);
+  public void createDataSource(IPentahoDataSource dataSource, AsyncCallback callback);
+  public void deleteDataSources(IPentahoDataSource[] dataSources, AsyncCallback callback);
+  public void updateDataSource(IPentahoDataSource dataSource, AsyncCallback callback);
+  public void testDataSourceConnection(IPentahoDataSource dataSource, AsyncCallback callback);
+  public void testDataSourceValidationQuery(IPentahoDataSource dataSource, AsyncCallback callback);
   public void getDataSources(AsyncCallback callback);
   
   public void refreshSolutionRepository(AsyncCallback callback);

@@ -6,8 +6,10 @@ import org.pentaho.pac.common.roles.DuplicateRoleException;
 import org.pentaho.pac.common.roles.NonExistingRoleException;
 import org.pentaho.pac.common.users.DuplicateUserException;
 import org.pentaho.pac.common.users.NonExistingUserException;
+import org.pentaho.pac.server.common.DAOException;
+import org.pentaho.pac.server.common.IGenericDAO;
 
-/*package private*/ interface IUserRoleDAO extends IGenericDAO {
+public interface IUserRoleDAO extends IGenericDAO {
 
   public void createUser(IPentahoUser newUser) throws DuplicateUserException, DAOException;
   

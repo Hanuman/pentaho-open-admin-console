@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.pentaho.pac.common.users.NonExistingUserException;
+import org.pentaho.pac.server.common.DAOException;
+import org.pentaho.pac.server.common.DAOFactory;
 
 public class PentahoRole implements IPentahoRole {
 
@@ -53,7 +55,7 @@ public class PentahoRole implements IPentahoRole {
   public void addUser(String userName) throws NonExistingUserException {
     IPentahoUser user = null;
     try {
-      user = UserRoleDAOFactory.getDAO().getUser(userName);
+      user = DAOFactory.getUserRoleDAO().getUser(userName);
     } catch (DAOException e) {
       throw new RuntimeException(e);
     }
@@ -72,7 +74,7 @@ public class PentahoRole implements IPentahoRole {
   public void removeUser(String userName) {
     IPentahoUser user = null;
     try {
-      user = UserRoleDAOFactory.getDAO().getUser(userName);
+      user = DAOFactory.getUserRoleDAO().getUser(userName);
       if (user != null) {
         ((PentahoUser)user).getAssignedRoles().remove(this);
       } else {
@@ -93,7 +95,7 @@ public class PentahoRole implements IPentahoRole {
     for (String userName : userNames) {
       IPentahoUser persistedUser = null;
       try {
-        persistedUser = UserRoleDAOFactory.getDAO().getUser(userName);
+        persistedUser = DAOFactory.getUserRoleDAO().getUser(userName);
       } catch (DAOException e) {
         throw new RuntimeException(e);
       }

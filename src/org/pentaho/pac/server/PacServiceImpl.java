@@ -10,7 +10,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,8 +25,11 @@ import org.pentaho.pac.common.PacServiceException;
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.UserRoleSecurityInfo;
 import org.pentaho.pac.common.UserToRoleAssignment;
-import org.pentaho.pac.common.datasources.Constants;
-import org.pentaho.pac.common.datasources.IDataSource;
+import org.pentaho.pac.common.datasources.DataSourceManagementException;
+import org.pentaho.pac.common.datasources.DuplicateDataSourceException;
+import org.pentaho.pac.common.datasources.IPentahoDataSource;
+import org.pentaho.pac.common.datasources.NonExistingDataSourceException;
+import org.pentaho.pac.common.datasources.PentahoDataSource;
 import org.pentaho.pac.common.roles.DuplicateRoleException;
 import org.pentaho.pac.common.roles.NonExistingRoleException;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
@@ -37,12 +39,10 @@ import org.pentaho.pac.common.users.ProxyPentahoUser;
 import org.pentaho.pac.messages.Messages;
 import org.pentaho.pac.server.common.AppConfigProperties;
 import org.pentaho.pac.server.common.BiServerTrustedProxy;
+import org.pentaho.pac.server.common.DAOException;
 import org.pentaho.pac.server.common.ThreadSafeHttpClient;
-import org.pentaho.pac.server.datasources.DataSourceManagementException;
-import org.pentaho.pac.server.datasources.DataSourceManagerCreationException;
-import org.pentaho.pac.server.datasources.DataSourceManagerFacade;
-import org.pentaho.pac.server.datasources.IDataSourceManager;
-import org.pentaho.pac.server.datasources.NamedParameter;
+import org.pentaho.pac.server.datasources.DataSourceMgmtService;
+import org.pentaho.pac.server.datasources.IDataSourceMgmtService;
 import org.pentaho.pac.server.scheduler.SchedulerAdminUIComponentProxy;
 import org.pentaho.pac.server.scheduler.XmlSerializer;
 
@@ -51,8 +51,13 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class PacServiceImpl extends RemoteServiceServlet implements PacService {
 
   private IUserRoleMgmtService userRoleMgmtService = new UserRoleMgmtService();
+
+  private IDataSourceMgmtService dataSourceMgmtService = new DataSourceMgmtService();
+
   private static final String PROPERTIES_FILE_NAME = "pac.properties"; //$NON-NLS-1$
+
   private static final Log logger = LogFactory.getLog(PacServiceImpl.class);
+
   // TODO sbarkdull, damn it would be nice to inject this with Spring (and some of these other props)
   private static SchedulerAdminUIComponentProxy schedulerProxy = null;
   private static BiServerTrustedProxy biServerProxy;
@@ -61,6 +66,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   }
   
   private String jmxHostName = null;
+
   private String jmxPortNumber = null;
   private String userName = null;
   private String pciContextPath = null;
@@ -71,19 +77,19 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     initFromConfiguration();
     schedulerProxy = new SchedulerAdminUIComponentProxy( getUserName() );
   }
-  
-  public UserRoleSecurityInfo getUserRoleSecurityInfo() throws PacServiceException{
+
+  public UserRoleSecurityInfo getUserRoleSecurityInfo() throws PacServiceException {
     UserRoleSecurityInfo userRoleSecurityInfo = new UserRoleSecurityInfo();
     try {
       List<IPentahoUser> users = userRoleMgmtService.getUsers();
-      for (IPentahoUser user : users) {       
+      for (IPentahoUser user : users) {
         ProxyPentahoUser proxyPentahoUser = new ProxyPentahoUser();
         proxyPentahoUser.setName(user.getName());
         proxyPentahoUser.setDescription(user.getDescription());
         proxyPentahoUser.setEnabled(user.getEnabled());
         proxyPentahoUser.setPassword(user.getPassword());
         userRoleSecurityInfo.getUsers().add(proxyPentahoUser);
-        
+
         Set<IPentahoRole> roles = user.getRoles();
         for (IPentahoRole role : roles) {
           userRoleSecurityInfo.getAssignments().add(new UserToRoleAssignment(user.getName(), role.getName()));
@@ -99,25 +105,24 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     }
     return userRoleSecurityInfo;
   }
-  
-  public boolean createUser( ProxyPentahoUser proxyUser ) throws DuplicateUserException, PentahoSecurityException, PacServiceException
-  {
+
+  public boolean createUser(ProxyPentahoUser proxyUser) throws DuplicateUserException, PentahoSecurityException,
+      PacServiceException {
     boolean result = false;
     IPentahoUser user = new PentahoUser(proxyUser.getName());
     user.setDescription(proxyUser.getDescription());
     user.setPassword(proxyUser.getPassword());
-    user.setEnabled(proxyUser.getEnabled()) ;
+    user.setEnabled(proxyUser.getEnabled());
     try {
       userRoleMgmtService.beginTransaction();
-      userRoleMgmtService.createUser( user );
+      userRoleMgmtService.createUser(user);
       userRoleMgmtService.commitTransaction();
       result = true;
-    } catch ( DAOException e) {
-      String msg = Messages.getString( "PacService.ERROR_0004_USER_CREATION_FAILED", proxyUser.getName() ) //$NON-NLS-1$
-        + " " + e.getMessage(); //$NON-NLS-1$
-      throw new PacServiceException( msg, e );
-    }
-    finally {
+    } catch (DAOException e) {
+      String msg = Messages.getString("PacService.ERROR_0004_USER_CREATION_FAILED", proxyUser.getName()) //$NON-NLS-1$
+          + " " + e.getMessage(); //$NON-NLS-1$
+      throw new PacServiceException(msg, e);
+    } finally {
       if (!result) {
         rollbackTransaction();
       }
@@ -126,30 +131,27 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return result;
   }
 
-  public boolean deleteUsers( ProxyPentahoUser[] users ) throws NonExistingUserException, PentahoSecurityException, PacServiceException
-  {
+  public boolean deleteUsers(ProxyPentahoUser[] users) throws NonExistingUserException, PentahoSecurityException,
+      PacServiceException {
     boolean result = false;
     IPentahoUser[] persistedUsers;
     try {
       persistedUsers = new IPentahoUser[users.length];
       for (int i = 0; i < users.length; i++) {
         persistedUsers[i] = userRoleMgmtService.getUser(users[i].getName());
-        if ( null == persistedUsers[i] )
-        {
+        if (null == persistedUsers[i]) {
           throw new NonExistingUserException(users[i].getName());
         }
       }
       userRoleMgmtService.beginTransaction();
       for (int i = 0; i < persistedUsers.length; i++) {
-        userRoleMgmtService.deleteUser( persistedUsers[i] );
+        userRoleMgmtService.deleteUser(persistedUsers[i]);
       }
       userRoleMgmtService.commitTransaction();
       result = true;
     } catch (DAOException e) {
-      throw new PacServiceException(
-          Messages.getString("PacService.USER_DELETION_FAILED", e.getMessage())); //$NON-NLS-1$
-    }
-    finally {
+      throw new PacServiceException(Messages.getString("PacService.USER_DELETION_FAILED", e.getMessage())); //$NON-NLS-1$
+    } finally {
       if (!result) {
         rollbackTransaction();
       }
@@ -158,13 +160,11 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return result;
   }
 
-  public ProxyPentahoUser getUser(String userName) throws PacServiceException
-  {
+  public ProxyPentahoUser getUser(String userName) throws PacServiceException {
     ProxyPentahoUser proxyPentahoUser = null;
     try {
-      IPentahoUser user = userRoleMgmtService.getUser( userName );
-      if ( null != user )
-      {
+      IPentahoUser user = userRoleMgmtService.getUser(userName);
+      if (null != user) {
         proxyPentahoUser = new ProxyPentahoUser();
         proxyPentahoUser.setName(user.getName());
         proxyPentahoUser.setDescription(user.getDescription());
@@ -172,23 +172,20 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
         proxyPentahoUser.setPassword(user.getPassword());
       }
     } catch (DAOException e) {
-      throw new PacServiceException(
-          Messages.getString("PacService.FAILED_TO_FIND_USER", userName ), e ); //$NON-NLS-1$
-    }
-    finally {
+      throw new PacServiceException(Messages.getString("PacService.FAILED_TO_FIND_USER", userName), e); //$NON-NLS-1$
+    } finally {
       userRoleMgmtService.closeSession();
     }
     return proxyPentahoUser;
   }
 
-  public ProxyPentahoUser[] getUsers() throws PacServiceException
-  {
+  public ProxyPentahoUser[] getUsers() throws PacServiceException {
     ProxyPentahoUser[] proxyUsers = new ProxyPentahoUser[0];
     try {
       List<IPentahoUser> users = userRoleMgmtService.getUsers();
       proxyUsers = new ProxyPentahoUser[users.size()];
       int i = 0;
-      for (IPentahoUser user : users) {       
+      for (IPentahoUser user : users) {
         ProxyPentahoUser proxyPentahoUser = new ProxyPentahoUser();
         proxyPentahoUser.setName(user.getName());
         proxyPentahoUser.setDescription(user.getDescription());
@@ -197,21 +194,18 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
         proxyUsers[i++] = proxyPentahoUser;
       }
     } catch (DAOException e) {
-      throw new PacServiceException(
-          Messages.getString("PacService.FAILED_TO_GET_USER_NAME" ), e ); //$NON-NLS-1$
-    }
-    finally {
+      throw new PacServiceException(Messages.getString("PacService.FAILED_TO_GET_USER_NAME"), e); //$NON-NLS-1$
+    } finally {
       userRoleMgmtService.closeSession();
     }
     return proxyUsers;
   }
-  
+
   public ProxyPentahoUser[] getUsers(ProxyPentahoRole proxyRole) throws NonExistingRoleException, PacServiceException {
     ArrayList<ProxyPentahoUser> users = new ArrayList<ProxyPentahoUser>();
     try {
-      IPentahoRole role = userRoleMgmtService.getRole( proxyRole.getName());
-      if ( null != role )
-      {
+      IPentahoRole role = userRoleMgmtService.getRole(proxyRole.getName());
+      if (null != role) {
         for (IPentahoUser user : role.getUsers()) {
           ProxyPentahoUser proxyPentahoUser = new ProxyPentahoUser();
           proxyPentahoUser.setName(user.getName());
@@ -224,37 +218,33 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
         throw new NonExistingRoleException(proxyRole.getName());
       }
     } catch (DAOException e) {
-      throw new PacServiceException(
-          Messages.getString("PacService.FAILED_TO_FIND_USER", proxyRole.getName() ), e ); //$NON-NLS-1$
-    }
-    finally {
+      throw new PacServiceException(Messages.getString("PacService.FAILED_TO_FIND_USER", proxyRole.getName()), e); //$NON-NLS-1$
+    } finally {
       userRoleMgmtService.closeSession();
     }
-    return (ProxyPentahoUser[])users.toArray(new ProxyPentahoUser[0]);
+    return (ProxyPentahoUser[]) users.toArray(new ProxyPentahoUser[0]);
   }
-  
-  public boolean updateUser(ProxyPentahoUser proxyUser) throws NonExistingUserException, PentahoSecurityException, PacServiceException
-  {
+
+  public boolean updateUser(ProxyPentahoUser proxyUser) throws NonExistingUserException, PentahoSecurityException,
+      PacServiceException {
     boolean result = false;
     try {
       IPentahoUser user = userRoleMgmtService.getUser(proxyUser.getName());
-      if ( null == user )
-      {
+      if (null == user) {
         throw new NonExistingUserException(proxyUser.getName());
       }
       userRoleMgmtService.beginTransaction();
       user.setPassword(proxyUser.getPassword());
       user.setEnabled(proxyUser.getEnabled());
       user.setDescription(proxyUser.getDescription());
-      userRoleMgmtService.updateUser( user );
+      userRoleMgmtService.updateUser(user);
       userRoleMgmtService.commitTransaction();
       result = true;
     } catch (DAOException e) {
-      String msg = Messages.getString( "PacService.USER_UPDATE_FAILED", proxyUser.getName() ) //$NON-NLS-1$
-        + " " + e.getMessage(); //$NON-NLS-1$
-      throw new PacServiceException( msg, e );
-    }
-    finally {
+      String msg = Messages.getString("PacService.USER_UPDATE_FAILED", proxyUser.getName()) //$NON-NLS-1$
+          + " " + e.getMessage(); //$NON-NLS-1$
+      throw new PacServiceException(msg, e);
+    } finally {
       if (!result) {
         rollbackTransaction();
       }
@@ -262,7 +252,6 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     }
     return result;
   }
-  
   public void setRoles(ProxyPentahoUser proxyUser, ProxyPentahoRole[] assignedRoles) throws NonExistingRoleException, NonExistingUserException, PentahoSecurityException, PacServiceException{
     boolean result = false;
     try {
@@ -385,101 +374,146 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     }
   }
 
-  private String createDSManagerCreationErrorMsg()
-  {
-    StringBuilder sb = new StringBuilder();
-    sb.append( "Requested operation failed. Unable to create data source manager. Data source manager configuration info: " )
-      .append( " host name: " ).append( this.getJmxHostName() )
-      .append( " port #: " ).append( this.getJmxPortNumber() );
-    
-    return sb.toString();
+  public void updateRole(String roleName, String description, List<String> userNames) throws NonExistingRoleException,
+      NonExistingUserException, PentahoSecurityException, PacServiceException {
+    try {
+      IPentahoRole role = userRoleMgmtService.getRole(roleName);
+      if (null == role) {
+        throw new PacServiceException(Messages.getString("PacService.ROLE_UPDATE_FAILED", roleName)); //$NON-NLS-1$
+      }
+      userRoleMgmtService.beginTransaction();
+      role.setDescription(description);
+      role.setUsers(userNames);
+      userRoleMgmtService.updateRole(role);
+      userRoleMgmtService.commitTransaction();
+    } catch (DAOException e) {
+      rollbackTransaction();
+      throw new PacServiceException(Messages.getString("PacService.ROLE_UPDATE_FAILED", roleName), e); //$NON-NLS-1$
+    } finally {
+      userRoleMgmtService.closeSession();
+    }
   }
-  
-  public boolean createDataSource(IDataSource dataSource) throws PacServiceException {
+
+  public boolean createDataSource(IPentahoDataSource dataSource) throws PacServiceException {
     boolean result = false;
     try {
-      IDataSourceManager dsMgr = getDataSourceMgr();
-      dataSource.setParameter( Constants.PATH, this.getPciContextPath() );
-      dsMgr.addDataSource(dataSource);
-      dsMgr.commitChanges();
+      dataSourceMgmtService.beginTransaction();
+      dataSourceMgmtService.createDataSource(dataSource);
+      dataSourceMgmtService.commitTransaction();
       result = true;
-    } catch (DataSourceManagementException e) {
-      throw new PacServiceException(e);
-    } catch (DataSourceManagerCreationException e) {
-      throw new PacServiceException(createDSManagerCreationErrorMsg());
+    } catch (DuplicateDataSourceException dde) {
+      String msg = Messages.getString("PacService.ERROR_0009_DATASOURCE_ALREADY_EXIST", dataSource.getJndiName()) //$NON-NLS-1$
+          + " " + dde.getMessage(); //$NON-NLS-1$
+      throw new PacServiceException(msg, dde);
+
+    } catch (DAOException e) {
+      String msg = Messages.getString("PacService.ERROR_0007_DATASOURCE_CREATION_FAILED", dataSource.getJndiName()) //$NON-NLS-1$
+          + " " + e.getMessage(); //$NON-NLS-1$
+      throw new PacServiceException(msg, e);
+    } catch (PentahoSecurityException pse) {
+      String msg = Messages.getString(
+          "PacService.ERROR_0008_NO_CREATE_DATASOURCE_PERMISSION", dataSource.getJndiName()) //$NON-NLS-1$
+          + " " + pse.getMessage(); //$NON-NLS-1$
+      throw new PacServiceException(msg, pse);
+
+    } finally {
+      if (!result) {
+        rollbackTransaction();
+      }
+      dataSourceMgmtService.closeSession();
     }
     return result;
+
   }
-  
-  public boolean deleteDataSources(IDataSource[] dataSources) throws PacServiceException {
+
+  public boolean deleteDataSources(IPentahoDataSource[] dataSources) throws PacServiceException {
     boolean result = false;
+    IPentahoDataSource persistedDataSources = null;
     try {
-      IDataSourceManager dsMgr = getDataSourceMgr();
+      dataSourceMgmtService.beginTransaction();
       for (int i = 0; i < dataSources.length; i++) {
-        if (dsMgr.getDataSource(dataSources[i].getJndiName()) == null) {
-          throw new PacServiceException("Data Source does not exist : " + dataSources[i].getJndiName());
-        }
-      }
-      for (int i = 0; i < dataSources.length; i++) {
-        dataSources[i].setParameter( Constants.PATH, this.getPciContextPath() );
-        dsMgr.deleteDataSource(dataSources[i]);
-        dsMgr.commitChanges();
+        persistedDataSources = dataSourceMgmtService.getDataSource(dataSources[i].getJndiName());
+        dataSourceMgmtService.deleteDataSource(persistedDataSources);
       }
       result = true;
-    } catch (DataSourceManagementException e) {
-      throw new PacServiceException(e);
-    } catch (DataSourceManagerCreationException e) {
-      throw new PacServiceException(createDSManagerCreationErrorMsg());
-    }
-    return result;
-  }
-  
-  public boolean updateDataSource(IDataSource dataSource) throws PacServiceException {
-    boolean result = false;
-    try {
-      IDataSourceManager dsMgr = getDataSourceMgr();
-      dataSource.setParameter( Constants.PATH, this.getPciContextPath() );
-      dsMgr.updateDataSource(dataSource);
-      dsMgr.commitChanges();
-      result = true;
-    } catch (DataSourceManagementException e) {
-      throw new PacServiceException(e);
-    } catch (DataSourceManagerCreationException e) {
-      Exception e2 = e;
-      throw new PacServiceException( createDSManagerCreationErrorMsg() );
+      dataSourceMgmtService.commitTransaction();
+    } catch (NonExistingDataSourceException neds) {
+      String msg = Messages.getString(
+          "PacService.DATASOURCE_DELETION_FAILED_NO_DATASOURCE", persistedDataSources.getJndiName()) //$NON-NLS-1$
+          + " " + neds.getMessage(); //$NON-NLS-1$
+      throw new PacServiceException(msg, neds);
+    } catch (DAOException e) {
+      String msg = Messages.getString("PacService.DATASOURCE_DELETION_FAILED", persistedDataSources.getJndiName()) //$NON-NLS-1$
+          + " " + e.getMessage(); //$NON-NLS-1$
+      throw new PacServiceException(msg, e);
+    } catch (PentahoSecurityException pse) {
+      String msg = Messages.getString("PacService.DATASOURCE_DELETION_FAILED_NO_PERMISSION", persistedDataSources.getJndiName()) //$NON-NLS-1$
+          + " " + pse.getMessage(); //$NON-NLS-1$
+      throw new PacServiceException(msg, pse);
+    } finally {
+      if (!result) {
+        rollbackTransaction();
+      }
+      userRoleMgmtService.closeSession();
     }
     return result;
   }
 
-  public IDataSource[] getDataSources() throws PacServiceException {
-    IDataSource[] dataSources;
+  public boolean updateDataSource(IPentahoDataSource dataSource) throws PacServiceException {
+    boolean result = false;
     try {
-      IDataSourceManager dataSourceManager = getDataSourceMgr();
-      Collection<String> dataSourceNames = dataSourceManager.getDataSources();
-      dataSources = new IDataSource[dataSourceNames.size()];
-      int i = 0;
-      for (String datasourceName : dataSourceNames) {
-        dataSources[i++] = dataSourceManager.getDataSource(datasourceName);
+      IPentahoDataSource ds = dataSourceMgmtService.getDataSource(dataSource.getJndiName());
+      if (null == ds) {
+        throw new NonExistingDataSourceException(dataSource.getJndiName());
       }
-    } catch (DataSourceManagementException e) {
-      throw new PacServiceException(e);
-    } catch (DataSourceManagerCreationException e) {
-      throw new PacServiceException(createDSManagerCreationErrorMsg());
-    }
-    return dataSources;
-  }
-  
-  private IDataSourceManager getDataSourceMgr() throws DataSourceManagerCreationException
-  {
-    IDataSourceManager dsMgr = null;
+      ds.setDriverClass(dataSource.getDriverClass());
+      ds.setIdleConn(dataSource.getIdleConn());
+      ds.setMaxActConn(dataSource.getMaxActConn());
+      ds.setPassword(dataSource.getPassword());
+      ds.setQuery(dataSource.getQuery());
+      ds.setUrl(dataSource.getUrl());
+      ds.setUserName(dataSource.getUserName());
+      ds.setWait(dataSource.getWait());
+      dataSourceMgmtService.beginTransaction();
+      dataSourceMgmtService.updateDataSource(ds);
+      dataSourceMgmtService.commitTransaction();
+      result = true;
+    } catch (NonExistingDataSourceException neds) {
+      String msg = Messages.getString("PacService.DATASOURCE_UPDATE_FAILED_DOES_NOT_EXIST", dataSource.getJndiName()) //$NON-NLS-1$
+          + " " + neds.getMessage(); //$NON-NLS-1$
+      throw new PacServiceException(msg, neds);
 
-    NamedParameter[] parms = new NamedParameter[2];
-    parms[0] = new NamedParameter(Constants.JMX_HOST, this.getJmxHostName() );
-    parms[1] = new NamedParameter(Constants.JMX_PORT, this.getJmxPortNumber() );
-    dsMgr = new DataSourceManagerFacade().getDSManager(DataSourceManagerFacade.Type.TOMCAT, parms);
-    return dsMgr;
+    } catch (DAOException e) {
+      String msg = Messages.getString("PacService.DATASOURCE_UPDATE_FAILED", dataSource.getJndiName()) //$NON-NLS-1$
+          + " " + e.getMessage(); //$NON-NLS-1$
+      throw new PacServiceException(msg, e);
+    } catch (PentahoSecurityException pse) {
+      String msg = Messages.getString("PacService.DATASOURCE_UPDATE_FAILED_NO_PERMISSION", dataSource.getJndiName()) //$NON-NLS-1$
+          + " " + pse.getMessage(); //$NON-NLS-1$
+      throw new PacServiceException(msg, pse);
+
+    } finally {
+      if (!result) {
+        rollbackTransaction();
+      }
+      dataSourceMgmtService.closeSession();
+    }
+    return result;
   }
-  
+
+  public IPentahoDataSource[] getDataSources() throws PacServiceException {
+    List<IPentahoDataSource> dataSources;
+    try {
+      dataSources = dataSourceMgmtService.getDataSources();
+    } catch (DAOException e) {
+      throw new PacServiceException(Messages.getString("PacService.FAILED_TO_GET_DATASDOURCE"), e); //$NON-NLS-1$
+    } finally {
+      dataSourceMgmtService.closeSession();
+    }
+    return (IPentahoDataSource[]) dataSources.toArray(new PentahoDataSource[0]);
+
+  }
+
   /**
    * NOTE: caller is responsible for closing connection
    * 
@@ -487,101 +521,99 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
    * @return
    * @throws DataSourceManagementException
    */
-   private static Connection getDataSourceConnection(IDataSource ds) throws DataSourceManagementException {
-     Connection conn = null;
+  private static Connection getDataSourceConnection(IPentahoDataSource ds) throws DataSourceManagementException {
+    Connection conn = null;
 
-     String driverClass = ds.getDriverClass();
-     if (StringUtils.isEmpty(driverClass)) {
-       throw new DataSourceManagementException("Connection attempt failed, no driver class available: " + driverClass);
-     }
-     Class<?> driverC = null;
+    String driverClass = ds.getDriverClass();
+    if (StringUtils.isEmpty(driverClass)) {
+      throw new DataSourceManagementException("Connection attempt failed, no driver class available: " + driverClass);
+    }
+    Class<?> driverC = null;
 
-     try {
-       driverC = Class.forName(driverClass);
-     } catch (ClassNotFoundException e) {
-       throw new DataSourceManagementException("Connection attempt failed, driver class " + driverClass
-           + " not in classpath. ");
-     }
-     if (!Driver.class.isAssignableFrom(driverC)) {
-       throw new DataSourceManagementException("Connection attempt failed, driver class " + driverClass
-           + " not in classpath. ");
-     }
+    try {
+      driverC = Class.forName(driverClass);
+    } catch (ClassNotFoundException e) {
+      throw new DataSourceManagementException("Connection attempt failed, driver class " + driverClass
+          + " not in classpath. ");
+    }
+    if (!Driver.class.isAssignableFrom(driverC)) {
+      throw new DataSourceManagementException("Connection attempt failed, driver class " + driverClass
+          + " not in classpath. ");
+    }
 
-     Driver driver = null;
+    Driver driver = null;
 
-     try {
-       driver = driverC.asSubclass(Driver.class).newInstance();
-     } catch (InstantiationException e) {
-       throw new DataSourceManagementException("Connection attempt failed, unable to create driver class instance: "
-           + driverClass, e);
-     } catch (IllegalAccessException e) {
-       throw new DataSourceManagementException("Connection attempt failed, unable to create driver class instance: "
-           + driverClass, e);
-     }
+    try {
+      driver = driverC.asSubclass(Driver.class).newInstance();
+    } catch (InstantiationException e) {
+      throw new DataSourceManagementException("Connection attempt failed, unable to create driver class instance: "
+          + driverClass, e);
+    } catch (IllegalAccessException e) {
+      throw new DataSourceManagementException("Connection attempt failed, unable to create driver class instance: "
+          + driverClass, e);
+    }
 
-     try {
-       DriverManager.registerDriver(driver);
-       conn = DriverManager.getConnection(ds.getUrl(), ds.getUserName(), ds.getPassword());
-       return conn;
-     } catch (SQLException e) {
-       throw new DataSourceManagementException("Connection attempt failed. " + e.getMessage(), e);
-     }
-   }
+    try {
+      DriverManager.registerDriver(driver);
+      conn = DriverManager.getConnection(ds.getUrl(), ds.getUserName(), ds.getPassword());
+      return conn;
+    } catch (SQLException e) {
+      throw new DataSourceManagementException("Connection attempt failed. " + e.getMessage(), e);
+    }
+  }
 
-   public boolean testDataSourceConnection(IDataSource ds) throws PacServiceException {
-     Connection conn = null;
-     try {
-       conn = getDataSourceConnection(ds);
-     } catch (DataSourceManagementException dme) {
-       throw new PacServiceException( dme.getMessage(), dme );
-     } finally {
-       try {
-         if (conn != null) {
-           conn.close();
-         }
-       } catch (SQLException e) {
-         throw new PacServiceException(e);
-       }
-     }
-     return true;
-   }
+  public boolean testDataSourceConnection(IPentahoDataSource ds) throws PacServiceException {
+    Connection conn = null;
+    try {
+      conn = getDataSourceConnection(ds);
+    } catch (DataSourceManagementException dme) {
+      throw new PacServiceException(dme.getMessage(), dme);
+    } finally {
+      try {
+        if (conn != null) {
+          conn.close();
+        }
+      } catch (SQLException e) {
+        throw new PacServiceException(e);
+      }
+    }
+    return true;
+  }
 
-   public boolean testDataSourceValidationQuery(IDataSource ds) throws PacServiceException {
-     Connection conn = null;
-     Statement stmt = null;
-     ResultSet rs = null;
-     try {
-       conn = getDataSourceConnection(ds);
+  public boolean testDataSourceValidationQuery(IPentahoDataSource ds) throws PacServiceException {
+    Connection conn = null;
+    Statement stmt = null;
+    ResultSet rs = null;
+    try {
+      conn = getDataSourceConnection(ds);
 
-       if (!StringUtils.isEmpty(ds.getValidationQuery())) {
-         stmt = conn.createStatement();
-         rs = stmt.executeQuery(ds.getValidationQuery());
-       } else {
-         throw new PacServiceException("Data Source configuration does not contain a validation query.");
-       }
-     } catch (DataSourceManagementException dme) {
-       throw new PacServiceException("Data Source validation query failed. Query: "
-           + ds.getValidationQuery(), dme);
-     } catch (SQLException e) {
-       throw new PacServiceException("Data Source validation query failed. Query: "
-           + ds.getValidationQuery(), e);
-     } finally {
-       try {
-         if (rs != null) {
-           rs.close();
-         }
-         if (stmt != null) {
-           stmt.close();
-         }
-         if (conn != null) {
-           conn.close();
-         }
-       } catch (SQLException e) {
-         throw new PacServiceException(e);
-       }
-     }
-     return true;
-   }
+      if (!StringUtils.isEmpty(ds.getQuery())) {
+        stmt = conn.createStatement();
+        rs = stmt.executeQuery(ds.getQuery());
+      } else {
+        throw new PacServiceException("Data Source configuration does not contain a validation query.");
+      }
+    } catch (DataSourceManagementException dme) {
+      throw new PacServiceException("Data Source validation query failed. Query: " + ds.getQuery(), dme);
+    } catch (SQLException e) {
+      throw new PacServiceException("Data Source validation query failed. Query: " + ds.getQuery(), e);
+    } finally {
+      try {
+        if (rs != null) {
+          rs.close();
+        }
+        if (stmt != null) {
+          stmt.close();
+        }
+        if (conn != null) {
+          conn.close();
+        }
+      } catch (SQLException e) {
+        throw new PacServiceException(e);
+      }
+    }
+    return true;
+  }
 
   private void rollbackTransaction()
   {
@@ -863,7 +895,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       
     return html;
   }
-	  
+    
   private String showStatic(){
     String templateFileName = "defaultHome.ftl"; //$NON-NLS-1$
     InputStream flatFile = getClass().getResourceAsStream( templateFileName );
@@ -878,7 +910,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   
 
   // begin Scheduler Admin interfaces -----------------------------------------------------
-  public void deleteJob( String jobName, String jobGroup ) throws PacServiceException {
+  public void deleteJob(String jobName, String jobGroup) throws PacServiceException {
     schedulerProxy.deleteJob(jobName, jobGroup);
   }
 
@@ -886,15 +918,15 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
    * query string: schedulerAction=executeJob&jobName=PentahoSystemVersionCheck&jobGroup=DEFAULT
    * @throws PacServiceException 
    */
-  public void executeJobNow( String jobName, String jobGroup ) throws PacServiceException {
-    schedulerProxy.executeJobNow( jobName, jobGroup );
+  public void executeJobNow(String jobName, String jobGroup) throws PacServiceException {
+    schedulerProxy.executeJobNow(jobName, jobGroup);
   }
 
   /**
    * query string: schedulerAction=getJobNames
    * @throws PacServiceException 
    */
-  public List/*<Job>*/ getJobNames() throws PacServiceException {
+  public List/*<Job>*/getJobNames() throws PacServiceException {
     List l = schedulerProxy.getJobNames();
     return l;
   }
@@ -919,7 +951,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
    * query string: schedulerAction=pauseJob&jobName=PentahoSystemVersionCheck&jobGroup=DEFAULT
    * @throws PacServiceException 
    */
-  public void pauseJob( String jobName, String jobGroup ) throws PacServiceException {
+  public void pauseJob(String jobName, String jobGroup) throws PacServiceException {
     schedulerProxy.pauseJob(jobName, jobGroup);
   }
 
@@ -935,9 +967,9 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
    * query string: schedulerAction=resumeJob&jobName=PentahoSystemVersionCheck&jobGroup=DEFAULT
    * @throws PacServiceException 
    */
-  public void resumeJob( String jobName, String jobGroup ) throws PacServiceException {
+  public void resumeJob(String jobName, String jobGroup) throws PacServiceException {
     schedulerProxy.resumeJob(jobName, jobGroup);
   }
   // end Scheduler Admin interfaces -----------------------------------------------------
-  
+
 }

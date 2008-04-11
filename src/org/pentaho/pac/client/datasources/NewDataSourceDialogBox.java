@@ -3,7 +3,7 @@ package org.pentaho.pac.client.datasources;
 import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.common.datasources.SimpleDataSource;
+import org.pentaho.pac.common.datasources.PentahoDataSource;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -69,7 +69,7 @@ public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
     super.setText(text);
   }
 
-  public SimpleDataSource getDataSource() {
+  public PentahoDataSource getDataSource() {
     return dataSourceDetailsPanel.getDataSource();
   }
 
@@ -189,7 +189,7 @@ public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
   }
 
 
-  public void setDataSource(SimpleDataSource dataSource) {
+  public void setDataSource(PentahoDataSource dataSource) {
     dataSourceDetailsPanel.setDataSource(dataSource);
   }
 
@@ -213,12 +213,15 @@ public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
       messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().missingDbUserName());
       messageDialog.center();
     } else {
-      SimpleDataSource dataSource = getDataSource();
+      PentahoDataSource dataSource = getDataSource();
       if (dataSource != null) {
         AsyncCallback callback = new AsyncCallback() {
           public void onSuccess(Object result) {
             dataSourceCreated = true;
             hide();
+            messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().addDataSource());
+            messageDialog.setMessage("New datasource successfully created");
+            messageDialog.center();
           }
 
           public void onFailure(Throwable caught) {
@@ -244,7 +247,7 @@ public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
   }
   
   private void testDataSourceConnection() {
-    final SimpleDataSource dataSource = dataSourceDetailsPanel.getDataSource();
+    final PentahoDataSource dataSource = dataSourceDetailsPanel.getDataSource();
     AsyncCallback callback = new AsyncCallback() {
       public void onSuccess(Object result) {
         messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().testConnection());

@@ -22,6 +22,7 @@
     <property name="hibernate.jdbc.use_streams_for_binary">true</property>
     <mapping resource="org/pentaho/pac/server/PentahoRole.hbm.xml" />
     <mapping resource="org/pentaho/pac/server/PentahoUser.hbm.xml" />
+    <mapping resource="org/pentaho/pac/server/PentahoDataSource.hbm.xml" />    
 
 </session-factory>
 

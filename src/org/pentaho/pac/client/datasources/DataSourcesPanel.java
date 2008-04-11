@@ -3,7 +3,7 @@ package org.pentaho.pac.client.datasources;
 import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.common.datasources.SimpleDataSource;
+import org.pentaho.pac.common.datasources.PentahoDataSource;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -21,7 +21,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 
   MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN}); //$NON-NLS-1$
   DataSourcesList dataSourcesList = new DataSourcesList();
-  SimpleDataSource[] dataSources = null;
+  PentahoDataSource[] dataSources = null;
   DataSourceDetailsPanel dataSourceDetailsPanel = new DataSourceDetailsPanel();
   Button updateDataSourceBtn = new Button(PentahoAdminConsole.getLocalizedMessages().update());
   Button testDataSourceBtn = new Button(PentahoAdminConsole.getLocalizedMessages().test());
@@ -120,11 +120,14 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
    }
 	
 	private void deleteSelectedDataSources() {
-	  final SimpleDataSource[] selectedDataSources = dataSourcesList.getSelectedDataSources();
+	  final PentahoDataSource[] selectedDataSources = dataSourcesList.getSelectedDataSources();
 	  if (selectedDataSources.length > 0) {
 	    AsyncCallback callback = new AsyncCallback() {
 	      public void onSuccess(Object result) {
-	        dataSourceSelectionChanged();
+          messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().deleteDataSources());
+          messageDialog.setMessage("Successfully Deleted the selected datasource(s)");
+          messageDialog.center();
+	        refresh();
 	      }
 
 	      public void onFailure(Throwable caught) {
@@ -138,7 +141,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 	}
 	
 	private void dataSourceSelectionChanged() {
-    SimpleDataSource[] selectedDataSources = dataSourcesList.getSelectedDataSources();
+    PentahoDataSource[] selectedDataSources = dataSourcesList.getSelectedDataSources();
     if (selectedDataSources.length == 1) {
       dataSourceDetailsPanel.setDataSource(selectedDataSources[0]);
     } else {
@@ -166,14 +169,18 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
       messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().missingDbUserName());
       messageDialog.center();
     } else {
-      final SimpleDataSource dataSource = dataSourceDetailsPanel.getDataSource();
+      final PentahoDataSource dataSource = dataSourceDetailsPanel.getDataSource();
       final int index = dataSourcesList.getSelectedIndex();
       
       ((Button)sender).setEnabled( false );
       AsyncCallback callback = new AsyncCallback() {
         public void onSuccess(Object result) {
+          messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().updateDataSource());
+          messageDialog.setMessage("Successfully updated the DataSource");
+          messageDialog.center();
           dataSourcesList.setDataSource(index, dataSource);
           ((Button)sender).setEnabled( true );
+          
         }
 
         public void onFailure(Throwable caught) {
@@ -188,7 +195,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 	}
 	
 	 private void testDataSourceConnection() {
-	    final SimpleDataSource dataSource = dataSourceDetailsPanel.getDataSource();
+	    final PentahoDataSource dataSource = dataSourceDetailsPanel.getDataSource();
 	    AsyncCallback callback = new AsyncCallback() {
 	      public void onSuccess(Object result) {
 	        messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().testConnection());
@@ -220,7 +227,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 	
   public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
     if ((sender == newDataSourceDialogBox) && newDataSourceDialogBox.isDataSourceCreated()) {
-      SimpleDataSource dataSource = newDataSourceDialogBox.getDataSource();
+      PentahoDataSource dataSource = newDataSourceDialogBox.getDataSource();
       if (dataSourcesList.addDataSource(dataSource)) {
         dataSourcesList.setSelectedDataSource(dataSource);
         dataSourceSelectionChanged();

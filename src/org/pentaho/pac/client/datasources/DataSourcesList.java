@@ -8,8 +8,8 @@ import java.util.List;
 import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.common.datasources.IDataSource;
-import org.pentaho.pac.common.datasources.SimpleDataSource;
+import org.pentaho.pac.common.datasources.IPentahoDataSource;
+import org.pentaho.pac.common.datasources.PentahoDataSource;
 import org.pentaho.pac.common.users.ProxyPentahoUser;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -24,11 +24,11 @@ public class DataSourcesList extends ListBox {
     super(true);
   }
 
-  public SimpleDataSource[] getDataSources() {
-    return (SimpleDataSource[])dataSources.toArray(new ProxyPentahoUser[0]);
+  public PentahoDataSource[] getDataSources() {
+    return (PentahoDataSource[])dataSources.toArray(new PentahoDataSource[0]);
   }
 
-  public void setDataSources(IDataSource[] dataSources) {
+  public void setDataSources(IPentahoDataSource[] dataSources) {
     
     this.dataSources.clear();
     this.dataSources.addAll(Arrays.asList(dataSources));
@@ -39,12 +39,12 @@ public class DataSourcesList extends ListBox {
     isInitialized = true;
   }
   
-  public void setDataSource(int index, SimpleDataSource dataSource) {
+  public void setDataSource(int index, PentahoDataSource dataSource) {
     dataSources.set(index, dataSource);
     setItemText(index, dataSource.getJndiName());
   }
   
-  public SimpleDataSource[] getSelectedDataSources() {
+  public PentahoDataSource[] getSelectedDataSources() {
     List selectedDataSources = new ArrayList();
     int itemCount = getItemCount();
     for (int i = 0; i < itemCount; i++) {
@@ -52,14 +52,14 @@ public class DataSourcesList extends ListBox {
         selectedDataSources.add(dataSources.get(i));
       }
     }
-    return (SimpleDataSource[])selectedDataSources.toArray(new SimpleDataSource[0]);
+    return (PentahoDataSource[])selectedDataSources.toArray(new PentahoDataSource[0]);
   }
   
-  public void setSelectedDataSource(SimpleDataSource dataSource) {
-    setSelectedDataSources(new SimpleDataSource[]{dataSource});
+  public void setSelectedDataSource(PentahoDataSource dataSource) {
+    setSelectedDataSources(new PentahoDataSource[]{dataSource});
   }
   
-  public void setSelectedDataSources(SimpleDataSource[] dataSources) {
+  public void setSelectedDataSources(PentahoDataSource[] dataSources) {
     List dataSourceNames = new ArrayList();
     for (int i = 0; i < dataSources.length; i++) {
       dataSourceNames.add(dataSources[i].getJndiName());
@@ -93,7 +93,7 @@ public class DataSourcesList extends ListBox {
     }
   }
   
-  public void removeDataSources(SimpleDataSource[] dataSourcesToRemove) {
+  public void removeDataSources(PentahoDataSource[] dataSourcesToRemove) {
     int numDataSourcesDeleted = 0;
     int selectedIndex = -1;
     for (int i = getItemCount() - 1; i >= 0; i--) {
@@ -119,11 +119,11 @@ public class DataSourcesList extends ListBox {
   }
   
   public void refresh() {
-    setDataSources(new SimpleDataSource[0]);
+    setDataSources(new PentahoDataSource[0]);
     isInitialized = false;
     AsyncCallback callback = new AsyncCallback() {
       public void onSuccess(Object result) {
-        setDataSources((IDataSource[])result);
+        setDataSources((IPentahoDataSource[])result);
         isInitialized = true;
       }
 
@@ -137,11 +137,11 @@ public class DataSourcesList extends ListBox {
     PacServiceFactory.getPacService().getDataSources(callback);
   }
   
-  public boolean addDataSource(SimpleDataSource dataSource) {
+  public boolean addDataSource(PentahoDataSource dataSource) {
     boolean result = false;
     boolean dataSourceNameExists = false;
     for (Iterator iter = dataSources.iterator(); iter.hasNext() && !dataSourceNameExists;) {
-      SimpleDataSource tmpDataSource = (SimpleDataSource)iter.next();
+      PentahoDataSource tmpDataSource = (PentahoDataSource)iter.next();
       dataSourceNameExists = tmpDataSource.getJndiName().equals(dataSource.getJndiName());      
     }
     if (!dataSourceNameExists) {
@@ -157,7 +157,7 @@ public class DataSourcesList extends ListBox {
   }
   
   public void clearDataSourcesCache() {
-    setDataSources(new SimpleDataSource[0]);
+    setDataSources(new PentahoDataSource[0]);
     isInitialized = false;
   }
 }

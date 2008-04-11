@@ -1,7 +1,7 @@
 package org.pentaho.pac.client.datasources;
 
 import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.common.datasources.SimpleDataSource;
+import org.pentaho.pac.common.datasources.PentahoDataSource;
 
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
@@ -175,7 +175,7 @@ public class DataSourceDetailsPanel extends VerticalPanel {
     return waitTextBox;
   }
   
-  public void setDataSource(SimpleDataSource dataSource) {
+  public void setDataSource(PentahoDataSource dataSource) {
     if (dataSource == null) {
       setUserName(""); //$NON-NLS-1$
       setPassword(""); //$NON-NLS-1$
@@ -190,25 +190,25 @@ public class DataSourceDetailsPanel extends VerticalPanel {
       setUserName(dataSource.getUserName());
       setPassword(dataSource.getPassword());
       setJndiName(dataSource.getJndiName());
-      setMaxActiveConnections(dataSource.getActive());
+      setMaxActiveConnections(dataSource.getMaxActConn());
       setDriverClass(dataSource.getDriverClass());
-      setIdleConnections(dataSource.getIdle());
+      setIdleConnections(dataSource.getIdleConn());
       setUrl(dataSource.getUrl());
-      setValidationQuery(dataSource.getValidationQuery());
+      setValidationQuery(dataSource.getQuery());
       setWait(dataSource.getWait());
     }
   }
   
-  public SimpleDataSource getDataSource() {
-    SimpleDataSource dataSource = new SimpleDataSource();
+  public PentahoDataSource getDataSource() {
+    PentahoDataSource dataSource = new PentahoDataSource();
     dataSource.setUserName(getUserName());
     dataSource.setPassword(getPassword());
     dataSource.setJndiName(getJndiName());
-    dataSource.setActive(getMaxActiveConnections());
+    dataSource.setMaxActConn(getMaxActiveConnections());
     dataSource.setDriverClass(getDriverClass());
-    dataSource.setIdle(getIdleConnections());
+    dataSource.setIdleConn(getIdleConnections());
     dataSource.setUrl(getUrl());
-    dataSource.setValidationQuery(getValidationQuery());
+    dataSource.setQuery(getValidationQuery());
     dataSource.setWait(getWait());
     return dataSource;
   }

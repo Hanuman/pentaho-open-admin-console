@@ -10,8 +10,10 @@ import org.pentaho.pac.common.roles.DuplicateRoleException;
 import org.pentaho.pac.common.roles.NonExistingRoleException;
 import org.pentaho.pac.common.users.DuplicateUserException;
 import org.pentaho.pac.common.users.NonExistingUserException;
+import org.pentaho.pac.server.common.DAOException;
+import org.pentaho.pac.server.common.HibernateSessionFactory;
 
-/*package private*/ class UserRoleHibernateDAO implements IUserRoleDAO {
+public class UserRoleHibernateDAO implements IUserRoleDAO {
 
   public UserRoleHibernateDAO() {
   }

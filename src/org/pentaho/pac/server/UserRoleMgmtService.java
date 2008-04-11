@@ -7,12 +7,14 @@ import org.pentaho.pac.common.roles.DuplicateRoleException;
 import org.pentaho.pac.common.roles.NonExistingRoleException;
 import org.pentaho.pac.common.users.DuplicateUserException;
 import org.pentaho.pac.common.users.NonExistingUserException;
+import org.pentaho.pac.server.common.DAOException;
+import org.pentaho.pac.server.common.DAOFactory;
 
 /*package private */ class UserRoleMgmtService implements IUserRoleMgmtService {
   IUserRoleDAO userRoleDAO = null;
 
   public UserRoleMgmtService() {
-    userRoleDAO = UserRoleDAOFactory.getDAO();
+    userRoleDAO = DAOFactory.getUserRoleDAO();
   }
   
   public void createRole(IPentahoRole newRole) throws DuplicateRoleException, DAOException, PentahoSecurityException {
