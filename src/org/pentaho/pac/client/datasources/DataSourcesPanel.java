@@ -122,7 +122,6 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 	private void deleteSelectedDataSources() {
 	  final SimpleDataSource[] selectedDataSources = dataSourcesList.getSelectedDataSources();
 	  if (selectedDataSources.length > 0) {
-	    final int index = dataSourcesList.getSelectedIndex();
 	    AsyncCallback callback = new AsyncCallback() {
 	      public void onSuccess(Object result) {
 	        dataSourceSelectionChanged();
