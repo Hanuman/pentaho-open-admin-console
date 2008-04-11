@@ -19,6 +19,7 @@ package org.pentaho.pac.client.services;
 import org.pentaho.pac.client.PacServiceAsync;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -32,15 +33,16 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class AdminServicesPanel extends VerticalPanel implements ClickListener {
 
-  Button refreshSolutionRepositoryBtn = new Button(PentahoAdminConsole.getLocalizedMessages().refreshSolutionRepository());
-  Button cleanRepositoryBtn = new Button(PentahoAdminConsole.getLocalizedMessages().removeStaleContent());
-  Button clearMondrianDataCacheBtn = new Button(PentahoAdminConsole.getLocalizedMessages().purgeMondrianDataCache());
-  Button clearMondrianSchemaCacheBtn = new Button(PentahoAdminConsole.getLocalizedMessages().purgeMondrianSchemaCache());
-  Button scheduleRepositoryCleaningBtn = new Button(PentahoAdminConsole.getLocalizedMessages().scheduleDailyRepositoryCleaning());
-  Button resetRepositoryBtn = new Button(PentahoAdminConsole.getLocalizedMessages().restoreDefaultFilePermissions());
-  Button refreshSystemSettingsBtn = new Button(PentahoAdminConsole.getLocalizedMessages().refreshSystemSettings());
-  Button executeGlobalActionsBtn = new Button(PentahoAdminConsole.getLocalizedMessages().executeGlobalActions());
-  Button refreshReportingMetadataBtn = new Button(PentahoAdminConsole.getLocalizedMessages().refreshReportingMetadata());
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
+  Button refreshSolutionRepositoryBtn = new Button(MSGS.refreshSolutionRepository());
+  Button cleanRepositoryBtn = new Button(MSGS.removeStaleContent());
+  Button clearMondrianDataCacheBtn = new Button(MSGS.purgeMondrianDataCache());
+  Button clearMondrianSchemaCacheBtn = new Button(MSGS.purgeMondrianSchemaCache());
+  Button scheduleRepositoryCleaningBtn = new Button(MSGS.scheduleDailyRepositoryCleaning());
+  Button resetRepositoryBtn = new Button(MSGS.restoreDefaultFilePermissions());
+  Button refreshSystemSettingsBtn = new Button(MSGS.refreshSystemSettings());
+  Button executeGlobalActionsBtn = new Button(MSGS.executeGlobalActions());
+  Button refreshReportingMetadataBtn = new Button(MSGS.refreshReportingMetadata());
   
   public AdminServicesPanel() {
     Grid grid = new Grid(5, 2);
@@ -84,8 +86,8 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
       
       public void onSuccess(Object result) {
         final DialogBox dialogBox = new DialogBox();
-        dialogBox.setText(PentahoAdminConsole.getLocalizedMessages().services());
-        Button okButton = new Button(PentahoAdminConsole.getLocalizedMessages().ok());
+        dialogBox.setText(MSGS.services());
+        Button okButton = new Button(MSGS.ok());
         okButton.addClickListener(new ClickListener() {
           public void onClick(Widget sender) {
             dialogBox.hide();
@@ -106,8 +108,8 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
 
       public void onFailure(Throwable caught) {
         final DialogBox dialogBox = new DialogBox();
-        dialogBox.setText(PentahoAdminConsole.getLocalizedMessages().error());
-        Button okButton = new Button(PentahoAdminConsole.getLocalizedMessages().ok());
+        dialogBox.setText(MSGS.error());
+        Button okButton = new Button(MSGS.ok());
         okButton.addClickListener(new ClickListener() {
           public void onClick(Widget sender) {
             dialogBox.hide();
