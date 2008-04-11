@@ -61,6 +61,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
               createUI( jobList );
               allActionsTable.setHTML( 2, 1, resumeSuspendState );
               isInitialized = true;
+              updateSchedulerPausedStatus();
             }
       
             public void onFailure(Throwable caught) {
@@ -72,7 +73,6 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
             }
           }
         );
-      updateSchedulerPausedStatus();
     } // end if (!isInitialized)
   }
 
@@ -159,6 +159,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
     rowNum++; // 1
     Hyperlink statusHyper = createSchedulerStatusHyperlink();
     t.setWidget( rowNum, 0, statusHyper );
+    //see setSchedulerStatusMsg
     t.setHTML( rowNum, 1, "&nbsp;" ); //$NON-NLS-1$
 
     rowNum++; // 2
@@ -194,7 +195,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
    
   private Hyperlink createSuspendHyperlink( final String jobName, final String jobGroup ) {
     Hyperlink a = new Hyperlink();
-    a.setText( MSGS.suspended() );
+    a.setText( MSGS.suspend() );
     // TODO sbarkdull, yuk
     a.addClickListener( new ClickListener() {
       public void onClick( final Widget sender ) {
@@ -379,7 +380,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
         new AsyncCallback() {
           public void onSuccess( Object oIsRunning ) {
             boolean isRunning = ((Boolean)oIsRunning).booleanValue();
-            setSchedulerStatusMsg( isRunning ? MSGS.running() : MSGS.suspended() );
+            setSchedulerStatusMsg( isRunning ? MSGS.running() : MSGS.notRunning() );
           }
     
           public void onFailure(Throwable caught) {
@@ -395,6 +396,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
   {
     allActionsTable.setHTML( 1, 1, statusMsg );
   }
+  
   private FlexTable createJobsTable( List/*<Job>*/ jobList ) {
     
     FlexTable table = new FlexTable();
