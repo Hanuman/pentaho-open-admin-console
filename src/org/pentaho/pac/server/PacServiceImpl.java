@@ -61,7 +61,6 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   
   private String jmxHostName = null;
   private String jmxPortNumber = null;
-  private String password = null;
   private String userName = null;
   private String pciContextPath = null;
   private String biServerBaseURL = null;
@@ -520,7 +519,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   
 
   public String resetRepository() throws PacServiceException {
-    return resetSolutionRepository(getUserName(), getPassword());
+    return resetSolutionRepository(getUserName() );
   }
   
 
@@ -543,7 +542,6 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     Properties p = AppConfigProperties.getProperties();
     jmxHostName = StringUtils.defaultIfEmpty( p.getProperty("jmxHostName"), System.getProperty("jmxHostName") ); //$NON-NLS-1$ //$NON-NLS-2$
     jmxPortNumber = StringUtils.defaultIfEmpty( p.getProperty("jmxPortNumber"), System.getProperty("jmxPortNumber") ); //$NON-NLS-1$ //$NON-NLS-2$
-    password = StringUtils.defaultIfEmpty( p.getProperty("pentaho.platform.password"), System.getProperty("pentaho.platform.password") ); //$NON-NLS-1$ //$NON-NLS-2$
     userName = StringUtils.defaultIfEmpty( p.getProperty("pentaho.platform.userName"), System.getProperty("pentaho.platform.userName") ); //$NON-NLS-1$ //$NON-NLS-2$
     pciContextPath = StringUtils.defaultIfEmpty( p.getProperty("pciContextPath"), System.getProperty("pciContextPath") ); //$NON-NLS-1$ //$NON-NLS-2$
     biServerBaseURL = StringUtils.defaultIfEmpty( p.getProperty("biServerBaseURL"), System.getProperty("biServerBaseURL") ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -555,10 +553,6 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
 
   public String getJmxPortNumber() {
     return jmxPortNumber;
-  }
-
-  public String getPassword() {
-    return password;
   }
 
   public String getUserName() {
@@ -600,8 +594,8 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     params.put( "path", path ); //$NON-NLS-1$
     params.put( "action", xAction ); //$NON-NLS-1$
     
-    String strResponse = biServerProxy.execRemoteMethod( "ServiceAction", userName, params );
-    return Messages.getString( "PacService.ACTION_COMPLETE" );
+    String strResponse = biServerProxy.execRemoteMethod( "ServiceAction", userName, params ); //$NON-NLS-1$
+    return Messages.getString( "PacService.ACTION_COMPLETE" ); //$NON-NLS-1$
   }
   
   private String executePublishRequest(String publisherClassName ) throws PacServiceException {
@@ -611,14 +605,14 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     params.put( "style", "popup" ); //$NON-NLS-1$ //$NON-NLS-2$
     params.put( "class", publisherClassName ); //$NON-NLS-1$
     
-    String strResponse = biServerProxy.execRemoteMethod( "Publish", userName, params );
-    return Messages.getString( "PacService.ACTION_COMPLETE" );
+    String strResponse = biServerProxy.execRemoteMethod( "Publish", userName, params ); //$NON-NLS-1$
+    return Messages.getString( "PacService.ACTION_COMPLETE" ); //$NON-NLS-1$
   }
   
-  private String resetSolutionRepository(String userid, String password) throws PacServiceException {
+  private String resetSolutionRepository(String userid ) throws PacServiceException {
 
-    String strResponse = biServerProxy.execRemoteMethod( "ResetRepository", userName, /*params*/null );
-    return Messages.getString( "PacService.ACTION_COMPLETE" );
+    String strResponse = biServerProxy.execRemoteMethod( "ResetRepository", userName, /*params*/null ); //$NON-NLS-1$
+    return Messages.getString( "PacService.ACTION_COMPLETE" ); //$NON-NLS-1$
   }
 
   public boolean createRole(ProxyPentahoRole proxyRole) throws DuplicateRoleException, PentahoSecurityException, PacServiceException {
