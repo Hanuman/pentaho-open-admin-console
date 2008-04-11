@@ -192,7 +192,6 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 	
 	private void updateRoleDetails(final Widget sender) {
     final ProxyPentahoRole role = roleDetailsPanel.getRole();
-    final int index = rolesList.getSelectedIndex();
     AsyncCallback callback = new AsyncCallback() {
       public void onSuccess(Object result) {
         rolesList.addRole(role);
