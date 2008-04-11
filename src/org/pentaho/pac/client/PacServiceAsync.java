@@ -1,7 +1,11 @@
 package org.pentaho.pac.client;
 
+import org.pentaho.pac.common.PacServiceException;
+import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.datasources.IDataSource;
+import org.pentaho.pac.common.roles.NonExistingRoleException;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
+import org.pentaho.pac.common.users.NonExistingUserException;
 import org.pentaho.pac.common.users.ProxyPentahoUser;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -14,12 +18,14 @@ public interface PacServiceAsync {
   public void updateUser(ProxyPentahoUser user, AsyncCallback callback);
   public void getUsers(AsyncCallback callback);
   public void getUsers(ProxyPentahoRole role, AsyncCallback callback);
+  public void setUsers(ProxyPentahoRole role, ProxyPentahoUser[] assignedUsers, AsyncCallback callback);
   
   public void createRole(ProxyPentahoRole role, AsyncCallback callback);
   public void deleteRoles(ProxyPentahoRole[] roles, AsyncCallback callback);
   public void updateRole(ProxyPentahoRole role, AsyncCallback callback);
   public void getRoles(AsyncCallback callback);
   public void getRoles(ProxyPentahoUser user, AsyncCallback callback);
+  public void setRoles(ProxyPentahoUser user, ProxyPentahoRole[] assignedRoles, AsyncCallback callback);
   
   public void createDataSource(IDataSource dataSource, AsyncCallback callback);
   public void deleteDataSources(IDataSource[] dataSources, AsyncCallback callback);

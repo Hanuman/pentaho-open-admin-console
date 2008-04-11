@@ -69,7 +69,7 @@ public class UserAndRoleMgmtService {
     }
     for (Iterator iter = roleNames.iterator(); iter.hasNext();) {
       String roleName = iter.next().toString();
-      for (Iterator iter2 = userRoleSecurityInfo.getRoles().iterator(); iter.hasNext();) {
+      for (Iterator iter2 = userRoleSecurityInfo.getRoles().iterator(); iter2.hasNext();) {
         ProxyPentahoRole role = (ProxyPentahoRole)iter2.next();
         if (role.getName().equals(roleName)) {
           assignedRoles.add(role);
@@ -112,7 +112,7 @@ public class UserAndRoleMgmtService {
         callback.onFailure(caught);
       }
     };
-    PacServiceFactory.getPacService().createUser(user, callback);
+    PacServiceFactory.getPacService().createUser(user, innerCallback);
   }
   
   public void updateUser(final ProxyPentahoUser user, final AsyncCallback callback) {
@@ -130,7 +130,7 @@ public class UserAndRoleMgmtService {
         callback.onFailure(caught);
       }
     };
-    PacServiceFactory.getPacService().updateUser(user, callback);
+    PacServiceFactory.getPacService().updateUser(user, innerCallback);
   }
   
   public void deleteUsers(final ProxyPentahoUser[] users, final AsyncCallback callback) {
@@ -154,7 +154,7 @@ public class UserAndRoleMgmtService {
         callback.onFailure(caught);
       }
     };
-    PacServiceFactory.getPacService().deleteUsers(users, callback);
+    PacServiceFactory.getPacService().deleteUsers(users, innerCallback);
   }
   
   public void createRole(final ProxyPentahoRole role, final AsyncCallback callback) {
@@ -167,7 +167,7 @@ public class UserAndRoleMgmtService {
         callback.onFailure(caught);
       }
     };
-    PacServiceFactory.getPacService().createRole(role, callback);
+    PacServiceFactory.getPacService().createRole(role, innerCallback);
   }
   
   public void updateRole(final ProxyPentahoRole role, final AsyncCallback callback) {
@@ -185,7 +185,7 @@ public class UserAndRoleMgmtService {
         callback.onFailure(caught);
       }
     };
-    PacServiceFactory.getPacService().updateRole(role, callback);
+    PacServiceFactory.getPacService().updateRole(role, innerCallback);
   }
   
   public void deleteRoles(final ProxyPentahoRole[] roles, final AsyncCallback callback) {
@@ -209,7 +209,82 @@ public class UserAndRoleMgmtService {
         callback.onFailure(caught);
       }
     };
-    PacServiceFactory.getPacService().deleteRoles(roles, callback);
+    PacServiceFactory.getPacService().deleteRoles(roles, innerCallback);
   }
 
+  public void setUsers(final ProxyPentahoRole role, final ProxyPentahoUser[] assignedUsers, final AsyncCallback callback) {
+    AsyncCallback innerCallback = new AsyncCallback() {
+      public void onSuccess(Object result) {        
+        if (userRoleSecurityInfo != null) {
+          ArrayList currentMappings = new ArrayList();
+          ArrayList mappingsToAdd = new ArrayList();
+          ArrayList mappingsToRemove = new ArrayList();
+          
+          for (int i = 0; i < assignedUsers.length; i++) {
+            currentMappings.add(new UserToRoleAssignment(assignedUsers[i].getName(), role.getName()));
+          }
+          
+          for (Iterator iter = userRoleSecurityInfo.getAssignments().iterator(); iter.hasNext();) {
+            UserToRoleAssignment userToRoleAssignment = (UserToRoleAssignment)iter.next();
+            if (userToRoleAssignment.getRoleId().equals(role.getName())
+                && !currentMappings.contains(userToRoleAssignment)) {
+              mappingsToRemove.add(userToRoleAssignment);
+            }
+          }
+          
+          for (Iterator iter = currentMappings.iterator(); iter.hasNext();) {
+            UserToRoleAssignment userToRoleAssignment = (UserToRoleAssignment)iter.next();
+            if (!userRoleSecurityInfo.getAssignments().contains(userToRoleAssignment)) {
+              mappingsToAdd.add(userToRoleAssignment);
+            }
+          }
+          userRoleSecurityInfo.getAssignments().removeAll(mappingsToRemove);
+          userRoleSecurityInfo.getAssignments().addAll(mappingsToAdd);
+        }      
+        callback.onSuccess(null);
+      }
+      public void onFailure(Throwable caught) {
+        callback.onFailure(caught);
+      }
+    };
+    PacServiceFactory.getPacService().setUsers(role, assignedUsers, innerCallback);
+  }
+  
+  public void setRoles(final ProxyPentahoUser user, final ProxyPentahoRole[] assignedRoles, final AsyncCallback callback) {
+    AsyncCallback innerCallback = new AsyncCallback() {
+      public void onSuccess(Object result) {
+        if (userRoleSecurityInfo != null) {
+          ArrayList currentMappings = new ArrayList();
+          ArrayList mappingsToAdd = new ArrayList();
+          ArrayList mappingsToRemove = new ArrayList();
+          
+          for (int i = 0; i < assignedRoles.length; i++) {
+            currentMappings.add(new UserToRoleAssignment(user.getName(), assignedRoles[i].getName()));
+          }
+          
+          for (Iterator iter = userRoleSecurityInfo.getAssignments().iterator(); iter.hasNext();) {
+            UserToRoleAssignment userToRoleAssignment = (UserToRoleAssignment)iter.next();
+            if (userToRoleAssignment.getUserId().equals(user.getName())
+                && !currentMappings.contains(userToRoleAssignment)) {
+              mappingsToRemove.add(userToRoleAssignment);
+            }
+          }
+          
+          for (Iterator iter = currentMappings.iterator(); iter.hasNext();) {
+            UserToRoleAssignment userToRoleAssignment = (UserToRoleAssignment)iter.next();
+            if (!userRoleSecurityInfo.getAssignments().contains(userToRoleAssignment)) {
+              mappingsToAdd.add(userToRoleAssignment);
+            }
+          }
+          userRoleSecurityInfo.getAssignments().removeAll(mappingsToRemove);
+          userRoleSecurityInfo.getAssignments().addAll(mappingsToAdd);
+        }
+        callback.onSuccess(null);
+      }
+      public void onFailure(Throwable caught) {
+        callback.onFailure(caught);
+      }
+    };
+    PacServiceFactory.getPacService().setRoles(user, assignedRoles, innerCallback);
+  }
 }

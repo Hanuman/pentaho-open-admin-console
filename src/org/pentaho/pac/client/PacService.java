@@ -25,12 +25,14 @@ public interface PacService extends RemoteService {
   public boolean updateRole(ProxyPentahoRole role) throws NonExistingRoleException, NonExistingUserException, PentahoSecurityException, PacServiceException;
   public ProxyPentahoRole[] getRoles() throws PacServiceException;
   public ProxyPentahoRole[] getRoles(ProxyPentahoUser user) throws NonExistingUserException, PacServiceException;
+  public void setRoles(ProxyPentahoUser user, ProxyPentahoRole[] assignedRoles) throws NonExistingRoleException, NonExistingUserException, PentahoSecurityException, PacServiceException;
   
   public boolean createUser(ProxyPentahoUser user) throws DuplicateUserException, PentahoSecurityException, PacServiceException;
   public boolean deleteUsers(ProxyPentahoUser[] users) throws NonExistingUserException, PentahoSecurityException, PacServiceException;
   public boolean updateUser(ProxyPentahoUser user) throws NonExistingUserException, PentahoSecurityException, PacServiceException;
   public ProxyPentahoUser[] getUsers() throws PacServiceException;
   public ProxyPentahoUser[] getUsers(ProxyPentahoRole role) throws NonExistingRoleException, PacServiceException;
+  public void setUsers(ProxyPentahoRole role, ProxyPentahoUser[] assignedUsers) throws NonExistingRoleException, NonExistingUserException, PentahoSecurityException, PacServiceException;
   
   public boolean createDataSource(IDataSource dataSource) throws PacServiceException;
   public boolean deleteDataSources(IDataSource[] dataSources) throws PacServiceException;

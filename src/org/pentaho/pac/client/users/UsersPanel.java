@@ -1,10 +1,16 @@
 package org.pentaho.pac.client.users;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
+import org.pentaho.pac.client.roles.AddRoleAssignmentsDialogBox;
 import org.pentaho.pac.client.roles.RolesList;
 import org.pentaho.pac.common.PentahoSecurityException;
+import org.pentaho.pac.common.roles.NonExistingRoleException;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
 import org.pentaho.pac.common.users.NonExistingUserException;
 import org.pentaho.pac.common.users.ProxyPentahoUser;
@@ -31,9 +37,12 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
   Button updateUserBtn = new Button(PentahoAdminConsole.getLocalizedMessages().update());
   Button addUserBtn = new Button("+"); //$NON-NLS-1$
   Button deleteUserBtn = new Button("-"); //$NON-NLS-1$
+  Button addRoleAssignmentBtn = new Button("+");
+  Button deleteRoleAssignmentBtn = new Button("-");
   TextBox filterTextBox = new TextBox();
   NewUserDialogBox newUserDialogBox = new NewUserDialogBox();
-  MessageDialog confirmUserDeleteDialog = new MessageDialog(PentahoAdminConsole.getLocalizedMessages().deleteUsers(), PentahoAdminConsole.getLocalizedMessages().confirmUserDeletionMsg(), new int[] {MessageDialog.OK_BTN, MessageDialog.CANCEL_BTN});
+  MessageDialog confirmationDialog = new MessageDialog("", "", new int[] {MessageDialog.OK_BTN, MessageDialog.CANCEL_BTN});
+  AddRoleAssignmentsDialogBox addRoleAssignmentsDialogBox = new AddRoleAssignmentsDialogBox();
   
 	public UsersPanel() {
 	  DockPanel userListPanel = buildUsersListPanel();
@@ -57,8 +66,9 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     updateUserBtn.setEnabled(false);
     
     newUserDialogBox.addPopupListener(this);
+    addRoleAssignmentsDialogBox.addPopupListener(this);
     
-    confirmUserDeleteDialog.addPopupListener(this);
+    confirmationDialog.addPopupListener(this);
     
     userDetailsPanel.getUserNameTextBox().setEnabled(false);
     
@@ -121,30 +131,63 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	}
 	
 	public DockPanel buildAssignedRolesPanel() {
+    DockPanel headerDockPanel = new DockPanel();
+    headerDockPanel.add(deleteRoleAssignmentBtn, DockPanel.EAST);
+    headerDockPanel.add(addRoleAssignmentBtn, DockPanel.EAST);
+    Label label = new Label(PentahoAdminConsole.getLocalizedMessages().assignedRoles()); //$NON-NLS-1$
+    headerDockPanel.add(label, DockPanel.WEST);
+    headerDockPanel.setCellWidth(label, "100%"); //$NON-NLS-1$
+    
 	  DockPanel assignedRolesPanel = new DockPanel();
-	  assignedRolesPanel.add(new Label(PentahoAdminConsole.getLocalizedMessages().assignedRoles()), DockPanel.NORTH);
+	  assignedRolesPanel.add(headerDockPanel, DockPanel.NORTH);
 	  assignedRolesPanel.add(assignedRolesList, DockPanel.CENTER);
 	  assignedRolesPanel.setCellHeight(assignedRolesList, "100%"); //$NON-NLS-1$
 	  assignedRolesPanel.setCellWidth(assignedRolesList, "100%"); //$NON-NLS-1$
 	  assignedRolesList.setHeight("100%"); //$NON-NLS-1$
 	  assignedRolesList.setWidth("100%"); //$NON-NLS-1$
+	  
+	  deleteRoleAssignmentBtn.setHeight("20px"); //$NON-NLS-1$
+	  deleteRoleAssignmentBtn.setWidth("20px"); //$NON-NLS-1$
+	  addRoleAssignmentBtn.setHeight("20px"); //$NON-NLS-1$
+	  addRoleAssignmentBtn.setWidth("20px"); //$NON-NLS-1$
+	  
+    assignedRolesList.addChangeListener(this);
+	  deleteRoleAssignmentBtn.addClickListener(this);
+	  addRoleAssignmentBtn.addClickListener(this);
 	  return assignedRolesPanel;
 	}
-	
 	
 	public void onClick(Widget sender) {
 	  if (sender == updateUserBtn) {
 	    updateUserDetails( sender );
 	  } else if (sender == deleteUserBtn) {
 	    if (usersList.getSelectedUsers().length > 0) {
-	      confirmUserDeleteDialog.center();
+	      confirmationDialog.setText(PentahoAdminConsole.getLocalizedMessages().deleteUsers());
+	      confirmationDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().confirmUserDeletionMsg());
+	      confirmationDialog.center();
 	    }
 	  } else if (sender == addUserBtn) {
 	    addNewUser();
+	  } else if (sender == deleteRoleAssignmentBtn) {
+	    if (assignedRolesList.getSelectedRoles().length > 0) {
+        confirmationDialog.setText(PentahoAdminConsole.getLocalizedMessages().assignedRoles());
+        confirmationDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().confirmRemoveRoleAssignmentMsg());
+        confirmationDialog.center();
+      }
+	  } else if (sender == addRoleAssignmentBtn) {
+	    ProxyPentahoUser[] selectedUsers = usersList.getSelectedUsers();
+      if (selectedUsers.length == 1) {
+        addRoleAssignments(selectedUsers[0]);
+      }
 	  }
 	}
 
 
+	private void addRoleAssignments(ProxyPentahoUser user) {
+	  addRoleAssignmentsDialogBox.setUser(user);
+	  addRoleAssignmentsDialogBox.center();
+	}
+	
 	private void addNewUser() {
 	  newUserDialogBox.setUser(null);
     newUserDialogBox.center();
@@ -175,6 +218,41 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	  }
 	}
 	
+  private void unassignSelectedRoles() {
+    ProxyPentahoUser[] selectedUsers = usersList.getSelectedUsers();
+    if (selectedUsers.length == 1) {
+      ArrayList assignedRoles = new ArrayList();
+      assignedRoles.addAll(Arrays.asList(UserAndRoleMgmtService.instance().getRoles(selectedUsers[0])));
+      final ProxyPentahoRole[] rolesToUnassign = assignedRolesList.getSelectedRoles();
+      assignedRoles.removeAll(Arrays.asList(rolesToUnassign));      
+      
+      AsyncCallback callback = new AsyncCallback() {
+        public void onSuccess(Object result) {
+          assignedRolesList.removeRoles(rolesToUnassign);
+        }
+
+        public void onFailure(Throwable caught) {
+          messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().removeRoles());
+          if (caught instanceof PentahoSecurityException) {
+            messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().insufficientPrivileges());
+          } else if (caught instanceof NonExistingUserException) {
+            messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().userDoesNotExist(caught.getMessage()));
+          } else if (caught instanceof NonExistingRoleException) {
+            messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().roleDoesNotExist(caught.getMessage()));
+          } else {
+            messageDialog.setMessage(caught.getMessage());
+          }
+          messageDialog.center();
+        }
+      };
+      UserAndRoleMgmtService.instance().setRoles(selectedUsers[0], (ProxyPentahoRole[])assignedRoles.toArray(new ProxyPentahoRole[0]), callback);
+    }
+  }
+  
+  private void assignedRoleSelectionChanged() {
+    deleteRoleAssignmentBtn.setEnabled(assignedRolesList.getSelectedRoles().length > 0);
+  }
+  
 	private void userSelectionChanged() {
     ProxyPentahoUser[] selectedUsers = usersList.getSelectedUsers();
     if (selectedUsers.length == 1) {
@@ -187,8 +265,10 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     userDetailsPanel.setEnabled(selectedUsers.length == 1);
     updateUserBtn.setEnabled(selectedUsers.length == 1);
     deleteUserBtn.setEnabled(selectedUsers.length > 0);
+    addRoleAssignmentBtn.setEnabled(selectedUsers.length == 1);
     
     userDetailsPanel.getUserNameTextBox().setEnabled(false);
+    assignedRoleSelectionChanged();
 	}
 	
 	private void updateUserDetails( final Widget sender ) {
@@ -224,7 +304,11 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	}
 	
 	public void onChange(Widget sender) {
-	  userSelectionChanged();
+	  if (sender == usersList) {
+	    userSelectionChanged();
+	  } else if (sender == assignedRolesList) {
+	    assignedRoleSelectionChanged();
+	  }
 	}
 	
 	public void refresh() {
@@ -238,8 +322,16 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
       usersList.addUser(newUser);
       usersList.setSelectedUser(newUser);
       userSelectionChanged();
-    } else if ((sender == confirmUserDeleteDialog) && (confirmUserDeleteDialog.getButtonPressed() == MessageDialog.OK_BTN)) {
-      deleteSelectedUsers();
+    } else if ((sender == addRoleAssignmentsDialogBox) && addRoleAssignmentsDialogBox.getRolesAssigned()) {
+      assignedRolesList.setRoles(UserAndRoleMgmtService.instance().getRoles(addRoleAssignmentsDialogBox.getUser()));
+      assignedRoleSelectionChanged();
+    } else if ((sender == confirmationDialog) && (confirmationDialog.getButtonPressed() == MessageDialog.OK_BTN)) {
+      if (confirmationDialog.getText().equals(PentahoAdminConsole.getLocalizedMessages().deleteUsers())) {
+        deleteSelectedUsers();
+      } else if (confirmationDialog.getText().equals(PentahoAdminConsole.getLocalizedMessages().assignedRoles())) {
+        unassignSelectedRoles();
+      }
+      assignedRoleSelectionChanged();
     }
   }
 

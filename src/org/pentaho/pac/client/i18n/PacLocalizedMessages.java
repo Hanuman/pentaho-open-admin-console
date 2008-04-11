@@ -304,7 +304,15 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String deleteRoles();
 
   /**
-   * Translated "Run Now".
+   * Translated "Remove Roles".
+   * 
+   * @return translated "Remove Roles"
+   * @gwt.key removeRoles
+   */
+  String removeRoles();
+  
+  /**
+   * Translated ""Are your sure you want to delete the selected data sources?"".
    * 
    * @return translated "Run Now"
    * @gwt.key runNow
@@ -806,4 +814,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key services
    */
   String services();
+  
+
+  /**
+   * Translated "Are your sure you want to remove the user from the selected roles?".
+   * 
+   * @return translated "Are your sure you want to remove the user from the selected roles?"
+   * @gwt.key confirmRemoveRoleAssignmentMsg
+   */
+  String confirmRemoveRoleAssignmentMsg();
+
 }
