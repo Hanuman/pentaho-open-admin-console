@@ -212,7 +212,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
   private Hyperlink createSuspendHyperlink( final String jobName, final String jobGroup ) {
     Hyperlink a = new Hyperlink();
     a.setText( MSGS.suspend() );
-    // TODO sbarkdull, yuk
+    
     a.addClickListener( new ClickListener() {
       public void onClick( final Widget sender ) {
         ((Hyperlink)sender).setText( MSGS.working() );
@@ -240,7 +240,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
   private Hyperlink createResumeHyperlink( final String jobName, final String jobGroup ) {
     Hyperlink a = new Hyperlink();
     a.setText( MSGS.resume() );
-    // TODO sbarkdull, yuk
+    
     a.addClickListener( new ClickListener() {
       public void onClick( Widget sender ) {
         ((Hyperlink)sender).setText( MSGS.working() );
@@ -268,7 +268,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
   private Hyperlink createDeleteHyperlink( final String jobName, final String jobGroup, int rowNum ) {
     Hyperlink a = new Hyperlink();
     a.setText( MSGS.delete() );
-    // TODO sbarkdull, yuk
+    
     final int localRowNum = rowNum;
     a.addClickListener( new ClickListener() {
       public void onClick( Widget sender ) {
@@ -297,7 +297,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
   private Hyperlink createRunNowHyperlink( final String jobName, final String jobGroup ) {
     Hyperlink a = new Hyperlink();
     a.setText( MSGS.runNow() );
-    // TODO sbarkdull, yuk
+    
     a.addClickListener( new ClickListener() {
       public void onClick( Widget sender ) {
         ((Hyperlink)sender).setText( MSGS.working() );
@@ -326,7 +326,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
   private Hyperlink createSuspendAllHyperlink() {
     Hyperlink a = new Hyperlink();
     a.setText( MSGS.suspendAllJobs() );
-    // TODO sbarkdull, yuk
+    
     a.addClickListener( new ClickListener() {
       public void onClick( Widget sender ) {
         allActionsTable.setHTML( 2, 1, MSGS.working() );
@@ -352,7 +352,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
   private Hyperlink createResumeAllHyperlink() {
     Hyperlink a = new Hyperlink();
     a.setText( MSGS.resumeAllJobs() );
-    // TODO sbarkdull, yuk
+    
     a.addClickListener( new ClickListener() {
       public void onClick( Widget sender ) {
         allActionsTable.setHTML( 2, 1, MSGS.working() );
@@ -379,7 +379,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
   private Hyperlink createSchedulerStatusHyperlink() {
     Hyperlink a = new Hyperlink();
     a.setText( MSGS.schedulerStatus() );
-    // TODO sbarkdull, yuk
+    
     a.addClickListener( new ClickListener() {
       public void onClick( Widget sender ) {
         setSchedulerStatusMsg( MSGS.working() );
