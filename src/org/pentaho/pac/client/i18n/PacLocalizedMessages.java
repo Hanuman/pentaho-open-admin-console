@@ -656,6 +656,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String addDataSource();
 
   /**
+   * Translated "Suspended".
+   * 
+   * @return translated "Suspended"
+   * @gwt.key stateSuspended
+   */
+  String stateSuspended();
+
+  /**
    * Translated "Yes".
    * 
    * @return translated "Yes"
@@ -672,12 +680,12 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String confirmDataSourceDeletionMsg();
 
   /**
-   * Translated "Suspended".
+   * Translated "Unable to load Home page, reason: {0}".
    * 
-   * @return translated "Suspended"
-   * @gwt.key stateSuspended
+   * @return translated "Unable to load Home page, reason: {0}"
+   * @gwt.key failedToLoadHome
    */
-  String stateSuspended();
+  String failedToLoadHome(String arg0);
 
   /**
    * Translated "All Jobs Resumed".
