@@ -384,6 +384,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String jdbcDriverClass();
 
   /**
+   * Translated "Suspend".
+   * 
+   * @return translated "Suspend"
+   * @gwt.key suspend
+   */
+  String suspend();
+
+  /**
    * Translated "Error Loading Data Sources".
    * 
    * @return translated "Error Loading Data Sources"
@@ -406,14 +414,6 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key maxActiveDbConnections
    */
   String maxActiveDbConnections();
-
-  /**
-   * Translated "Suspended".
-   * 
-   * @return translated "Suspended"
-   * @gwt.key suspended
-   */
-  String suspended();
 
   /**
    * Translated "Test Connection".
@@ -750,6 +750,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key roleDoesNotExist
    */
   String roleDoesNotExist(String arg0);
+
+  /**
+   * Translated "Not running".
+   * 
+   * @return translated "Not running"
+   * @gwt.key notRunning
+   */
+  String notRunning();
 
   /**
    * Translated "Users & Roles".
