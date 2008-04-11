@@ -273,4 +273,22 @@ public class XmlSerializer {
       }
     }
   }
+  
+  /**
+   * Complete hack, we can only get back html from the service, so lets look
+   * at the html and try to find the error string.
+   * 
+   * @param strXml
+   * @return
+   */
+  public String getPublishStatusFromXml( String strXml )
+  {
+    String errorMsg = null;
+    int startIdx = strXml.indexOf( "PentahoSystem.ERROR" );
+    int endIdx = strXml.indexOf( "\n", startIdx );
+    if ( -1 != startIdx ) {
+      errorMsg = strXml.substring( startIdx, endIdx-1 );
+    }
+    return errorMsg;
+  }
 }
