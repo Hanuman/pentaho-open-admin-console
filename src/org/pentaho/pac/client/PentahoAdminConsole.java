@@ -185,6 +185,9 @@ public void onClick(Widget sender) {
           dataSourcesPanel.refresh();
         }
         break;
+      case ADMIN_SERVICES_TAB_INDEX:
+        // do nothing;
+        break;
       case ADMIN_SCHEDULER_TAB_INDEX: 
         if (!schedulerPanel.isInitialized()) {
           schedulerPanel.refresh();
