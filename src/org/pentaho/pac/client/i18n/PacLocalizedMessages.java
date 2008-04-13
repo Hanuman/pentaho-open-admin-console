@@ -312,6 +312,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String removeRoles();
   
   /**
+   * Translated "Remove Users".
+   * 
+   * @return translated "Remove Users"
+   * @gwt.key removeUsers
+   */
+  String removeUsers();
+  
+  /**
    * Translated ""Are your sure you want to delete the selected data sources?"".
    * 
    * @return translated "Run Now"

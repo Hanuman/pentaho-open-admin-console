@@ -65,6 +65,7 @@ public class UsersAndRolesPanel extends DockPanel implements ClickListener {
         usersButton.setDown(true);
       } else {
         rolesButton.setDown(false);
+        usersPanel.refresh();
         deckPanel.showWidget(USER_PANEL_ID);
       }
     } else if (sender == rolesButton) {
@@ -72,6 +73,7 @@ public class UsersAndRolesPanel extends DockPanel implements ClickListener {
         rolesButton.setDown(true);
       } else {
         usersButton.setDown(false);
+        rolesPanel.refresh();
         deckPanel.showWidget(ROLE_PANEL_ID);
       }
     }    

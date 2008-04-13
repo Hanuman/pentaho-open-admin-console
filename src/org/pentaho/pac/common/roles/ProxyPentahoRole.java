@@ -2,8 +2,10 @@ package org.pentaho.pac.common.roles;
 
 import java.io.Serializable;
 
+import org.pentaho.pac.common.users.ProxyPentahoUser;
 
-public class ProxyPentahoRole implements Serializable{
+
+public class ProxyPentahoRole implements Serializable, Cloneable{
 
   String name;
   String description;
@@ -38,4 +40,12 @@ public class ProxyPentahoRole implements Serializable{
   public int hashCode() {
     return name.hashCode();
   }
+
+  public Object clone() {
+    ProxyPentahoRole o = new ProxyPentahoRole();
+    o.name = name;
+    o.description = description;
+    return o;
+  }
+  
 }

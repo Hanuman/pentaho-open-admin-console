@@ -1,4 +1,4 @@
-package org.pentaho.pac.client.roles;
+package org.pentaho.pac.client.users;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,36 +20,36 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class AddRoleAssignmentsDialogBox extends DialogBox implements ClickListener {
+public class AddUserAssignmentsDialogBox extends DialogBox implements ClickListener {
   
   Button okButton = new Button(PentahoAdminConsole.getLocalizedMessages().ok());
   Button cancelButton = new Button(PentahoAdminConsole.getLocalizedMessages().cancel());
-  RolesList rolesList = new RolesList(true);
-  boolean rolesAssigned = false;
-  ProxyPentahoUser user;
-  MessageDialog messageDialog = new MessageDialog(PentahoAdminConsole.getLocalizedMessages().addRole(), new int[]{MessageDialog.OK_BTN}); //$NON-NLS-1$
+  UsersList usersList = new UsersList(true);
+  boolean usersAssigned = false;
+  ProxyPentahoRole role;
+  MessageDialog messageDialog = new MessageDialog(PentahoAdminConsole.getLocalizedMessages().addUser(), new int[]{MessageDialog.OK_BTN}); //$NON-NLS-1$
   
-  public AddRoleAssignmentsDialogBox() {
+  public AddUserAssignmentsDialogBox() {
     super();
     
-    setText(PentahoAdminConsole.getLocalizedMessages().addRole());
+    setText(PentahoAdminConsole.getLocalizedMessages().addUser());
     
     HorizontalPanel footerPanel = new HorizontalPanel();
     footerPanel.add(okButton);
     footerPanel.add(cancelButton);
     
     VerticalPanel verticalPanel = new VerticalPanel();
-    verticalPanel.add(rolesList);
+    verticalPanel.add(usersList);
     verticalPanel.add(footerPanel);
     
     verticalPanel.setWidth("100%");
     verticalPanel.setHeight("100%");
     
-    verticalPanel.setCellHeight(rolesList, "100%");
-    verticalPanel.setCellWidth(rolesList, "100%");
+    verticalPanel.setCellHeight(usersList, "100%");
+    verticalPanel.setCellWidth(usersList, "100%");
     
-    rolesList.setWidth("100%"); //$NON-NLS-1$
-    rolesList.setHeight("100%"); //$NON-NLS-1$
+    usersList.setWidth("100%"); //$NON-NLS-1$
+    usersList.setHeight("100%"); //$NON-NLS-1$
     
     setWidth("250px"); //$NON-NLS-1$
     setHeight("250px"); //$NON-NLS-1$
@@ -60,27 +60,27 @@ public class AddRoleAssignmentsDialogBox extends DialogBox implements ClickListe
     cancelButton.addClickListener(this);
   }
   
-  public AddRoleAssignmentsDialogBox(ProxyPentahoUser user) {
+  public AddUserAssignmentsDialogBox(ProxyPentahoRole role) {
     this(); 
-    setUser(user);
+    setRole(role);
   }
 
 
-  public ProxyPentahoUser getUser() {
-    return user;
+  public ProxyPentahoRole getRole() {
+    return role;
   }
 
 
-  public void setUser(ProxyPentahoUser user) {
-    rolesAssigned = false;
-    this.user = user;
-    if (user != null) {
-      ArrayList unassignedRoles = new ArrayList();
-      unassignedRoles.addAll(Arrays.asList(UserAndRoleMgmtService.instance().getRoles()));
-      unassignedRoles.removeAll(Arrays.asList(UserAndRoleMgmtService.instance().getRoles(user)));
-      rolesList.setRoles((ProxyPentahoRole[])unassignedRoles.toArray(new ProxyPentahoRole[0]));
+  public void setRole(ProxyPentahoRole role) {
+    usersAssigned = false;
+    this.role = role;
+    if (role != null) {
+      ArrayList unassignedUsers = new ArrayList();
+      unassignedUsers.addAll(Arrays.asList(UserAndRoleMgmtService.instance().getUsers()));
+      unassignedUsers.removeAll(Arrays.asList(UserAndRoleMgmtService.instance().getUsers(role)));
+      usersList.setUsers((ProxyPentahoUser[])unassignedUsers.toArray(new ProxyPentahoUser[0]));
     } else {
-      rolesList.setRoles(new ProxyPentahoRole[0]);
+      usersList.setUsers(new ProxyPentahoUser[0]);
     }
   }
 
@@ -94,40 +94,40 @@ public class AddRoleAssignmentsDialogBox extends DialogBox implements ClickListe
   }
 
   
-  public RolesList getRolesList() {
-    return rolesList;
+  public UsersList getUsersList() {
+    return usersList;
   }
 
 
-  public ProxyPentahoRole[] getSelectedRoles() {
-    return rolesList.getSelectedRoles();
+  public ProxyPentahoUser[] getSelectedUsers() {
+    return usersList.getSelectedUsers();
   }
 
 
   public void show() {
-    rolesAssigned = false;
+    usersAssigned = false;
     super.show();
   }
 
 
   public void onClick(Widget sender) {
     if (sender == okButton) {
-      assignSelectedRoles();
+      assignSelectedUsers();
     } else if (sender == cancelButton) {
       hide();
     }
   }
   
-  private void assignSelectedRoles() {
-    ProxyPentahoRole[] selectedRoles = getSelectedRoles();
-    if (selectedRoles.length > 0) {
-      ArrayList assignedRoles = new ArrayList();
-      assignedRoles.addAll(Arrays.asList(UserAndRoleMgmtService.instance().getRoles(user)));
-      assignedRoles.addAll(Arrays.asList(selectedRoles));
+  private void assignSelectedUsers() {
+    ProxyPentahoUser[] selectedUsers = getSelectedUsers();
+    if (selectedUsers.length > 0) {
+      ArrayList assignedUsers = new ArrayList();
+      assignedUsers.addAll(Arrays.asList(UserAndRoleMgmtService.instance().getUsers(role)));
+      assignedUsers.addAll(Arrays.asList(selectedUsers));
       
       AsyncCallback callback = new AsyncCallback() {
         public void onSuccess(Object result) {
-          rolesAssigned = true;
+          usersAssigned = true;
           hide();
         }
 
@@ -144,11 +144,11 @@ public class AddRoleAssignmentsDialogBox extends DialogBox implements ClickListe
           messageDialog.center();
         }
       };
-      UserAndRoleMgmtService.instance().setRoles(user, (ProxyPentahoRole[])assignedRoles.toArray(new ProxyPentahoRole[0]), callback);
+      UserAndRoleMgmtService.instance().setUsers(role, (ProxyPentahoUser[])assignedUsers.toArray(new ProxyPentahoUser[0]), callback);
     }
   }
 
-  public boolean getRolesAssigned() {
-    return rolesAssigned;
+  public boolean getUsersAssigned() {
+    return usersAssigned;
   }
 }

@@ -3,13 +3,13 @@ package org.pentaho.pac.common.users;
 import java.io.Serializable;
 
 
-public class ProxyPentahoUser implements Serializable {
+public class ProxyPentahoUser implements Serializable, Cloneable {
 
   private String name;
 
   private String password = "";
 
-  private String description = "test description";
+  private String description = "";
 
   private boolean enabled = true;
 
@@ -56,5 +56,13 @@ public class ProxyPentahoUser implements Serializable {
     return name.hashCode();
   }
 
+  public Object clone() {  
+    ProxyPentahoUser o = new ProxyPentahoUser();
+    o.name = name;
+    o.password = password;
+    o.description = description;
+    o.enabled = enabled;
+    return o;
+  }
 
 }
