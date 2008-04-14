@@ -30,6 +30,7 @@
 		<mkdir dir="${build.jars.dir}" />
 		<mkdir dir="${build.dir}"/>
 		<mkdir dir="${dist.dir}"/>
+		<mkdir dir="${dist.dir}/lib"/>
 	</target>
 
 	<!-- ===================================================================
@@ -112,6 +113,8 @@
 				<attribute name="Implementation-Version" value="${impl.version}" />
 				<attribute name="Implementation-Vendor" value="${impl.vendor}" />
 				<attribute name="Implementation-ProductID" value="${impl.productID}" />
+				<attribute name="Main-Class" value="org.pentaho.pac.server.JettyServer" />
+				<attribute name="Class-Path" value="${class-path}" />
 			</manifest>
 			<fileset dir="${build.classes.dir}">
 				<!-- include only core -->
@@ -124,6 +127,18 @@
 		</jar>
 	</target>
 
+	<path id="class.path">		
+	  <fileset dir="lib" >
+		<exclude name="**/test/*"/>
+	  </fileset>
+	</path>
+	
+	<pathconvert property="class-path" pathsep=" " dirsep="/">
+	  <path refid="class.path"></path>
+	  <map from="${basedir}${file.separator}lib/" to=""/>		
+	</pathconvert>
+	
+	
 	<!-- =================================
 		 target: jar-messages
 
@@ -197,7 +212,7 @@
 		 package up distribution in a zip file
 		 ================================= -->
 
-	<target name="dist" depends="jar-console, jar-messages" description="create distribution" >
+	<target name="dist" depends="clean, jar-console, jar-messages" description="create distribution" >
 		<copy todir="${dist.dir}/lib">
 			<fileset dir="${build.jars.dir}"/>
 			<fileset dir="lib">
