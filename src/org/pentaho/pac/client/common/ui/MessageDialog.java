@@ -15,82 +15,57 @@ import com.google.gwt.user.client.ui.Widget;
 public class MessageDialog extends DialogBox implements ClickListener {
   
   private Label msgLabel = null;
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
-
-  // TODO delete these
-
-  public static final int UNKNOWN_BTN = 0;
-  public static final int OK_BTN = 1;
-  public static final int CANCEL_BTN = 2;
-  public static final int YES_BTN = 4;
-  public static final int NO_BTN = 8;
+  protected static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
+  private HorizontalPanel btnPanel = null; 
+  protected int buttonPressed = NONE_BTN;
   
-  public Button okBtn = new Button(MSGS.ok());
+  public static final int NONE_BTN = 0;
+  public static final int OK_BTN = 1;
+  
+  protected Button okBtn = new Button(MSGS.ok());
 
-  // delete me
-  /**
-   * @deprecated
-   */
-  public MessageDialog( String title, String msg, int[] btns ) {
-    this( title, msg );
-  }
-  // delete me
-  /**
-   * @deprecated
-   */
-  public MessageDialog(  int[] btns ) {
-    this( );
-  }
-  // delete me
-  /**
-   * @deprecated
-   */
-  public MessageDialog( String x, int[] btns ) {
-    this( x );
-  }
-
-  // delete me
-  /**
-   * @deprecated
-   */
   public int getButtonPressed() {
-    return 1;
+    return buttonPressed;
   }
   
   public MessageDialog( String title, String msg ) {
     super();
     
-    //this.setStylePrimaryName( "messageDialog" );
     msgLabel = new Label( msg );
-    VerticalPanel verticalPanel = new VerticalPanel();
-    verticalPanel.setStylePrimaryName( "messageDialog.messagePanel" );  //$NON-NLS-1$
-    verticalPanel.add(msgLabel);
-    HorizontalPanel horizontalPanel = new HorizontalPanel();
-    horizontalPanel.setStylePrimaryName( "messageDialog.buttonPanel" );  //$NON-NLS-1$
-    horizontalPanel.setHorizontalAlignment( HasHorizontalAlignment.ALIGN_RIGHT );
-    horizontalPanel.add(okBtn);
+    VerticalPanel clientPanel = new VerticalPanel();
+    clientPanel.setStylePrimaryName( "messageDialog.clientPanel" );  //$NON-NLS-1$
+    clientPanel.add(msgLabel);
+    btnPanel = new HorizontalPanel();
+    btnPanel.setStylePrimaryName( "messageDialog.buttonPanel" );  //$NON-NLS-1$
+    btnPanel.setHorizontalAlignment( HasHorizontalAlignment.ALIGN_RIGHT );
+
     okBtn.addClickListener(this);
+    addBtn(okBtn);
     
-    verticalPanel.setCellWidth(msgLabel, "100%"); //$NON-NLS-1$
-    verticalPanel.setCellHeight(msgLabel, "100%"); //$NON-NLS-1$
-    verticalPanel.setSpacing(10);
-    verticalPanel.setWidth("250px"); //$NON-NLS-1$
-    verticalPanel.setHeight("150px"); //$NON-NLS-1$
+    clientPanel.setCellWidth(msgLabel, "100%"); //$NON-NLS-1$
+    clientPanel.setCellHeight(msgLabel, "100%"); //$NON-NLS-1$
+    clientPanel.setSpacing(10);
+    clientPanel.setWidth("250px"); //$NON-NLS-1$
+    clientPanel.setHeight("150px"); //$NON-NLS-1$
     
-    verticalPanel.add(horizontalPanel);
+    clientPanel.add(btnPanel);
     
-    setWidget(verticalPanel);
+    setWidget(clientPanel);
     setText(title);
   }
   
-  public MessageDialog(String msg) {
-    this( "", msg ); //$NON-NLS-1$
+  public MessageDialog( String title ) {
+    this( title, "" ); //$NON-NLS-1$
   }
   
   public MessageDialog() {
     this(""); //$NON-NLS-1$
   }
 
+  public void addBtn( Button btn ) {
+    btnPanel.add( btn );
+  }
+  
   public String getMessage() {
     return msgLabel.getText();
   }
@@ -101,9 +76,8 @@ public class MessageDialog extends DialogBox implements ClickListener {
   
   public void onClick(Widget sender) {
     if (sender == okBtn) {
+      buttonPressed = OK_BTN;
       hide();
-    }else{
-      // no-op
     }
   }
 }
