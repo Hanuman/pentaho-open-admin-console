@@ -907,6 +907,7 @@ a:visited {
 	font-weight:normal;
 	line-height:normal;
 	white-space:nowrap;
+	background-color: #FFFFFF;
 }
 
 .allActionTable td {
@@ -957,6 +958,8 @@ a:visited {
 	font-variant:normal;
 	font-weight:normal;
 	line-height:normal;
+	
+	background-color: #FFFFFF;
 }
 
 .jobsTable td {
