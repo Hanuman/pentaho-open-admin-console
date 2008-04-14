@@ -1,8 +1,9 @@
 package org.pentaho.pac.client.datasources;
 
-import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
+import org.pentaho.pac.client.common.ui.MessageDialog;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -16,10 +17,11 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
-  
-  Button okButton = new Button(PentahoAdminConsole.getLocalizedMessages().ok());
-  Button testButton = new Button(PentahoAdminConsole.getLocalizedMessages().test());
-  Button cancelButton = new Button(PentahoAdminConsole.getLocalizedMessages().cancel());
+
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
+  Button okButton = new Button(MSGS.ok());
+  Button testButton = new Button(MSGS.test());
+  Button cancelButton = new Button(MSGS.cancel());
   DataSourceDetailsPanel dataSourceDetailsPanel = new DataSourceDetailsPanel();
   boolean dataSourceCreated = false;
   MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN});
@@ -35,7 +37,7 @@ public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
     verticalPanel.add(dataSourceDetailsPanel);
     verticalPanel.add(footerPanel);
     
-    setText(PentahoAdminConsole.getLocalizedMessages().addDataSource());
+    setText(MSGS.addDataSource());
     
     verticalPanel.setWidth("250px");
     dataSourceDetailsPanel.setWidth("100%");
@@ -201,16 +203,16 @@ public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
   
   private boolean createDataSource() {
     if (getJndiName().trim().length() == 0) {
-      messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().invalidConnectionName());
+      messageDialog.setMessage(MSGS.invalidConnectionName());
       messageDialog.center();
     } else if (getUrl().trim().length() == 0) { 
-      messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().missingDbUrl());
+      messageDialog.setMessage(MSGS.missingDbUrl());
       messageDialog.center();
     } else if (getDriverClass().trim().length() == 0) { 
-      messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().missingDbDriver());
+      messageDialog.setMessage(MSGS.missingDbDriver());
       messageDialog.center();
     } else if (getUserName().trim().length() == 0) { 
-      messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().missingDbUserName());
+      messageDialog.setMessage(MSGS.missingDbUserName());
       messageDialog.center();
     } else {
       PentahoDataSource dataSource = getDataSource();
@@ -219,13 +221,13 @@ public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
           public void onSuccess(Object result) {
             dataSourceCreated = true;
             hide();
-            messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().addDataSource());
+            messageDialog.setText(MSGS.addDataSource());
             messageDialog.setMessage("New datasource successfully created");
             messageDialog.center();
           }
 
           public void onFailure(Throwable caught) {
-            messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().errorCreatingDataSource());
+            messageDialog.setText(MSGS.errorCreatingDataSource());
             messageDialog.setMessage(caught.getMessage());
             messageDialog.center();
           }
@@ -250,13 +252,13 @@ public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
     final PentahoDataSource dataSource = dataSourceDetailsPanel.getDataSource();
     AsyncCallback callback = new AsyncCallback() {
       public void onSuccess(Object result) {
-        messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().testConnection());
-        messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().connectionTestSuccessful());
+        messageDialog.setText(MSGS.testConnection());
+        messageDialog.setMessage(MSGS.connectionTestSuccessful());
         messageDialog.center();
       }
 
       public void onFailure(Throwable caught) {
-        messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().testConnection());
+        messageDialog.setText(MSGS.testConnection());
         messageDialog.setMessage( caught.getMessage() );
         messageDialog.center();
       }

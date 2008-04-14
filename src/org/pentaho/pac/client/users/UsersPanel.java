@@ -2,11 +2,11 @@ package org.pentaho.pac.client.users;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
+import org.pentaho.pac.client.common.ui.MessageDialog;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.roles.AddRoleAssignmentsDialogBox;
 import org.pentaho.pac.client.roles.RolesList;
 import org.pentaho.pac.common.PentahoSecurityException;
@@ -30,11 +30,12 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class UsersPanel extends DockPanel implements ClickListener, ChangeListener, PopupListener, KeyboardListener {
 
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN}); //$NON-NLS-1$
   UsersList usersList = new UsersList(true);
   RolesList assignedRolesList = new RolesList(true);
   UserDetailsPanel userDetailsPanel = new UserDetailsPanel();
-  Button updateUserBtn = new Button(PentahoAdminConsole.getLocalizedMessages().update());
+  Button updateUserBtn = new Button(MSGS.update());
   Button addUserBtn = new Button("+"); //$NON-NLS-1$
   Button deleteUserBtn = new Button("-"); //$NON-NLS-1$
   Button addRoleAssignmentBtn = new Button("+");
@@ -108,7 +109,7 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     userListPanel.add(headerDockPanel, DockPanel.NORTH);
     userListPanel.add(usersList, DockPanel.CENTER);    
     userListPanel.add(filterTextBox, DockPanel.SOUTH  );
-    userListPanel.add(new Label(PentahoAdminConsole.getLocalizedMessages().userListFilter()), DockPanel.SOUTH );
+    userListPanel.add(new Label(MSGS.userListFilter()), DockPanel.SOUTH );
     
     userListPanel.setCellHeight(usersList, "100%"); //$NON-NLS-1$
     userListPanel.setCellWidth(usersList, "100%"); //$NON-NLS-1$
@@ -134,7 +135,7 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     DockPanel headerDockPanel = new DockPanel();
     headerDockPanel.add(deleteRoleAssignmentBtn, DockPanel.EAST);
     headerDockPanel.add(addRoleAssignmentBtn, DockPanel.EAST);
-    Label label = new Label(PentahoAdminConsole.getLocalizedMessages().assignedRoles()); //$NON-NLS-1$
+    Label label = new Label(MSGS.assignedRoles()); //$NON-NLS-1$
     headerDockPanel.add(label, DockPanel.WEST);
     headerDockPanel.setCellWidth(label, "100%"); //$NON-NLS-1$
     
@@ -162,16 +163,16 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	    updateUserDetails( sender );
 	  } else if (sender == deleteUserBtn) {
 	    if (usersList.getSelectedUsers().length > 0) {
-	      confirmationDialog.setText(PentahoAdminConsole.getLocalizedMessages().deleteUsers());
-	      confirmationDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().confirmUserDeletionMsg());
+	      confirmationDialog.setText(MSGS.deleteUsers());
+	      confirmationDialog.setMessage(MSGS.confirmUserDeletionMsg());
 	      confirmationDialog.center();
 	    }
 	  } else if (sender == addUserBtn) {
 	    addNewUser();
 	  } else if (sender == deleteRoleAssignmentBtn) {
 	    if (assignedRolesList.getSelectedRoles().length > 0) {
-        confirmationDialog.setText(PentahoAdminConsole.getLocalizedMessages().assignedRoles());
-        confirmationDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().confirmRemoveRoleAssignmentMsg());
+        confirmationDialog.setText(MSGS.assignedRoles());
+        confirmationDialog.setMessage(MSGS.confirmRemoveRoleAssignmentMsg());
         confirmationDialog.center();
       }
 	  } else if (sender == addRoleAssignmentBtn) {
@@ -203,11 +204,11 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	      }
 
 	      public void onFailure(Throwable caught) {
-	        messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().deleteUsers());
+	        messageDialog.setText(MSGS.deleteUsers());
           if (caught instanceof PentahoSecurityException) {
-            messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().insufficientPrivileges());
+            messageDialog.setMessage(MSGS.insufficientPrivileges());
           } else if (caught instanceof NonExistingUserException) {
-            messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().userDoesNotExist(caught.getMessage()));
+            messageDialog.setMessage(MSGS.userDoesNotExist(caught.getMessage()));
           } else {
             messageDialog.setMessage(caught.getMessage());
           }
@@ -232,13 +233,13 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
         }
 
         public void onFailure(Throwable caught) {
-          messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().removeRoles());
+          messageDialog.setText(MSGS.removeRoles());
           if (caught instanceof PentahoSecurityException) {
-            messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().insufficientPrivileges());
+            messageDialog.setMessage(MSGS.insufficientPrivileges());
           } else if (caught instanceof NonExistingUserException) {
-            messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().userDoesNotExist(caught.getMessage()));
+            messageDialog.setMessage(MSGS.userDoesNotExist(caught.getMessage()));
           } else if (caught instanceof NonExistingRoleException) {
-            messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().roleDoesNotExist(caught.getMessage()));
+            messageDialog.setMessage(MSGS.roleDoesNotExist(caught.getMessage()));
           } else {
             messageDialog.setMessage(caught.getMessage());
           }
@@ -273,8 +274,8 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	
 	private void updateUserDetails( final Widget sender ) {
 	  if (!userDetailsPanel.getPassword().equals(userDetailsPanel.getPasswordConfirmation())) { 
-	    messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().updateUser());
-      messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().passwordConfirmationFailed());
+	    messageDialog.setText(MSGS.updateUser());
+      messageDialog.setMessage(MSGS.passwordConfirmationFailed());
       messageDialog.center();
 	  } else {
       ((Button)sender).setEnabled( false );
@@ -287,11 +288,11 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	      }
 
 	      public void onFailure(Throwable caught) {
-          messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().updateUser());
+          messageDialog.setText(MSGS.updateUser());
           if (caught instanceof PentahoSecurityException) {
-            messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().insufficientPrivileges());
+            messageDialog.setMessage(MSGS.insufficientPrivileges());
           } else if (caught instanceof NonExistingUserException) {
-            messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().userDoesNotExist(caught.getMessage()));
+            messageDialog.setMessage(MSGS.userDoesNotExist(caught.getMessage()));
           } else {
             messageDialog.setMessage(caught.getMessage());
           }
@@ -326,9 +327,9 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
       assignedRolesList.setRoles(UserAndRoleMgmtService.instance().getRoles(addRoleAssignmentsDialogBox.getUser()));
       assignedRoleSelectionChanged();
     } else if ((sender == confirmationDialog) && (confirmationDialog.getButtonPressed() == MessageDialog.OK_BTN)) {
-      if (confirmationDialog.getText().equals(PentahoAdminConsole.getLocalizedMessages().deleteUsers())) {
+      if (confirmationDialog.getText().equals(MSGS.deleteUsers())) {
         deleteSelectedUsers();
-      } else if (confirmationDialog.getText().equals(PentahoAdminConsole.getLocalizedMessages().assignedRoles())) {
+      } else if (confirmationDialog.getText().equals(MSGS.assignedRoles())) {
         unassignSelectedRoles();
       }
       assignedRoleSelectionChanged();

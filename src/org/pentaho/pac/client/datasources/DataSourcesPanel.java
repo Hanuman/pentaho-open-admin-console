@@ -1,8 +1,9 @@
 package org.pentaho.pac.client.datasources;
 
-import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
+import org.pentaho.pac.client.common.ui.MessageDialog;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -19,16 +20,17 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class DataSourcesPanel extends DockPanel implements ClickListener, ChangeListener, PopupListener {
 
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN}); //$NON-NLS-1$
   DataSourcesList dataSourcesList = new DataSourcesList();
   PentahoDataSource[] dataSources = null;
   DataSourceDetailsPanel dataSourceDetailsPanel = new DataSourceDetailsPanel();
-  Button updateDataSourceBtn = new Button(PentahoAdminConsole.getLocalizedMessages().update());
-  Button testDataSourceBtn = new Button(PentahoAdminConsole.getLocalizedMessages().test());
+  Button updateDataSourceBtn = new Button(MSGS.update());
+  Button testDataSourceBtn = new Button(MSGS.test());
   Button addDataSourceBtn = new Button("+"); //$NON-NLS-1$
   Button deleteDataSourceBtn = new Button("-"); //$NON-NLS-1$
   NewDataSourceDialogBox newDataSourceDialogBox = new NewDataSourceDialogBox();
-  MessageDialog confirmDataSourceDeleteDialog = new MessageDialog(PentahoAdminConsole.getLocalizedMessages().deleteDataSources(), PentahoAdminConsole.getLocalizedMessages().confirmDataSourceDeletionMsg(), new int[] {MessageDialog.OK_BTN, MessageDialog.CANCEL_BTN});
+  MessageDialog confirmDataSourceDeleteDialog = new MessageDialog(MSGS.deleteDataSources(), MSGS.confirmDataSourceDeletionMsg(), new int[] {MessageDialog.OK_BTN, MessageDialog.CANCEL_BTN});
   
 	public DataSourcesPanel() {
 	  DockPanel dataSourcesListPanel = buildDataSourcesListPanel();
@@ -77,7 +79,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 	  DockPanel headerDockPanel = new DockPanel();
     headerDockPanel.add(deleteDataSourceBtn, DockPanel.EAST);
 	  headerDockPanel.add(addDataSourceBtn, DockPanel.EAST);
-    Label label = new Label(PentahoAdminConsole.getLocalizedMessages().dataSources());
+    Label label = new Label(MSGS.dataSources());
 	  headerDockPanel.add(label, DockPanel.WEST);
 	  headerDockPanel.setCellWidth(label, "100%"); //$NON-NLS-1$
     DockPanel dataSourceListPanel = new DockPanel();
@@ -124,14 +126,14 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 	  if (selectedDataSources.length > 0) {
 	    AsyncCallback callback = new AsyncCallback() {
 	      public void onSuccess(Object result) {
-          messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().deleteDataSources());
+          messageDialog.setText(MSGS.deleteDataSources());
           messageDialog.setMessage("Successfully Deleted the selected datasource(s)");
           messageDialog.center();
 	        refresh();
 	      }
 
 	      public void onFailure(Throwable caught) {
-          messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().errorDeletingDataSource());
+          messageDialog.setText(MSGS.errorDeletingDataSource());
           messageDialog.setMessage(caught.getMessage());
           messageDialog.center();
 	      }
@@ -155,18 +157,18 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 	}
 	
 	private void updateDataSourceDetails( final Widget sender ) {
-    messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().updateDataSource());
+    messageDialog.setText(MSGS.updateDataSource());
     if (dataSourceDetailsPanel.getJndiName().trim().length() == 0) {
-      messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().invalidConnectionName());
+      messageDialog.setMessage(MSGS.invalidConnectionName());
       messageDialog.center();
     } else if (dataSourceDetailsPanel.getUrl().trim().length() == 0) { 
-      messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().missingDbUrl());
+      messageDialog.setMessage(MSGS.missingDbUrl());
       messageDialog.center();
     } else if (dataSourceDetailsPanel.getDriverClass().trim().length() == 0) { 
-      messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().missingDbDriver());
+      messageDialog.setMessage(MSGS.missingDbDriver());
       messageDialog.center();
     } else if (dataSourceDetailsPanel.getUserName().trim().length() == 0) { 
-      messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().missingDbUserName());
+      messageDialog.setMessage(MSGS.missingDbUserName());
       messageDialog.center();
     } else {
       final PentahoDataSource dataSource = dataSourceDetailsPanel.getDataSource();
@@ -175,7 +177,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
       ((Button)sender).setEnabled( false );
       AsyncCallback callback = new AsyncCallback() {
         public void onSuccess(Object result) {
-          messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().updateDataSource());
+          messageDialog.setText(MSGS.updateDataSource());
           messageDialog.setMessage("Successfully updated the DataSource");
           messageDialog.center();
           dataSourcesList.setDataSource(index, dataSource);
@@ -184,7 +186,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
         }
 
         public void onFailure(Throwable caught) {
-          messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().errorUpdatingDataSource());
+          messageDialog.setText(MSGS.errorUpdatingDataSource());
           messageDialog.setMessage(caught.getMessage());
           messageDialog.center();
           ((Button)sender).setEnabled( true );
@@ -198,13 +200,13 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 	    final PentahoDataSource dataSource = dataSourceDetailsPanel.getDataSource();
 	    AsyncCallback callback = new AsyncCallback() {
 	      public void onSuccess(Object result) {
-	        messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().testConnection());
-	        messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().connectionTestSuccessful());
+	        messageDialog.setText(MSGS.testConnection());
+	        messageDialog.setMessage(MSGS.connectionTestSuccessful());
 	        messageDialog.center();
 	      }
 
 	      public void onFailure(Throwable caught) {
-	        messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().testConnection());
+	        messageDialog.setText(MSGS.testConnection());
 	        messageDialog.setMessage( caught.getMessage() );
 	        messageDialog.center();
 	      }

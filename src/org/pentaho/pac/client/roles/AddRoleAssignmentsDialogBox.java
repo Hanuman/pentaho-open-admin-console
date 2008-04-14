@@ -3,9 +3,10 @@ package org.pentaho.pac.client.roles;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
+import org.pentaho.pac.client.common.ui.MessageDialog;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.roles.NonExistingRoleException;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
@@ -21,18 +22,19 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class AddRoleAssignmentsDialogBox extends DialogBox implements ClickListener {
-  
-  Button okButton = new Button(PentahoAdminConsole.getLocalizedMessages().ok());
-  Button cancelButton = new Button(PentahoAdminConsole.getLocalizedMessages().cancel());
+
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
+  Button okButton = new Button(MSGS.ok());
+  Button cancelButton = new Button(MSGS.cancel());
   RolesList rolesList = new RolesList(true);
   boolean rolesAssigned = false;
   ProxyPentahoUser user;
-  MessageDialog messageDialog = new MessageDialog(PentahoAdminConsole.getLocalizedMessages().addRole(), new int[]{MessageDialog.OK_BTN}); //$NON-NLS-1$
+  MessageDialog messageDialog = new MessageDialog(MSGS.addRole(), new int[]{MessageDialog.OK_BTN}); //$NON-NLS-1$
   
   public AddRoleAssignmentsDialogBox() {
     super();
     
-    setText(PentahoAdminConsole.getLocalizedMessages().addRole());
+    setText(MSGS.addRole());
     
     HorizontalPanel footerPanel = new HorizontalPanel();
     footerPanel.add(okButton);
@@ -133,11 +135,11 @@ public class AddRoleAssignmentsDialogBox extends DialogBox implements ClickListe
 
         public void onFailure(Throwable caught) {
           if (caught instanceof PentahoSecurityException) {
-            messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().insufficientPrivileges());
+            messageDialog.setMessage(MSGS.insufficientPrivileges());
           } else if (caught instanceof NonExistingRoleException) {
-            messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().roleDoesNotExist(caught.getMessage()));
+            messageDialog.setMessage(MSGS.roleDoesNotExist(caught.getMessage()));
           } else if (caught instanceof NonExistingUserException) {
-            messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().userDoesNotExist(caught.getMessage()));
+            messageDialog.setMessage(MSGS.userDoesNotExist(caught.getMessage()));
           } else {
             messageDialog.setMessage(caught.getMessage());
           }

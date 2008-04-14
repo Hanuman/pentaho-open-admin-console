@@ -1,5 +1,6 @@
 package org.pentaho.pac.client;
 
+import org.pentaho.pac.client.common.ui.MessageDialog;
 import org.pentaho.pac.client.datasources.DataSourcesPanel;
 import org.pentaho.pac.client.home.HomePanel;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
@@ -24,9 +25,10 @@ import com.google.gwt.user.client.ui.Widget;
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListener {
-  ToggleButton adminToggleBtn = new ToggleButton(PentahoAdminConsole.getLocalizedMessages().administration());
-  ToggleButton homeToggleBtn = new ToggleButton(PentahoAdminConsole.getLocalizedMessages().home());
-  ToggleButton testToggleBtn = new ToggleButton(PentahoAdminConsole.getLocalizedMessages().test());
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
+  ToggleButton adminToggleBtn = new ToggleButton(MSGS.administration());
+  ToggleButton homeToggleBtn = new ToggleButton(MSGS.home());
+  ToggleButton testToggleBtn = new ToggleButton(MSGS.test());
   
   VerticalPanel leftVerticalPanel = new VerticalPanel();
   TabPanel rightTabPanel = new TabPanel();
@@ -41,7 +43,7 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
   TabPanel adminTabPanel = new TabPanel();
   
   boolean securityInfoInitialized = false;
-  MessageDialog messageDialog = new MessageDialog(PentahoAdminConsole.getLocalizedMessages().security(), "", new int[]{MessageDialog.OK_BTN}); //$NON-NLS-1$
+  MessageDialog messageDialog = new MessageDialog(MSGS.security(), "", new int[]{MessageDialog.OK_BTN}); //$NON-NLS-1$
   
   // TODO can this be a "real" Java 5 enum?
   public static final int ADMIN_USERS_ROLES_TAB_INDEX = 0;
@@ -131,18 +133,7 @@ public void onClick(Widget sender) {
         testToggleBtn.setDown(false);
         deckPanel.showWidget(1);
         int selectedTab = adminTabPanel.getDeckPanel().getVisibleWidget();
-        switch (selectedTab) {
-          case ADMIN_USERS_ROLES_TAB_INDEX:
-            if (!securityInfoInitialized) {
-              initializeSecurityInfo();
-            }
-            break;
-          case ADMIN_DATA_SOURCES_TAB_INDEX: 
-            if (!dataSourcesPanel.isInitialized()) {
-              dataSourcesPanel.refresh();
-            }
-            break;
-        }   
+        onTabSelected( null, selectedTab );
       } else {
         adminToggleBtn.setDown(true);
       }

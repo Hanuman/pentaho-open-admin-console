@@ -1,6 +1,7 @@
 package org.pentaho.pac.client.users;
 
 import org.pentaho.pac.client.PentahoAdminConsole;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.common.users.ProxyPentahoUser;
 
 import com.google.gwt.user.client.ui.Label;
@@ -9,19 +10,20 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class UserDetailsPanel extends VerticalPanel {
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   TextBox userNameTextBox = new TextBox();
   PasswordTextBox passwordTextBox = new PasswordTextBox();
   PasswordTextBox passwordConfirmationTextBox = new PasswordTextBox();
   TextBox descriptionTextBox = new TextBox();
   
   public UserDetailsPanel() {
-    add(new Label(PentahoAdminConsole.getLocalizedMessages().userName()));
+    add(new Label(MSGS.userName()));
     add(userNameTextBox);
-    add(new Label(PentahoAdminConsole.getLocalizedMessages().password()));
+    add(new Label(MSGS.password()));
     add(passwordTextBox);
-    add(new Label(PentahoAdminConsole.getLocalizedMessages().passwordConfirmation()));
+    add(new Label(MSGS.passwordConfirmation()));
     add(passwordConfirmationTextBox);
-    add(new Label(PentahoAdminConsole.getLocalizedMessages().description()));
+    add(new Label(MSGS.description()));
     add(descriptionTextBox);
     userNameTextBox.setWidth("100%"); //$NON-NLS-1$
     passwordTextBox.setWidth("100%"); //$NON-NLS-1$

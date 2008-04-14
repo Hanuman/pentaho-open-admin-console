@@ -1,6 +1,7 @@
 package org.pentaho.pac.client.roles;
 
 import org.pentaho.pac.client.PentahoAdminConsole;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
 
 import com.google.gwt.user.client.ui.Label;
@@ -8,13 +9,14 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class RoleDetailsPanel extends VerticalPanel {
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   TextBox roleNameTextBox = new TextBox();
   TextBox descriptionTextBox = new TextBox();
   
   public RoleDetailsPanel() {
-    add(new Label(PentahoAdminConsole.getLocalizedMessages().roleName()));
+    add(new Label(MSGS.roleName()));
     add(roleNameTextBox);
-    add(new Label(PentahoAdminConsole.getLocalizedMessages().description()));
+    add(new Label(MSGS.description()));
     add(descriptionTextBox);
     roleNameTextBox.setWidth("100%"); //$NON-NLS-1$
     descriptionTextBox.setWidth("100%"); //$NON-NLS-1$

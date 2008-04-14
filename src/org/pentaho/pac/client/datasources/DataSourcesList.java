@@ -5,18 +5,19 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
+import org.pentaho.pac.client.common.ui.MessageDialog;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.common.datasources.IPentahoDataSource;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
-import org.pentaho.pac.common.users.ProxyPentahoUser;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ListBox;
 
 public class DataSourcesList extends ListBox {
-  MessageDialog messageDialog = new MessageDialog(PentahoAdminConsole.getLocalizedMessages().dataSources(), "", new int[]{MessageDialog.OK_BTN}); //$NON-NLS-1$
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
+  MessageDialog messageDialog = new MessageDialog(MSGS.dataSources(), "", new int[]{MessageDialog.OK_BTN}); //$NON-NLS-1$
   List dataSources = new ArrayList();
   boolean isInitialized = false;
   
@@ -128,8 +129,8 @@ public class DataSourcesList extends ListBox {
       }
 
       public void onFailure(Throwable caught) {
-        messageDialog.setText(PentahoAdminConsole.getLocalizedMessages().errorLoadingDataSources());
-        messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().dataSourcesRefreshError(caught.getMessage()));
+        messageDialog.setText(MSGS.errorLoadingDataSources());
+        messageDialog.setMessage(MSGS.dataSourcesRefreshError(caught.getMessage()));
         messageDialog.center();
       }
     };

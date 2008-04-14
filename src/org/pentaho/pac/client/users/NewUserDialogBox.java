@@ -1,8 +1,9 @@
 package org.pentaho.pac.client.users;
 
-import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
+import org.pentaho.pac.client.common.ui.MessageDialog;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.users.DuplicateUserException;
 import org.pentaho.pac.common.users.ProxyPentahoUser;
@@ -18,9 +19,10 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class NewUserDialogBox extends DialogBox implements ClickListener {
-  
-  Button okButton = new Button(PentahoAdminConsole.getLocalizedMessages().ok());
-  Button cancelButton = new Button(PentahoAdminConsole.getLocalizedMessages().cancel());
+
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
+  Button okButton = new Button(MSGS.ok());
+  Button cancelButton = new Button(MSGS.cancel());
   UserDetailsPanel userDetailsPanel = new UserDetailsPanel();
   boolean userCreated = false;
   MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN}); //$NON-NLS-1$
@@ -35,7 +37,7 @@ public class NewUserDialogBox extends DialogBox implements ClickListener {
     verticalPanel.add(userDetailsPanel);
     verticalPanel.add(footerPanel);
     
-    setText(PentahoAdminConsole.getLocalizedMessages().addUser());
+    setText(MSGS.addUser());
     setWidget(verticalPanel);
     okButton.addClickListener(this);
     cancelButton.addClickListener(this);
@@ -106,10 +108,10 @@ public class NewUserDialogBox extends DialogBox implements ClickListener {
   
   private boolean createUser() {
     if (getUserName().trim().length() == 0) {
-      messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().invalidUserName());
+      messageDialog.setMessage(MSGS.invalidUserName());
       messageDialog.center();
     } else if (!getPassword().equals(getPasswordConfirmation())) { 
-      messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().passwordConfirmationFailed());
+      messageDialog.setMessage(MSGS.passwordConfirmationFailed());
       messageDialog.center();
     } else {
       ProxyPentahoUser user = getUser();
@@ -122,9 +124,9 @@ public class NewUserDialogBox extends DialogBox implements ClickListener {
 
           public void onFailure(Throwable caught) {
             if (caught instanceof PentahoSecurityException) {
-              messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().insufficientPrivileges());
+              messageDialog.setMessage(MSGS.insufficientPrivileges());
             } else if (caught instanceof DuplicateUserException) {
-              messageDialog.setMessage(PentahoAdminConsole.getLocalizedMessages().userAlreadyExist());
+              messageDialog.setMessage(MSGS.userAlreadyExist());
             } else {
               messageDialog.setMessage(caught.getMessage());
             }

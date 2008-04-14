@@ -17,10 +17,11 @@ package org.pentaho.pac.client.home;
 
 import java.util.NoSuchElementException;
 
-import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacServiceAsync;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
+import org.pentaho.pac.client.common.ui.MessageDialog;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -34,6 +35,7 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class HomePanel extends HorizontalPanel {
 
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   private static int sUid;
   private String htmlContent = null;
   /**
@@ -59,8 +61,8 @@ public class HomePanel extends HorizontalPanel {
 		 public void onFailure(Throwable caught) {
 		   
        MessageDialog messageDialog = new MessageDialog(
-           PentahoAdminConsole.getLocalizedMessages().error(),
-           PentahoAdminConsole.getLocalizedMessages().failedToLoadHome( caught.getMessage() ),
+           MSGS.error(),
+           MSGS.failedToLoadHome( caught.getMessage() ),
            new int[]{MessageDialog.OK_BTN});
        messageDialog.center();
 		 }

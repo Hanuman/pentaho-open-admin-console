@@ -1,6 +1,7 @@
 package org.pentaho.pac.client.datasources;
 
 import org.pentaho.pac.client.PentahoAdminConsole;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
 
 import com.google.gwt.user.client.ui.Label;
@@ -9,6 +10,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class DataSourceDetailsPanel extends VerticalPanel {
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   TextBox userNameTextBox = new TextBox();
   PasswordTextBox passwordTextBox = new PasswordTextBox();
   TextBox jndiNameTextBox = new TextBox();
@@ -20,23 +22,23 @@ public class DataSourceDetailsPanel extends VerticalPanel {
   TextBox waitTextBox = new TextBox();
   
   public DataSourceDetailsPanel() {
-    add(new Label(PentahoAdminConsole.getLocalizedMessages().jndiName()));
+    add(new Label(MSGS.jndiName()));
     add(jndiNameTextBox);
-    add(new Label(PentahoAdminConsole.getLocalizedMessages().maxActiveDbConnections()));
+    add(new Label(MSGS.maxActiveDbConnections()));
     add(maxActiveConnTextBox);
-    add(new Label(PentahoAdminConsole.getLocalizedMessages().jdbcDriverClass()));
+    add(new Label(MSGS.jdbcDriverClass()));
     add(driverClassTextBox);
-    add(new Label(PentahoAdminConsole.getLocalizedMessages().numIdleDbConnnections()));
+    add(new Label(MSGS.numIdleDbConnnections()));
     add(idleConnTextBox);
-    add(new Label(PentahoAdminConsole.getLocalizedMessages().dbUserName()));
+    add(new Label(MSGS.dbUserName()));
     add(userNameTextBox);
-    add(new Label(PentahoAdminConsole.getLocalizedMessages().dbPassword()));
+    add(new Label(MSGS.dbPassword()));
     add(passwordTextBox);
-    add(new Label(PentahoAdminConsole.getLocalizedMessages().dbUrl()));
+    add(new Label(MSGS.dbUrl()));
     add(urlTextBox);
-    add(new Label(PentahoAdminConsole.getLocalizedMessages().dbValidationQuery()));
+    add(new Label(MSGS.dbValidationQuery()));
     add(validationQueryTextBox);
-    add(new Label(PentahoAdminConsole.getLocalizedMessages().dbWaitTime()));
+    add(new Label(MSGS.dbWaitTime()));
     add(waitTextBox);
     jndiNameTextBox.setWidth("100%"); //$NON-NLS-1$
     maxActiveConnTextBox.setWidth("100%"); //$NON-NLS-1$
