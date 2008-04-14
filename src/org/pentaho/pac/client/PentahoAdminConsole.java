@@ -6,16 +6,24 @@ import org.pentaho.pac.client.home.HomePanel;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.scheduler.SchedulerPanel;
 import org.pentaho.pac.client.services.AdminServicesPanel;
+import org.pentaho.pac.client.users.UsersPanel;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SourcesTabEvents;
 import com.google.gwt.user.client.ui.TabListener;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -25,48 +33,78 @@ import com.google.gwt.user.client.ui.Widget;
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListener {
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
-  ToggleButton adminToggleBtn = new ToggleButton(MSGS.administration());
-  ToggleButton homeToggleBtn = new ToggleButton(MSGS.home());
-  ToggleButton testToggleBtn = new ToggleButton(MSGS.test());
   
-  VerticalPanel leftVerticalPanel = new VerticalPanel();
-  TabPanel rightTabPanel = new TabPanel();
-  DockPanel dockPanel = new DockPanel();
-  DeckPanel deckPanel = new DeckPanel();
-  
-  AdminServicesPanel servicesPanel = new AdminServicesPanel();
-  UsersAndRolesPanel usersAndRolesPanel = new UsersAndRolesPanel();
-  //HomePanel homePanel = new HomePanel();
-  DataSourcesPanel dataSourcesPanel = new DataSourcesPanel();
-  SchedulerPanel schedulerPanel = new SchedulerPanel();
-  TabPanel adminTabPanel = new TabPanel();
-  
-  boolean securityInfoInitialized = false;
-  MessageDialog messageDialog = new MessageDialog(MSGS.security(), "", new int[]{MessageDialog.OK_BTN}); //$NON-NLS-1$
-  
-  // TODO can this be a "real" Java 5 enum?
+  //TODO can this be a "real" Java 5 enum?
   public static final int ADMIN_USERS_ROLES_TAB_INDEX = 0;
   public static final int ADMIN_DATA_SOURCES_TAB_INDEX = 1;
   public static final int ADMIN_SERVICES_TAB_INDEX = 2;
   public static final int ADMIN_SCHEDULER_TAB_INDEX = 3;
   public static PacLocalizedMessages pacLocalizedMessages = (PacLocalizedMessages)GWT.create(PacLocalizedMessages.class);
   
-
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
+  ToggleButton adminToggleBtn = new ToggleButton(MSGS.administration());
+  ToggleButton homeToggleBtn = new ToggleButton(MSGS.home());
+  ToggleButton testToggleBtn = new ToggleButton(MSGS.test());
+  
+  VerticalPanel leftVerticalPanel = new VerticalPanel();
+  DockPanel centerPanel = new DockPanel();
+  HorizontalPanel toolbar = new ConsoleToolbar();
+  HorizontalPanel topPanel = new HorizontalPanel();
+  
+  TabPanel rightTabPanel = new TabPanel();
+  DockPanel mainPanel = new DockPanel();
+  DockPanel dockPanel = new DockPanel();
+  DeckPanel deckPanel = new DeckPanel();
+  DockPanel principalsPanel = new DockPanel();
+  AdminServicesPanel servicesPanel = new AdminServicesPanel();
+  UsersAndRolesPanel usersAndRolesPanel = new UsersAndRolesPanel();
+  DataSourcesPanel dataSourcesPanel = new DataSourcesPanel();
+	SchedulerPanel schedulerPanel = new SchedulerPanel();
+  TabPanel adminTabPanel = new TabPanel();
+  
+  boolean securityInfoInitialized = false;
+  MessageDialog messageDialog = new MessageDialog(MSGS.security(), "", new int[]{MessageDialog.OK_BTN}); //$NON-NLS-1$
+  
+  HomePanel homePanel;
+  CommonTasks commonTasks;
+  
+  
   /**
    * This is the entry point method.
    */
   public void onModuleLoad() {
+
+    homePanel = new HomePanel("http://www.pentaho.com/console_home");
+    commonTasks = new CommonTasks();
+    
+    homeToggleBtn.setStylePrimaryName("leftToggleButtons");
+    adminToggleBtn.setStylePrimaryName("leftToggleButtons");
+    testToggleBtn.setStylePrimaryName("leftToggleButtons");
     
     homeToggleBtn.addClickListener(this);
-    
     adminToggleBtn.addClickListener(this);
-
     testToggleBtn.addClickListener(this);
     
+
+    Label spacer = new Label();
+    leftVerticalPanel.add(spacer);
+    leftVerticalPanel.setCellHeight(spacer, "20px");
     leftVerticalPanel.add(homeToggleBtn);
     leftVerticalPanel.add(adminToggleBtn);
     leftVerticalPanel.add(testToggleBtn);
+    
+    spacer = new Label();
+    leftVerticalPanel.add(spacer);
+    leftVerticalPanel.setCellHeight(spacer, "50");
+    leftVerticalPanel.add(commonTasks);
+    spacer = new Label();
+    leftVerticalPanel.add(spacer);
+    leftVerticalPanel.setCellHeight(spacer, "100%");
+    
+    
+    leftVerticalPanel.setStylePrimaryName("leftTabPanel");
+    
+    
     
     // Order that things are placed in the tab panel is important. There are
     // static constants defined within this class that assume a given tab position
@@ -75,42 +113,49 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
     adminTabPanel.add(dataSourcesPanel, getLocalizedMessages().dataSources());
     adminTabPanel.add(servicesPanel, getLocalizedMessages().services());
     adminTabPanel.add(schedulerPanel, getLocalizedMessages().scheduler());
-    
-    usersAndRolesPanel.setBorderWidth(2);    
-    HomePanel homePanel = new HomePanel("http://www.pentaho.com/console_home"); //$NON-NLS-1$
+
+    deckPanel.setStylePrimaryName("deckPanel");
     deckPanel.add(homePanel);
     deckPanel.add(adminTabPanel);
+    
+    usersAndRolesPanel.setBorderWidth(2);    
+    HomePanel homePanel = new HomePanel("http://www.pentaho.com/console_home");
+    
 
+    SimplePanel logo = new SimplePanel();
+    logo.setStylePrimaryName("logo");
+    topPanel.add(logo);
+    topPanel.add(toolbar);
     
-    dockPanel.add(leftVerticalPanel, DockPanel.WEST);
-    dockPanel.add(deckPanel, DockPanel.CENTER);
+
+    adminTabPanel.setWidth("97%");
+    adminTabPanel.setHeight("100%");
     
-    
-    dockPanel.setCellWidth(deckPanel, "100%"); //$NON-NLS-1$
-    dockPanel.setCellHeight(deckPanel, "100%"); //$NON-NLS-1$
-    
-    dockPanel.setSpacing(10);
-    
-    dockPanel.setWidth("100%"); //$NON-NLS-1$
-    dockPanel.setHeight("100%"); //$NON-NLS-1$
-    adminTabPanel.setWidth("100%"); //$NON-NLS-1$
-    adminTabPanel.setHeight("100%"); //$NON-NLS-1$
-    
-    usersAndRolesPanel.setWidth("100%"); //$NON-NLS-1$
-    usersAndRolesPanel.setHeight("100%"); //$NON-NLS-1$
-    dataSourcesPanel.setWidth("100%"); //$NON-NLS-1$
-    dataSourcesPanel.setHeight("100%"); //$NON-NLS-1$
-    servicesPanel.setWidth("100%"); //$NON-NLS-1$
-    servicesPanel.setHeight("100%"); //$NON-NLS-1$
-    
-    schedulerPanel.setWidth("100%"); //$NON-NLS-1$
-    schedulerPanel.setHeight("100%"); //$NON-NLS-1$
-    
-    deckPanel.setWidth("100%"); //$NON-NLS-1$
-    deckPanel.setHeight("100%"); //$NON-NLS-1$
+    usersAndRolesPanel.setWidth("100%");
+    usersAndRolesPanel.setHeight("100%");
+    dataSourcesPanel.setWidth("100%");
+    dataSourcesPanel.setHeight("100%");
+    servicesPanel.setWidth("100%");
+    servicesPanel.setHeight("100%");
+    deckPanel.setWidth("100%");
+    deckPanel.setHeight("100%");
     adminTabPanel.selectTab(ADMIN_USERS_ROLES_TAB_INDEX);
 
-    RootPanel.get().add(dockPanel);    
+    centerPanel.add(leftVerticalPanel, DockPanel.WEST);
+    centerPanel.add(deckPanel, DockPanel.CENTER);
+    centerPanel.setCellHeight(deckPanel, "100%");
+    centerPanel.setCellWidth(deckPanel, "100%");
+    
+    //Main DockPanel
+    mainPanel.setStylePrimaryName("main-panel");
+    mainPanel.add(topPanel, DockPanel.NORTH);
+    mainPanel.add(centerPanel, DockPanel.CENTER);
+    mainPanel.setCellHeight(centerPanel, "100%");
+    
+    
+    
+    //attach all to the page
+    RootPanel.get("canvas").add(mainPanel); 
     deckPanel.showWidget(0);
     homeToggleBtn.setDown(true);
     
@@ -142,7 +187,7 @@ public void onClick(Widget sender) {
       adminToggleBtn.setDown(false);
     }
   }
-
+  
   private void initializeSecurityInfo() {
     AsyncCallback callback = new AsyncCallback() {
       public void onSuccess(Object result) {
@@ -162,7 +207,6 @@ public void onClick(Widget sender) {
   public boolean onBeforeTabSelected(SourcesTabEvents sender, int tabIndex) {
     return true;
   }
-  
   
   public void onTabSelected(SourcesTabEvents sender, int tabIndex) {
     switch (tabIndex) {
@@ -192,5 +236,41 @@ public void onClick(Widget sender) {
   static public PacLocalizedMessages getLocalizedMessages() {
     return pacLocalizedMessages;
   }
+  
+  //TOP Toolbar
+  private class ConsoleToolbar extends HorizontalPanel{
+    public ConsoleToolbar(){
+      super();
+
+      setStylePrimaryName("toolbar");
+      add(new Label("In Toolbar"));
+    }
+  }
+  
+  private class CommonTasks extends SimplePanel{
+    public CommonTasks(){
+      super();
+      VerticalPanel vertPanel = new VerticalPanel();
+      
+      SimplePanel headerPanel = new SimplePanel();
+      headerPanel.setStyleName("CommonTasksHeader");
+      
+      Label header = new Label("Common Tasks");
+      header.setStylePrimaryName("commonTasksHeaderText");
+      headerPanel.add(header);
+      vertPanel.add(headerPanel);
+      
+      VerticalPanel list = new VerticalPanel();
+      list.add(new Hyperlink("Link 1 text","Link1"));
+      list.add(new Hyperlink("Link 2 text","Link2"));
+      list.add(new Hyperlink("Link 3 text","Link3"));
+      list.setStyleName("CommonTasksLinks");
+      vertPanel.add(list);
+      
+      setStylePrimaryName("CommonTasks");
+      this.add(vertPanel);
+    }
+  }
+  
 }
  

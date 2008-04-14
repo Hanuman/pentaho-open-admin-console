@@ -390,9 +390,9 @@ a:visited {
 }
 
 .gwt-TabBar {
-  padding-top: 2px;
+  margin-top: 9px;
+  margin-right: 12px;
   border-bottom: 4px solid #87944c;
-  background-color: #fff;
 }
 
 .gwt-TabBar .gwt-TabBarFirst {
@@ -402,15 +402,6 @@ a:visited {
 }
 
 .gwt-TabBar .gwt-TabBarItem {
-  padding: 4px;
-  cursor: pointer;
-  cursor: hand;
-  background-color: #e8eef7;
-  border-bottom: 2px solid white;
-  margin-right: 2px;
-}
-
-.gwt-TabBar .gwt-TabBarItem-selected {
   color: white;
   padding: 4px;
   cursor: default;
@@ -419,12 +410,24 @@ a:visited {
   margin-right: 2px;
 }
 
+.gwt-TabBar .gwt-TabBarItem-selected {
+  padding: 4px;
+  cursor: pointer;
+  color: black;
+  font-color: black;
+  cursor: hand;
+  background-color: #eeeeee;
+  border-bottom: 2px solid white;
+  margin-right: 2px;
+}
+
 .gwt-TabBar .gwt-TabBarItemLabel-selected {
-  color: white;
   font-size: 8pt;
+  font-color: black;
 }
 
 .gwt-TabBar .gwt-TabBarItemLabel {
+  color: white;
   font-size: 8pt;
 }
 
@@ -618,7 +621,91 @@ a:visited {
   padding: 2px;
 }
 
-/* begin users toggle button */
+.leftToggleButtons{clear: both;
+	background: url("style/images/btn2.png") left center no-repeat;
+	line-height: 35px;
+	padding: 1px 0px 4px 15px;
+	margin-right:6px;
+	cursor: pointer;
+	
+	text-align: left;
+	font-weight: normal;
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #FFF; /* #FF3600 */
+	text-decoration: none;
+	border:none;
+}
+
+.leftToggleButtons-up {
+  clear: both;
+	background: url("style/images/btn2.png") left center no-repeat;
+	line-height: 35px;
+	padding: 1px 0px 4px 15px;
+	cursor: pointer;
+	
+	text-align: left;
+	font-weight: normal;
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #FFF; /* #FF3600 */
+	text-decoration: none;
+}
+
+.leftToggleButtons-up-hovering {
+	color: #292929;
+	background-image: url(style/images/btn3.png);
+	background-repeat: no-repeat;
+	text-decoration: none;
+	display: block; /* border: 1px solid #999999; */
+}
+
+.leftToggleButtons-down {
+	clear: both;
+	background: url("style/images/btn.png") left center no-repeat;
+	line-height: 35px;
+	padding: 1px 0px 4px 15px;
+	cursor: pointer;
+	text-align: left;
+	font-weight: normal;
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #FFF; /* #FF3600 */
+	text-decoration: none;
+}
+
+.leftToggleButtons-down-hovering {
+	clear: both;
+	background: url("style/images/btn.png") left center no-repeat;
+	line-height: 35px;
+	padding: 1px 0px 4px 15px;
+	cursor: pointer;
+	text-align: left;
+	font-weight: normal;
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #FFF; /* #FF3600 */
+	text-decoration: none;
+}
+
+
+.toolbar{
+	margin: 0 0px 0 2px;
+	padding: 0 0px 0 0;
+	width: 750px;
+	height: 60px;
+	float: left;
+	background-image: url(style/images/toolbar_bg.png);
+	background-repeat:no-repeat;
+}
+
+.main-panel{
+	width:100%;
+	height:100%;
+	
+}
+
+/* users toggle button */
 .usersToggleBtn {
   background-image:url(style/images/users_off.png);
   width: 36px;
@@ -659,9 +746,9 @@ a:visited {
   border-left: 2px solid #777777;
   margin: 5px 0px 5px 10px; // top right bottom left
 }
-/* end users toggle button */
 
-/* begin roles toggle button */
+
+/* roles toggle button */
 .rolesToggleBtn {
   background-image:url(style/images/roles_off.png);
   width: 36px;
@@ -702,8 +789,71 @@ a:visited {
   border-left: 2px solid #777777;
   margin: 5px 0px 5px 5px; // top right bottom left
 }
-/* end roles toggle button */
 
+.logo{
+	background: url(style/images/pentaho_logo.png) top center no-repeat;
+	height: 60px;
+	width: 196px;
+	margin-left:5px;
+	margin-right: 20px;
+}
+
+.deckPanel{
+	background: url(style/images/content_bg.png) left top no-repeat;
+	height:100%;
+	width: 750px;
+	padding-left:8px;
+	white-space:nowrap;
+}
+
+.leftPanel{
+	height:100%;
+	width:204px;
+	white-space:nowrap;
+}
+
+.leftTabPanel{
+	background: transparent url(style/images/sidebar_bg.png) no-repeat scroll right top;
+	padding: 16px 0px 0px 0px;
+	height:500px;
+	margin-left:11px;
+	width: 219px;
+}
+
+.CommonTasks{
+	background-image:url(style/images/task_bottom.png);
+	background-position:center bottom;
+	background-repeat:no-repeat;
+	border:0pt none;
+	margin:10px 0pt 0pt 2px;
+	padding:0pt 0pt 15px;
+	width:200px;
+}
+
+.CommonTasksHeader{
+	background: url(style/images/task_header.png) top left no-repeat;
+	width:200px;
+	height:25px;
+	padding:3px;
+	line-height:25px;
+}
+.commonTasksHeaderText{
+	color:#5C631F;
+	font-size:14px;
+	font-weight:bold; 
+	margin-left:5px
+}
+.CommonTasksLinks{
+	background: url(style/images/task_bg.png) repeat-y;
+	font-decoration: none;
+	color:black;
+	width:100%;
+	padding:0pt 2px 2px 10px;
+}
+
+.commonTasksHeader{
+
+}
 
 /* begin scheduler panel */
 .schedulerPanel {
