@@ -1,9 +1,16 @@
 package org.pentaho.pac.client;
 
+import org.pentaho.pac.client.PentahoAdminConsole;
+import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.client.users.UsersList;
+import org.pentaho.pac.common.PentahoSecurityException;
+import org.pentaho.pac.common.roles.NonExistingRoleException;
+import org.pentaho.pac.common.roles.ProxyPentahoRole;
+import org.pentaho.pac.common.users.NonExistingUserException;
 
 import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
  * GWT JUnit tests must extend GWTTestCase.
@@ -24,8 +31,13 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
     
     // create the users list and ask it to refresh itself. this will make an async. call 
     // to the server, which will take some time to complete.
-    final UsersList usersList = new UsersList();
-    usersList.refresh();
+    AsyncCallback callback = new AsyncCallback() {
+      public void onSuccess(Object result) {
+      }
+      public void onFailure(Throwable caught) {
+      }
+    };
+    UserAndRoleMgmtService.instance().refreshSecurityInfo(callback);
     
     // we're going to need to wait a few seconds to let the async. call complete before we check
     // the users list to see if it has been populated with users. We'll create a timer that we'll 
@@ -33,7 +45,7 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
     // has been populated.
     Timer timer = new Timer() {
       public void run() {
-        assertTrue(usersList.getUsers().length > 0);
+        assertTrue(UserAndRoleMgmtService.instance().getUsers().length > 0);
         
         // Finish this test. This will allow the test method to no longer be delayed in finishing.
         finishTest();
