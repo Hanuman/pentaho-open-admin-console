@@ -62,8 +62,7 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
 	SchedulerPanel schedulerPanel = new SchedulerPanel();
   TabPanel adminTabPanel = new TabPanel();
   
-  boolean securityInfoInitialized = false;
-  MessageDialog messageDialog = new MessageDialog(MSGS.security(), "", new int[]{MessageDialog.OK_BTN}); //$NON-NLS-1$
+  boolean securityInfoInitialized = false;  
   
   HomePanel homePanel;
   CommonTasks commonTasks;
@@ -196,6 +195,7 @@ public void onClick(Widget sender) {
       }
     
       public void onFailure(Throwable caught) {
+        MessageDialog messageDialog = new MessageDialog( MSGS.error() );
         messageDialog.setMessage(getLocalizedMessages().securityRefreshError(caught.getMessage()));
         messageDialog.center();
       }
