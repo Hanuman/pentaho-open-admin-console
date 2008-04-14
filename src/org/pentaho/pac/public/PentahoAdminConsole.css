@@ -272,17 +272,20 @@ a:visited {
 
 .gwt-DialogBox {
   background-color: #e8eefa;
-  border: 3px solid #000000;
-  padding: 2px;
+  border-top: 2px solid #CCCCCC;
+  border-right: 2px solid #777777;
+  border-bottom: 2px solid #777777;
+  border-left: 2px solid #CCCCCC;
+  padding: 0px;
 }
 
 .gwt-DialogBox .Caption {
   background-color: #87944c;
   color: #ffffff;
   cursor: move;
-  border-bottom: 2px solid #000000;
+  /*border-bottom: 2px solid #777777;*/
   text-align: left;
-  padding: 5px;
+  padding: 2px 5px 2px 5px; /* top right bottom left */
 }
 
 
@@ -845,3 +848,12 @@ a:visited {
 	margin-bottom: 20px;
 }
 /* end scheduler panel */
+
+/* styles for message box, also see: ".gwt-DialogBox" and ".gwt-DialogBox .Caption" */
+messageDialog\.messagePanel {
+	width: 100%;
+}
+
+.messageDialog\.buttonPanel {
+	width: 100%;
+}
