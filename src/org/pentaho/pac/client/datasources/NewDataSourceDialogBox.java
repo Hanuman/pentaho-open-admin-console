@@ -24,7 +24,7 @@ public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
   Button cancelButton = new Button(MSGS.cancel());
   DataSourceDetailsPanel dataSourceDetailsPanel = new DataSourceDetailsPanel();
   boolean dataSourceCreated = false;
-  MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN});
+  MessageDialog messageDialog = new MessageDialog( MSGS.error() );
   
   public NewDataSourceDialogBox() {
     super();
@@ -67,7 +67,6 @@ public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
   }
 
   public void setText(String text) {
-    messageDialog.setText(text);
     super.setText(text);
   }
 

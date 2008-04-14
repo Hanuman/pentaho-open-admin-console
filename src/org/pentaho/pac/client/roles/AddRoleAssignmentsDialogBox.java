@@ -29,7 +29,7 @@ public class AddRoleAssignmentsDialogBox extends DialogBox implements ClickListe
   RolesList rolesList = new RolesList(true);
   boolean rolesAssigned = false;
   ProxyPentahoUser user;
-  MessageDialog messageDialog = new MessageDialog(MSGS.addRole(), new int[]{MessageDialog.OK_BTN}); //$NON-NLS-1$
+  MessageDialog errorDialog = new MessageDialog( MSGS.error() );
   
   public AddRoleAssignmentsDialogBox() {
     super();
@@ -135,15 +135,15 @@ public class AddRoleAssignmentsDialogBox extends DialogBox implements ClickListe
 
         public void onFailure(Throwable caught) {
           if (caught instanceof PentahoSecurityException) {
-            messageDialog.setMessage(MSGS.insufficientPrivileges());
+            errorDialog.setMessage(MSGS.insufficientPrivileges());
           } else if (caught instanceof NonExistingRoleException) {
-            messageDialog.setMessage(MSGS.roleDoesNotExist(caught.getMessage()));
+            errorDialog.setMessage(MSGS.roleDoesNotExist(caught.getMessage()));
           } else if (caught instanceof NonExistingUserException) {
-            messageDialog.setMessage(MSGS.userDoesNotExist(caught.getMessage()));
+            errorDialog.setMessage(MSGS.userDoesNotExist(caught.getMessage()));
           } else {
-            messageDialog.setMessage(caught.getMessage());
+            errorDialog.setMessage(caught.getMessage());
           }
-          messageDialog.center();
+          errorDialog.center();
         }
       };
       UserAndRoleMgmtService.instance().setRoles(user, (ProxyPentahoRole[])assignedRoles.toArray(new ProxyPentahoRole[0]), callback);

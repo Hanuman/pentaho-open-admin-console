@@ -62,8 +62,7 @@ public class HomePanel extends HorizontalPanel {
 		   
        MessageDialog messageDialog = new MessageDialog(
            MSGS.error(),
-           MSGS.failedToLoadHome( caught.getMessage() ),
-           new int[]{MessageDialog.OK_BTN});
+           MSGS.failedToLoadHome( caught.getMessage() ) );
        messageDialog.center();
 		 }
 		 public void onSuccess(Object result) {

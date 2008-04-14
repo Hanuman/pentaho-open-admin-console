@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
+import org.pentaho.pac.client.common.ui.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.users.AddUserAssignmentsDialogBox;
@@ -31,7 +32,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class RolesPanel extends DockPanel implements ClickListener, ChangeListener, PopupListener, KeyboardListener {
 
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
-  MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN}); //$NON-NLS-1$
+  MessageDialog errorDialog = new MessageDialog( MSGS.error() );
   RolesList rolesList = new RolesList(true);
   UsersList assignedUsersList = new UsersList(true);
   RoleDetailsPanel roleDetailsPanel = new RoleDetailsPanel();
@@ -42,7 +43,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
   Button deleteRoleAssignmentBtn = new Button("-");
   TextBox filterTextBox = new TextBox();
   NewRoleDialogBox newRoleDialogBox = new NewRoleDialogBox();
-  MessageDialog confirmationDialog = new MessageDialog("", "", new int[] {MessageDialog.OK_BTN, MessageDialog.CANCEL_BTN});
+  ConfirmDialog confirmationDialog = new ConfirmDialog();
   AddUserAssignmentsDialogBox addUserAssignmentsDialogBox = new AddUserAssignmentsDialogBox();
   
 	public RolesPanel() {
@@ -203,15 +204,14 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 	      }
 
 	      public void onFailure(Throwable caught) {
-          messageDialog.setText(MSGS.deleteRoles());
           if (caught instanceof PentahoSecurityException) {
-            messageDialog.setMessage(MSGS.insufficientPrivileges());
+            errorDialog.setMessage(MSGS.insufficientPrivileges());
           } else if (caught instanceof NonExistingRoleException) {
-            messageDialog.setMessage(MSGS.roleDoesNotExist(caught.getMessage()));
+            errorDialog.setMessage(MSGS.roleDoesNotExist(caught.getMessage()));
           } else {
-            messageDialog.setMessage(caught.getMessage());
+            errorDialog.setMessage(caught.getMessage());
           }
-          messageDialog.center();
+          errorDialog.center();
 	      }
 	    };
 	    UserAndRoleMgmtService.instance().deleteRoles(selectedRoles, callback);
@@ -232,17 +232,16 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
         }
 
         public void onFailure(Throwable caught) {
-          messageDialog.setText(MSGS.removeUsers());
           if (caught instanceof PentahoSecurityException) {
-            messageDialog.setMessage(MSGS.insufficientPrivileges());
+            errorDialog.setMessage(MSGS.insufficientPrivileges());
           } else if (caught instanceof NonExistingUserException) {
-            messageDialog.setMessage(MSGS.userDoesNotExist(caught.getMessage()));
+            errorDialog.setMessage(MSGS.userDoesNotExist(caught.getMessage()));
           } else if (caught instanceof NonExistingRoleException) {
-            messageDialog.setMessage(MSGS.roleDoesNotExist(caught.getMessage()));
+            errorDialog.setMessage(MSGS.roleDoesNotExist(caught.getMessage()));
           } else {
-            messageDialog.setMessage(caught.getMessage());
+            errorDialog.setMessage(caught.getMessage());
           }
-          messageDialog.center();
+          errorDialog.center();
         }
       };
       UserAndRoleMgmtService.instance().setUsers(selectedRoles[0], (ProxyPentahoUser[])assignedUsers.toArray(new ProxyPentahoUser[0]), callback);
@@ -279,17 +278,16 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
       }
 
       public void onFailure(Throwable caught) {
-        messageDialog.setText(MSGS.updateRole());
         if (caught instanceof PentahoSecurityException) {
-          messageDialog.setMessage(MSGS.insufficientPrivileges());
+          errorDialog.setMessage(MSGS.insufficientPrivileges());
         } else if (caught instanceof NonExistingRoleException) {
-          messageDialog.setMessage(MSGS.roleDoesNotExist(caught.getMessage()));
+          errorDialog.setMessage(MSGS.roleDoesNotExist(caught.getMessage()));
         } else if (caught instanceof NonExistingUserException) {
-          messageDialog.setMessage(MSGS.cantAssignNonexistingUserToRole(caught.getMessage()));
+          errorDialog.setMessage(MSGS.cantAssignNonexistingUserToRole(caught.getMessage()));
         } else {
-          messageDialog.setMessage(caught.getMessage());
+          errorDialog.setMessage(caught.getMessage());
         }
-        messageDialog.center();
+        errorDialog.center();
         ((Button)sender).setEnabled( true );
       }
     };

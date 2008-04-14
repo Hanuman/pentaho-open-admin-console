@@ -2,6 +2,7 @@ package org.pentaho.pac.client.datasources;
 
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
+import org.pentaho.pac.client.common.ui.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
@@ -21,7 +22,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class DataSourcesPanel extends DockPanel implements ClickListener, ChangeListener, PopupListener {
 
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
-  MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN}); //$NON-NLS-1$
+  MessageDialog messageDialog = new MessageDialog(); //$NON-NLS-1$
   DataSourcesList dataSourcesList = new DataSourcesList();
   PentahoDataSource[] dataSources = null;
   DataSourceDetailsPanel dataSourceDetailsPanel = new DataSourceDetailsPanel();
@@ -30,7 +31,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
   Button addDataSourceBtn = new Button("+"); //$NON-NLS-1$
   Button deleteDataSourceBtn = new Button("-"); //$NON-NLS-1$
   NewDataSourceDialogBox newDataSourceDialogBox = new NewDataSourceDialogBox();
-  MessageDialog confirmDataSourceDeleteDialog = new MessageDialog(MSGS.deleteDataSources(), MSGS.confirmDataSourceDeletionMsg(), new int[] {MessageDialog.OK_BTN, MessageDialog.CANCEL_BTN});
+  ConfirmDialog confirmDataSourceDeleteDialog = new ConfirmDialog(MSGS.deleteDataSources(), MSGS.confirmDataSourceDeletionMsg() );
   
 	public DataSourcesPanel() {
 	  DockPanel dataSourcesListPanel = buildDataSourcesListPanel();

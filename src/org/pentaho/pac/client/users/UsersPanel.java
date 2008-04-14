@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
+import org.pentaho.pac.client.common.ui.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.roles.AddRoleAssignmentsDialogBox;
@@ -31,7 +32,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class UsersPanel extends DockPanel implements ClickListener, ChangeListener, PopupListener, KeyboardListener {
 
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
-  MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN}); //$NON-NLS-1$
+  MessageDialog errorDialog = new MessageDialog( MSGS.error() );
   UsersList usersList = new UsersList(true);
   RolesList assignedRolesList = new RolesList(true);
   UserDetailsPanel userDetailsPanel = new UserDetailsPanel();
@@ -42,7 +43,7 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
   Button deleteRoleAssignmentBtn = new Button("-");
   TextBox filterTextBox = new TextBox();
   NewUserDialogBox newUserDialogBox = new NewUserDialogBox();
-  MessageDialog confirmationDialog = new MessageDialog("", "", new int[] {MessageDialog.OK_BTN, MessageDialog.CANCEL_BTN});
+  ConfirmDialog confirmationDialog = new ConfirmDialog();
   AddRoleAssignmentsDialogBox addRoleAssignmentsDialogBox = new AddRoleAssignmentsDialogBox();
   
 	public UsersPanel() {
@@ -204,15 +205,15 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	      }
 
 	      public void onFailure(Throwable caught) {
-	        messageDialog.setText(MSGS.deleteUsers());
+	        errorDialog.setText(MSGS.deleteUsers());
           if (caught instanceof PentahoSecurityException) {
-            messageDialog.setMessage(MSGS.insufficientPrivileges());
+            errorDialog.setMessage(MSGS.insufficientPrivileges());
           } else if (caught instanceof NonExistingUserException) {
-            messageDialog.setMessage(MSGS.userDoesNotExist(caught.getMessage()));
+            errorDialog.setMessage(MSGS.userDoesNotExist(caught.getMessage()));
           } else {
-            messageDialog.setMessage(caught.getMessage());
+            errorDialog.setMessage(caught.getMessage());
           }
-          messageDialog.center();
+          errorDialog.center();
 	      }
 	    };
 	    UserAndRoleMgmtService.instance().deleteUsers(selectedUsers, callback);
@@ -233,17 +234,17 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
         }
 
         public void onFailure(Throwable caught) {
-          messageDialog.setText(MSGS.removeRoles());
+          errorDialog.setText(MSGS.removeRoles());
           if (caught instanceof PentahoSecurityException) {
-            messageDialog.setMessage(MSGS.insufficientPrivileges());
+            errorDialog.setMessage(MSGS.insufficientPrivileges());
           } else if (caught instanceof NonExistingUserException) {
-            messageDialog.setMessage(MSGS.userDoesNotExist(caught.getMessage()));
+            errorDialog.setMessage(MSGS.userDoesNotExist(caught.getMessage()));
           } else if (caught instanceof NonExistingRoleException) {
-            messageDialog.setMessage(MSGS.roleDoesNotExist(caught.getMessage()));
+            errorDialog.setMessage(MSGS.roleDoesNotExist(caught.getMessage()));
           } else {
-            messageDialog.setMessage(caught.getMessage());
+            errorDialog.setMessage(caught.getMessage());
           }
-          messageDialog.center();
+          errorDialog.center();
         }
       };
       UserAndRoleMgmtService.instance().setRoles(selectedUsers[0], (ProxyPentahoRole[])assignedRoles.toArray(new ProxyPentahoRole[0]), callback);
@@ -274,9 +275,9 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	
 	private void updateUserDetails( final Widget sender ) {
 	  if (!userDetailsPanel.getPassword().equals(userDetailsPanel.getPasswordConfirmation())) { 
-	    messageDialog.setText(MSGS.updateUser());
-      messageDialog.setMessage(MSGS.passwordConfirmationFailed());
-      messageDialog.center();
+	    errorDialog.setText(MSGS.updateUser());
+      errorDialog.setMessage(MSGS.passwordConfirmationFailed());
+      errorDialog.center();
 	  } else {
       ((Button)sender).setEnabled( false );
 	    final ProxyPentahoUser user = userDetailsPanel.getUser();
@@ -288,15 +289,15 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	      }
 
 	      public void onFailure(Throwable caught) {
-          messageDialog.setText(MSGS.updateUser());
+          errorDialog.setText(MSGS.updateUser());
           if (caught instanceof PentahoSecurityException) {
-            messageDialog.setMessage(MSGS.insufficientPrivileges());
+            errorDialog.setMessage(MSGS.insufficientPrivileges());
           } else if (caught instanceof NonExistingUserException) {
-            messageDialog.setMessage(MSGS.userDoesNotExist(caught.getMessage()));
+            errorDialog.setMessage(MSGS.userDoesNotExist(caught.getMessage()));
           } else {
-            messageDialog.setMessage(caught.getMessage());
+            errorDialog.setMessage(caught.getMessage());
           }
-          messageDialog.center();
+          errorDialog.center();
           ((Button)sender).setEnabled( true );
 	      }
 	    }; // end AsyncCallback

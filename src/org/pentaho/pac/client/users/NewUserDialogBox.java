@@ -25,7 +25,7 @@ public class NewUserDialogBox extends DialogBox implements ClickListener {
   Button cancelButton = new Button(MSGS.cancel());
   UserDetailsPanel userDetailsPanel = new UserDetailsPanel();
   boolean userCreated = false;
-  MessageDialog messageDialog = new MessageDialog("", new int[]{MessageDialog.OK_BTN}); //$NON-NLS-1$
+  MessageDialog messageDialog = new MessageDialog( MSGS.error() );
   
   public NewUserDialogBox() {
     super();
@@ -102,7 +102,6 @@ public class NewUserDialogBox extends DialogBox implements ClickListener {
   }
   
   public void setText(String text) {
-    messageDialog.setText(text);
     super.setText(text);
   }
   

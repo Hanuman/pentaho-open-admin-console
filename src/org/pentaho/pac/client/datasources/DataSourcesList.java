@@ -17,7 +17,6 @@ import com.google.gwt.user.client.ui.ListBox;
 
 public class DataSourcesList extends ListBox {
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
-  MessageDialog messageDialog = new MessageDialog(MSGS.dataSources(), "", new int[]{MessageDialog.OK_BTN}); //$NON-NLS-1$
   List dataSources = new ArrayList();
   boolean isInitialized = false;
   
@@ -129,9 +128,10 @@ public class DataSourcesList extends ListBox {
       }
 
       public void onFailure(Throwable caught) {
-        messageDialog.setText(MSGS.errorLoadingDataSources());
-        messageDialog.setMessage(MSGS.dataSourcesRefreshError(caught.getMessage()));
-        messageDialog.center();
+        MessageDialog errorDialog = new MessageDialog(MSGS.error() );
+        errorDialog.setText(MSGS.errorLoadingDataSources());
+        errorDialog.setMessage(MSGS.dataSourcesRefreshError(caught.getMessage()));
+        errorDialog.center();
       }
     };
     
