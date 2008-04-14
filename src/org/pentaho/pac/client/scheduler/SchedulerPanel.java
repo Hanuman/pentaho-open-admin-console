@@ -18,13 +18,14 @@ package org.pentaho.pac.client.scheduler;
 
 import java.util.List;
 
-import org.pentaho.pac.client.MessageDialog;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
+import org.pentaho.pac.client.common.ui.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
@@ -82,7 +83,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
       
             public void onFailure(Throwable caught) {
               MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
-                  caught.getMessage(), new int[]{MessageDialog.OK_BTN});
+                  caught.getMessage() );
               messageDialog.center();
               remove( loading );
               isInitialized = false;
@@ -117,6 +118,22 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
     } else {
       remove( loading );
     }
+    
+// TODO !!!
+    Hyperlink a = new Hyperlink();
+    a.setText( "dlg test" );
+    
+    a.addClickListener( new ClickListener() {
+      public void onClick( Widget sender ) {
+        MessageDialog b2 = new MessageDialog( "title xxx",
+            "xxx a really long message message with lots of information. so lets see what happens.xxx a really long message message with lots of information. so lets see what happens.xxx a really long message message with lots of information. so lets see what happens.xxx a really long message message with lots of information. so lets see what happens.xxx a really long message message with lots of information. so lets see what happens." );
+        b2.show();
+      }
+    } );
+    add( a );
+    
+    
+    
     userInstructionLabel = new Label( USER_INSTRUCTION );
     userInstructionLabel.setStylePrimaryName( "schedulerInstructionLabel" ); //$NON-NLS-1$
     add( userInstructionLabel );
@@ -126,8 +143,8 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
 
     jobsTable = createJobsTable( jobList );
     jobsTableScrollPanel = new ScrollPanel( jobsTable );
-    // TODO sbarkdull, move the 450px to style sheet
-    jobsTableScrollPanel.setHeight( "450px" ); //$NON-NLS-1$
+    // TODO sbarkdull, move the 230px to style sheet
+    jobsTableScrollPanel.setHeight( "230px" ); //$NON-NLS-1$
     add( jobsTableScrollPanel );
   }
   
@@ -226,7 +243,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
         
               public void onFailure(Throwable caught) {
                 MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
-                    caught.getMessage(), new int[]{MessageDialog.OK_BTN});
+                    caught.getMessage() );
                 messageDialog.center();
               }
             }
@@ -255,7 +272,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
               public void onFailure(Throwable caught) {
                 // TODO sbarkdull
                 MessageDialog messageDialog = new MessageDialog(MSGS.error(), 
-                    caught.getMessage(), new int[]{MessageDialog.OK_BTN});
+                    caught.getMessage() );
                 messageDialog.center();
               }
             }
@@ -284,7 +301,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
         
               public void onFailure(Throwable caught) {
                 MessageDialog messageDialog = new MessageDialog(MSGS.error(), 
-                    caught.getMessage(), new int[]{MessageDialog.OK_BTN});
+                    caught.getMessage() );
                 messageDialog.center();
               }
             }
@@ -311,7 +328,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
         
               public void onFailure(Throwable caught) {
                 MessageDialog messageDialog = new MessageDialog(MSGS.error(), 
-                    caught.getMessage(), new int[]{MessageDialog.OK_BTN});
+                    caught.getMessage() );
                 messageDialog.center();
               }
             }
@@ -339,7 +356,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
         
               public void onFailure(Throwable caught) {
                 MessageDialog messageDialog = new MessageDialog(MSGS.error(), 
-                    caught.getMessage(), new int[]{MessageDialog.OK_BTN});
+                    caught.getMessage() );
                 messageDialog.center();
               }
             }
@@ -365,7 +382,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
         
               public void onFailure(Throwable caught) {
                 MessageDialog messageDialog = new MessageDialog(MSGS.error(), 
-                    caught.getMessage(), new int[]{MessageDialog.OK_BTN});
+                    caught.getMessage() );
                 messageDialog.center();
               }
             }
@@ -401,7 +418,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
     
           public void onFailure(Throwable caught) {
             MessageDialog messageDialog = new MessageDialog(MSGS.error(), 
-                caught.getMessage(), new int[]{MessageDialog.OK_BTN});
+                caught.getMessage() );
             messageDialog.center();
           }
         }
