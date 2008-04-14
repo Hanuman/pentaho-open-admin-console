@@ -19,6 +19,7 @@ package org.pentaho.pac.client.services;
 import org.pentaho.pac.client.PacServiceAsync;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
+import org.pentaho.pac.client.common.ui.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -85,46 +86,15 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
     AsyncCallback callback = new AsyncCallback() {
       
       public void onSuccess(Object result) {
-        final DialogBox dialogBox = new DialogBox();
-        dialogBox.setText(MSGS.services());
-        Button okButton = new Button(MSGS.ok());
-        okButton.addClickListener(new ClickListener() {
-          public void onClick(Widget sender) {
-            dialogBox.hide();
-          }  
-        });
-        
-        ((Button)sender).setEnabled(true);
-        HorizontalPanel footerPanel = new HorizontalPanel();
-        footerPanel.add(okButton);
-        
-        VerticalPanel verticalPanel = new VerticalPanel();
-        verticalPanel.add(new Label(result.toString()));
-        verticalPanel.add(footerPanel);
-        
-        dialogBox.setWidget(verticalPanel);
-        dialogBox.center();
+        MessageDialog messageDialog = new MessageDialog(MSGS.services(), 
+            result.toString());
+        messageDialog.center();
       }
 
       public void onFailure(Throwable caught) {
-        final DialogBox dialogBox = new DialogBox();
-        dialogBox.setText(MSGS.error());
-        Button okButton = new Button(MSGS.ok());
-        okButton.addClickListener(new ClickListener() {
-          public void onClick(Widget sender) {
-            dialogBox.hide();
-          }
-        });
-        ((Button)sender).setEnabled(true);
-        HorizontalPanel footerPanel = new HorizontalPanel();
-        footerPanel.add(okButton);
-        
-        VerticalPanel verticalPanel = new VerticalPanel();
-        verticalPanel.add(new Label(caught.getMessage()));
-        verticalPanel.add(footerPanel);
-        
-        dialogBox.setWidget(verticalPanel);
-        dialogBox.center();
+        MessageDialog messageDialog = new MessageDialog(MSGS.error(), 
+            caught.getMessage() );
+        messageDialog.center();
       }
     }; // end AsyncCallback
 
