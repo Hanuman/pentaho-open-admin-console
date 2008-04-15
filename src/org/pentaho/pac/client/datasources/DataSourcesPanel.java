@@ -3,6 +3,7 @@ package org.pentaho.pac.client.datasources;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.ConfirmDialog;
+import org.pentaho.pac.client.common.ui.ICallbackHandler;
 import org.pentaho.pac.client.common.ui.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
@@ -55,7 +56,13 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
     updateDataSourceBtn.setEnabled(false);
     testDataSourceBtn.setEnabled(false);
     newDataSourceDialogBox.addPopupListener(this);
-    confirmDataSourceDeleteDialog.addPopupListener(this);
+
+    final DataSourcesPanel localThis = this;
+    confirmDataSourceDeleteDialog.setOnOkHandler( new ICallbackHandler() {
+      public void onHandle(Object o) {
+        localThis.deleteSelectedDataSources();
+      }
+    });
  	}
 
 	public DockPanel buildDataSourceDetailsDockPanel() {
@@ -235,10 +242,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
         dataSourcesList.setSelectedDataSource(dataSource);
         dataSourceSelectionChanged();
       }
-    } else if ((sender == confirmDataSourceDeleteDialog) && (confirmDataSourceDeleteDialog.getButtonPressed() == MessageDialog.OK_BTN)) {
-      deleteSelectedDataSources();
-    }      
-
+    }
   }
   
   public boolean isInitialized() {

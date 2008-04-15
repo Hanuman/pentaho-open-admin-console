@@ -6,6 +6,7 @@ import java.util.Arrays;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.client.common.ui.ConfirmDialog;
+import org.pentaho.pac.client.common.ui.ICallbackHandler;
 import org.pentaho.pac.client.common.ui.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.roles.AddRoleAssignmentsDialogBox;
@@ -44,6 +45,10 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
   TextBox filterTextBox = new TextBox();
   NewUserDialogBox newUserDialogBox = new NewUserDialogBox();
   ConfirmDialog confirmationDialog = new ConfirmDialog();
+  
+  ConfirmDialog confirmDeleteUsersDialog = new ConfirmDialog();
+  ConfirmDialog confirmRemoveRoleAssignmentDialog = new ConfirmDialog();
+  
   AddRoleAssignmentsDialogBox addRoleAssignmentsDialogBox = new AddRoleAssignmentsDialogBox();
   
 	public UsersPanel() {
@@ -70,10 +75,26 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     newUserDialogBox.addPopupListener(this);
     addRoleAssignmentsDialogBox.addPopupListener(this);
     
-    confirmationDialog.addPopupListener(this);
-    
     userDetailsPanel.getUserNameTextBox().setEnabled(false);
     
+    confirmDeleteUsersDialog.setText(MSGS.deleteUsers());
+    confirmDeleteUsersDialog.setMessage(MSGS.confirmUserDeletionMsg());
+    final UsersPanel localThis = this;
+    confirmDeleteUsersDialog.setOnOkHandler( new ICallbackHandler() {
+      public void onHandle(Object o) {
+        localThis.deleteSelectedUsers();
+        localThis.assignedRoleSelectionChanged();
+      }
+    });
+    
+    confirmRemoveRoleAssignmentDialog.setText(MSGS.assignedRoles());
+    confirmRemoveRoleAssignmentDialog.setMessage(MSGS.confirmRemoveRoleAssignmentMsg());
+    confirmRemoveRoleAssignmentDialog.setOnOkHandler( new ICallbackHandler() {
+      public void onHandle(Object o) {
+        localThis.unassignSelectedRoles();
+        localThis.assignedRoleSelectionChanged();
+      }
+    });
  	}
 
 	public DockPanel buildUserDetailsDockPanel() {
@@ -164,17 +185,13 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	    updateUserDetails( sender );
 	  } else if (sender == deleteUserBtn) {
 	    if (usersList.getSelectedUsers().length > 0) {
-	      confirmationDialog.setText(MSGS.deleteUsers());
-	      confirmationDialog.setMessage(MSGS.confirmUserDeletionMsg());
-	      confirmationDialog.center();
+	      confirmDeleteUsersDialog.center();
 	    }
 	  } else if (sender == addUserBtn) {
 	    addNewUser();
 	  } else if (sender == deleteRoleAssignmentBtn) {
 	    if (assignedRolesList.getSelectedRoles().length > 0) {
-        confirmationDialog.setText(MSGS.assignedRoles());
-        confirmationDialog.setMessage(MSGS.confirmRemoveRoleAssignmentMsg());
-        confirmationDialog.center();
+        confirmRemoveRoleAssignmentDialog.center();
       }
 	  } else if (sender == addRoleAssignmentBtn) {
 	    ProxyPentahoUser[] selectedUsers = usersList.getSelectedUsers();
@@ -326,13 +343,6 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
       userSelectionChanged();
     } else if ((sender == addRoleAssignmentsDialogBox) && addRoleAssignmentsDialogBox.getRolesAssigned()) {
       assignedRolesList.setRoles(UserAndRoleMgmtService.instance().getRoles(addRoleAssignmentsDialogBox.getUser()));
-      assignedRoleSelectionChanged();
-    } else if ((sender == confirmationDialog) && (confirmationDialog.getButtonPressed() == MessageDialog.OK_BTN)) {
-      if (confirmationDialog.getText().equals(MSGS.deleteUsers())) {
-        deleteSelectedUsers();
-      } else if (confirmationDialog.getText().equals(MSGS.assignedRoles())) {
-        unassignSelectedRoles();
-      }
       assignedRoleSelectionChanged();
     }
   }

@@ -270,7 +270,6 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
               }
         
               public void onFailure(Throwable caught) {
-                // TODO sbarkdull
                 MessageDialog messageDialog = new MessageDialog(MSGS.error(), 
                     caught.getMessage() );
                 messageDialog.center();
