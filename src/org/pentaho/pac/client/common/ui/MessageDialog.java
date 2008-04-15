@@ -14,9 +14,10 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class MessageDialog extends DialogBox implements ClickListener {
   
-  private Label msgLabel = null;
+  protected Label msgLabel = null;
   protected static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
-  private HorizontalPanel btnPanel = null; 
+  private HorizontalPanel btnPanel = null;
+  protected VerticalPanel clientPanel = null;
   protected int buttonPressed = NONE_BTN;
   
   public static final int NONE_BTN = 0;
@@ -32,7 +33,7 @@ public class MessageDialog extends DialogBox implements ClickListener {
     super();
     
     msgLabel = new Label( msg );
-    VerticalPanel clientPanel = new VerticalPanel();
+    clientPanel = new VerticalPanel();
     clientPanel.setStylePrimaryName( "messageDialog.clientPanel" );  //$NON-NLS-1$
     clientPanel.add(msgLabel);
     btnPanel = new HorizontalPanel();
