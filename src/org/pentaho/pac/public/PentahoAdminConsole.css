@@ -1002,9 +1002,28 @@ a:visited {
 }
 /* end scheduler panel */
 
-/* styles for message box, also see: ".gwt-DialogBox" and ".gwt-DialogBox .Caption" */
-messageDialog\.clientPanel {
+/* begin styles for BasicDialog, also see: ".gwt-DialogBox" and ".gwt-DialogBox .Caption" */
+.basicDialog\.rootPanel {
+	/*background-color: red;*/
+	margin: 20px 20px 10px 20px;	/* top right bottom left*/
+	padding: 0px;
 }
 
-.messageDialog\.buttonPanel {
+.basicDialog\.clientPanel {
+	/*background-color: red;*/
+	border: 1px solid #95A22C;
+	margin-bottom: 10px;
+	padding: 0px;
 }
+
+.basicDialog\.buttonPanel {
+	/*background-color: red;*/
+	padding: 0px;
+}
+
+.basicDialog\.button {
+	/*background-color: red;*/
+	padding: 0px;
+	margin: 0px 0px 0px 10px;	/* top right bottom left*/
+}
+/* end styles for BasicDialog */

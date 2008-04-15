@@ -5,54 +5,32 @@ import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class MessageDialog extends DialogBox implements ClickListener {
-  
-  protected Label msgLabel = null;
-  protected static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
-  private HorizontalPanel btnPanel = null;
-  protected VerticalPanel clientPanel = null;
-  protected int buttonPressed = NONE_BTN;
-  
-  public static final int NONE_BTN = 0;
-  public static final int OK_BTN = 1;
-  
-  protected Button okBtn = new Button(MSGS.ok());
+public class MessageDialog extends BasicDialog {
 
-  public int getButtonPressed() {
-    return buttonPressed;
-  }
+  protected static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
+  protected Label msgLabel = null;
+  private Button okBtn = null;
+  ICallbackHandler okHandler = null;
   
   public MessageDialog( String title, String msg ) {
-    super();
+    super( title );
     
     msgLabel = new Label( msg );
-    clientPanel = new VerticalPanel();
-    clientPanel.setStylePrimaryName( "messageDialog.clientPanel" );  //$NON-NLS-1$
-    clientPanel.add(msgLabel);
-    btnPanel = new HorizontalPanel();
-    btnPanel.setStylePrimaryName( "messageDialog.buttonPanel" );  //$NON-NLS-1$
-    btnPanel.setHorizontalAlignment( HasHorizontalAlignment.ALIGN_RIGHT );
+    addWidgetToClientArea( msgLabel );
 
-    okBtn.addClickListener(this);
-    addBtn(okBtn);
-    
-    clientPanel.setCellWidth(msgLabel, "100%"); //$NON-NLS-1$
-    clientPanel.setCellHeight(msgLabel, "100%"); //$NON-NLS-1$
-    clientPanel.setSpacing(10);
-    clientPanel.setWidth("250px"); //$NON-NLS-1$
-    clientPanel.setHeight("150px"); //$NON-NLS-1$
-    
-    clientPanel.add(btnPanel);
-    
-    setWidget(clientPanel);
-    setText(title);
+    final MessageDialog localThis = this;
+    okBtn = new Button(MSGS.ok(), new ClickListener() {
+      public void onClick(Widget sender) {
+        if ( null != okHandler ) {
+          okHandler.onHandle( sender );
+        }
+        localThis.hide();
+      }
+    });
+    addButton(okBtn);
   }
   
   public MessageDialog( String title ) {
@@ -61,10 +39,6 @@ public class MessageDialog extends DialogBox implements ClickListener {
   
   public MessageDialog() {
     this(""); //$NON-NLS-1$
-  }
-
-  public void addBtn( Button btn ) {
-    btnPanel.add( btn );
   }
   
   public String getMessage() {
@@ -75,10 +49,8 @@ public class MessageDialog extends DialogBox implements ClickListener {
     msgLabel.setText(msg);
   }
   
-  public void onClick(Widget sender) {
-    if (sender == okBtn) {
-      buttonPressed = OK_BTN;
-      hide();
-    }
+  public void setOnOkHandler( final ICallbackHandler handler )
+  {
+    okHandler = handler;
   }
 }

@@ -1,33 +1,38 @@
 package org.pentaho.pac.client.common.ui;
 
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ConfirmDialog extends MessageDialog {
 
-  protected Button cancelBtn = new Button(MSGS.cancel());
-  public static final int CANCEL_BTN = 2;
+  protected Button cancelBtn = null;
+  private ICallbackHandler cancelHandler = null;
   
   public ConfirmDialog( String title, String msg ) {
     super( title, msg );
-    cancelBtn.addClickListener(this);
-    addBtn(cancelBtn);
+    final ConfirmDialog localThis = this;
+    cancelBtn = new Button(MSGS.cancel(), new ClickListener() {
+      public void onClick(Widget sender) {
+        if ( null != cancelHandler ) {
+          cancelHandler.onHandle( sender );
+        }
+        localThis.hide();
+      }
+    });
+    addButton(cancelBtn);
   }
   
   public ConfirmDialog( String title ) {
-    this( title, "" );
+    this( title, "" ); //$NON-NLS-1$
   }
   
   public ConfirmDialog() {
-    this( "", "" );
+    this( "", "" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
   
-  public void onClick(Widget sender) {
-    if (sender == cancelBtn) {
-      buttonPressed = CANCEL_BTN;
-      hide();
-    } else {
-      super.onClick( sender );
-    }
+  public void setOnCancelHandler( final ICallbackHandler handler )
+  {
+    cancelHandler = handler;
   }
 }
