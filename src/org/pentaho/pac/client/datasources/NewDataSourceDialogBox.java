@@ -2,6 +2,8 @@ package org.pentaho.pac.client.datasources;
 
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
+import org.pentaho.pac.client.common.ui.ConfirmDialog;
+import org.pentaho.pac.client.common.ui.ICallbackHandler;
 import org.pentaho.pac.client.common.ui.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
@@ -9,65 +11,44 @@ import org.pentaho.pac.common.datasources.PentahoDataSource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
+public class NewDataSourceDialogBox extends ConfirmDialog {
 
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
-  Button okButton = new Button(MSGS.ok());
-  Button testButton = new Button(MSGS.test());
-  Button cancelButton = new Button(MSGS.cancel());
+  Button testButton;
   DataSourceDetailsPanel dataSourceDetailsPanel = new DataSourceDetailsPanel();
   boolean dataSourceCreated = false;
   MessageDialog messageDialog = new MessageDialog( MSGS.error() );
   
   public NewDataSourceDialogBox() {
     super();
-    HorizontalPanel footerPanel = new HorizontalPanel();
-    footerPanel.add(okButton);
-    footerPanel.add(testButton);    
-    footerPanel.add(cancelButton);
-    
-    VerticalPanel verticalPanel = new VerticalPanel();
-    verticalPanel.add(dataSourceDetailsPanel);
-    verticalPanel.add(footerPanel);
-    
-    setText(MSGS.addDataSource());
-    
-    verticalPanel.setWidth("250px");
-    dataSourceDetailsPanel.setWidth("100%");
-    
-    setWidget(verticalPanel);
-    
-    okButton.addClickListener(this);
-    testButton.addClickListener(this);        
-    cancelButton.addClickListener(this);
-  }
 
+    setTitle( MSGS.addDataSource() );
+    
+    final NewDataSourceDialogBox localThis = this;
+    dataSourceDetailsPanel.setStyleName( "newDataSourceDialogBox.detailsPanel" ); //$NON-NLS-1$
+    addWidgetToClientArea( dataSourceDetailsPanel );
+    testButton = new Button(MSGS.test(), new ClickListener() {
+      public void onClick(Widget sender) {
+        localThis.testDataSourceConnection();
+      }
+    });
+    addWidgetToClientArea( testButton );
 
-  public Button getOkButton() {
-    return okButton;
-  }
-
-  public Button getTestButton() {
-    return testButton;
-  }
-
-  public Button getCancelButton() {
-    return cancelButton;
+    setOnOkHandler( new ICallbackHandler() {
+      public void onHandle( Object o ) {
+        localThis.createDataSource();
+      }
+    });
   }
 
   public boolean isDataSourceCreated() {
     return dataSourceCreated;
-  }
-
-  public void setText(String text) {
-    super.setText(text);
   }
 
   public PentahoDataSource getDataSource() {
@@ -238,11 +219,7 @@ public class NewDataSourceDialogBox extends DialogBox implements ClickListener {
   }
   
   public void onClick(Widget sender) {
-    if (sender == okButton) {
-      createDataSource();
-    } else if (sender == cancelButton) {
-      hide();
-    } else if(sender == testButton) {
+    if(sender == testButton) {
       testDataSourceConnection();      
     }
   }

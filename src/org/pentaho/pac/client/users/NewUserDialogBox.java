@@ -2,7 +2,10 @@ package org.pentaho.pac.client.users;
 
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
+import org.pentaho.pac.client.common.ui.ConfirmDialog;
+import org.pentaho.pac.client.common.ui.ICallbackHandler;
 import org.pentaho.pac.client.common.ui.MessageDialog;
+import org.pentaho.pac.client.datasources.NewDataSourceDialogBox;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.users.DuplicateUserException;
@@ -10,37 +13,32 @@ import org.pentaho.pac.common.users.ProxyPentahoUser;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class NewUserDialogBox extends DialogBox implements ClickListener {
+public class NewUserDialogBox extends ConfirmDialog {
 
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
-  Button okButton = new Button(MSGS.ok());
-  Button cancelButton = new Button(MSGS.cancel());
   UserDetailsPanel userDetailsPanel = new UserDetailsPanel();
   boolean userCreated = false;
   MessageDialog messageDialog = new MessageDialog( MSGS.error() );
   
   public NewUserDialogBox() {
     super();
-    HorizontalPanel footerPanel = new HorizontalPanel();
-    footerPanel.add(okButton);
-    footerPanel.add(cancelButton);
+
+    setTitle( MSGS.addUser() );
     
-    VerticalPanel verticalPanel = new VerticalPanel();
-    verticalPanel.add(userDetailsPanel);
-    verticalPanel.add(footerPanel);
+    final NewUserDialogBox localThis = this;
+    userDetailsPanel.setStyleName( "newUserDialogBox.detailsPanel" ); //$NON-NLS-1$
+    addWidgetToClientArea( userDetailsPanel );
     
-    setText(MSGS.addUser());
-    setWidget(verticalPanel);
-    okButton.addClickListener(this);
-    cancelButton.addClickListener(this);
+    setOnOkHandler( new ICallbackHandler() {
+      public void onHandle( Object o ) {
+        localThis.createUser();
+      }
+    });
   }
 
   public String getDescription() {
@@ -75,14 +73,6 @@ public class NewUserDialogBox extends DialogBox implements ClickListener {
     return userDetailsPanel.getUserNameTextBox();
   }
 
-  public Button getOkButton() {
-    return okButton;
-  }
-
-  public Button getCancelButton() {
-    return cancelButton;
-  }
-
   public boolean isUserCreated() {
     return userCreated;
   }
@@ -96,14 +86,10 @@ public class NewUserDialogBox extends DialogBox implements ClickListener {
     userDetailsPanel.setUser(user);
   }
 
-  public void show() {
-    userCreated = false;
-    super.show();
-  }
-  
-  public void setText(String text) {
-    super.setText(text);
-  }
+//  public void show() {
+//    userCreated = false;
+//    super.show();
+//  }
   
   private boolean createUser() {
     if (getUserName().trim().length() == 0) {
@@ -137,13 +123,5 @@ public class NewUserDialogBox extends DialogBox implements ClickListener {
     }
     
     return userCreated;
-  }
-  
-  public void onClick(Widget sender) {
-    if (sender == okButton) {
-      createUser();
-    } else if (sender == cancelButton) {
-      hide();
-    }
   }
 }

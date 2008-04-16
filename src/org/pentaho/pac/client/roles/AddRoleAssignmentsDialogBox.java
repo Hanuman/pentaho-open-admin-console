@@ -5,6 +5,8 @@ import java.util.Arrays;
 
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
+import org.pentaho.pac.client.common.ui.ConfirmDialog;
+import org.pentaho.pac.client.common.ui.ICallbackHandler;
 import org.pentaho.pac.client.common.ui.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.common.PentahoSecurityException;
@@ -15,13 +17,8 @@ import org.pentaho.pac.common.users.ProxyPentahoUser;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
-public class AddRoleAssignmentsDialogBox extends DialogBox implements ClickListener {
+public class AddRoleAssignmentsDialogBox extends ConfirmDialog  {
 
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   Button okButton = new Button(MSGS.ok());
@@ -34,44 +31,28 @@ public class AddRoleAssignmentsDialogBox extends DialogBox implements ClickListe
   public AddRoleAssignmentsDialogBox() {
     super();
     
-    setText(MSGS.addRole());
+    setTitle(MSGS.addRole());
+
+    final AddRoleAssignmentsDialogBox localThis = this;
+    rolesList.setVisibleItemCount( 9 );
+    rolesList.setStyleName( "addRoleAssignmentsDialogBox.rolesList" ); //$NON-NLS-1$
+    addWidgetToClientArea( rolesList );
     
-    HorizontalPanel footerPanel = new HorizontalPanel();
-    footerPanel.add(okButton);
-    footerPanel.add(cancelButton);
-    
-    VerticalPanel verticalPanel = new VerticalPanel();
-    verticalPanel.add(rolesList);
-    verticalPanel.add(footerPanel);
-    
-    verticalPanel.setWidth("100%");
-    verticalPanel.setHeight("100%");
-    
-    verticalPanel.setCellHeight(rolesList, "100%");
-    verticalPanel.setCellWidth(rolesList, "100%");
-    
-    rolesList.setWidth("100%"); //$NON-NLS-1$
-    rolesList.setHeight("100%"); //$NON-NLS-1$
-    
-    setWidth("250px"); //$NON-NLS-1$
-    setHeight("250px"); //$NON-NLS-1$
-    
-    setWidget(verticalPanel);
-    
-    okButton.addClickListener(this);
-    cancelButton.addClickListener(this);
+    setOnOkHandler( new ICallbackHandler() {
+      public void onHandle( Object o ) {
+        localThis.assignSelectedRoles();
+      }
+    });
   }
   
   public AddRoleAssignmentsDialogBox(ProxyPentahoUser user) {
     this(); 
     setUser(user);
   }
-
-
+  
   public ProxyPentahoUser getUser() {
     return user;
   }
-
 
   public void setUser(ProxyPentahoUser user) {
     rolesAssigned = false;
@@ -106,19 +87,10 @@ public class AddRoleAssignmentsDialogBox extends DialogBox implements ClickListe
   }
 
 
-  public void show() {
-    rolesAssigned = false;
-    super.show();
-  }
-
-
-  public void onClick(Widget sender) {
-    if (sender == okButton) {
-      assignSelectedRoles();
-    } else if (sender == cancelButton) {
-      hide();
-    }
-  }
+//  public void show() {
+//    rolesAssigned = false;
+//    super.show();
+//  }
   
   private void assignSelectedRoles() {
     ProxyPentahoRole[] selectedRoles = getSelectedRoles();

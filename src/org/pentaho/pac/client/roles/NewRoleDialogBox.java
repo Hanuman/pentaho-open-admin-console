@@ -2,48 +2,44 @@ package org.pentaho.pac.client.roles;
 
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
+import org.pentaho.pac.client.common.ui.ConfirmDialog;
+import org.pentaho.pac.client.common.ui.ICallbackHandler;
 import org.pentaho.pac.client.common.ui.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.users.NewUserDialogBox;
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
 import org.pentaho.pac.common.users.DuplicateUserException;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class NewRoleDialogBox extends DialogBox implements ClickListener {
+public class NewRoleDialogBox extends ConfirmDialog {
 
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
-  Button okButton = new Button(MSGS.ok());
-  Button cancelButton = new Button(MSGS.cancel());
+
   RoleDetailsPanel roleDetailsPanel = new RoleDetailsPanel();
   boolean roleCreated = false;
   MessageDialog messageDialog = new MessageDialog( MSGS.error() );
   
   public NewRoleDialogBox() {
     super();
-    HorizontalPanel footerPanel = new HorizontalPanel();
-    footerPanel.add(okButton);
-    footerPanel.add(cancelButton);
     
-    VerticalPanel verticalPanel = new VerticalPanel();
-    verticalPanel.add(roleDetailsPanel);
-    verticalPanel.add(footerPanel);
+    setTitle(MSGS.addRole());
     
-    setText(MSGS.addRole());
+    final NewRoleDialogBox localThis = this;
+    roleDetailsPanel.setStyleName( "newRoleDialogBox.detailsPanel" ); //$NON-NLS-1$
+    addWidgetToClientArea( roleDetailsPanel );
     
-    verticalPanel.setWidth("250px"); //$NON-NLS-1$
-    roleDetailsPanel.setWidth("100%"); //$NON-NLS-1$
-    
-    setWidget(verticalPanel);
-    okButton.addClickListener(this);
-    cancelButton.addClickListener(this);
+    setOnOkHandler( new ICallbackHandler() {
+      public void onHandle( Object o ) {
+        localThis.createRole();
+      }
+    });
   }
 
   public String getDescription() {
@@ -62,18 +58,9 @@ public class NewRoleDialogBox extends DialogBox implements ClickListener {
     return roleDetailsPanel.getRoleNameTextBox();
   }
 
-  public Button getOkButton() {
-    return okButton;
-  }
-
-  public Button getCancelButton() {
-    return cancelButton;
-  }
-
   public boolean isRoleCreated() {
     return roleCreated;
   }
-
 
   public ProxyPentahoRole getRole() {
     return roleDetailsPanel.getRole();
@@ -83,14 +70,10 @@ public class NewRoleDialogBox extends DialogBox implements ClickListener {
     roleDetailsPanel.setRole(role);
   }
 
-  public void show() {
-    roleCreated = false;
-    super.show();
-  }
-  
-  public void setText(String text) {
-    super.setText(text);
-  }
+//  public void show() {
+//    roleCreated = false;
+//    super.show();
+//  }
   
   private boolean createRole() {
     if (getRoleName().trim().length() == 0) {
@@ -120,13 +103,5 @@ public class NewRoleDialogBox extends DialogBox implements ClickListener {
       }
     }
     return roleCreated;
-  }
-  
-  public void onClick(Widget sender) {
-    if (sender == okButton) {
-      createRole();
-    } else if (sender == cancelButton) {
-      hide();
-    }
   }
 }
