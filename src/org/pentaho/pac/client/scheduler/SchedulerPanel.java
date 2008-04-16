@@ -21,11 +21,11 @@ import java.util.List;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.MessageDialog;
+import org.pentaho.pac.client.common.util.StringUtils;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
@@ -156,24 +156,13 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
       int rowNum = jobIdx+1;
       table.setHTML( rowNum, 0, job.jobGroup + "<br/>" + job.jobName ); //$NON-NLS-1$
       table.setHTML( rowNum, 1, job.triggerGroup + "<br/>" + job.triggerName ); //$NON-NLS-1$
-      table.setHTML( rowNum, 2, defaultIfEmpty( job.description ) );
+      table.setHTML( rowNum, 2, StringUtils.defaultIfEmpty( job.description, "&nbsp" ) ); //$NON-NLS-1$
       table.setHTML( rowNum, 3, job.prevFireTime + "<br/>" + job.getNextFireTime() ); //$NON-NLS-1$
-      table.setHTML( rowNum, 4, defaultIfEmpty( job.triggerState ) );
+      table.setHTML( rowNum, 4, StringUtils.defaultIfEmpty( job.triggerState, "&nbsp" ) ); //$NON-NLS-1$
       
       VerticalPanel actionPanel = createActionPanel( job, rowNum, job.triggerState );
       table.setWidget( rowNum, 5, actionPanel );
     }
-  }
-  
-//TODO move to a client side utils class
-  /**
-   * mimics StringUtils.defaultIfEmpty()
-   * @param str
-   * @return
-   */
-  private static String defaultIfEmpty( String str )
-  {
-    return ( null == str || "".equals( str ) ) ? "&nbsp;" : str; //$NON-NLS-1$ //$NON-NLS-2$
   }
   
   private FlexTable createAllActionsTable()
