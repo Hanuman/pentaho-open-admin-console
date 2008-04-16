@@ -708,86 +708,78 @@ a:visited {
 /* users toggle button */
 .usersToggleBtn {
   background-image:url(style/images/users_off.png);
-  width: 36px;
-  height: 36px;
-  border-top: 2px solid #EEEEEE;
-  border-right: 2px solid #777777;
-  border-bottom: 2px solid #777777;
-  border-left: 2px solid #EEEEEE;
-  margin: 5px 0px 5px 10px; // top right bottom left
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 32px;
+  height: 32px;
+  margin: 5px 0px 0px 10px; /* top right bottom left*/
+  font-size: .8em;
 }
 .usersToggleBtn-up-hovering {
   background-image:url(style/images/users_over.png);
-  width: 36px;
-  height: 36px;
-  border-top: 2px solid #EEEEEE;
-  border-right: 2px solid #777777;
-  border-bottom: 2px solid #777777;
-  border-left: 2px solid #EEEEEE;
-  margin: 5px 0px 5px 10px; // top right bottom left
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 32px;
+  height: 32px;
+  margin: 5px 0px 0px 10px; /* top right bottom left*/
+  font-size: .8em;
 }
 .usersToggleBtn-down {
   background-image:url(style/images/users_selected.png);
-  width: 36px;
-  height: 36px;
-  border-top: 2px solid #777777;
-  border-right: 2px solid #EEEEEE;
-  border-bottom: 2px solid #EEEEEE;
-  border-left: 2px solid #777777;
-  margin: 5px 0px 5px 10px; // top right bottom left
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 32px;
+  height: 32px;
+  margin: 5px 0px 0px 10px; /* top right bottom left*/
+  font-size: .8em;
 }
 .usersToggleBtn-down-hovering {
   background-image:url(style/images/users_selected.png);
-  width: 36px;
-  height: 36px;
-  border-top: 2px solid #777777;
-  border-right: 2px solid #EEEEEE;
-  border-bottom: 2px solid #EEEEEE;
-  border-left: 2px solid #777777;
-  margin: 5px 0px 5px 10px; // top right bottom left
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 32px;
+  height: 32px;
+  margin: 5px 0px 0px 10px; /* top right bottom left*/
+  font-size: .8em;
 }
 
 
 /* roles toggle button */
 .rolesToggleBtn {
   background-image:url(style/images/roles_off.png);
-  width: 36px;
-  height: 36px;
-  border-top: 2px solid #EEEEEE;
-  border-right: 2px solid #777777;
-  border-bottom: 2px solid #777777;
-  border-left: 2px solid #EEEEEE;
-  margin: 5px 0px 5px 5px; // top right bottom left
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 32px;
+  height: 32px;
+  margin: 5px 0px 0px 10px; /* top right bottom left*/
+  font-size: .8em;
 }
 .rolesToggleBtn-up-hovering {
   background-image:url(style/images/roles_over.png);
-  width: 36px;
-  height: 36px;
-  border-top: 2px solid #EEEEEE;
-  border-right: 2px solid #777777;
-  border-bottom: 2px solid #777777;
-  border-left: 2px solid #EEEEEE;
-  margin: 5px 0px 5px 5px; // top right bottom left
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 32px;
+  height: 32px;
+  margin: 5px 0px 0px 10px; /* top right bottom left*/
+  font-size: .8em;
 }
 .rolesToggleBtn-down {
   background-image:url(style/images/roles_selected.png);
-  width: 36px;
-  height: 36px;
-  border-top: 2px solid #777777;
-  border-right: 2px solid #EEEEEE;
-  border-bottom: 2px solid #EEEEEE;
-  border-left: 2px solid #777777;
-  margin: 5px 0px 5px 5px; // top right bottom left
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 32px;
+  height: 32px;
+  margin: 5px 0px 0px 10px; /* top right bottom left*/
+  font-size: .8em;
 }
 .rolesToggleBtn-down-hovering {
   background-image:url(style/images/roles_selected.png);
-  width: 36px;
-  height: 36px;
-  border-top: 2px solid #777777;
-  border-right: 2px solid #EEEEEE;
-  border-bottom: 2px solid #EEEEEE;
-  border-left: 2px solid #777777;
-  margin: 5px 0px 5px 5px; // top right bottom left
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 32px;
+  height: 32px;
+  margin: 5px 0px 0px 10px; /* top right bottom left*/
+  font-size: .8em;
 }
 
 .logo{
@@ -1014,7 +1006,7 @@ a:visited {
 	border: 1px solid #95A22C;
 	margin-bottom: 10px;
 	vertical-align: top;
-	padding: 0px;	/* NOTE: making this value a positive integer seems to have no effect in IE. Instead, the cellpadding attribute on this element has been set to 10px*/
+	padding: 40px;	/* NOTE: making this value a positive integer seems to have no effect in IE. Instead, the cellpadding attribute on this element has been set to 10px*/
 }
 
 .basicDialog\.buttonPanel {
