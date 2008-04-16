@@ -176,14 +176,6 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String numIdleDbConnnections();
 
   /**
-   * Translated "Connection Test Successful.".
-   * 
-   * @return translated "Connection Test Successful."
-   * @gwt.key connectionTestSuccessful
-   */
-  String connectionTestSuccessful();
-
-  /**
    * Translated "Scheduler Status".
    * 
    * @return translated "Scheduler Status"
@@ -192,12 +184,28 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String schedulerStatus();
 
   /**
+   * Translated "Connection Test Successful.".
+   * 
+   * @return translated "Connection Test Successful."
+   * @gwt.key connectionTestSuccessful
+   */
+  String connectionTestSuccessful();
+
+  /**
    * Translated "Loading...".
    * 
    * @return translated "Loading..."
    * @gwt.key loading
    */
   String loading();
+
+  /**
+   * Translated "Are your sure you want to remove the selected user(s) from the selected role(s)?".
+   * 
+   * @return translated "Are your sure you want to remove the selected user(s) from the selected role(s)?"
+   * @gwt.key confirmRemoveRoleAssignmentMsg
+   */
+  String confirmRemoveRoleAssignmentMsg();
 
   /**
    * Translated "State".
@@ -304,23 +312,7 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String deleteRoles();
 
   /**
-   * Translated "Remove Roles".
-   * 
-   * @return translated "Remove Roles"
-   * @gwt.key removeRoles
-   */
-  String removeRoles();
-  
-  /**
-   * Translated "Remove Users".
-   * 
-   * @return translated "Remove Users"
-   * @gwt.key removeUsers
-   */
-  String removeUsers();
-  
-  /**
-   * Translated ""Are your sure you want to delete the selected data sources?"".
+   * Translated "Run Now".
    * 
    * @return translated "Run Now"
    * @gwt.key runNow
@@ -400,6 +392,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String jdbcDriverClass();
 
   /**
+   * Translated "Remove Users".
+   * 
+   * @return translated "Remove Users"
+   * @gwt.key removeUsers
+   */
+  String removeUsers();
+
+  /**
    * Translated "Suspend".
    * 
    * @return translated "Suspend"
@@ -462,6 +462,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key missingDbDriver
    */
   String missingDbDriver();
+
+  /**
+   * Translated "Remove Roles".
+   * 
+   * @return translated "Remove Roles"
+   * @gwt.key removeRoles
+   */
+  String removeRoles();
 
   /**
    * Translated "Delete Data Sources".
@@ -640,6 +648,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String confirmUserDeletionMsg();
 
   /**
+   * Translated "Error: onClick() trying to handle unrecognized widget.".
+   * 
+   * @return translated "Error: onClick() trying to handle unrecognized widget."
+   * @gwt.key invalidToggleButton
+   */
+  String invalidToggleButton();
+
+  /**
    * Translated "JNDI Name:".
    * 
    * @return translated "JNDI Name:"
@@ -808,9 +824,9 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String updateRole();
 
   /**
-   * Translated ""Assigned Roles"".
+   * Translated "Assigned Roles".
    * 
-   * @return translated ""Assigned Roles""
+   * @return translated "Assigned Roles"
    * @gwt.key assignedRoles
    */
   String assignedRoles();
@@ -822,14 +838,4 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key services
    */
   String services();
-  
-
-  /**
-   * Translated "Are your sure you want to remove the user from the selected roles?".
-   * 
-   * @return translated "Are your sure you want to remove the user from the selected roles?"
-   * @gwt.key confirmRemoveRoleAssignmentMsg
-   */
-  String confirmRemoveRoleAssignmentMsg();
-
 }

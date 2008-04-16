@@ -44,7 +44,6 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   ToggleButton adminToggleBtn = new ToggleButton(MSGS.administration());
   ToggleButton homeToggleBtn = new ToggleButton(MSGS.home());
-  ToggleButton testToggleBtn = new ToggleButton(MSGS.test());
   
   VerticalPanel leftVerticalPanel = new VerticalPanel();
   DockPanel centerPanel = new DockPanel();
@@ -78,11 +77,9 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
     
     homeToggleBtn.setStylePrimaryName("leftToggleButtons");
     adminToggleBtn.setStylePrimaryName("leftToggleButtons");
-    testToggleBtn.setStylePrimaryName("leftToggleButtons");
     
     homeToggleBtn.addClickListener(this);
     adminToggleBtn.addClickListener(this);
-    testToggleBtn.addClickListener(this);
     
 
     Label spacer = new Label();
@@ -90,7 +87,6 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
     leftVerticalPanel.setCellHeight(spacer, "20px");
     leftVerticalPanel.add(homeToggleBtn);
     leftVerticalPanel.add(adminToggleBtn);
-    leftVerticalPanel.add(testToggleBtn);
     
     spacer = new Label();
     leftVerticalPanel.add(spacer);
@@ -167,7 +163,6 @@ public void onClick(Widget sender) {
     if (sender == homeToggleBtn) {
       if (homeToggleBtn.isDown()) {
         adminToggleBtn.setDown(false);
-        testToggleBtn.setDown(false);
         deckPanel.showWidget(0);
       } else {
         homeToggleBtn.setDown(true);
@@ -175,16 +170,14 @@ public void onClick(Widget sender) {
     } else if (sender == adminToggleBtn) {
       if (adminToggleBtn.isDown()) {
         homeToggleBtn.setDown(false);
-        testToggleBtn.setDown(false);
         deckPanel.showWidget(1);
         int selectedTab = adminTabPanel.getDeckPanel().getVisibleWidget();
         onTabSelected( null, selectedTab );
       } else {
         adminToggleBtn.setDown(true);
       }
-    } else if (sender == testToggleBtn) {
-      homeToggleBtn.setDown(false);
-      adminToggleBtn.setDown(false);
+    } else {
+      throw new RuntimeException( MSGS.invalidToggleButton() );
     }
   }
   
