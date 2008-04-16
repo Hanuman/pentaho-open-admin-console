@@ -129,6 +129,7 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
 
     adminTabPanel.setWidth("97%");
     adminTabPanel.setHeight("100%");
+    adminTabPanel.getDeckPanel().setHeight("100%");
     
     usersAndRolesPanel.setWidth("100%");
     usersAndRolesPanel.setHeight("100%");
