@@ -72,14 +72,6 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String invalidTabIndex(String arg0);
 
   /**
-   * Translated "User List Filter:".
-   * 
-   * @return translated "User List Filter:"
-   * @gwt.key userListFilter
-   */
-  String userListFilter();
-
-  /**
    * Translated "Running".
    * 
    * @return translated "Running"
@@ -280,6 +272,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String fireTimeLastNext();
 
   /**
+   * Translated "Filter:".
+   * 
+   * @return translated "Filter:"
+   * @gwt.key filter
+   */
+  String filter();
+
+  /**
    * Translated "Refresh Reporting Metadata".
    * 
    * @return translated "Refresh Reporting Metadata"
@@ -432,6 +432,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String maxActiveDbConnections();
 
   /**
+   * Translated "Users".
+   * 
+   * @return translated "Users"
+   * @gwt.key users
+   */
+  String users();
+
+  /**
    * Translated "Test Connection".
    * 
    * @return translated "Test Connection"
@@ -496,14 +504,6 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String ok();
 
   /**
-   * Translated "Role List Filter:".
-   * 
-   * @return translated "Role List Filter:"
-   * @gwt.key roleListFilter
-   */
-  String roleListFilter();
-
-  /**
    * Translated "Job - Group / Name".
    * 
    * @return translated "Job - Group / Name"
@@ -544,20 +544,20 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String roleName();
 
   /**
-   * Translated "Delete Users".
-   * 
-   * @return translated "Delete Users"
-   * @gwt.key deleteUsers
-   */
-  String deleteUsers();
-
-  /**
    * Translated "Resume All Jobs".
    * 
    * @return translated "Resume All Jobs"
    * @gwt.key resumeAllJobs
    */
   String resumeAllJobs();
+
+  /**
+   * Translated "Delete Users".
+   * 
+   * @return translated "Delete Users"
+   * @gwt.key deleteUsers
+   */
+  String deleteUsers();
 
   /**
    * Translated "User already exists.".
@@ -614,6 +614,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key missingDbUserName
    */
   String missingDbUserName();
+
+  /**
+   * Translated "Click to edit users.".
+   * 
+   * @return translated "Click to edit users."
+   * @gwt.key clickEditUsers
+   */
+  String clickEditUsers();
 
   /**
    * Translated "User does not exist: {0}".
@@ -678,6 +686,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key missingDbUrl
    */
   String missingDbUrl();
+
+  /**
+   * Translated "Click to edit roles.".
+   * 
+   * @return translated "Click to edit roles."
+   * @gwt.key clickEditRoles
+   */
+  String clickEditRoles();
 
   /**
    * Translated "Add Data Source".
