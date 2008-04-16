@@ -118,22 +118,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
     } else {
       remove( loading );
     }
-    
-// TODO !!!
-    Hyperlink a = new Hyperlink();
-    a.setText( "dlg test" );
-    
-    a.addClickListener( new ClickListener() {
-      public void onClick( Widget sender ) {
-        MessageDialog b2 = new MessageDialog( "title xxx",
-            "xxx a really long message message with lots of information. so lets see what happens.xxx a really long message message with lots of information. so lets see what happens.xxx a really long message message with lots of information. so lets see what happens.xxx a really long message message with lots of information. so lets see what happens.xxx a really long message message with lots of information. so lets see what happens." );
-        b2.show();
-      }
-    } );
-    add( a );
-    
-    
-    
+
     userInstructionLabel = new Label( USER_INSTRUCTION );
     userInstructionLabel.setStylePrimaryName( "schedulerInstructionLabel" ); //$NON-NLS-1$
     add( userInstructionLabel );
