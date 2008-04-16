@@ -13,7 +13,7 @@ public class BasicDialog extends DialogBox {
   private VerticalPanel clientPanel = null;
 
   public BasicDialog() {
-    this( "" );
+    this( "" ); //$NON-NLS-1$
   }
 
   public BasicDialog( String title ) {
@@ -25,14 +25,10 @@ public class BasicDialog extends DialogBox {
     rootPanel.setStylePrimaryName("basicDialog.rootPanel"); //$NON-NLS-1$
     
     clientPanel = new VerticalPanel();
-    clientPanel.setSpacing( 0 );
+    clientPanel.setSpacing( 10 );
+    setClientSize( "250px", "140px" ); //$NON-NLS-1$ //$NON-NLS-2$
     clientPanel.setStylePrimaryName("basicDialog.clientPanel"); //$NON-NLS-1$
-    
-//    clientPanel.setCellWidth(msgLabel, "100%"); //$NON-NLS-1$
-//    clientPanel.setCellHeight(msgLabel, "100%"); //$NON-NLS-1$
-    clientPanel.setSpacing(10);
-    clientPanel.setWidth("250px"); //$NON-NLS-1$
-    clientPanel.setHeight("150px"); //$NON-NLS-1$
+
     rootPanel.add( clientPanel );
     
     btnPanel = new HorizontalPanel();
@@ -41,19 +37,33 @@ public class BasicDialog extends DialogBox {
     rootPanel.setHorizontalAlignment( HasHorizontalAlignment.ALIGN_RIGHT );
     rootPanel.add(btnPanel);
     
-    
     setWidget(rootPanel);
+  }
+  
+  protected void setClientSize( String width, String height ) {
+    clientPanel.setWidth( width );
+    clientPanel.setHeight( height );
   }
   
   protected void addButton( Button btn )
   {
-    btn.addStyleName( "basicDialog.button" );
+    btn.addStyleName( "basicDialog.button" ); //$NON-NLS-1$
     this.btnPanel.add( btn );
   }
   
   protected void addWidgetToClientArea( Widget widget )
   {
     this.clientPanel.add( widget );
+  }
+  
+  protected void removeRowFromClientArea( int row )
+  {
+    this.clientPanel.remove( row );
+  }
+  
+  protected void insertRowToClientArea( Widget widget, int beforeRow )
+  {
+    this.clientPanel.insert( widget, beforeRow );
   }
   
   public void setTitle( String title ) {
