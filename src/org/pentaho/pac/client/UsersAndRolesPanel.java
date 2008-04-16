@@ -1,5 +1,6 @@
 package org.pentaho.pac.client;
 
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.roles.RolesPanel;
 import org.pentaho.pac.client.users.UsersPanel;
 
@@ -13,22 +14,17 @@ import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 
 public class UsersAndRolesPanel extends DockPanel implements ClickListener {
+
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
+
+	ToggleButton usersButton = new ToggleButton();// MSGS.users(), MSGS.users() );
+  ToggleButton rolesButton = new ToggleButton();// MSGS.roles(), MSGS.roles() );
   
-//  PacImageBundle pacImageBundle = (PacImageBundle) GWT.create(PacImageBundle.class);
-//
-//  ToggleButton usersButton = new ToggleButton( 
-//      pacImageBundle.usersOffIcon().createImage(),
-//      pacImageBundle.usersSelectedIcon().createImage() );
-//  ToggleButton rolesButton = new ToggleButton( 
-//      pacImageBundle.rolesOffIcon().createImage(),
-//      pacImageBundle.rolesSelectedIcon().createImage() );
-  
-  ToggleButton usersButton = new ToggleButton();
-  ToggleButton rolesButton = new ToggleButton();
   DeckPanel deckPanel = new DeckPanel();
   UsersPanel usersPanel = new UsersPanel();
   RolesPanel rolesPanel = new RolesPanel();
   
+  // TODO sbarkdull, w/java 5 make it an enum
   public static final int USER_PANEL_ID = 0;
   public static final int ROLE_PANEL_ID = 1;
   
@@ -38,6 +34,9 @@ public class UsersAndRolesPanel extends DockPanel implements ClickListener {
     horizontalPanel.add(rolesButton);
     add(horizontalPanel, DockPanel.NORTH);
     setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+
+    usersButton.setTitle( MSGS.clickEditUsers() );
+    rolesButton.setTitle( MSGS.clickEditRoles() );
     
     usersButton.setStylePrimaryName( "usersToggleBtn" ); //$NON-NLS-1$
     rolesButton.setStylePrimaryName( "rolesToggleBtn" ); //$NON-NLS-1$
