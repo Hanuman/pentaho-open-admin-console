@@ -131,7 +131,7 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     userListPanel.add(headerDockPanel, DockPanel.NORTH);
     userListPanel.add(usersList, DockPanel.CENTER);    
     userListPanel.add(filterTextBox, DockPanel.SOUTH  );
-    userListPanel.add(new Label(MSGS.userListFilter()), DockPanel.SOUTH );
+    userListPanel.add(new Label(MSGS.filter()), DockPanel.SOUTH );
     
     userListPanel.setCellHeight(usersList, "100%"); //$NON-NLS-1$
     userListPanel.setCellWidth(usersList, "100%"); //$NON-NLS-1$

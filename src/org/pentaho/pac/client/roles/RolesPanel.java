@@ -128,7 +128,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     roleListPanel.add(headerDockPanel, DockPanel.NORTH);
     roleListPanel.add(rolesList, DockPanel.CENTER);
     roleListPanel.add(filterTextBox, DockPanel.SOUTH  );
-    roleListPanel.add(new Label(MSGS.roleListFilter()), DockPanel.SOUTH );
+    roleListPanel.add(new Label(MSGS.filter()), DockPanel.SOUTH );
 
     roleListPanel.setCellHeight(rolesList, "100%"); //$NON-NLS-1$
     roleListPanel.setCellWidth(rolesList, "100%"); //$NON-NLS-1$
