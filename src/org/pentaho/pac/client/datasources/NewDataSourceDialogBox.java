@@ -11,7 +11,7 @@ import org.pentaho.pac.common.datasources.PentahoDataSource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -21,18 +21,32 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
 
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   Button testButton;
-  DataSourceDetailsPanel dataSourceDetailsPanel = new DataSourceDetailsPanel();
+  DataSourceGeneralPanel dataSourceGeneralPanel = new DataSourceGeneralPanel();
+
+  DataSourceAdvancePanel dataSourceAdvancePanel = new DataSourceAdvancePanel();
+  DisclosurePanel advancePanelOption = new DisclosurePanel("Advance");
+
   boolean dataSourceCreated = false;
   MessageDialog messageDialog = new MessageDialog( MSGS.error() );
-  
+
   public NewDataSourceDialogBox() {
     super();
-
     setTitle( MSGS.addDataSource() );
-    
     final NewDataSourceDialogBox localThis = this;
-    dataSourceDetailsPanel.setStyleName( "newDataSourceDialogBox.detailsPanel" ); //$NON-NLS-1$
-    addWidgetToClientArea( dataSourceDetailsPanel );
+    VerticalPanel verticalPanel = new VerticalPanel();
+    verticalPanel.add(dataSourceGeneralPanel);
+    advancePanelOption.add(dataSourceAdvancePanel);
+    advancePanelOption.setWidth("100%");
+    verticalPanel.setSpacing(4);
+    verticalPanel.add(advancePanelOption);
+    verticalPanel.setSpacing(4);    
+
+    verticalPanel.setWidth("250px");
+    dataSourceGeneralPanel.setWidth("100%");
+    dataSourceAdvancePanel.setWidth("100%");
+    
+    verticalPanel.setStyleName( "newDataSourceDialogBox.detailsPanel" ); //$NON-NLS-1$
+    addWidgetToClientArea( verticalPanel );
     testButton = new Button(MSGS.test(), new ClickListener() {
       public void onClick(Widget sender) {
         localThis.testDataSourceConnection();
@@ -45,153 +59,185 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
         localThis.createDataSource();
       }
     });
+
   }
 
   public boolean isDataSourceCreated() {
     return dataSourceCreated;
   }
 
-  public PentahoDataSource getDataSource() {
-    return dataSourceDetailsPanel.getDataSource();
+  private PentahoDataSource getNormalDataSource() {
+    return dataSourceGeneralPanel.getDataSource();
   }
 
+  public PentahoDataSource getDataSource() {
+    PentahoDataSource normalDataSource = getNormalDataSource();
+    PentahoDataSource advanceDataSource = getAdvanceDataSource();
+    PentahoDataSource dataSource = consolidateNormalAndAdvance(normalDataSource, advanceDataSource);
+    return dataSource;
+  }
+
+  private PentahoDataSource getAdvanceDataSource() {
+    return dataSourceAdvancePanel.getDataSource();
+  }
 
   public String getDriverClass() {
-    return dataSourceDetailsPanel.getDriverClass();
+    return dataSourceGeneralPanel.getDriverClass();
   }
-
 
   public TextBox getDriverClassTextBox() {
-    return dataSourceDetailsPanel.getDriverClassTextBox();
+    return dataSourceGeneralPanel.getDriverClassTextBox();
   }
-
 
   public int getIdleConnections() {
-    return dataSourceDetailsPanel.getIdleConnections();
+    return dataSourceAdvancePanel.getIdleConnections();
   }
-
 
   public TextBox getIdleConnectionsTextBox() {
-    return dataSourceDetailsPanel.getIdleConnectionsTextBox();
+    return dataSourceAdvancePanel.getIdleConnectionsTextBox();
   }
-
 
   public String getJndiName() {
-    return dataSourceDetailsPanel.getJndiName();
+    return dataSourceGeneralPanel.getJndiName();
   }
-
 
   public TextBox getJndiNameTextBox() {
-    return dataSourceDetailsPanel.getJndiNameTextBox();
+    return dataSourceGeneralPanel.getJndiNameTextBox();
   }
-
 
   public int getMaxActiveConnections() {
-    return dataSourceDetailsPanel.getMaxActiveConnections();
+    return dataSourceAdvancePanel.getMaxActiveConnections();
   }
-
 
   public TextBox getMaxActiveConnectionsTextBox() {
-    return dataSourceDetailsPanel.getMaxActiveConnectionsTextBox();
+    return dataSourceAdvancePanel.getMaxActiveConnectionsTextBox();
   }
-
 
   public String getPassword() {
-    return dataSourceDetailsPanel.getPassword();
+    return dataSourceGeneralPanel.getPassword();
   }
-
 
   public PasswordTextBox getPasswordTextBox() {
-    return dataSourceDetailsPanel.getPasswordTextBox();
+    return dataSourceGeneralPanel.getPasswordTextBox();
   }
-
 
   public String getUrl() {
-    return dataSourceDetailsPanel.getUrl();
+    return dataSourceGeneralPanel.getUrl();
   }
-
 
   public TextBox getUrlTextBox() {
-    return dataSourceDetailsPanel.getUrlTextBox();
+    return dataSourceGeneralPanel.getUrlTextBox();
   }
-
 
   public String getUserName() {
-    return dataSourceDetailsPanel.getUserName();
+    return dataSourceGeneralPanel.getUserName();
   }
-
 
   public TextBox getUserNameTextBox() {
-    return dataSourceDetailsPanel.getUserNameTextBox();
+    return dataSourceGeneralPanel.getUserNameTextBox();
   }
-
 
   public String getValidationQuery() {
-    return dataSourceDetailsPanel.getValidationQuery();
+    return dataSourceAdvancePanel.getValidationQuery();
   }
-
 
   public TextBox getValidationQueryTextBox() {
-    return dataSourceDetailsPanel.getValidationQueryTextBox();
+    return dataSourceAdvancePanel.getValidationQueryTextBox();
   }
-
 
   public void setDriverClass(String className) {
-    dataSourceDetailsPanel.setDriverClass(className);
+    dataSourceGeneralPanel.setDriverClass(className);
   }
-
 
   public void setIdleConnections(int count) {
-    dataSourceDetailsPanel.setIdleConnections(count);
+    dataSourceAdvancePanel.setIdleConnections(count);
   }
-
 
   public void setJndiName(String jndiName) {
-    dataSourceDetailsPanel.setJndiName(jndiName);
+    dataSourceGeneralPanel.setJndiName(jndiName);
   }
-
 
   public void setMaxActiveConnections(int count) {
-    dataSourceDetailsPanel.setMaxActiveConnections(count);
+    dataSourceAdvancePanel.setMaxActiveConnections(count);
   }
-
 
   public void setPassword(String password) {
-    dataSourceDetailsPanel.setPassword(password);
+    dataSourceGeneralPanel.setPassword(password);
   }
-
 
   public void setUrl(String url) {
-    dataSourceDetailsPanel.setUrl(url);
+    dataSourceGeneralPanel.setUrl(url);
   }
-
 
   public void setUserName(String userName) {
-    dataSourceDetailsPanel.setUserName(userName);
+    dataSourceGeneralPanel.setUserName(userName);
   }
 
+  private void setAdvanceDataSource(PentahoDataSource dataSource) {
+    dataSourceGeneralPanel.setDataSource(dataSource);
+  }
 
   public void setDataSource(PentahoDataSource dataSource) {
-    dataSourceDetailsPanel.setDataSource(dataSource);
+    setAdvanceDataSource(dataSource);
+    setNormalDataSource(dataSource);
   }
 
+  private void setNormalDataSource(PentahoDataSource dataSource) {
+    dataSourceAdvancePanel.setDataSource(dataSource);
+  }
+
+  private PentahoDataSource consolidateNormalAndAdvance(PentahoDataSource normalDataSource,
+      PentahoDataSource advanceDataSource) {
+    PentahoDataSource dataSource = new PentahoDataSource();
+    dataSource.setDriverClass(normalDataSource.getDriverClass());
+    dataSource.setPassword(normalDataSource.getPassword());
+    dataSource.setJndiName(normalDataSource.getJndiName());
+    dataSource.setUrl(normalDataSource.getUrl());
+    dataSource.setUserName(normalDataSource.getUserName());
+    int idleConn = advanceDataSource.getIdleConn();
+    int maxActConn = advanceDataSource.getMaxActConn();
+    long wait = advanceDataSource.getWait();
+    String query = advanceDataSource.getQuery();
+
+    if (idleConn >= 0) {
+      dataSource.setIdleConn(idleConn);
+    } else {
+      dataSource.setIdleConn(0);
+    }
+    if (maxActConn >= 0) {
+      dataSource.setMaxActConn(maxActConn);
+    } else {
+      dataSource.setMaxActConn(0);
+    }
+    if (query != null && query.length() > 0) {
+      dataSource.setQuery(query);
+    } else {
+      dataSource.setQuery("");
+    }
+    if (wait >= 0) {
+      dataSource.setWait(wait);
+    } else {
+      dataSource.setWait(0);
+    }
+    return dataSource;
+  }
 
   public void show() {
     dataSourceCreated = false;
     super.show();
   }
-  
+
   private boolean createDataSource() {
     if (getJndiName().trim().length() == 0) {
       messageDialog.setMessage(MSGS.invalidConnectionName());
       messageDialog.center();
-    } else if (getUrl().trim().length() == 0) { 
+    } else if (getUrl().trim().length() == 0) {
       messageDialog.setMessage(MSGS.missingDbUrl());
       messageDialog.center();
-    } else if (getDriverClass().trim().length() == 0) { 
+    } else if (getDriverClass().trim().length() == 0) {
       messageDialog.setMessage(MSGS.missingDbDriver());
       messageDialog.center();
-    } else if (getUserName().trim().length() == 0) { 
+    } else if (getUserName().trim().length() == 0) {
       messageDialog.setMessage(MSGS.missingDbUserName());
       messageDialog.center();
     } else {
@@ -217,15 +263,16 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
     }
     return dataSourceCreated;
   }
-  
+
   public void onClick(Widget sender) {
     if(sender == testButton) {
-      testDataSourceConnection();      
+      testDataSourceConnection();
     }
   }
-  
+
   private void testDataSourceConnection() {
-    final PentahoDataSource dataSource = dataSourceDetailsPanel.getDataSource();
+    final PentahoDataSource dataSource = getDataSource();
+
     AsyncCallback callback = new AsyncCallback() {
       public void onSuccess(Object result) {
         messageDialog.setText(MSGS.testConnection());
@@ -235,12 +282,12 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
 
       public void onFailure(Throwable caught) {
         messageDialog.setText(MSGS.testConnection());
-        messageDialog.setMessage( caught.getMessage() );
+        messageDialog.setMessage(caught.getMessage());
         messageDialog.center();
       }
     };
     PacServiceFactory.getPacService().testDataSourceConnection(dataSource, callback);
-    
+
   }
-  
+
 }

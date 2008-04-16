@@ -3,7 +3,7 @@ package org.pentaho.pac.client.i18n;
 
 /**
  * Interface to represent the messages contained in resource  bundle:
- * 	C:/projects/pentaho1.6/pentaho-open-admin-console/src/org/pentaho/pac/client/i18n/PacLocalizedMessages.properties'.
+ *  C:/projects/pentaho1.6/pentaho-open-admin-console/src/org/pentaho/pac/client/i18n/PacLocalizedMessages.properties'.
  */
 public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Messages {
   
@@ -54,6 +54,16 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key errorDeletingDataSource
    */
   String errorDeletingDataSource();
+
+  /**
+   * Translated "Advance".
+   * 
+   * @return translated "Advance"
+   * @gwt.key advanceDb
+   */
+  String advanceDb();
+
+
 
   /**
    * Translated "None".
