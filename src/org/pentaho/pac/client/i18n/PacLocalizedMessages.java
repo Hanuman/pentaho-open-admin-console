@@ -40,6 +40,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String scheduleDailyRepositoryCleaning();
 
   /**
+   * Translated "No scheduled jobs.".
+   * 
+   * @return translated "No scheduled jobs."
+   * @gwt.key noScheduledJobs
+   */
+  String noScheduledJobs();
+
+  /**
    * Translated ""Error Deleting Data Source"".
    * 
    * @return translated ""Error Deleting Data Source""
