@@ -33,7 +33,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class SchedulerPanel extends VerticalPanel implements ClickListener {
+public class SchedulerPanel extends VerticalPanel {
 
   private ScrollPanel jobsTableScrollPanel = null;
   private FlexTable jobsTable = null;
@@ -41,6 +41,8 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
   private Label userInstructionLabel = null;
   private boolean isInitialized = false;
   private String resumeSuspendState = "&nbsp;"; //$NON-NLS-1$
+  private static final int INVALID_SCROLL_POS = -1;
+  private int currScrollPos = INVALID_SCROLL_POS;
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   
   private static final String USER_INSTRUCTION = MSGS.schedulerUserInstruction();
@@ -58,10 +60,6 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
   {
     this.setStylePrimaryName( "schedulerPanel" ); //$NON-NLS-1$
   }
-  
-  public void onClick( Widget sender ) {
-  }
-
 
   public void refresh() {
     if ( !isInitialized ) {
@@ -79,6 +77,10 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
               allActionsTable.setHTML( 2, 1, resumeSuspendState );
               isInitialized = true;
               updateSchedulerPausedStatus();
+              if ( INVALID_SCROLL_POS != currScrollPos ) { 
+                jobsTableScrollPanel.setScrollPosition( currScrollPos );
+                currScrollPos = INVALID_SCROLL_POS;
+              }
             }
       
             public void onFailure(Throwable caught) {
@@ -126,7 +128,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
     allActionsTable = createAllActionsTable();
     add( allActionsTable );
 
-    jobsTable = createJobsTable( jobList );
+    createJobsTable( jobList );
     jobsTableScrollPanel = new ScrollPanel( jobsTable );
     // TODO sbarkdull, move the 230px to style sheet
     jobsTableScrollPanel.setHeight( "230px" ); //$NON-NLS-1$
@@ -135,21 +137,36 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
   
   private void addJobListToTable( List/*<Job>*/ jobList, FlexTable table )
   {
-    for ( int jobIdx=0; jobIdx< jobList.size(); ++jobIdx ) {
-      Job job = (Job)jobList.get( jobIdx );
-
-      int rowNum = jobIdx+1;
-      table.setHTML( rowNum, 0, job.jobGroup + "<br/>" + job.jobName ); //$NON-NLS-1$
-      table.setHTML( rowNum, 1, job.triggerGroup + "<br/>" + job.triggerName ); //$NON-NLS-1$
-      table.setHTML( rowNum, 2, StringUtils.defaultIfEmpty( job.description, "&nbsp" ) ); //$NON-NLS-1$
-      table.setHTML( rowNum, 3, job.prevFireTime + "<br/>" + job.getNextFireTime() ); //$NON-NLS-1$
-      table.setHTML( rowNum, 4, StringUtils.defaultIfEmpty( job.triggerState, "&nbsp" ) ); //$NON-NLS-1$
-      
-      VerticalPanel actionPanel = createActionPanel( job, rowNum, job.triggerState );
-      table.setWidget( rowNum, 5, actionPanel );
+    if ( jobList.size() > 0 ) {
+      for ( int jobIdx=0; jobIdx< jobList.size(); ++jobIdx ) {
+        Job job = (Job)jobList.get( jobIdx );
+  
+        int rowNum = jobIdx+1;
+        table.setHTML( rowNum, 0, job.jobGroup + "<br/>" + job.jobName ); //$NON-NLS-1$
+        table.setHTML( rowNum, 1, job.triggerGroup + "<br/>" + job.triggerName ); //$NON-NLS-1$
+        table.setHTML( rowNum, 2, StringUtils.defaultIfEmpty( job.description, "&nbsp" ) ); //$NON-NLS-1$
+        table.setHTML( rowNum, 3, job.prevFireTime + "<br/>" + job.getNextFireTime() ); //$NON-NLS-1$
+        table.setHTML( rowNum, 4, StringUtils.defaultIfEmpty( job.triggerState, "&nbsp" ) ); //$NON-NLS-1$
+        
+        VerticalPanel actionPanel = createActionPanel( job, job.triggerState );
+        table.setWidget( rowNum, 5, actionPanel );
+      }
+    } else {
+      showNoScheduledJobsRow();
     }
   }
   
+  private void showNoScheduledJobsRow()
+  {
+    if ( jobsTable.getRowCount() <= 1 ) {
+      jobsTable.setHTML( 1, 0, MSGS.noScheduledJobs() );
+      jobsTable.setHTML( 1, 1, "&nbsp;" ); //$NON-NLS-1$
+      jobsTable.setHTML( 1, 2, "&nbsp;" ); //$NON-NLS-1$
+      jobsTable.setHTML( 1, 3, "&nbsp;" ); //$NON-NLS-1$
+      jobsTable.setHTML( 1, 4, "&nbsp;" ); //$NON-NLS-1$
+      jobsTable.setHTML( 1, 5, "&nbsp;" ); //$NON-NLS-1$
+    }
+  }
   private FlexTable createAllActionsTable()
   {
     FlexTable t = new FlexTable();
@@ -184,7 +201,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
     return t;
   }
   
-  private VerticalPanel createActionPanel( Job job, int rowNum, String triggerState ) {
+  private VerticalPanel createActionPanel( Job job, String triggerState ) {
     VerticalPanel p = new VerticalPanel();
     p.setStylePrimaryName( "actionCellPanel" ); //$NON-NLS-1$
     p.setSpacing(0);
@@ -193,7 +210,7 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
       ? createResumeHyperlink( job.getJobName(), job.getJobGroup() )
       : createSuspendHyperlink( job.getJobName(), job.getJobGroup() );
     p.add( a );
-    a = createDeleteHyperlink( job.getJobName(), job.getJobGroup(), rowNum );
+    a = createDeleteHyperlink( job.getJobName(), job.getJobGroup() );
     p.add( a );
     a = createRunNowHyperlink( job.getJobName(), job.getJobGroup() );
     p.add( a );
@@ -255,11 +272,10 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
     
     return a;
   }
-  private Hyperlink createDeleteHyperlink( final String jobName, final String jobGroup, int rowNum ) {
+  private Hyperlink createDeleteHyperlink( final String jobName, final String jobGroup ) {
     Hyperlink a = new Hyperlink();
     a.setText( MSGS.delete() );
     
-    final int localRowNum = rowNum;
     a.addClickListener( new ClickListener() {
       public void onClick( Widget sender ) {
         ((Hyperlink)sender).setText( MSGS.working() );
@@ -268,8 +284,8 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
             jobGroup,
             new AsyncCallback() {
               public void onSuccess( Object o ) {
+                currScrollPos = jobsTableScrollPanel.getScrollPosition();
                 forceRefresh();
-                jobsTable.removeRow( localRowNum );
               }
         
               public void onFailure(Throwable caught) {
@@ -403,26 +419,24 @@ public class SchedulerPanel extends VerticalPanel implements ClickListener {
     allActionsTable.setHTML( 1, 1, statusMsg );
   }
   
-  private FlexTable createJobsTable( List/*<Job>*/ jobList ) {
+  private void createJobsTable( List/*<Job>*/ jobList ) {
     
-    FlexTable table = new FlexTable();
-    table.setStylePrimaryName( "jobsTable" ); //$NON-NLS-1$
-    table.setCellPadding( 0 );
-    table.setCellSpacing( 0 );
-    addJobsTableHeader( table );
+    jobsTable = new FlexTable();
+    jobsTable.setStylePrimaryName( "jobsTable" ); //$NON-NLS-1$
+    jobsTable.setCellPadding( 0 );
+    jobsTable.setCellSpacing( 0 );
+    addJobsTableHeader();
     
-    addJobListToTable( jobList, table );
-    
-    return table;
+    addJobListToTable( jobList, jobsTable );
   }
   
-  private void addJobsTableHeader( FlexTable t )
+  private void addJobsTableHeader()
   {
     for ( int ii=0; ii<COLUMN_HEADER_TITLE.length; ++ii ) {
       String title = COLUMN_HEADER_TITLE[ii];
-      //t.addCell( 0 );
-      t.setText(0, ii, title );
+      //jobsTable.addCell( 0 );
+      jobsTable.setText(0, ii, title );
     }
-    t.getRowFormatter().setStylePrimaryName( 0, "jobsTableHeader" ); //$NON-NLS-1$
+    jobsTable.getRowFormatter().setStylePrimaryName( 0, "jobsTableHeader" ); //$NON-NLS-1$
   }
 }
