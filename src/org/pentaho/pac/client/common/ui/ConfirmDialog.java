@@ -11,6 +11,7 @@ public class ConfirmDialog extends MessageDialog {
   
   public ConfirmDialog( String title, String msg ) {
     super( title, msg );
+    
     final ConfirmDialog localThis = this;
     cancelBtn = new Button(MSGS.cancel(), new ClickListener() {
       public void onClick(Widget sender) {
