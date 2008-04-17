@@ -89,12 +89,14 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
         MessageDialog messageDialog = new MessageDialog(MSGS.services(), 
             result.toString() );
         messageDialog.center();
+        ((Button)sender).setEnabled(true);
       }
 
       public void onFailure(Throwable caught) {
         MessageDialog messageDialog = new MessageDialog(MSGS.error(), 
             caught.getMessage() );
         messageDialog.center();
+        ((Button)sender).setEnabled(true);
       }
     }; // end AsyncCallback
 
