@@ -697,7 +697,114 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
     timer.schedule(1000);
   }
   
+  public void testAddUsersToRole() {
+    testCreateUser();
+    testCreateRole();
+    // we're going to need to wait a few seconds to let the async. call complete before we check
+    // the users list to see if it has been populated with users. We'll create a timer that we'll 
+    // schedule for future execution. When the timer is executed it will make sure the users list
+    // has been populated.
+    Timer timer = new Timer() {
+      public void run() {
+        
+        ProxyPentahoRole[] roles = new ProxyPentahoRole[1];
+        ProxyPentahoRole role = new ProxyPentahoRole();
+        String description = "poweruser";
+        String name = "poweruser";
+        role.setDescription(description);
+        role.setName(name);
+        roles[0] = role;
+        ProxyPentahoUser user  = new ProxyPentahoUser();
+        String uDescription = "myuser";
+        boolean enabled = true;
+        String uName = "hibuser";
+        String password = "password";
+        user.setDescription(uDescription);
+        user.setEnabled(enabled);
+        user.setName(uName);
+        user.setPassword(password);
+
+        AsyncCallback callback = new AsyncCallback() {
+          public void onSuccess(Object result) {
+            assertTrue(true);
+          }
+
+          public void onFailure(Throwable caught) {
+            fail();
+          }
+        };
+        UserAndRoleMgmtService.instance().setRoles(user, roles, callback);
+
+        // Finish this test. This will allow the test method to no longer be delayed in finishing.
+        testDeleteUser();
+        testDeleteRoles();
+        finishTest();
+      }
+    };
+
+    // Delay the completion of this test method for some time, so that the timer can run and the 
+    // results can be checked. If the finishTest() method is not called before this timer expires
+    // and exception will be thrown and this test case will fail.
+    delayTestFinish(30000);
+
+    // Schedule the timer to fire in a few seconds. Again, we need to wait a bit to allow the async call 
+    // to return results.
+    timer.schedule(1000);
+  }
   
+  public void testAddRolesToUser() {
+    testCreateUser();
+    testCreateRole();
+
+    // we're going to need to wait a few seconds to let the async. call complete before we check
+    // the users list to see if it has been populated with users. We'll create a timer that we'll 
+    // schedule for future execution. When the timer is executed it will make sure the users list
+    // has been populated.
+    Timer timer = new Timer() {
+      public void run() {
+        ProxyPentahoUser[] users = new ProxyPentahoUser[1];
+        ProxyPentahoRole role = new ProxyPentahoRole();
+        String description = "poweruser";
+        String name = "poweruser";
+        role.setDescription(description);
+        role.setName(name);
+        ProxyPentahoUser user  = new ProxyPentahoUser();
+        String uDescription = "myuser";
+        boolean enabled = true;
+        String uName = "hibuser";
+        String password = "password";
+        user.setDescription(uDescription);
+        user.setEnabled(enabled);
+        user.setName(uName);
+        user.setPassword(password);
+        users[0] = user;
+        AsyncCallback callback = new AsyncCallback() {
+          public void onSuccess(Object result) {
+            assertTrue(true);
+          }
+
+          public void onFailure(Throwable caught) {
+            fail();
+          }
+        };
+        UserAndRoleMgmtService.instance().setUsers(role, users, callback);
+        testDeleteUser();
+        testDeleteRoles();
+
+        // Finish this test. This will allow the test method to no longer be delayed in finishing.
+        finishTest();
+      }
+    };
+
+    // Delay the completion of this test method for some time, so that the timer can run and the 
+    // results can be checked. If the finishTest() method is not called before this timer expires
+    // and exception will be thrown and this test case will fail.
+    delayTestFinish(30000);
+
+    // Schedule the timer to fire in a few seconds. Again, we need to wait a bit to allow the async call 
+    // to return results.
+    timer.schedule(1000);
+  }
 
   
 }
