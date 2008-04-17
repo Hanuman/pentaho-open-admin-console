@@ -22,22 +22,26 @@ import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.ui.GroupBox;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * A panel that contains HTML, and which can attach child widgets to identified
  * elements within that HTML.
  */
-public class HomePanel extends HorizontalPanel {
+public class HomePanel extends SimplePanel {
 
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   private static int sUid;
   private String htmlContent = null;
+  private GroupBox groupbox;
+  
   /**
    * A helper method for creating unique IDs for elements within dynamically-
    * generated HTML. This is important because no two elements in a document
@@ -56,6 +60,10 @@ public class HomePanel extends HorizontalPanel {
    * @param html the panel's HTML
    */
   public HomePanel(String url) {
+    groupbox = new GroupBox("Welcome");
+    groupbox.setStylePrimaryName("homeGroupBox");
+    this.add(groupbox);
+    
 	 PacServiceAsync pacService = PacServiceFactory.getPacService();
 	 pacService.getHomePage(url, new AsyncCallback() {
 		 public void onFailure(Throwable caught) {
@@ -67,49 +75,13 @@ public class HomePanel extends HorizontalPanel {
 		 }
 		 public void onSuccess(Object result) {
       htmlContent = (String) result;
-      setElement(DOM.createDiv());
-      DOM.setInnerHTML(getElement(), htmlContent);
+      SimplePanel tempPanel = new SimplePanel();
+      
+      DOM.setInnerHTML(tempPanel.getElement(), htmlContent);
+      groupbox.setContent(tempPanel);
 		 }
 	 });
 
   }
 
-  /**
-   * Adds a child widget to the panel, contained within the HTML element
-   * specified by a given id.
-   * 
-   * @param widget the widget to be added
-   * @param id the id of the element within which it will be contained
-   */
-  public void add(Widget widget, String id) {
-    Element elem = getElementById(getElement(), id);
-    if (elem == null) {
-      throw new NoSuchElementException(id);
-    }
-
-    super.add(widget, elem);
-  }
-
-  /*
-   * Implements getElementById() downward from the given element. We need to do
-   * this because {@link #add(Widget, String)} must often be called before the
-   * panel is attached to the DOM, so {@link Dom#getElementById} won't yet work.
-   */
-  private Element getElementById(Element elem, String id) {
-    String elemId = DOM.getElementProperty(elem, "id"); //$NON-NLS-1$
-    if ((elemId != null) && elemId.equals(id)) {
-      return elem;
-    }
-
-    Element child = DOM.getFirstChild(elem);
-    while (child != null) {
-      Element ret = getElementById(child, id);
-      if (ret != null) {
-        return ret;
-      }
-      child = DOM.getNextSibling(child);
-    }
-
-    return null;
-  }
 }

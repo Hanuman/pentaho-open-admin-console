@@ -387,12 +387,15 @@ a:visited {
 }
 
 .gwt-TabPanelBottom {
+		background-color:#EDEDED;
+		border-color:#95A22C;
+		border-style:solid;
+		border-width: 1px;
 }
 
 .gwt-TabBar {
   margin-top: 9px;
   margin-right: 12px;
-  border-bottom: 4px solid #87944c;
 }
 
 .gwt-TabBar .gwt-TabBarFirst {
@@ -403,21 +406,25 @@ a:visited {
 
 .gwt-TabBar .gwt-TabBarItem {
   color: white;
-  padding: 4px;
+  padding: 3px 8px 3px 8px;
   cursor: default;
-  background-color: #87944c;
-  border-bottom: 2px solid #87944c;
+  background-color: #A0AF21;
+	border-color:#95A22C;
+	border-style:solid;
+	border-width: 1px 1px 0px 1px;
   margin-right: 2px;
 }
 
 .gwt-TabBar .gwt-TabBarItem-selected {
-  padding: 4px;
+  padding: 3px 8px 3px 8px;
   cursor: pointer;
   color: black;
   font-color: black;
   cursor: hand;
   background-color: #eeeeee;
-  border-bottom: 2px solid white;
+	border-color:#95A22C;
+	border-style:solid;
+	border-width: 1px 1px 0px 1px;
   margin-right: 2px;
 }
 
@@ -1042,3 +1049,31 @@ a:visited {
 .addRoleAssignmentsDialogBox\.rolesList {
 	width: 100%;
 }
+
+.groupBox{
+}
+
+.homeGroupBox{
+	clear:both;
+	width:725px;
+	height:100%;
+	margin-right:10px;
+	margin-top:10px;
+}
+
+.groupBoxHeader{
+	color:#FFFFFF;
+	font-size:14px;
+	font-weight:normal;
+	padding: 4px 4px 0px 10px;	
+}
+
+.groupbox-nw{background:url(style/images/dialog_nw.png) repeat-x; height:28px; width:10px;}
+.groupbox-n{background:url(style/images/dialog_n.png) repeat-x;}
+.groupbox-ne{background:url(style/images/dialog_ne.png) repeat-x; height:28px; width:10px;}
+.groupbox-w{background:url(style/images/dialog_w.png) repeat-y;}
+.groupbox-e{background:url(style/images/dialog_e.png) repeat-y;}
+.groupbox-sw{background:url(style/images/dialog_sw.png) repeat-x; height:11px; width:10px;}
+.groupbox-s{background:url(style/images/dialog_s.png) repeat-x;}
+.groupbox-se{background:url(style/images/dialog_se.png) repeat-x; height:11px; width:10px;}
+.groupbox-c{background-color: #ffffff}

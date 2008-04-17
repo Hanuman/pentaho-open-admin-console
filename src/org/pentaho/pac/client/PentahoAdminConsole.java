@@ -109,7 +109,6 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
     deckPanel.add(homePanel);
     deckPanel.add(adminTabPanel);
     
-    usersAndRolesPanel.setBorderWidth(2);    
     HomePanel homePanel = new HomePanel("http://www.pentaho.com/console_home");
     
 
@@ -120,7 +119,7 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
     
 
     adminTabPanel.setWidth("97%");
-    adminTabPanel.setHeight("100%");
+    adminTabPanel.setHeight("97%");
     adminTabPanel.getDeckPanel().setHeight("100%");
     
     usersAndRolesPanel.setWidth("100%");
