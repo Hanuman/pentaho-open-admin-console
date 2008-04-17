@@ -32,8 +32,7 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
   public NewDataSourceDialogBox() {
     super();
     setTitle( MSGS.addDataSource() );
-    final NewDataSourceDialogBox localThis = this;
-    VerticalPanel verticalPanel = new VerticalPanel();
+   VerticalPanel verticalPanel = new VerticalPanel();
     verticalPanel.add(dataSourceGeneralPanel);
     advancePanelOption.add(dataSourceAdvancePanel);
     advancePanelOption.setWidth("100%");
@@ -49,14 +48,14 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
     addWidgetToClientArea( verticalPanel );
     testButton = new Button(MSGS.test(), new ClickListener() {
       public void onClick(Widget sender) {
-        localThis.testDataSourceConnection();
+        testDataSourceConnection();
       }
     });
     addWidgetToClientArea( testButton );
 
     setOnOkHandler( new ICallbackHandler() {
       public void onHandle( Object o ) {
-        localThis.createDataSource();
+        createDataSource();
       }
     });
 
@@ -226,7 +225,7 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
     dataSourceCreated = false;
     super.show();
   }
-
+  
   private boolean createDataSource() {
     if (getJndiName().trim().length() == 0) {
       messageDialog.setMessage(MSGS.invalidConnectionName());
@@ -247,9 +246,6 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
           public void onSuccess(Object result) {
             dataSourceCreated = true;
             hide();
-            messageDialog.setText(MSGS.addDataSource());
-            messageDialog.setMessage("New datasource successfully created");
-            messageDialog.center();
           }
 
           public void onFailure(Throwable caught) {

@@ -7,18 +7,19 @@ import com.google.gwt.user.client.ui.Widget;
 public class ConfirmDialog extends MessageDialog {
 
   protected Button cancelBtn = null;
-  private ICallbackHandler cancelHandler = null;
+  private ICallbackHandler cancelHandler = new ICallbackHandler() {
+    public void onHandle(Object o) {
+      hide();
+    }
+  };
   
   public ConfirmDialog( String title, String msg ) {
     super( title, msg );
-    
-    final ConfirmDialog localThis = this;
     cancelBtn = new Button(MSGS.cancel(), new ClickListener() {
       public void onClick(Widget sender) {
-        if ( null != cancelHandler ) {
-          cancelHandler.onHandle( sender );
+        if (cancelHandler != null) {
+          cancelHandler.onHandle(sender);
         }
-        localThis.hide();
       }
     });
     addButton(cancelBtn);

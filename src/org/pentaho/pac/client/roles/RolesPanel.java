@@ -7,9 +7,10 @@ import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.client.common.ui.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.ICallbackHandler;
+import org.pentaho.pac.client.common.ui.IListBoxFilter;
 import org.pentaho.pac.client.common.ui.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
-import org.pentaho.pac.client.users.AddUserAssignmentsDialogBox;
+import org.pentaho.pac.client.users.UserAssignmentsDialogBox;
 import org.pentaho.pac.client.users.UsersList;
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.roles.NonExistingRoleException;
@@ -32,6 +33,29 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class RolesPanel extends DockPanel implements ClickListener, ChangeListener, PopupListener, KeyboardListener {
 
+  class RoleNameFilter implements IListBoxFilter {
+    String roleNameFilter;
+    
+    RoleNameFilter(String roleNameFilter) {
+      this.roleNameFilter = roleNameFilter;
+    }
+    
+    public boolean accepts(Object object) {
+      boolean result = false;
+      if (object instanceof ProxyPentahoRole) {
+        String roleName = ((ProxyPentahoRole)object).getName();
+        result = ((roleNameFilter == null) || (roleNameFilter.length() == 0));
+        if (!result) {
+          int filterLen = roleNameFilter.length();
+          result = ( filterLen <= roleName.length() )
+            && roleNameFilter.toLowerCase().substring( 0, filterLen )
+              .equals( roleName.toLowerCase().substring( 0, filterLen ) ); 
+        }
+      }
+      return result;
+    }  
+  }
+  
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   MessageDialog errorDialog = new MessageDialog( MSGS.error() );
   RolesList rolesList = new RolesList(true);
@@ -46,7 +70,8 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
   NewRoleDialogBox newRoleDialogBox = new NewRoleDialogBox();
   ConfirmDialog confirmDeleteRolesDialog = new ConfirmDialog();
   ConfirmDialog confirmRemoveRoleAssignmentDialog = new ConfirmDialog();
-  AddUserAssignmentsDialogBox addUserAssignmentsDialogBox = new AddUserAssignmentsDialogBox();
+  
+  UserAssignmentsDialogBox userAssignmentsDialog = new UserAssignmentsDialogBox();
   
 	public RolesPanel() {
 	  DockPanel roleListPanel = buildRolesListPanel();
@@ -70,17 +95,17 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     updateRoleBtn.setEnabled(false);
     
     newRoleDialogBox.addPopupListener(this);
-    addUserAssignmentsDialogBox.addPopupListener(this);
+    userAssignmentsDialog.addPopupListener(this);
     
     roleDetailsPanel.getRoleNameTextBox().setEnabled(false);
     
     confirmDeleteRolesDialog.setText(MSGS.deleteRoles());
     confirmDeleteRolesDialog.setMessage(MSGS.confirmRoleDeletionMsg());
-    final RolesPanel localThis = this;
     confirmDeleteRolesDialog.setOnOkHandler( new ICallbackHandler() {
       public void onHandle(Object o) {
-        localThis.deleteSelectedRoles();
-        localThis.assignedUserSelectionChanged();
+        confirmDeleteRolesDialog.hide();
+        deleteSelectedRoles();
+        assignedUserSelectionChanged();
       }
     });
     
@@ -88,8 +113,9 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     confirmRemoveRoleAssignmentDialog.setMessage(MSGS.confirmRemoveRoleAssignmentMsg());
     confirmRemoveRoleAssignmentDialog.setOnOkHandler( new ICallbackHandler() {
       public void onHandle(Object o) {
-        localThis.unassignSelectedUsers();
-        localThis.assignedUserSelectionChanged();
+        confirmRemoveRoleAssignmentDialog.hide();
+        unassignSelectedUsers();
+        assignedUserSelectionChanged();
       }
     });
  	}
@@ -194,14 +220,14 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     } else if (sender == addRoleAssignmentBtn) {
       ProxyPentahoRole[] selectedRoles = rolesList.getSelectedRoles();
       if (selectedRoles.length == 1) {
-        addUserAssignments(selectedRoles[0]);
+        modifyUserAssignments(selectedRoles[0]);
       }
     }
 	}
 
-  private void addUserAssignments(ProxyPentahoRole role) {
-    addUserAssignmentsDialogBox.setRole(role);
-    addUserAssignmentsDialogBox.center();
+  private void modifyUserAssignments(ProxyPentahoRole role) {
+    userAssignmentsDialog.setRole(role);
+    userAssignmentsDialog.center();
   }
 
 	private void addNewRole() {
@@ -328,8 +354,8 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
       rolesList.addRole(newRole);
       rolesList.setSelectedRole(newRole);
       roleSelectionChanged();
-    } else if ((sender == addUserAssignmentsDialogBox) && addUserAssignmentsDialogBox.getUsersAssigned()) {
-      assignedUsersList.setUsers(UserAndRoleMgmtService.instance().getUsers(addUserAssignmentsDialogBox.getRole()));
+    } else if ((sender == userAssignmentsDialog) && userAssignmentsDialog.getUserAssignmentsModified()) {
+      assignedUsersList.setUsers(UserAndRoleMgmtService.instance().getUsers(userAssignmentsDialog.getRole()));
       assignedUserSelectionChanged();
     }
   }
@@ -342,7 +368,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 
   public void onKeyUp(Widget sender, char keyCode, int modifiers) {
     if (filterTextBox == sender) {
-      rolesList.setRoleNameFilter(filterTextBox.getText());
+      rolesList.setFilter(new RoleNameFilter(filterTextBox.getText()));
       roleSelectionChanged();
     }
   }

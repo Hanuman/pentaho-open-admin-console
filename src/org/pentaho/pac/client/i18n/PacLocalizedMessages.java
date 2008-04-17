@@ -210,14 +210,6 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String loading();
 
   /**
-   * Translated "Are your sure you want to remove the selected user(s) from the selected role(s)?".
-   * 
-   * @return translated "Are your sure you want to remove the selected user(s) from the selected role(s)?"
-   * @gwt.key confirmRemoveRoleAssignmentMsg
-   */
-  String confirmRemoveRoleAssignmentMsg();
-
-  /**
    * Translated "State".
    * 
    * @return translated "State"
@@ -872,4 +864,30 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key services
    */
   String services();
+  
+
+  /**
+   * Translated "Are your sure you want to remove the user from the selected roles?".
+   * 
+   * @return translated "Are your sure you want to remove the user from the selected roles?"
+   * @gwt.key confirmRemoveRoleAssignmentMsg
+   */
+  String confirmRemoveRoleAssignmentMsg();
+
+  /**
+   * Translated "Available".
+   * 
+   * @return translated "Available"
+   * @gwt.key availableItemsTitle
+   */
+  String availableItemsTitle();
+  
+
+  /**
+   * Translated "Assigned".
+   * 
+   * @return translated "Assigned"
+   * @gwt.key assignedItemsTitle
+   */
+  String assignedItemsTitle();
 }

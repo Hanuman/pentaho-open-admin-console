@@ -7,9 +7,10 @@ import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.client.common.ui.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.ICallbackHandler;
+import org.pentaho.pac.client.common.ui.IListBoxFilter;
 import org.pentaho.pac.client.common.ui.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
-import org.pentaho.pac.client.roles.AddRoleAssignmentsDialogBox;
+import org.pentaho.pac.client.roles.RoleAssignmentsDialogBox;
 import org.pentaho.pac.client.roles.RolesList;
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.roles.NonExistingRoleException;
@@ -32,6 +33,29 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class UsersPanel extends DockPanel implements ClickListener, ChangeListener, PopupListener, KeyboardListener {
 
+  class UserNameFilter implements IListBoxFilter {
+    String userNameFilter;
+    
+    UserNameFilter(String userNameFilter) {
+      this.userNameFilter = userNameFilter;
+    }
+    
+    public boolean accepts(Object object) {
+      boolean result = false;
+      if (object instanceof ProxyPentahoUser) {
+        String userName = ((ProxyPentahoUser)object).getName();
+        result = ((userNameFilter == null) || (userNameFilter.length() == 0));
+        if (!result) {
+          int filterLen = userNameFilter.length();
+          result = ( filterLen <= userName.length() )
+            && userNameFilter.toLowerCase().substring( 0, filterLen )
+              .equals( userName.toLowerCase().substring( 0, filterLen ) ); 
+        }
+      }
+      return result;
+    }  
+  }
+  
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   MessageDialog errorDialog = new MessageDialog( MSGS.error() );
   UsersList usersList = new UsersList(true);
@@ -44,12 +68,10 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
   Button deleteRoleAssignmentBtn = new Button("-");
   TextBox filterTextBox = new TextBox();
   NewUserDialogBox newUserDialogBox = new NewUserDialogBox();
-  ConfirmDialog confirmationDialog = new ConfirmDialog();
-  
   ConfirmDialog confirmDeleteUsersDialog = new ConfirmDialog();
   ConfirmDialog confirmRemoveRoleAssignmentDialog = new ConfirmDialog();
   
-  AddRoleAssignmentsDialogBox addRoleAssignmentsDialogBox = new AddRoleAssignmentsDialogBox();
+  RoleAssignmentsDialogBox roleAssignmentsDialog = new RoleAssignmentsDialogBox();
   
 	public UsersPanel() {
 	  DockPanel userListPanel = buildUsersListPanel();
@@ -68,22 +90,22 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     userListPanel.setHeight("100%"); //$NON-NLS-1$
     userDetailsDockPanel.setWidth("100%"); //$NON-NLS-1$
     userDetailsDockPanel.setHeight("100%"); //$NON-NLS-1$
-    
+        
     userDetailsPanel.setEnabled(false);
     updateUserBtn.setEnabled(false);
     
     newUserDialogBox.addPopupListener(this);
-    addRoleAssignmentsDialogBox.addPopupListener(this);
+    roleAssignmentsDialog.addPopupListener(this);
     
     userDetailsPanel.getUserNameTextBox().setEnabled(false);
     
     confirmDeleteUsersDialog.setText(MSGS.deleteUsers());
     confirmDeleteUsersDialog.setMessage(MSGS.confirmUserDeletionMsg());
-    final UsersPanel localThis = this;
     confirmDeleteUsersDialog.setOnOkHandler( new ICallbackHandler() {
       public void onHandle(Object o) {
-        localThis.deleteSelectedUsers();
-        localThis.assignedRoleSelectionChanged();
+        confirmDeleteUsersDialog.hide();
+        deleteSelectedUsers();
+        assignedRoleSelectionChanged();
       }
     });
     
@@ -91,8 +113,9 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     confirmRemoveRoleAssignmentDialog.setMessage(MSGS.confirmRemoveRoleAssignmentMsg());
     confirmRemoveRoleAssignmentDialog.setOnOkHandler( new ICallbackHandler() {
       public void onHandle(Object o) {
-        localThis.unassignSelectedRoles();
-        localThis.assignedRoleSelectionChanged();
+        confirmRemoveRoleAssignmentDialog.hide();
+        unassignSelectedRoles();
+        assignedRoleSelectionChanged();
       }
     });
  	}
@@ -196,21 +219,21 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	  } else if (sender == addRoleAssignmentBtn) {
 	    ProxyPentahoUser[] selectedUsers = usersList.getSelectedUsers();
       if (selectedUsers.length == 1) {
-        addRoleAssignments(selectedUsers[0]);
+        modifyRoleAssignments(selectedUsers[0]);
       }
 	  }
 	}
 
 
-	private void addRoleAssignments(ProxyPentahoUser user) {
-	  addRoleAssignmentsDialogBox.setUser(user);
-	  addRoleAssignmentsDialogBox.center();
+	private void modifyRoleAssignments(ProxyPentahoUser user) {
+	  roleAssignmentsDialog.setUser(user);
+	  roleAssignmentsDialog.center();
 	}
 	
 	private void addNewUser() {
 	  newUserDialogBox.setUser(null);
     newUserDialogBox.center();
-   }
+  }
 	
 	private void deleteSelectedUsers() {
 	  final ProxyPentahoUser[] selectedUsers = usersList.getSelectedUsers();
@@ -341,8 +364,8 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
       usersList.addUser(newUser);
       usersList.setSelectedUser(newUser);
       userSelectionChanged();
-    } else if ((sender == addRoleAssignmentsDialogBox) && addRoleAssignmentsDialogBox.getRolesAssigned()) {
-      assignedRolesList.setRoles(UserAndRoleMgmtService.instance().getRoles(addRoleAssignmentsDialogBox.getUser()));
+    } else if ((sender == roleAssignmentsDialog) && roleAssignmentsDialog.getRoleAssignmentsModified()) {
+      assignedRolesList.setRoles(UserAndRoleMgmtService.instance().getRoles(roleAssignmentsDialog.getUser()));
       assignedRoleSelectionChanged();
     }
   }
@@ -355,7 +378,7 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 
   public void onKeyUp(Widget sender, char keyCode, int modifiers) {
     if (filterTextBox == sender) {
-      usersList.setUserNameFilter(filterTextBox.getText());
+      usersList.setFilter(new UserNameFilter(filterTextBox.getText()));
       userSelectionChanged();
     }
   }

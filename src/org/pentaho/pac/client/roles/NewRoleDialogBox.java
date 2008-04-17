@@ -31,13 +31,12 @@ public class NewRoleDialogBox extends ConfirmDialog {
     
     setTitle(MSGS.addRole());
     
-    final NewRoleDialogBox localThis = this;
     roleDetailsPanel.setStyleName( "newRoleDialogBox.detailsPanel" ); //$NON-NLS-1$
     addWidgetToClientArea( roleDetailsPanel );
     
     setOnOkHandler( new ICallbackHandler() {
       public void onHandle( Object o ) {
-        localThis.createRole();
+        createRole();
       }
     });
   }
@@ -70,10 +69,10 @@ public class NewRoleDialogBox extends ConfirmDialog {
     roleDetailsPanel.setRole(role);
   }
 
-//  public void show() {
-//    roleCreated = false;
-//    super.show();
-//  }
+  public void show() {
+    roleCreated = false;
+    super.show();
+  }
   
   private boolean createRole() {
     if (getRoleName().trim().length() == 0) {

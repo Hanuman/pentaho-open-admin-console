@@ -78,10 +78,10 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
     newDataSourceDialogBox.addPopupListener(this);
     updateDataSourceBtn.addClickListener(this);
     testDataSourceBtn.addClickListener(this);
-    final DataSourcesPanel localThis = this;
     confirmDataSourceDeleteDialog.setOnOkHandler(new ICallbackHandler() {
       public void onHandle(Object o) {
-        localThis.deleteSelectedDataSources();
+        confirmDataSourceDeleteDialog.hide();
+        deleteSelectedDataSources();
       }
     });
   }
@@ -147,7 +147,6 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
   public void onClick(Widget sender) {
     if (sender == updateDataSourceBtn) {
       updateDataSourceDetails(sender);
-      ;
     } else if (sender == testDataSourceBtn) {
       testDataSourceConnection();
     } else if (sender == deleteDataSourceBtn) {

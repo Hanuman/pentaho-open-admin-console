@@ -14,21 +14,23 @@ public class MessageDialog extends BasicDialog {
   protected static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   protected Label msgLabel = null;
   private Button okBtn = null;
-  ICallbackHandler okHandler = null;
+  ICallbackHandler okHandler = new ICallbackHandler() {
+    public void onHandle(Object o) {
+      hide();
+    }
+  };
   
   public MessageDialog( String title, String msg ) {
     super( title );
     
     msgLabel = new Label();
     setMessage( msg );
-    
-    final MessageDialog localThis = this;
+
     okBtn = new Button(MSGS.ok(), new ClickListener() {
       public void onClick(Widget sender) {
-        if ( null != okHandler ) {
-          okHandler.onHandle( sender );
+        if (okHandler != null) {
+          okHandler.onHandle(sender);
         }
-        localThis.hide();
       }
     });
     addButton(okBtn);

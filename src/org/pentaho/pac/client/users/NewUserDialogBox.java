@@ -30,13 +30,12 @@ public class NewUserDialogBox extends ConfirmDialog {
 
     setTitle( MSGS.addUser() );
     
-    final NewUserDialogBox localThis = this;
     userDetailsPanel.setStyleName( "newUserDialogBox.detailsPanel" ); //$NON-NLS-1$
     addWidgetToClientArea( userDetailsPanel );
     
     setOnOkHandler( new ICallbackHandler() {
       public void onHandle( Object o ) {
-        localThis.createUser();
+        createUser();
       }
     });
   }
@@ -86,10 +85,10 @@ public class NewUserDialogBox extends ConfirmDialog {
     userDetailsPanel.setUser(user);
   }
 
-//  public void show() {
-//    userCreated = false;
-//    super.show();
-//  }
+  public void show() {
+    userCreated = false;
+    super.show();
+  }
   
   private boolean createUser() {
     if (getUserName().trim().length() == 0) {
