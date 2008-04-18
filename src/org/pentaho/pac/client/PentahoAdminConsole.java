@@ -9,6 +9,7 @@ import org.pentaho.pac.client.services.AdminServicesPanel;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DeckPanel;
@@ -36,7 +37,7 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
   public static final int ADMIN_SERVICES_TAB_INDEX = 2;
   public static final int ADMIN_SCHEDULER_TAB_INDEX = 3;
   public static PacLocalizedMessages pacLocalizedMessages = (PacLocalizedMessages)GWT.create(PacLocalizedMessages.class);
-  
+
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   ToggleButton adminToggleBtn = new ToggleButton(MSGS.administration());
   ToggleButton homeToggleBtn = new ToggleButton(MSGS.home());
@@ -68,11 +69,11 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
    */
   public void onModuleLoad() {
 
-    homePanel = new HomePanel("http://www.pentaho.com/console_home");
+    homePanel = new HomePanel("http://www.pentaho.com/console_home"); //$NON-NLS-1$
     commonTasks = new CommonTasks();
     
-    homeToggleBtn.setStylePrimaryName("leftToggleButtons");
-    adminToggleBtn.setStylePrimaryName("leftToggleButtons");
+    homeToggleBtn.setStylePrimaryName("leftToggleButtons"); //$NON-NLS-1$
+    adminToggleBtn.setStylePrimaryName("leftToggleButtons"); //$NON-NLS-1$
     
     homeToggleBtn.addClickListener(this);
     adminToggleBtn.addClickListener(this);
@@ -93,7 +94,7 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
     leftVerticalPanel.setCellHeight(spacer, "100%");
     
     
-    leftVerticalPanel.setStylePrimaryName("leftTabPanel");
+    leftVerticalPanel.setStylePrimaryName("leftTabPanel"); //$NON-NLS-1$
     
     
     
@@ -105,15 +106,12 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
     adminTabPanel.add(servicesPanel, getLocalizedMessages().services());
     adminTabPanel.add(schedulerPanel, getLocalizedMessages().scheduler());
 
-    deckPanel.setStylePrimaryName("deckPanel");
+    deckPanel.setStylePrimaryName("deckPanel"); //$NON-NLS-1$
     deckPanel.add(homePanel);
     deckPanel.add(adminTabPanel);
-    
-    HomePanel homePanel = new HomePanel("http://www.pentaho.com/console_home");
-    
 
     SimplePanel logo = new SimplePanel();
-    logo.setStylePrimaryName("logo");
+    logo.setStylePrimaryName("logo"); //$NON-NLS-1$
     topPanel.add(logo);
     topPanel.add(toolbar);
     
@@ -228,11 +226,49 @@ public void onClick(Widget sender) {
   
   //TOP Toolbar
   private class ConsoleToolbar extends HorizontalPanel{
+    
+    Label statusLabel = new Label();
+    Timer statusTimer = null;
+    
     public ConsoleToolbar(){
       super();
 
-      setStylePrimaryName("toolbar");
+      setStylePrimaryName("toolbar"); //$NON-NLS-1$
       add(new Label("In Toolbar"));
+      add(statusLabel);
+
+      statusLabel.setStyleName( "biServerDeadIcon" ); //$NON-NLS-1$
+      statusTimer = new Timer() {
+        public void run()
+        {
+          PacServiceFactory.getPacService().isBiServerAlive(
+              new AsyncCallback() {
+                public void onSuccess( Object isAlive ) {
+                  statusLabel.setStyleName( "biServerAliveIcon" ); //$NON-NLS-1$
+                  statusLabel.setTitle( MSGS.biServerAlive() );
+                }
+                public void onFailure(Throwable caught) {
+                  statusLabel.setStyleName( "biServerDeadIcon" ); //$NON-NLS-1$
+                  statusLabel.setTitle( MSGS.biServerDead() );
+                }
+              }
+            );
+        }
+      };
+      
+      PacServiceFactory.getPacService().getBiServerStatusCheckPeriod(
+        new AsyncCallback() {
+          public void onSuccess( Object oCheckPeriod ) {
+            int checkPeriod = ((Integer)oCheckPeriod ).intValue();
+            if ( checkPeriod > 0 ) {
+              statusTimer.scheduleRepeating( checkPeriod );
+            }
+          }
+          public void onFailure(Throwable caught) {
+            // otherwise we don't know what the status check period is, so don't schedule anything
+          }
+        }
+      );
     }
   }
   
@@ -242,10 +278,10 @@ public void onClick(Widget sender) {
       VerticalPanel vertPanel = new VerticalPanel();
       
       SimplePanel headerPanel = new SimplePanel();
-      headerPanel.setStyleName("CommonTasksHeader");
+      headerPanel.setStyleName("CommonTasksHeader"); //$NON-NLS-1$
       
       Label header = new Label("Common Tasks");
-      header.setStylePrimaryName("commonTasksHeaderText");
+      header.setStylePrimaryName("commonTasksHeaderText"); //$NON-NLS-1$
       headerPanel.add(header);
       vertPanel.add(headerPanel);
       
@@ -253,10 +289,10 @@ public void onClick(Widget sender) {
       list.add(new Hyperlink("Link 1 text","Link1"));
       list.add(new Hyperlink("Link 2 text","Link2"));
       list.add(new Hyperlink("Link 3 text","Link3"));
-      list.setStyleName("CommonTasksLinks");
+      list.setStyleName("CommonTasksLinks"); //$NON-NLS-1$
       vertPanel.add(list);
       
-      setStylePrimaryName("CommonTasks");
+      setStylePrimaryName("CommonTasks"); //$NON-NLS-1$
       this.add(vertPanel);
     }
   }
