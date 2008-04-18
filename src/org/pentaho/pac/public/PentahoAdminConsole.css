@@ -1027,6 +1027,7 @@ a:visited {
 	margin: 0px 0px 0px 10px;	/* top right bottom left*/
 }
 /* end styles for BasicDialog */
+
 .newDataSourceDialogBox\.detailsPanel {
 	width: 100%;
 	/*background-color:red;*/
@@ -1050,6 +1051,26 @@ a:visited {
 	width: 100%;
 }
 
+
+}
+
+.biServerAliveIcon {
+  background-image:url(style/images/serverOn.gif);
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 32px;
+  height: 32px;
+}
+
+.biServerDeadIcon {
+  background-image:url(style/images/serverOff.gif);
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 32px;
+  height: 32px;
+}
+
+/* begin styles for group box */
 .groupBox{
 }
 
@@ -1068,12 +1089,47 @@ a:visited {
 	padding: 4px 4px 0px 10px;	
 }
 
-.groupbox-nw{background:url(style/images/dialog_nw.png) repeat-x; height:28px; width:10px;}
-.groupbox-n{background:url(style/images/dialog_n.png) repeat-x;}
-.groupbox-ne{background:url(style/images/dialog_ne.png) repeat-x; height:28px; width:10px;}
-.groupbox-w{background:url(style/images/dialog_w.png) repeat-y;}
-.groupbox-e{background:url(style/images/dialog_e.png) repeat-y;}
-.groupbox-sw{background:url(style/images/dialog_sw.png) repeat-x; height:11px; width:10px;}
-.groupbox-s{background:url(style/images/dialog_s.png) repeat-x;}
-.groupbox-se{background:url(style/images/dialog_se.png) repeat-x; height:11px; width:10px;}
-.groupbox-c{background-color: #ffffff}
+.groupbox-nw {
+	background: url(style/images/dialog_nw.png) repeat-x;
+	height: 28px;
+	width: 10px;
+}
+
+.groupbox-n {
+	background: url(style/images/dialog_n.png) repeat-x;
+}
+
+.groupbox-ne {
+	background: url(style/images/dialog_ne.png) repeat-x;
+	height: 28px;
+	width: 10px;
+}
+
+.groupbox-w {
+	background: url(style/images/dialog_w.png) repeat-y;
+}
+
+.groupbox-e {
+	background: url(style/images/dialog_e.png) repeat-y;
+}
+
+.groupbox-sw {
+	background: url(style/images/dialog_sw.png) repeat-x;
+	height: 11px;
+	width: 10px;
+}
+
+.groupbox-s {
+	background: url(style/images/dialog_s.png) repeat-x;
+}
+
+.groupbox-se {
+	background: url(style/images/dialog_se.png) repeat-x;
+	height: 11px;
+	width: 10px;
+}
+
+.groupbox-c {
+	background-color: #ffffff
+}
+/* end styles for group box */
