@@ -59,6 +59,14 @@ public class ThreadSafeHttpClient {
       return execRemoteMethod( serviceName, mapParams, "text/xml" ); //$NON-NLS-1$
     }
 
+    /**
+     * 
+     * @param serviceName String can be null or empty string.
+     * @param mapParams
+     * @param contentType
+     * @return
+     * @throws PacServiceException
+     */
     public String execRemoteMethod( String serviceName, Map mapParams, String contentType )
         throws PacServiceException {
 
@@ -77,7 +85,8 @@ public class ThreadSafeHttpClient {
         if ( null != params ) {
           method.setQueryString(params);
         }
-        if (CLIENT.executeMethod(method) != HttpStatus.SC_OK) {
+        int httpStatus = CLIENT.executeMethod(method);
+        if ( httpStatus != HttpStatus.SC_OK) {
           String status = method.getStatusLine().toString();
           throw new PacServiceException(status);
         }
