@@ -650,6 +650,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String executeGlobalActions();
 
   /**
+   * Translated "BI Server is available.".
+   * 
+   * @return translated "BI Server is available."
+   * @gwt.key biServerAlive
+   */
+  String biServerAlive();
+
+  /**
    * Translated "Invalid connection name.".
    * 
    * @return translated "Invalid connection name."
@@ -664,6 +672,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key confirmUserDeletionMsg
    */
   String confirmUserDeletionMsg();
+
+  /**
+   * Translated "BI Server is is NOT available.".
+   * 
+   * @return translated "BI Server is is NOT available."
+   * @gwt.key biServerDead
+   */
+  String biServerDead();
 
   /**
    * Translated "Error: onClick() trying to handle unrecognized widget.".
