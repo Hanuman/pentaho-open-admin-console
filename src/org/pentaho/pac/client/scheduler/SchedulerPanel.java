@@ -20,6 +20,8 @@ import java.util.List;
 
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
+import org.pentaho.pac.client.common.ui.ConfirmDialog;
+import org.pentaho.pac.client.common.ui.ICallbackHandler;
 import org.pentaho.pac.client.common.ui.MessageDialog;
 import org.pentaho.pac.client.common.util.StringUtils;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
@@ -67,8 +69,10 @@ public class SchedulerPanel extends VerticalPanel {
       if ( !hasUIBeenCreated() ) {
         loading = new Label( MSGS.loading() );
         add( loading );
+      } else {
+        currScrollPos = jobsTableScrollPanel.getScrollPosition();
       }
-      
+
       PacServiceFactory.getPacService().getJobNames(
           new AsyncCallback() {
             public void onSuccess( Object oJobList ) {
@@ -277,24 +281,30 @@ public class SchedulerPanel extends VerticalPanel {
     a.setText( MSGS.delete() );
     
     a.addClickListener( new ClickListener() {
-      public void onClick( Widget sender ) {
-        ((Hyperlink)sender).setText( MSGS.working() );
-        PacServiceFactory.getPacService().deleteJob( 
-            jobName,
-            jobGroup,
-            new AsyncCallback() {
-              public void onSuccess( Object o ) {
-                currScrollPos = jobsTableScrollPanel.getScrollPosition();
-                forceRefresh();
-              }
+      public void onClick( final Widget sender ) {
         
-              public void onFailure(Throwable caught) {
-                MessageDialog messageDialog = new MessageDialog(MSGS.error(), 
-                    caught.getMessage() );
-                messageDialog.center();
-              }
-            }
-          );
+        ConfirmDialog confirmDeleteDlg = new ConfirmDialog( "Delete Job", "Are you sure you want to delete this job?");
+        confirmDeleteDlg.center();
+        confirmDeleteDlg.setOnOkHandler( new ICallbackHandler() {
+          public void onHandle(Object o) {
+            ((Hyperlink)sender).setText( MSGS.working() );
+            PacServiceFactory.getPacService().deleteJob( 
+                jobName,
+                jobGroup,
+                new AsyncCallback() {
+                  public void onSuccess( Object o ) {
+                    forceRefresh();
+                  }
+            
+                  public void onFailure(Throwable caught) {
+                    MessageDialog messageDialog = new MessageDialog(MSGS.error(), 
+                        caught.getMessage() );
+                    messageDialog.center();
+                  }
+                }
+              );
+          }
+        });
       }
     } );
     
