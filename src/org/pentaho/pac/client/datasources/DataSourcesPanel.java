@@ -80,7 +80,6 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
     testDataSourceBtn.addClickListener(this);
     confirmDataSourceDeleteDialog.setOnOkHandler(new ICallbackHandler() {
       public void onHandle(Object o) {
-        confirmDataSourceDeleteDialog.hide();
         deleteSelectedDataSources();
       }
     });

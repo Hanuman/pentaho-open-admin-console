@@ -103,7 +103,6 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     confirmDeleteRolesDialog.setMessage(MSGS.confirmRoleDeletionMsg());
     confirmDeleteRolesDialog.setOnOkHandler( new ICallbackHandler() {
       public void onHandle(Object o) {
-        confirmDeleteRolesDialog.hide();
         deleteSelectedRoles();
         assignedUserSelectionChanged();
       }
@@ -113,7 +112,6 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     confirmRemoveRoleAssignmentDialog.setMessage(MSGS.confirmRemoveRoleAssignmentMsg());
     confirmRemoveRoleAssignmentDialog.setOnOkHandler( new ICallbackHandler() {
       public void onHandle(Object o) {
-        confirmRemoveRoleAssignmentDialog.hide();
         unassignSelectedUsers();
         assignedUserSelectionChanged();
       }
