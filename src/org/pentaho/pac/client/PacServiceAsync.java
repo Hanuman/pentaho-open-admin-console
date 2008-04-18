@@ -1,5 +1,6 @@
 package org.pentaho.pac.client;
 
+import org.pentaho.pac.common.PacServiceException;
 import org.pentaho.pac.common.datasources.IPentahoDataSource;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
 import org.pentaho.pac.common.users.ProxyPentahoUser;
@@ -49,4 +50,8 @@ public interface PacServiceAsync {
   public void pauseJob( String jobName, String jobGroup, AsyncCallback callback );
   public void resumeAll( AsyncCallback callback );
   public void resumeJob( String jobName, String jobGroup, AsyncCallback callback );
+  
+  public void isBiServerAlive( AsyncCallback callback );
+  public void getBiServerStatusCheckPeriod( AsyncCallback callback );
+  public void getAppProperty( String propName, AsyncCallback callback );
 }

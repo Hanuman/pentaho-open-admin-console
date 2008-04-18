@@ -54,8 +54,6 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
 
   private IDataSourceMgmtService dataSourceMgmtService = new DataSourceMgmtService();
 
-  private static final String PROPERTIES_FILE_NAME = "pac.properties"; //$NON-NLS-1$
-
   private static final Log logger = LogFactory.getLog(PacServiceImpl.class);
 
   // TODO sbarkdull, damn it would be nice to inject this with Spring (and some of these other props)
@@ -65,12 +63,13 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     biServerProxy = BiServerTrustedProxy.getInstance();
   }
   
+  Properties appConfigProperties = null; 
   private String jmxHostName = null;
-
   private String jmxPortNumber = null;
   private String userName = null;
   private String pciContextPath = null;
   private String biServerBaseURL = null;
+  private int biServerStatusCheckPeriod = -1;
   
   public PacServiceImpl()
   {
@@ -671,11 +670,18 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   private void initFromConfiguration()
   {
     Properties p = AppConfigProperties.getProperties();
+    appConfigProperties = p;
     jmxHostName = StringUtils.defaultIfEmpty( p.getProperty("jmxHostName"), System.getProperty("jmxHostName") ); //$NON-NLS-1$ //$NON-NLS-2$
     jmxPortNumber = StringUtils.defaultIfEmpty( p.getProperty("jmxPortNumber"), System.getProperty("jmxPortNumber") ); //$NON-NLS-1$ //$NON-NLS-2$
     userName = StringUtils.defaultIfEmpty( p.getProperty("pentaho.platform.userName"), System.getProperty("pentaho.platform.userName") ); //$NON-NLS-1$ //$NON-NLS-2$
     pciContextPath = StringUtils.defaultIfEmpty( p.getProperty("pciContextPath"), System.getProperty("pciContextPath") ); //$NON-NLS-1$ //$NON-NLS-2$
-    biServerBaseURL = StringUtils.defaultIfEmpty( p.getProperty("biServerBaseURL"), System.getProperty("biServerBaseURL") ); //$NON-NLS-1$ //$NON-NLS-2$
+    biServerBaseURL = StringUtils.defaultIfEmpty( p.getProperty("biServerBaseURL"), System.getProperty("biServerBaseURL") ); //$NON-NLS-1$ //$NON-NLS-2$biServerBaseURL = StringUtils.defaultIfEmpty( p.getProperty("biServerBaseURL"), System.getProperty("biServerBaseURL") ); //$NON-NLS-1$ //$NON-NLS-2$
+    String strBiServerStatusCheckPeriod = StringUtils.defaultIfEmpty( p.getProperty("consoleToolBar.biServerStatusCheckPeriod"), System.getProperty("consoleToolBar.biServerStatusCheckPeriod") ); //$NON-NLS-1$ //$NON-NLS-2$
+    try {
+      biServerStatusCheckPeriod = Integer.parseInt( strBiServerStatusCheckPeriod );
+    } catch( NumberFormatException e ) {
+      logger.error( "Failed to schedule the BI Server status thread.", e );
+    }
   }
 
   public String getJmxHostName() {
@@ -973,4 +979,16 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   }
   // end Scheduler Admin interfaces -----------------------------------------------------
 
+  public void isBiServerAlive() throws PacServiceException {
+    ThreadSafeHttpClient c = new ThreadSafeHttpClient( biServerBaseURL );
+    String response = c.execRemoteMethod( "Login", null );
+  }
+  
+  public int getBiServerStatusCheckPeriod() {
+    return biServerStatusCheckPeriod;
+  }
+  
+  public String getAppProperty( String propName ) {
+    return (String)appConfigProperties.get( propName );
+  }
 }

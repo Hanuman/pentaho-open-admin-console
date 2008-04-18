@@ -63,4 +63,8 @@ public interface PacService extends RemoteService {
   public void pauseJob( String jobName, String jobGroup ) throws PacServiceException;
   public void resumeAll() throws PacServiceException;
   public void resumeJob( String jobName, String jobGroup ) throws PacServiceException;
+  
+  public void isBiServerAlive() throws PacServiceException;
+  public int getBiServerStatusCheckPeriod();
+  public String getAppProperty( String propName );
 }
