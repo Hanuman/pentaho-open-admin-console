@@ -16,10 +16,13 @@
 
 package org.pentaho.pac.client.utils;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.ImageBundle;
 
 /**
+ * Usage:
+ * PacImageBundle b = (PacImageBundle)GWT.create(PacImageBundle.class);
  * @deprecated
  * @author Steven Barkdull
  *
@@ -64,6 +67,14 @@ public interface PacImageBundle extends ImageBundle {
   * @gwt.resource org/pentaho/pac/public/style/images/roles_off.png
   */
  public AbstractImagePrototype rolesOffIcon(); 
+ /**
+  * @gwt.resource org/pentaho/pac/public/style/images/serverOn.gif
+  */
+ public AbstractImagePrototype serverOnIcon(); 
+ /**
+  * @gwt.resource org/pentaho/pac/public/style/images/serverOff.gif
+  */
+ public AbstractImagePrototype serverOffIcon(); 
  
  
 }
