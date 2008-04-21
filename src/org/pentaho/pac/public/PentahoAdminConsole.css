@@ -1060,6 +1060,7 @@ a:visited {
   background-position: center center;
   width: 32px;
   height: 32px;
+  background-color: purple;
 }
 
 .biServerDeadIcon {
@@ -1068,6 +1069,7 @@ a:visited {
   background-position: center center;
   width: 32px;
   height: 32px;
+  background-color: red;
 }
 
 /* begin styles for group box */
