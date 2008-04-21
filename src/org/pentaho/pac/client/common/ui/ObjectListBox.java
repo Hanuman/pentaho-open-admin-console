@@ -43,13 +43,13 @@ public class ObjectListBox extends ListBox {
   }
   
   public void addObject(Object object) {
-    int index = objects.indexOf(object);
-    if (index >= 0) {
-      objects.set(index, object);
+    if ((comparator == null) || (objects.size() == 0)) {
+      objects.add(object);
+      applyFilter();
     } else {
-      if (comparator == null) {
-        objects.add(object);
-        applyFilter();
+      int index = objects.indexOf(object);
+      if (index >= 0) {
+        objects.set(index, object);
       } else {
         index = 0;
         int comparison = 0;
