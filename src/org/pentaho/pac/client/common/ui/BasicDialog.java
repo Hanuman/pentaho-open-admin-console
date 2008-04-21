@@ -22,18 +22,18 @@ public class BasicDialog extends DialogBox {
     setTitle( title );
     VerticalPanel rootPanel = new VerticalPanel();
     rootPanel.setSpacing( 0 );
-    rootPanel.setStylePrimaryName("basicDialog.rootPanel"); //$NON-NLS-1$
+    rootPanel.setStyleName("basicDialog.rootPanel"); //$NON-NLS-1$
     
     clientPanel = new VerticalPanel();
     clientPanel.setSpacing( 10 );
     setClientSize( "250px", "140px" ); //$NON-NLS-1$ //$NON-NLS-2$
-    clientPanel.setStylePrimaryName("basicDialog.clientPanel"); //$NON-NLS-1$
+    clientPanel.setStyleName("basicDialog.clientPanel"); //$NON-NLS-1$
 
     rootPanel.add( clientPanel );
     
     btnPanel = new HorizontalPanel();
     btnPanel.setSpacing( 0 );
-    btnPanel.setStylePrimaryName("basicDialog.buttonPanel"); //$NON-NLS-1$
+    btnPanel.setStyleName("basicDialog.buttonPanel"); //$NON-NLS-1$
     rootPanel.setHorizontalAlignment( HasHorizontalAlignment.ALIGN_RIGHT );
     rootPanel.add(btnPanel);
     

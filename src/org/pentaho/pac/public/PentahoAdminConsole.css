@@ -628,7 +628,8 @@ a:visited {
   padding: 2px;
 }
 
-.leftToggleButtons{clear: both;
+.leftToggleButtons{
+	clear: both;
 	background: url("style/images/btn2.png") left center no-repeat;
 	line-height: 35px;
 	padding: 1px 0px 4px 15px;

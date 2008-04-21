@@ -107,8 +107,8 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
     generalAdvanceDbPanel.setWidth("100%"); //$NON-NLS-1$
     generalAdvanceDbPanel.setHeight("75%"); //$NON-NLS-1$
     generalAdvanceDbPanel.showWidget(0);
-    generalAdvanceDbPanel.setStylePrimaryName("deckPanel");
-    dockPanel.setStylePrimaryName("dockPanel");
+    generalAdvanceDbPanel.setStyleName("deckPanel");
+    dockPanel.setStyleName("dockPanel");
     generalButton.setDown(true);
     advanceButton.setDown(false);
     generalButton.addClickListener(this);

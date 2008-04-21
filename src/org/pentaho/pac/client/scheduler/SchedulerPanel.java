@@ -61,7 +61,7 @@ public class SchedulerPanel extends VerticalPanel {
   
   public SchedulerPanel()
   {
-    this.setStylePrimaryName( "schedulerPanel" ); //$NON-NLS-1$
+    this.setStyleName( "schedulerPanel" ); //$NON-NLS-1$
   }
 
   public void refresh() {
@@ -125,7 +125,7 @@ public class SchedulerPanel extends VerticalPanel {
     }
 
     userInstructionLabel = new Label( USER_INSTRUCTION );
-    userInstructionLabel.setStylePrimaryName( "schedulerInstructionLabel" ); //$NON-NLS-1$
+    userInstructionLabel.setStyleName( "schedulerInstructionLabel" ); //$NON-NLS-1$
     add( userInstructionLabel );
     
     allActionsTable = createAllActionsTable();
@@ -173,7 +173,7 @@ public class SchedulerPanel extends VerticalPanel {
   private FlexTable createAllActionsTable()
   {
     FlexTable t = new FlexTable();
-    t.setStylePrimaryName( "allActionTable"); //$NON-NLS-1$
+    t.setStyleName( "allActionTable"); //$NON-NLS-1$
     t.setCellPadding( 0 );
     t.setCellSpacing( 0 );
 
@@ -181,7 +181,7 @@ public class SchedulerPanel extends VerticalPanel {
     Label l = new Label( MSGS.actions() );
     t.setWidget( rowNum, 0, l );
     t.setHTML( rowNum, 1, MSGS.status() );
-    t.getRowFormatter().setStylePrimaryName( 0, "allActionTableHeader" ); //$NON-NLS-1$
+    t.getRowFormatter().setStyleName( 0, "allActionTableHeader" ); //$NON-NLS-1$
     
     rowNum++; // 1
     Hyperlink statusHyper = createSchedulerStatusHyperlink();
@@ -193,7 +193,7 @@ public class SchedulerPanel extends VerticalPanel {
     Hyperlink resumeHyper = createResumeAllHyperlink();
     Hyperlink suspendHyper = createSuspendAllHyperlink();
     VerticalPanel p = new VerticalPanel();
-    p.setStylePrimaryName( "resumeSuspendPanel" ); //$NON-NLS-1$
+    p.setStyleName( "resumeSuspendPanel" ); //$NON-NLS-1$
     p.setSpacing(0);
     
     p.add( resumeHyper );
@@ -206,7 +206,7 @@ public class SchedulerPanel extends VerticalPanel {
   
   private VerticalPanel createActionPanel( Job job, String triggerState ) {
     VerticalPanel p = new VerticalPanel();
-    p.setStylePrimaryName( "actionCellPanel" ); //$NON-NLS-1$
+    p.setStyleName( "actionCellPanel" ); //$NON-NLS-1$
     p.setSpacing(0);
     
     Hyperlink a = MSGS.stateSuspended().equals( triggerState )
@@ -432,7 +432,7 @@ public class SchedulerPanel extends VerticalPanel {
   private void createJobsTable( List/*<Job>*/ jobList ) {
     
     jobsTable = new FlexTable();
-    jobsTable.setStylePrimaryName( "jobsTable" ); //$NON-NLS-1$
+    jobsTable.setStyleName( "jobsTable" ); //$NON-NLS-1$
     jobsTable.setCellPadding( 0 );
     jobsTable.setCellSpacing( 0 );
     addJobsTableHeader();
@@ -447,6 +447,6 @@ public class SchedulerPanel extends VerticalPanel {
       //jobsTable.addCell( 0 );
       jobsTable.setText(0, ii, title );
     }
-    jobsTable.getRowFormatter().setStylePrimaryName( 0, "jobsTableHeader" ); //$NON-NLS-1$
+    jobsTable.getRowFormatter().setStyleName( 0, "jobsTableHeader" ); //$NON-NLS-1$
   }
 }

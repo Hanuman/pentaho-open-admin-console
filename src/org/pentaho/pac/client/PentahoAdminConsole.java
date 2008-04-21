@@ -94,7 +94,7 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
     leftVerticalPanel.setCellHeight(spacer, "100%");
     
     
-    leftVerticalPanel.setStylePrimaryName("leftTabPanel"); //$NON-NLS-1$
+    leftVerticalPanel.setStyleName("leftTabPanel"); //$NON-NLS-1$
     
     
     
@@ -106,12 +106,12 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
     adminTabPanel.add(servicesPanel, getLocalizedMessages().services());
     adminTabPanel.add(schedulerPanel, getLocalizedMessages().scheduler());
 
-    deckPanel.setStylePrimaryName("deckPanel"); //$NON-NLS-1$
+    deckPanel.setStyleName("deckPanel"); //$NON-NLS-1$
     deckPanel.add(homePanel);
     deckPanel.add(adminTabPanel);
 
     SimplePanel logo = new SimplePanel();
-    logo.setStylePrimaryName("logo"); //$NON-NLS-1$
+    logo.setStyleName("logo"); //$NON-NLS-1$
     topPanel.add(logo);
     topPanel.add(toolbar);
     
@@ -136,7 +136,7 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
     centerPanel.setCellWidth(deckPanel, "100%");
     
     //Main DockPanel
-    mainPanel.setStylePrimaryName("main-panel");
+    mainPanel.setStyleName("main-panel");
     mainPanel.add(topPanel, DockPanel.NORTH);
     mainPanel.add(centerPanel, DockPanel.CENTER);
     mainPanel.setCellHeight(centerPanel, "100%");
@@ -233,7 +233,7 @@ public void onClick(Widget sender) {
     public ConsoleToolbar(){
       super();
 
-      setStylePrimaryName("toolbar"); //$NON-NLS-1$
+      setStyleName("toolbar"); //$NON-NLS-1$
       add(new Label("In Toolbar"));
       add(statusLabel);
 
@@ -281,7 +281,7 @@ public void onClick(Widget sender) {
       headerPanel.setStyleName("CommonTasksHeader"); //$NON-NLS-1$
       
       Label header = new Label("Common Tasks");
-      header.setStylePrimaryName("commonTasksHeaderText"); //$NON-NLS-1$
+      header.setStyleName("commonTasksHeaderText"); //$NON-NLS-1$
       headerPanel.add(header);
       vertPanel.add(headerPanel);
       
@@ -292,7 +292,7 @@ public void onClick(Widget sender) {
       list.setStyleName("CommonTasksLinks"); //$NON-NLS-1$
       vertPanel.add(list);
       
-      setStylePrimaryName("CommonTasks"); //$NON-NLS-1$
+      setStyleName("CommonTasks"); //$NON-NLS-1$
       this.add(vertPanel);
     }
   }

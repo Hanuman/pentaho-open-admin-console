@@ -61,7 +61,7 @@ public class HomePanel extends SimplePanel {
    */
   public HomePanel(String url) {
     groupbox = new GroupBox("Welcome");
-    groupbox.setStylePrimaryName("homeGroupBox");
+    groupbox.setStyleName("homeGroupBox");
     this.add(groupbox);
     
 	 PacServiceAsync pacService = PacServiceFactory.getPacService();

@@ -12,10 +12,10 @@ public class GroupBox extends DockPanel{
   private Grid grid;
   
   public GroupBox(String title){
-    this.setStylePrimaryName("GroupBox");
+    this.setStyleName("GroupBox");
     
     this.title = new Label(title);
-    this.title.setStylePrimaryName("groupBoxHeader");
+    this.title.setStyleName("groupBoxHeader");
     
     grid = new Grid(5, 5);
     grid.setWidth("100%");
@@ -25,15 +25,15 @@ public class GroupBox extends DockPanel{
     
     grid.setWidget(0,1,this.title);
     
-    grid.getCellFormatter().setStylePrimaryName(0, 0, "groupbox-nw");
-    grid.getCellFormatter().setStylePrimaryName(0, 1, "groupbox-n");
-    grid.getCellFormatter().setStylePrimaryName(0, 2, "groupbox-ne");
-    grid.getCellFormatter().setStylePrimaryName(1, 0, "groupbox-w");
-    grid.getCellFormatter().setStylePrimaryName(1, 1, "groupbox-c");
-    grid.getCellFormatter().setStylePrimaryName(1, 2, "groupbox-e");
-    grid.getCellFormatter().setStylePrimaryName(2, 0, "groupbox-sw");
-    grid.getCellFormatter().setStylePrimaryName(2, 1, "groupbox-s");
-    grid.getCellFormatter().setStylePrimaryName(2, 2, "groupbox-se");
+    grid.getCellFormatter().setStyleName(0, 0, "groupbox-nw");
+    grid.getCellFormatter().setStyleName(0, 1, "groupbox-n");
+    grid.getCellFormatter().setStyleName(0, 2, "groupbox-ne");
+    grid.getCellFormatter().setStyleName(1, 0, "groupbox-w");
+    grid.getCellFormatter().setStyleName(1, 1, "groupbox-c");
+    grid.getCellFormatter().setStyleName(1, 2, "groupbox-e");
+    grid.getCellFormatter().setStyleName(2, 0, "groupbox-sw");
+    grid.getCellFormatter().setStyleName(2, 1, "groupbox-s");
+    grid.getCellFormatter().setStyleName(2, 2, "groupbox-se");
     
     this.add(grid, DockPanel.CENTER);
 //    
