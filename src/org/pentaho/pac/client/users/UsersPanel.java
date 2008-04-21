@@ -362,6 +362,11 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
   public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
     if ((sender == newUserDialogBox) && newUserDialogBox.isUserCreated()) {
       ProxyPentahoUser newUser = newUserDialogBox.getUser();
+      IListBoxFilter filter = usersList.getFilter();
+      if ((filter != null) && !filter.accepts(newUser)){
+        filterTextBox.setText("");
+        usersList.setFilter(null);
+      }
       usersList.addUser(newUser);
       usersList.setSelectedUser(newUser);
       userSelectionChanged();

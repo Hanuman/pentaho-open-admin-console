@@ -4,11 +4,13 @@ import java.util.Arrays;
 
 import org.pentaho.pac.client.common.ui.ObjectListBox;
 import org.pentaho.pac.common.users.ProxyPentahoUser;
+import org.pentaho.pac.common.users.UserComparator;
 
 public class UsersList extends ObjectListBox {
   
   public UsersList(boolean isMultiSelect) {
     super(isMultiSelect);
+    setComparator(new UserComparator());
   }
 
   public ProxyPentahoUser[] getUsers() {

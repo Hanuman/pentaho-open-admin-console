@@ -352,6 +352,11 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
   public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
     if ((sender == newRoleDialogBox) && newRoleDialogBox.isRoleCreated()) {
       ProxyPentahoRole newRole = newRoleDialogBox.getRole();
+      IListBoxFilter filter = rolesList.getFilter();
+      if ((filter != null) && !filter.accepts(newRole)){
+        filterTextBox.setText("");
+        rolesList.setFilter(null);
+      }
       rolesList.addRole(newRole);
       rolesList.setSelectedRole(newRole);
       roleSelectionChanged();

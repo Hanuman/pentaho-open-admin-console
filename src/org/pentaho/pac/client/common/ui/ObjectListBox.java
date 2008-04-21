@@ -1,6 +1,8 @@
 package org.pentaho.pac.client.common.ui;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -8,7 +10,8 @@ import com.google.gwt.user.client.ui.ListBox;
 
 public class ObjectListBox extends ListBox {
   List objects = new ArrayList();
-  IListBoxFilter listBoxFilter;
+  IListBoxFilter filter;
+  Comparator comparator;
   
   public ObjectListBox(boolean isMultiSelect) {
     super(isMultiSelect);
@@ -19,21 +22,54 @@ public class ObjectListBox extends ListBox {
   }
 
   protected void setObjects(List objects) {
-    
+    if (comparator != null) {
+      Collections.sort(objects, comparator);
+    }
     this.objects.clear();
     this.objects.addAll(objects);
     clear();
     applyFilter();
   }
 
+  public void setComparator(Comparator comparator) {
+    this.comparator = comparator;
+    if (comparator != null) {
+      setObjects(objects);
+    }
+  }
+  
+  public Comparator getComparator() {
+    return comparator;
+  }
+  
   public void addObject(Object object) {
     int index = objects.indexOf(object);
     if (index >= 0) {
       objects.set(index, object);
     } else {
-      objects.add(object);
-      if (doesFilterMatch(object)) {
-        addItem(getObjectText(object));
+      if (comparator == null) {
+        objects.add(object);
+        applyFilter();
+      } else {
+        index = 0;
+        int comparison = 0;
+        for (Iterator iterator = objects.iterator(); iterator.hasNext();) {
+          comparison = comparator.compare(iterator.next(), object);
+          if (comparison < 0) {
+            index++;
+          } else {
+            break;
+          }
+        }
+        if (comparison == 0) {
+          objects.set(index, object);
+        } else if (comparison > 0) {
+          objects.add(index, object);
+          applyFilter();
+        } else {
+          objects.add(object);
+          applyFilter();
+        }
       }
     }
   }
@@ -119,10 +155,14 @@ public class ObjectListBox extends ListBox {
   }
   
   public void setFilter(IListBoxFilter listBoxFilter) {
-    this.listBoxFilter = listBoxFilter;
+    this.filter = listBoxFilter;
     applyFilter();
   }
   
+  public IListBoxFilter getFilter() {
+    return filter;
+  }
+
   private void applyFilter() {
     List selectedObjects = getSelectedObjects();
     clear();
@@ -139,7 +179,7 @@ public class ObjectListBox extends ListBox {
   
   private boolean doesFilterMatch( Object filterTarget )
   {
-    return (listBoxFilter == null) || (listBoxFilter.accepts(filterTarget));
+    return (filter == null) || (filter.accepts(filterTarget));
   }
 
   protected Object getObject(String text)

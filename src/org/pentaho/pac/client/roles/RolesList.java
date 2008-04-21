@@ -4,11 +4,13 @@ import java.util.Arrays;
 
 import org.pentaho.pac.client.common.ui.ObjectListBox;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
+import org.pentaho.pac.common.roles.RoleComparator;
 
 public class RolesList extends ObjectListBox {
   
   public RolesList(boolean isMultiSelect) {
     super(isMultiSelect);
+    setComparator(new RoleComparator());
   }
 
   public ProxyPentahoRole[] getRoles() {
