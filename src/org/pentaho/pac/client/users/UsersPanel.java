@@ -33,6 +33,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class UsersPanel extends DockPanel implements ClickListener, ChangeListener, PopupListener, KeyboardListener {
 
+  
   class UserNameFilter implements IListBoxFilter {
     String userNameFilter;
     
@@ -103,6 +104,7 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     confirmDeleteUsersDialog.setMessage(MSGS.confirmUserDeletionMsg());
     confirmDeleteUsersDialog.setOnOkHandler( new ICallbackHandler() {
       public void onHandle(Object o) {
+        confirmDeleteUsersDialog.hide();
         deleteSelectedUsers();
         assignedRoleSelectionChanged();
       }
@@ -112,6 +114,7 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     confirmRemoveRoleAssignmentDialog.setMessage(MSGS.confirmRemoveRoleAssignmentMsg());
     confirmRemoveRoleAssignmentDialog.setOnOkHandler( new ICallbackHandler() {
       public void onHandle(Object o) {
+        confirmRemoveRoleAssignmentDialog.hide();
         unassignSelectedRoles();
         assignedRoleSelectionChanged();
       }

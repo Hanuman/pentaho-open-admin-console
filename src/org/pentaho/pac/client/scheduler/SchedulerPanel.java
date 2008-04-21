@@ -283,7 +283,7 @@ public class SchedulerPanel extends VerticalPanel {
     a.addClickListener( new ClickListener() {
       public void onClick( final Widget sender ) {
         
-        ConfirmDialog confirmDeleteDlg = new ConfirmDialog( "Delete Job", "Are you sure you want to delete this job?");
+        final ConfirmDialog confirmDeleteDlg = new ConfirmDialog( "Delete Job", "Are you sure you want to delete this job?");
         confirmDeleteDlg.center();
         confirmDeleteDlg.setOnOkHandler( new ICallbackHandler() {
           public void onHandle(Object o) {
@@ -293,6 +293,7 @@ public class SchedulerPanel extends VerticalPanel {
                 jobGroup,
                 new AsyncCallback() {
                   public void onSuccess( Object o ) {
+                    confirmDeleteDlg.hide();
                     forceRefresh();
                   }
             

@@ -56,6 +56,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     }  
   }
   
+  
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   MessageDialog errorDialog = new MessageDialog( MSGS.error() );
   RolesList rolesList = new RolesList(true);
@@ -103,6 +104,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     confirmDeleteRolesDialog.setMessage(MSGS.confirmRoleDeletionMsg());
     confirmDeleteRolesDialog.setOnOkHandler( new ICallbackHandler() {
       public void onHandle(Object o) {
+        confirmDeleteRolesDialog.hide();
         deleteSelectedRoles();
         assignedUserSelectionChanged();
       }
@@ -112,6 +114,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     confirmRemoveRoleAssignmentDialog.setMessage(MSGS.confirmRemoveRoleAssignmentMsg());
     confirmRemoveRoleAssignmentDialog.setOnOkHandler( new ICallbackHandler() {
       public void onHandle(Object o) {
+        confirmRemoveRoleAssignmentDialog.hide();
         unassignSelectedUsers();
         assignedUserSelectionChanged();
       }
