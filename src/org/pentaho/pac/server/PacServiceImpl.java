@@ -981,7 +981,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
 
   public void isBiServerAlive() throws PacServiceException {
     ThreadSafeHttpClient c = new ThreadSafeHttpClient( biServerBaseURL );
-    String response = c.execRemoteMethod( "Login", null );
+    String response = c.execRemoteMethod( "ping/alive.gif", null );
   }
   
   public int getBiServerStatusCheckPeriod() {
