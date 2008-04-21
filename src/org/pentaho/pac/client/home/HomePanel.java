@@ -20,9 +20,9 @@ import java.util.NoSuchElementException;
 import org.pentaho.pac.client.PacServiceAsync;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
+import org.pentaho.pac.client.common.ui.GroupBox;
 import org.pentaho.pac.client.common.ui.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
-import org.pentaho.pac.client.ui.GroupBox;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;

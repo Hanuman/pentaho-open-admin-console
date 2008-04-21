@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -227,29 +228,65 @@ public void onClick(Widget sender) {
   //TOP Toolbar
   private class ConsoleToolbar extends HorizontalPanel{
     
-    Label statusLabel = new Label();
+    Label statusLabel;
     Timer statusTimer = null;
+    
+    private SimplePanel serverIcon = new SimplePanel();
+    private Image statusIcon = new Image("style/images/status_working.png");
+    
+    
     
     public ConsoleToolbar(){
       super();
 
       setStyleName("toolbar"); //$NON-NLS-1$
-      add(new Label("In Toolbar"));
-      add(statusLabel);
-
-      statusLabel.setStyleName( "biServerDeadIcon" ); //$NON-NLS-1$
+     
+      SimplePanel indicatorsPanel = new SimplePanel();
+      indicatorsPanel.setStyleName("ToolBarIndicators");
+      add(indicatorsPanel);
+      
+      SimplePanel indicatorsLeft = new SimplePanel();
+      indicatorsLeft.setStyleName("indicators_left");
+      indicatorsPanel.add(indicatorsLeft);
+      
+      HorizontalPanel indicatorsRight = new HorizontalPanel();
+      indicatorsRight.setStyleName("indicators_right");
+      indicatorsLeft.add(indicatorsRight);
+     
+      statusLabel = new Label(getLocalizedMessages().toolbarStatus());
+      statusLabel.setStyleName("indicators_label");
+      
+      serverIcon.setStyleName("biServerAliveIcon");
+      
+      HorizontalPanel indicators = new HorizontalPanel();
+      indicators.setStyleName("indicators");
+      
+      indicators.add(statusLabel);
+      indicators.add(serverIcon);
+      indicators.add(statusIcon);
+      
+      indicatorsRight.add(indicators);
+      
+      HorizontalPanel buttonsPanel = new HorizontalPanel();
+      buttonsPanel.setStyleName("buttons");
+      buttonsPanel.add(new Image("style/images/refresh.png"));
+      buttonsPanel.add(new Image("style/images/help.png"));
+      add(buttonsPanel);
+      this.setCellHorizontalAlignment(buttonsPanel, HorizontalPanel.ALIGN_RIGHT);
+      this.setCellVerticalAlignment(buttonsPanel, HorizontalPanel.ALIGN_MIDDLE);
+      
       statusTimer = new Timer() {
         public void run()
         {
           PacServiceFactory.getPacService().isBiServerAlive(
               new AsyncCallback() {
                 public void onSuccess( Object isAlive ) {
-                  statusLabel.setStyleName( "biServerAliveIcon" ); //$NON-NLS-1$
-                  statusLabel.setTitle( MSGS.biServerAlive() );
+                  serverIcon.setStyleName( "biServerAliveIcon" ); //$NON-NLS-1$
+                  serverIcon.setTitle( MSGS.biServerAlive() );
                 }
                 public void onFailure(Throwable caught) {
-                  statusLabel.setStyleName( "biServerDeadIcon" ); //$NON-NLS-1$
-                  statusLabel.setTitle( MSGS.biServerDead() );
+                  serverIcon.setStyleName( "biServerDeadIcon" ); //$NON-NLS-1$
+                  serverIcon.setTitle( MSGS.biServerDead() );
                 }
               }
             );

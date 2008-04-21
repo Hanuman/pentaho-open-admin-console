@@ -906,4 +906,15 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key assignedItemsTitle
    */
   String assignedItemsTitle();
+  
+
+  
+
+  /**
+   * Translated "Status".
+   * 
+   * @return translated "Status"
+   * @gwt.key toolbarStatus
+   */
+  String toolbarStatus();
 }

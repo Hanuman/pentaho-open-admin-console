@@ -1140,3 +1140,57 @@ a:visited {
 	background-color: #ffffff
 }
 /* end styles for group box */
+
+.buttons{
+margin-right: 10px;
+}
+
+
+
+.ToolBarIndicators{
+	margin:  6px 0 0 18px;
+	padding:0;
+	float:left;
+
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	color: #292929;
+	font-size: 12px;
+	
+}
+
+.indicators_left{
+	background: url('style/images/indicator_left.png') top left no-repeat;
+	padding-left: 5px;
+}
+
+.indicators_right{
+	background: url('style/images/indicator_right.png') top right no-repeat;
+
+}
+
+.indicators{
+	background: url('style/images/indicator_middle.png') top repeat-x;
+	margin:0px 5px 0px 0px;
+	height: 43px;
+	width:auto;
+	padding: 0px;
+}
+
+.biServerAliveIcon{
+	background: url('style/images/status_server.png') top center no-repeat;
+	width:29px;
+	height: 42px;
+}
+
+.biServerDeadIcon{
+	background: url('style/images/status_critical.png') top center no-repeat;
+	width:29px;
+}
+
+.indicators_label{
+	line-height: 42px;
+	font-weight: bold;
+	margin-right: 8px;
+	
+}
