@@ -1052,7 +1052,7 @@ a:visited {
 }
 
 .biServerAliveIcon {
-  background-image:url(style/images/serverOn.gif);
+  background-image:url(style/images/serverAlive.gif);
   background-repeat: no-repeat;
   background-position: center center;
   width: 32px;
@@ -1061,7 +1061,7 @@ a:visited {
 }
 
 .biServerDeadIcon {
-  background-image:url(style/images/serverOff.gif);
+  background-image:url(style/images/serverDead.gif);
   background-repeat: no-repeat;
   background-position: center center;
   width: 32px;
