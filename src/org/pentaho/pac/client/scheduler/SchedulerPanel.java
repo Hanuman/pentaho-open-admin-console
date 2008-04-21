@@ -45,6 +45,7 @@ public class SchedulerPanel extends VerticalPanel {
   private String resumeSuspendState = "&nbsp;"; //$NON-NLS-1$
   private static final int INVALID_SCROLL_POS = -1;
   private int currScrollPos = INVALID_SCROLL_POS;
+  private Label loading = null;
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   
   private static final String USER_INSTRUCTION = MSGS.schedulerUserInstruction();
@@ -112,8 +113,6 @@ public class SchedulerPanel extends VerticalPanel {
   {
     return null != userInstructionLabel;
   }
-  
-  Label loading = null;
   
   private void createUI( List/*<Job>*/ jobList )
   {
