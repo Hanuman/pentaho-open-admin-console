@@ -11,46 +11,62 @@ import org.pentaho.pac.common.datasources.PentahoDataSource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DisclosurePanel;
+import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
+import com.google.gwt.user.client.ui.SourcesTabEvents;
+import com.google.gwt.user.client.ui.TabListener;
+import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class NewDataSourceDialogBox extends ConfirmDialog {
+public class NewDataSourceDialogBox extends ConfirmDialog{
 
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
+  private static final int GENERAL_PANEL_ID = 0;
+  private static final int ADVANCE_PANEL_ID = 1;
+
   Button testButton;
   DataSourceGeneralPanel dataSourceGeneralPanel = new DataSourceGeneralPanel();
-
   DataSourceAdvancePanel dataSourceAdvancePanel = new DataSourceAdvancePanel();
-  DisclosurePanel advancePanelOption = new DisclosurePanel("Advance");
-
   boolean dataSourceCreated = false;
   MessageDialog messageDialog = new MessageDialog( MSGS.error() );
+  TabPanel dataSourceTabPanel = new TabPanel();  
 
   public NewDataSourceDialogBox() {
     super();
     setTitle( MSGS.addDataSource() );
-   VerticalPanel verticalPanel = new VerticalPanel();
-    verticalPanel.add(dataSourceGeneralPanel);
-    advancePanelOption.add(dataSourceAdvancePanel);
-    advancePanelOption.setWidth("100%");
-    verticalPanel.setSpacing(4);
-    verticalPanel.add(advancePanelOption);
-    verticalPanel.setSpacing(4);    
-
-    verticalPanel.setWidth("250px");
+    dataSourceTabPanel.add(dataSourceGeneralPanel, "General");
+    dataSourceTabPanel.add(dataSourceAdvancePanel, "Advance");
     dataSourceGeneralPanel.setWidth("100%");
+    dataSourceGeneralPanel.setHeight("100%");
     dataSourceAdvancePanel.setWidth("100%");
+    dataSourceAdvancePanel.setHeight("100%");
     
-    verticalPanel.setStyleName( "newDataSourceDialogBox.detailsPanel" ); //$NON-NLS-1$
-    addWidgetToClientArea( verticalPanel );
+    dataSourceTabPanel.setStyleName( "newDataSourceDialogBox.detailsPanel" ); //$NON-NLS-1$
+    dataSourceTabPanel.setWidth("100%"); //$NON-NLS-1$
+    dataSourceTabPanel.setHeight("100%"); //$NON-NLS-1$
+    dataSourceTabPanel.getDeckPanel().setWidth("100%");
+    dataSourceTabPanel.selectTab(GENERAL_PANEL_ID);
+    DockPanel dockPanel = new DockPanel();
+    dockPanel.add(dataSourceTabPanel, DockPanel.CENTER);
+    dockPanel.setCellWidth(dataSourceTabPanel, "100%"); //$NON-NLS-1$
+    dockPanel.setCellHeight(dataSourceTabPanel, "100%"); //$NON-NLS-1$
+    dockPanel.setWidth("100%"); //$NON-NLS-1$
+    dockPanel.setHeight("100%"); //$NON-NLS-1$
+    addWidgetToClientArea( dockPanel );
     testButton = new Button(MSGS.test(), new ClickListener() {
       public void onClick(Widget sender) {
         testDataSourceConnection();
       }
     });
+
+    
     addWidgetToClientArea( testButton );
 
     setOnOkHandler( new ICallbackHandler() {
