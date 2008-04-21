@@ -750,6 +750,10 @@ a:visited {
   font-size: .8em;
 }
 
+.usersToggleBtn div {
+	padding-top: 19px;
+	text-align: center;
+}
 
 /* roles toggle button */
 .rolesToggleBtn {
@@ -787,6 +791,11 @@ a:visited {
   height: 32px;
   margin: 5px 0px 0px 10px; /* top right bottom left*/
   font-size: .8em;
+}
+
+.rolesToggleBtn div {
+	padding-top: 19px;
+	text-align: center;
 }
 
 .logo{

@@ -17,8 +17,8 @@ public class UsersAndRolesPanel extends DockPanel implements ClickListener {
 
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
 
-	ToggleButton usersButton = new ToggleButton();// MSGS.users(), MSGS.users() );
-  ToggleButton rolesButton = new ToggleButton();// MSGS.roles(), MSGS.roles() );
+	ToggleButton usersButton = new ToggleButton( MSGS.users(), MSGS.users() );
+  ToggleButton rolesButton = new ToggleButton( MSGS.roles(), MSGS.roles() );
   
   DeckPanel deckPanel = new DeckPanel();
   UsersPanel usersPanel = new UsersPanel();
