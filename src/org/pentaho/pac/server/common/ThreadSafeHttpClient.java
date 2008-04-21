@@ -17,6 +17,7 @@
 package org.pentaho.pac.server.common;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -69,31 +70,31 @@ public class ThreadSafeHttpClient {
      */
     public String execRemoteMethod( String serviceName, Map mapParams, String contentType )
         throws PacServiceException {
-
-      GetMethod method = null;
+      
+      InputStream responseStrm = null;
       NameValuePair[] params = mapToNameValuePair( mapParams );
-      try {
-        String serviceUrl = proxyUrl 
-          + ( ( StringUtils.isEmpty( serviceName ) ) ? "" : "/" + serviceName ); //$NON-NLS-1$ //$NON-NLS-2$
-        method = new GetMethod( serviceUrl );
+      String serviceUrl = proxyUrl 
+        + ( ( StringUtils.isEmpty( serviceName ) ) ? "" : "/" + serviceName ); //$NON-NLS-1$ //$NON-NLS-2$
+      GetMethod method = new GetMethod( serviceUrl );
 
-        method.addRequestHeader( "Content-Type", contentType ); //$NON-NLS-1$
-        
+      method.addRequestHeader( "Content-Type", contentType ); //$NON-NLS-1$
+      
 // TODO sbarkdull, do retries? if so, put number of retries in config file.
-        //method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(3, false));
-        
-        if ( null != params ) {
-          method.setQueryString(params);
-        }
+      //method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(3, false));
+      
+      if ( null != params ) {
+        method.setQueryString(params);
+      }
+      try {
         int httpStatus = CLIENT.executeMethod(method);
         if ( httpStatus != HttpStatus.SC_OK) {
           String status = method.getStatusLine().toString();
           throw new PacServiceException(status);
         }
-        // TODO sbarkdull, check for bad returns
         // trim() is necessary because SchedulerAdmin.jsp puts \n\r at the beginning of
         // the returned text, and the xml processor chokes on \n\r at the beginning.
-        return IOUtils.toString(method.getResponseBodyAsStream()).trim();
+        responseStrm = method.getResponseBodyAsStream();
+        return IOUtils.toString( responseStrm ).trim();
       } catch (IOException e) {
         throw new PacServiceException(e);
       } finally {
