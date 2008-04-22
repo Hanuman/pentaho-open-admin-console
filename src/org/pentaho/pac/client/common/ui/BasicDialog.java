@@ -4,6 +4,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -61,12 +62,26 @@ public class BasicDialog extends DialogBox {
     this.clientPanel.remove( row );
   }
   
-  protected void insertRowToClientArea( Widget widget, int beforeRow )
+  protected void insertRowIntoClientArea( Widget widget, int beforeRow )
   {
     this.clientPanel.insert( widget, beforeRow );
   }
   
   public void setTitle( String title ) {
     setText( title );
+  }
+
+  /**
+   * see: http://google-web-toolkit.googlecode.com/svn-history/r229/trunk/samples/mail/src/com/google/gwt/sample/mail/client/AboutDialog.java
+   */
+  public boolean onKeyDownPreview(char key, int modifiers) {
+    // Use the popup's key preview hooks to close the dialog when escape is pressed.
+    switch (key) {
+      case KeyboardListener.KEY_ESCAPE:
+        hide();
+        return false;
+      default:
+        return true;
+    }
   }
 }
