@@ -21,6 +21,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -31,15 +33,17 @@ public class AppConfigProperties {
 
   private static final Log logger = LogFactory.getLog(AppConfigProperties.class);
   private static final String PROPERTIES_FILE_NAME = "pac.properties"; //$NON-NLS-1$
-  private static final String PROPERTIES_PATH = "./config"; //$NON-NLS-1$
   private static Properties properties = null;
 
   static {
-    File propFile = new File(  PROPERTIES_PATH + "/" + PROPERTIES_FILE_NAME ); //$NON-NLS-1$
     InputStream s = null;
     try {
+      URL url = ClassLoader.getSystemResource("pac.properties");
+      File propFile = new File(url.toURI());
       s = new FileInputStream(propFile);
     } catch (FileNotFoundException e1) {
+      logger.error( Messages.getString( "PacService.OPEN_PROPS_FAILED", PROPERTIES_FILE_NAME ) ); //$NON-NLS-1$
+    } catch (URISyntaxException e) {
       logger.error( Messages.getString( "PacService.OPEN_PROPS_FAILED", PROPERTIES_FILE_NAME ) ); //$NON-NLS-1$
     }
     if ( null != s ) {

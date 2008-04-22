@@ -114,7 +114,7 @@
 				<attribute name="Implementation-Vendor" value="${impl.vendor}" />
 				<attribute name="Implementation-ProductID" value="${impl.productID}" />
 				<attribute name="Main-Class" value="org.pentaho.pac.server.JettyServer" />
-				<attribute name="Class-Path" value="${class-path}" />
+				<attribute name="Class-Path" value="../config/ ${class-path}" />
 			</manifest>
 			<fileset dir="${build.classes.dir}">
 				<!-- include only core -->
@@ -220,7 +220,7 @@
 			</fileset>
 		</copy>
 		<copy todir="${dist.dir}/config">
-			<fileset dir="config" includes="pac.properties" />
+			<fileset dir="config" includes="*.*" />
 		</copy>
 		<copy todir="${dist.dir}/www/">
 			<fileset dir="${gwt.output.dir}" />
