@@ -12,6 +12,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -25,23 +26,39 @@ import com.google.gwt.user.client.ui.Widget;
 public class DataSourcesPanel extends DockPanel implements ClickListener, ChangeListener, PopupListener {
 
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
+
   public static final int GENERAL_PANEL_ID = 0;
+
   public static final int ADVANCE_PANEL_ID = 1;
-  
+
   TabPanel generalAdvanceDbPanel = new TabPanel();
+
   MessageDialog messageDialog = new MessageDialog(); //$NON-NLS-1$
+
   DataSourcesList dataSourcesList = new DataSourcesList();
+
   PentahoDataSource[] dataSources = null;
-  
+
   DataSourceGeneralPanel dataSourceGeneralPanel = new DataSourceGeneralPanel();
+
   DataSourceAdvancePanel dataSourceAdvancePanel = new DataSourceAdvancePanel();
-  
+
+  DeckPanel deckPanel = new DeckPanel();
+
+  ToggleButton generalButton = new ToggleButton(MSGS.general(), MSGS.general());
+
+  ToggleButton advanceButton = new ToggleButton(MSGS.advance(), MSGS.advance());
+
   Button updateDataSourceBtn = new Button(MSGS.update());
+
   Button testDataSourceBtn = new Button(MSGS.test());
+
   Button addDataSourceBtn = new Button("+"); //$NON-NLS-1$
+
   Button deleteDataSourceBtn = new Button("-"); //$NON-NLS-1$
-  
+
   NewDataSourceDialogBox newDataSourceDialogBox = new NewDataSourceDialogBox();
+
   ConfirmDialog confirmDataSourceDeleteDialog = new ConfirmDialog(MSGS.deleteDataSources(), MSGS
       .confirmDataSourceDeletionMsg());
 
@@ -80,26 +97,44 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
       public void onHandle(Object o) {
         confirmDataSourceDeleteDialog.hide();
         deleteSelectedDataSources();
-        
+
       }
     });
   }
 
   public DockPanel buildDataSourceDetailsDockPanel() {
-   DockPanel dockPanel = new DockPanel();
+    DockPanel dockPanel = new DockPanel();
+
+    HorizontalPanel horizontalPanel = new HorizontalPanel();
+    horizontalPanel.add(generalButton);
+    horizontalPanel.add(advanceButton);
+    dockPanel.add(horizontalPanel, DockPanel.NORTH);
+    dockPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+    dockPanel.setSpacing(10);
+    generalButton.setTitle(MSGS.clickEditGeneral());
+    advanceButton.setTitle(MSGS.clickEditAdvance());
+
+    generalButton.setStylePrimaryName("generalToggleBtn"); //$NON-NLS-1$
+    advanceButton.setStylePrimaryName("advanceToggleBtn"); //$NON-NLS-1$
+
+    deckPanel.add(dataSourceGeneralPanel);
+    deckPanel.add(dataSourceAdvancePanel);
+    dockPanel.add(deckPanel, DockPanel.CENTER);
+
+    dockPanel.setCellWidth(deckPanel, "100%"); //$NON-NLS-1$
+    dockPanel.setCellHeight(deckPanel, "100%"); //$NON-NLS-1$
+
+    deckPanel.setWidth("100%"); //$NON-NLS-1$
+    deckPanel.setHeight("100%"); //$NON-NLS-1$
+    deckPanel.setStyleName("newDataSourceDialogBox.detailsPanel"); //$NON-NLS-1$
+    deckPanel.showWidget(GENERAL_PANEL_ID);
+    generalButton.setDown(false);
+    advanceButton.setDown(true);
+    generalButton.addClickListener(this);
+    advanceButton.addClickListener(this);
+
     dockPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
     dataSourceGeneralPanel.getJndiNameTextBox().setReadOnly(true);
-    generalAdvanceDbPanel.add(dataSourceGeneralPanel, "General");
-    generalAdvanceDbPanel.add(dataSourceAdvancePanel, "Advance");
-    dockPanel.add(generalAdvanceDbPanel, DockPanel.CENTER);
-    dockPanel.setCellWidth(generalAdvanceDbPanel, "75%"); //$NON-NLS-1$
-    dockPanel.setCellHeight(generalAdvanceDbPanel, "75%"); //$NON-NLS-1$
-    generalAdvanceDbPanel.setWidth("100%"); //$NON-NLS-1$
-    generalAdvanceDbPanel.setHeight("75%"); //$NON-NLS-1$
-    generalAdvanceDbPanel.selectTab(GENERAL_PANEL_ID);
-    generalAdvanceDbPanel.setStyleName("deckPanel");
-    dockPanel.setStyleName("dockPanel");
-
     return dockPanel;
 
   }
@@ -142,6 +177,20 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
       }
     } else if (sender == addDataSourceBtn) {
       addNewDataSource();
+    } else if (sender == generalButton) {
+      if (!generalButton.isDown()) {
+        generalButton.setDown(true);
+      } else {
+        advanceButton.setDown(false);
+        deckPanel.showWidget(GENERAL_PANEL_ID);
+      }
+    } else if (sender == advanceButton) {
+      if (!advanceButton.isDown()) {
+        advanceButton.setDown(true);
+      } else {
+        generalButton.setDown(false);
+        deckPanel.showWidget(ADVANCE_PANEL_ID);
+      }
     }    
   }
 

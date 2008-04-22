@@ -799,6 +799,95 @@ a:visited {
 	text-align: center;
 }
 
+
+/* general database toggle button */
+.generalToggleBtn {
+  background-image:url(style/images/Gen_off.png);
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 32px;
+  height: 32px;
+  margin: 5px 0px 0px 10px; /* top right bottom left*/
+  font-size: .8em;
+}
+.generalToggleBtn-up-hovering {
+  background-image:url(style/images/Gen_over.png);
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 32px;
+  height: 32px;
+  margin: 5px 0px 0px 10px; /* top right bottom left*/
+  font-size: .8em;
+}
+.generalToggleBtn-down {
+  background-image:url(style/images/Gen_selected.png);
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 32px;
+  height: 32px;
+  margin: 5px 0px 0px 10px; /* top right bottom left*/
+  font-size: .8em;
+}
+.generalToggleBtn-down-hovering {
+  background-image:url(style/images/Gen_selected.png);
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 32px;
+  height: 32px;
+  margin: 5px 0px 0px 10px; /* top right bottom left*/
+  font-size: .8em;
+}
+
+.generalToggleBtn div {
+	padding-top: 19px;
+	text-align: center;
+}
+
+/* Advance Database toggle button */
+.advanceToggleBtn {
+  background-image:url(style/images/Advanced_off.png);
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 32px;
+  height: 32px;
+  margin: 5px 0px 0px 10px; /* top right bottom left*/
+  font-size: .8em;
+}
+.advanceToggleBtn-up-hovering {
+  background-image:url(style/images/Advanced_over.png);
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 32px;
+  height: 32px;
+  margin: 5px 0px 0px 10px; /* top right bottom left*/
+  font-size: .8em;
+}
+.advanceToggleBtn-down {
+  background-image:url(style/images/Adv_Selected.png);
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 32px;
+  height: 32px;
+  margin: 5px 0px 0px 10px; /* top right bottom left*/
+  font-size: .8em;
+}
+.advanceToggleBtn-down-hovering {
+  background-image:url(style/images/Adv_Selected.png);
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 32px;
+  height: 32px;
+  margin: 5px 0px 0px 10px; /* top right bottom left*/
+  font-size: .8em;
+}
+
+.advanceToggleBtn div {
+	padding-top: 19px;
+	text-align: center;
+}
+
+
+
 .logo{
 	background: url(style/images/pentaho_logo.png) top center no-repeat;
 	height: 60px;

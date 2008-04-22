@@ -12,20 +12,16 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DeckPanel;
-import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.PasswordTextBox;
-import com.google.gwt.user.client.ui.SourcesTabEvents;
-import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ToggleButton;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class NewDataSourceDialogBox extends ConfirmDialog{
+public class NewDataSourceDialogBox extends ConfirmDialog {
 
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   private static final int GENERAL_PANEL_ID = 0;
@@ -36,28 +32,69 @@ public class NewDataSourceDialogBox extends ConfirmDialog{
   DataSourceAdvancePanel dataSourceAdvancePanel = new DataSourceAdvancePanel();
   boolean dataSourceCreated = false;
   MessageDialog messageDialog = new MessageDialog( MSGS.error() );
-  TabPanel dataSourceTabPanel = new TabPanel();  
-
+  DeckPanel deckPanel = new DeckPanel();
+  ToggleButton generalButton;
+  ToggleButton advanceButton;
   public NewDataSourceDialogBox() {
     super();
+    DockPanel dockPanel = new DockPanel();
+    
+    generalButton = new ToggleButton( MSGS.general(), MSGS.general() );
+    advanceButton = new ToggleButton( MSGS.advance(), MSGS.advance() );
+    
     setTitle( MSGS.addDataSource() );
     setClientSize( "350px", "300px" ); //$NON-NLS-1$ //$NON-NLS-2$
-    dataSourceTabPanel.add(dataSourceGeneralPanel, "General");
-    dataSourceTabPanel.add(dataSourceAdvancePanel, "Advance");
+    HorizontalPanel horizontalPanel = new HorizontalPanel();
+    horizontalPanel.add(generalButton);
+    horizontalPanel.add(advanceButton);
+    dockPanel.add(horizontalPanel, DockPanel.NORTH);
+    dockPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
+    dockPanel.setSpacing(10);
+    generalButton.setTitle( MSGS.clickAddGeneral() );
+    advanceButton.setTitle( MSGS.clickAddAdvance() );
+    
+    generalButton.setStylePrimaryName( "generalToggleBtn" ); //$NON-NLS-1$
+    advanceButton.setStylePrimaryName( "advanceToggleBtn" ); //$NON-NLS-1$
+
+    deckPanel.add(dataSourceGeneralPanel);
+    deckPanel.add(dataSourceAdvancePanel);
+    dockPanel.add(deckPanel, DockPanel.CENTER);
+    
+    dockPanel.setCellWidth(deckPanel, "100%"); //$NON-NLS-1$
+    dockPanel.setCellHeight(deckPanel, "100%"); //$NON-NLS-1$
+    
+    deckPanel.setWidth("100%"); //$NON-NLS-1$
+    deckPanel.setHeight("100%"); //$NON-NLS-1$
+    deckPanel.setStyleName( "newDataSourceDialogBox.detailsPanel" ); //$NON-NLS-1$
+    deckPanel.showWidget(GENERAL_PANEL_ID);
+    generalButton.setDown(false);
+    advanceButton.setDown(true);
+    generalButton.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        if (!generalButton.isDown()) {
+          generalButton.setDown(true);
+        } else {
+          advanceButton.setDown(false);
+          deckPanel.showWidget(GENERAL_PANEL_ID);
+        }
+      }
+    });
+    advanceButton.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        if (!advanceButton.isDown()) {
+          advanceButton.setDown(true);
+        } else {
+          generalButton.setDown(false);
+          deckPanel.showWidget(ADVANCE_PANEL_ID);
+        }
+      }
+    });
+
     dataSourceGeneralPanel.setWidth("100%"); //$NON-NLS-1$
     dataSourceGeneralPanel.setHeight("100%"); //$NON-NLS-1$
     dataSourceAdvancePanel.setWidth("100%"); //$NON-NLS-1$
     dataSourceAdvancePanel.setHeight("100%"); //$NON-NLS-1$
     
-    dataSourceTabPanel.setStyleName( "newDataSourceDialogBox.detailsPanel" ); //$NON-NLS-1$
-    dataSourceTabPanel.setWidth("100%"); //$NON-NLS-1$
-    dataSourceTabPanel.setHeight("100%"); //$NON-NLS-1$
-    dataSourceTabPanel.getDeckPanel().setWidth("100%"); //$NON-NLS-1$
-    dataSourceTabPanel.selectTab(GENERAL_PANEL_ID);
-    DockPanel dockPanel = new DockPanel();
-    dockPanel.add(dataSourceTabPanel, DockPanel.CENTER);
-    dockPanel.setCellWidth(dataSourceTabPanel, "100%"); //$NON-NLS-1$
-    dockPanel.setCellHeight(dataSourceTabPanel, "100%"); //$NON-NLS-1$
     dockPanel.setWidth("100%"); //$NON-NLS-1$
     dockPanel.setHeight("100%"); //$NON-NLS-1$
     addWidgetToClientArea( dockPanel );
