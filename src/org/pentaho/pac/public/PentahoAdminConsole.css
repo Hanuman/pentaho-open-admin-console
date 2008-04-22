@@ -208,27 +208,27 @@ a:visited {
 }
 
 .gwt-Button {
-   height:22px;
-   background-image: expression('url(buttonbg.gif)');
-   background-image:url(buttonbg.gif);
-   font-weight: plain;
-   border-style:solid;
-   border-color:#000000;
-   border-width:1px;
+	height:22px;
+	background-image: expression('url(buttonbg.gif)');
+	background-image:url(buttonbg.gif);
+	font-weight: plain;
+	border-style:solid;
+	border-color:#000000;
+	border-width:1px;
 	margin: 0px 0px 0px 0px;	/* top right bottom left*/
 }
 
 .gwt-Button:hover {
 	margin: 0px 0px 0px 0px;	/* top right bottom left*/
-   height:22px;
-   background-image:url(buttonhoverbg.gif);
-   background-image: expression('url(buttonhoverbg.gif)');
-   font-weight: plain;
-   border-style:solid;
-   border-color:#000000;
-   border-width:1px;
-   cursor: pointer;
-   cursor: hand;
+	height:22px;
+	background-image:url(buttonhoverbg.gif);
+	background-image: expression('url(buttonhoverbg.gif)');
+	font-weight: plain;
+	border-style:solid;
+	border-color:#000000;
+	border-width:1px;
+	cursor: pointer;
+	cursor: hand;
 }
 
 .gwt-Button:disabled {
