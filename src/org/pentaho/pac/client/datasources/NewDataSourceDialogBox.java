@@ -41,6 +41,7 @@ public class NewDataSourceDialogBox extends ConfirmDialog{
   public NewDataSourceDialogBox() {
     super();
     setTitle( MSGS.addDataSource() );
+    setClientSize( "350px", "300px" );
     dataSourceTabPanel.add(dataSourceGeneralPanel, "General");
     dataSourceTabPanel.add(dataSourceAdvancePanel, "Advance");
     dataSourceGeneralPanel.setWidth("100%");
