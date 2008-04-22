@@ -79,25 +79,21 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
     homeToggleBtn.addClickListener(this);
     adminToggleBtn.addClickListener(this);
     
-
     Label spacer = new Label();
     leftVerticalPanel.add(spacer);
-    leftVerticalPanel.setCellHeight(spacer, "20px");
+    leftVerticalPanel.setCellHeight(spacer, "20px"); //$NON-NLS-1$
     leftVerticalPanel.add(homeToggleBtn);
     leftVerticalPanel.add(adminToggleBtn);
     
     spacer = new Label();
     leftVerticalPanel.add(spacer);
-    leftVerticalPanel.setCellHeight(spacer, "50");
+    leftVerticalPanel.setCellHeight(spacer, "50"); //$NON-NLS-1$
     leftVerticalPanel.add(commonTasks);
     spacer = new Label();
     leftVerticalPanel.add(spacer);
-    leftVerticalPanel.setCellHeight(spacer, "100%");
-    
-    
+    leftVerticalPanel.setCellHeight(spacer, "100%"); //$NON-NLS-1$
+
     leftVerticalPanel.setStyleName("leftTabPanel"); //$NON-NLS-1$
-    
-    
     
     // Order that things are placed in the tab panel is important. There are
     // static constants defined within this class that assume a given tab position
@@ -116,36 +112,33 @@ public class PentahoAdminConsole implements EntryPoint, ClickListener, TabListen
     topPanel.add(logo);
     topPanel.add(toolbar);
     
-
-    adminTabPanel.setWidth("97%");
-    adminTabPanel.setHeight("97%");
-    adminTabPanel.getDeckPanel().setHeight("100%");
+    adminTabPanel.setWidth("97%"); //$NON-NLS-1$
+    adminTabPanel.setHeight("97%"); //$NON-NLS-1$
+    adminTabPanel.getDeckPanel().setHeight("100%"); //$NON-NLS-1$
     
-    usersAndRolesPanel.setWidth("100%");
-    usersAndRolesPanel.setHeight("100%");
-    dataSourcesPanel.setWidth("100%");
-    dataSourcesPanel.setHeight("100%");
-    servicesPanel.setWidth("100%");
-    servicesPanel.setHeight("100%");
-    deckPanel.setWidth("100%");
-    deckPanel.setHeight("100%");
+    usersAndRolesPanel.setWidth("100%"); //$NON-NLS-1$
+    usersAndRolesPanel.setHeight("100%"); //$NON-NLS-1$
+    dataSourcesPanel.setWidth("100%"); //$NON-NLS-1$
+    dataSourcesPanel.setHeight("100%"); //$NON-NLS-1$
+    servicesPanel.setWidth("100%"); //$NON-NLS-1$
+    servicesPanel.setHeight("100%"); //$NON-NLS-1$
+    deckPanel.setWidth("100%"); //$NON-NLS-1$
+    deckPanel.setHeight("100%"); //$NON-NLS-1$
     adminTabPanel.selectTab(ADMIN_USERS_ROLES_TAB_INDEX);
 
     centerPanel.add(leftVerticalPanel, DockPanel.WEST);
     centerPanel.add(deckPanel, DockPanel.CENTER);
-    centerPanel.setCellHeight(deckPanel, "100%");
-    centerPanel.setCellWidth(deckPanel, "100%");
+    centerPanel.setCellHeight(deckPanel, "100%"); //$NON-NLS-1$
+    centerPanel.setCellWidth(deckPanel, "100%"); //$NON-NLS-1$
     
     //Main DockPanel
-    mainPanel.setStyleName("main-panel");
+    mainPanel.setStyleName("main-panel"); //$NON-NLS-1$
     mainPanel.add(topPanel, DockPanel.NORTH);
     mainPanel.add(centerPanel, DockPanel.CENTER);
-    mainPanel.setCellHeight(centerPanel, "100%");
-    
-    
+    mainPanel.setCellHeight(centerPanel, "100%"); //$NON-NLS-1$
     
     //attach all to the page
-    RootPanel.get("canvas").add(mainPanel); 
+    RootPanel.get("canvas").add(mainPanel);  //$NON-NLS-1$
     deckPanel.showWidget(0);
     homeToggleBtn.setDown(true);
     
@@ -228,13 +221,10 @@ public void onClick(Widget sender) {
   //TOP Toolbar
   private class ConsoleToolbar extends HorizontalPanel{
     
-    Label statusLabel;
-    Timer statusTimer = null;
-    
+    private Label statusLabel;
+    private Timer statusTimer = null;
     private SimplePanel serverIcon = new SimplePanel();
-    private Image statusIcon = new Image("style/images/status_working.png");
-    
-    
+    private Image statusIcon = new Image("style/images/status_working.png"); //$NON-NLS-1$
     
     public ConsoleToolbar(){
       super();
@@ -242,24 +232,25 @@ public void onClick(Widget sender) {
       setStyleName("toolbar"); //$NON-NLS-1$
      
       SimplePanel indicatorsPanel = new SimplePanel();
-      indicatorsPanel.setStyleName("ToolBarIndicators");
+      indicatorsPanel.setStyleName("ToolBarIndicators"); //$NON-NLS-1$
       add(indicatorsPanel);
       
       SimplePanel indicatorsLeft = new SimplePanel();
-      indicatorsLeft.setStyleName("indicators_left");
+      indicatorsLeft.setStyleName("indicators_left"); //$NON-NLS-1$
       indicatorsPanel.add(indicatorsLeft);
       
       HorizontalPanel indicatorsRight = new HorizontalPanel();
-      indicatorsRight.setStyleName("indicators_right");
+      indicatorsRight.setStyleName("indicators_right"); //$NON-NLS-1$
       indicatorsLeft.add(indicatorsRight);
      
       statusLabel = new Label(getLocalizedMessages().toolbarStatus());
-      statusLabel.setStyleName("indicators_label");
-      
-      serverIcon.setStyleName("biServerAliveIcon");
+      statusLabel.setStyleName("indicators_label"); //$NON-NLS-1$
+
+      serverIcon.setStyleName( "biServerDeadIcon" ); //$NON-NLS-1$
+      serverIcon.setTitle( MSGS.biServerDead() );
       
       HorizontalPanel indicators = new HorizontalPanel();
-      indicators.setStyleName("indicators");
+      indicators.setStyleName("indicators"); //$NON-NLS-1$
       
       indicators.add(statusLabel);
       indicators.add(serverIcon);
@@ -268,9 +259,9 @@ public void onClick(Widget sender) {
       indicatorsRight.add(indicators);
       
       HorizontalPanel buttonsPanel = new HorizontalPanel();
-      buttonsPanel.setStyleName("buttons");
-      buttonsPanel.add(new Image("style/images/refresh.png"));
-      buttonsPanel.add(new Image("style/images/help.png"));
+      buttonsPanel.setStyleName("buttons"); //$NON-NLS-1$
+      buttonsPanel.add(new Image("style/images/refresh.png")); //$NON-NLS-1$
+      buttonsPanel.add(new Image("style/images/help.png")); //$NON-NLS-1$
       add(buttonsPanel);
       this.setCellHorizontalAlignment(buttonsPanel, HorizontalPanel.ALIGN_RIGHT);
       this.setCellVerticalAlignment(buttonsPanel, HorizontalPanel.ALIGN_MIDDLE);
@@ -323,9 +314,9 @@ public void onClick(Widget sender) {
       vertPanel.add(headerPanel);
       
       VerticalPanel list = new VerticalPanel();
-      list.add(new Hyperlink("Link 1 text","Link1"));
-      list.add(new Hyperlink("Link 2 text","Link2"));
-      list.add(new Hyperlink("Link 3 text","Link3"));
+      list.add(new Hyperlink("Link 1 text","Link1")); //$NON-NLS-2$
+      list.add(new Hyperlink("Link 2 text","Link2")); //$NON-NLS-2$
+      list.add(new Hyperlink("Link 3 text","Link3")); //$NON-NLS-2$
       list.setStyleName("CommonTasksLinks"); //$NON-NLS-1$
       vertPanel.add(list);
       
