@@ -41,13 +41,13 @@ public class NewDataSourceDialogBox extends ConfirmDialog{
   public NewDataSourceDialogBox() {
     super();
     setTitle( MSGS.addDataSource() );
-    setClientSize( "350px", "300px" );
+    setClientSize( "350px", "300px" ); //$NON-NLS-1$ //$NON-NLS-2$
     dataSourceTabPanel.add(dataSourceGeneralPanel, "General");
     dataSourceTabPanel.add(dataSourceAdvancePanel, "Advance");
-    dataSourceGeneralPanel.setWidth("100%");
-    dataSourceGeneralPanel.setHeight("100%");
-    dataSourceAdvancePanel.setWidth("100%");
-    dataSourceAdvancePanel.setHeight("100%");
+    dataSourceGeneralPanel.setWidth("100%"); //$NON-NLS-1$
+    dataSourceGeneralPanel.setHeight("100%"); //$NON-NLS-1$
+    dataSourceAdvancePanel.setWidth("100%"); //$NON-NLS-1$
+    dataSourceAdvancePanel.setHeight("100%"); //$NON-NLS-1$
     
     dataSourceTabPanel.setStyleName( "newDataSourceDialogBox.detailsPanel" ); //$NON-NLS-1$
     dataSourceTabPanel.setWidth("100%"); //$NON-NLS-1$
@@ -228,7 +228,7 @@ public class NewDataSourceDialogBox extends ConfirmDialog{
     if (query != null && query.length() > 0) {
       dataSource.setQuery(query);
     } else {
-      dataSource.setQuery("");
+      dataSource.setQuery(""); //$NON-NLS-1$
     }
     if (wait >= 0) {
       dataSource.setWait(wait);
