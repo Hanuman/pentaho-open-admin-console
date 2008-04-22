@@ -9,7 +9,6 @@
 	<classpathentry kind="lib" path="lib/asm-attrs.jar"/>
 	<classpathentry kind="lib" path="lib/cglib-2.1.3.jar"/>
 	<classpathentry kind="lib" path="lib/commons-codec-1.3.jar"/>
-	<classpathentry kind="lib" path="lib/commons-httpclient-3.0-rc4.jar"/>
 	<classpathentry kind="lib" path="lib/dom4j-1.6.1.jar"/>
 	<classpathentry kind="lib" path="lib/javassist.jar"/>
 	<classpathentry kind="lib" path="lib/jta.jar"/>
@@ -28,6 +27,7 @@
 	<classpathentry kind="lib" path="lib/servlet-api-2.5-6.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/gwt/jetty-gwt-6.1.9.jar"/>
 	<classpathentry kind="lib" path="lib/hibernate/hibernate3.jar"/>
+	<classpathentry kind="lib" path="lib/commons-httpclient-3.1.jar" sourcepath="C:/software/commons-httpclient-3.1/src"/>
 	<classpathentry kind="lib" path="config"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
