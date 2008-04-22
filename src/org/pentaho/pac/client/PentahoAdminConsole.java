@@ -6,6 +6,7 @@ import org.pentaho.pac.client.home.HomePanel;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.scheduler.SchedulerPanel;
 import org.pentaho.pac.client.services.AdminServicesPanel;
+import org.pentaho.pac.client.utils.PacImageBundle;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -224,7 +225,7 @@ public void onClick(Widget sender) {
     private Label statusLabel;
     private Timer statusTimer = null;
     private SimplePanel serverIcon = new SimplePanel();
-    private Image statusIcon = new Image("style/images/status_working.png"); //$NON-NLS-1$
+    private Image statusIcon = PacImageBundle.getBundle().statusWorkingIcon().createImage();
     
     public ConsoleToolbar(){
       super();
@@ -260,8 +261,8 @@ public void onClick(Widget sender) {
       
       HorizontalPanel buttonsPanel = new HorizontalPanel();
       buttonsPanel.setStyleName("buttons"); //$NON-NLS-1$
-      buttonsPanel.add(new Image("style/images/refresh.png")); //$NON-NLS-1$
-      buttonsPanel.add(new Image("style/images/help.png")); //$NON-NLS-1$
+      buttonsPanel.add(PacImageBundle.getBundle().refreshIcon().createImage());
+      buttonsPanel.add(PacImageBundle.getBundle().helpIcon().createImage());
       add(buttonsPanel);
       this.setCellHorizontalAlignment(buttonsPanel, HorizontalPanel.ALIGN_RIGHT);
       this.setCellVerticalAlignment(buttonsPanel, HorizontalPanel.ALIGN_MIDDLE);
