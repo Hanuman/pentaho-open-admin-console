@@ -30,8 +30,8 @@ public class UsersAndRolesPanel extends DockPanel implements ClickListener {
   
   public UsersAndRolesPanel() {
     HorizontalPanel horizontalPanel = new HorizontalPanel();
-    horizontalPanel.add(usersButton);
     horizontalPanel.add(rolesButton);
+    horizontalPanel.add(usersButton);
     add(horizontalPanel, DockPanel.NORTH);
     setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 
@@ -40,9 +40,9 @@ public class UsersAndRolesPanel extends DockPanel implements ClickListener {
     
     usersButton.setStylePrimaryName( "usersToggleBtn" ); //$NON-NLS-1$
     rolesButton.setStylePrimaryName( "rolesToggleBtn" ); //$NON-NLS-1$
-   
-    deckPanel.add(usersPanel);
+
     deckPanel.add(rolesPanel);
+    deckPanel.add(usersPanel);
     add(deckPanel, DockPanel.CENTER);
     
     setCellWidth(deckPanel, "100%"); //$NON-NLS-1$
@@ -52,8 +52,8 @@ public class UsersAndRolesPanel extends DockPanel implements ClickListener {
     deckPanel.setHeight("100%"); //$NON-NLS-1$
     
     deckPanel.showWidget(0);
-    usersButton.setDown(true);
-    rolesButton.setDown(false);
+    usersButton.setDown(false);
+    rolesButton.setDown(true);
     usersButton.addClickListener(this);
     rolesButton.addClickListener(this);
   }
