@@ -1125,6 +1125,15 @@ a:visited {
 	padding: 0px;
 	margin: 0px 0px 0px 10px;	/* top right bottom left*/
 }
+
+.basicDialog\.titleBarContent {
+	cursor: move;
+}
+
+.basicDialog\.closeIcon {
+	cursor: default;
+}
+
 /* end styles for BasicDialog */
 
 .newDataSourceDialogBox\.detailsPanel {
