@@ -1061,22 +1061,6 @@ a:visited {
 	width: 100%;
 }
 
-.biServerAliveIcon {
-  background-image:url(style/images/serverAlive.gif);
-  background-repeat: no-repeat;
-  background-position: center center;
-  width: 32px;
-  height: 32px;
-}
-
-.biServerDeadIcon {
-  background-image:url(style/images/serverDead.gif);
-  background-repeat: no-repeat;
-  background-position: center center;
-  width: 32px;
-  height: 32px;
-}
-
 /* begin styles for group box */
 .groupBox{
 }
@@ -1145,8 +1129,7 @@ a:visited {
 margin-right: 10px;
 }
 
-
-
+/* begin toolbar styles */
 .ToolBarIndicators{
 	margin:  6px 0 0 18px;
 	padding:0;
@@ -1177,20 +1160,21 @@ margin-right: 10px;
 	padding: 0px;
 }
 
-.biServerAliveIcon{
-	background: url('style/images/status_server.png') top center no-repeat;
-	width:29px;
-	height: 42px;
-}
-
-.biServerDeadIcon{
-	background: url('style/images/status_critical.png') top center no-repeat;
-	width:29px;
-}
-
 .indicators_label{
 	line-height: 42px;
 	font-weight: bold;
 	margin-right: 8px;
-	
 }
+
+.biServerAliveIcon {
+  background: url(style/images/serverAlive.png) top center no-repeat;
+	width: 29px;
+	height: 42px;
+}
+
+.biServerDeadIcon {
+  background: url(style/images/serverDead.png) top center no-repeat;
+	width: 29px;
+	height: 42px;
+}
+/* end toolbar styles */
