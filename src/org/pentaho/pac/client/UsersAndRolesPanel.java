@@ -25,8 +25,8 @@ public class UsersAndRolesPanel extends DockPanel implements ClickListener {
   RolesPanel rolesPanel = new RolesPanel();
   
   // TODO sbarkdull, w/java 5 make it an enum
-  public static final int USER_PANEL_ID = 0;
-  public static final int ROLE_PANEL_ID = 1;
+  public static final int USER_PANEL_ID = 1;
+  public static final int ROLE_PANEL_ID = 0;
   
   public UsersAndRolesPanel() {
     HorizontalPanel horizontalPanel = new HorizontalPanel();
