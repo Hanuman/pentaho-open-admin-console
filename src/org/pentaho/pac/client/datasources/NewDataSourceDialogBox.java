@@ -52,7 +52,7 @@ public class NewDataSourceDialogBox extends ConfirmDialog{
     dataSourceTabPanel.setStyleName( "newDataSourceDialogBox.detailsPanel" ); //$NON-NLS-1$
     dataSourceTabPanel.setWidth("100%"); //$NON-NLS-1$
     dataSourceTabPanel.setHeight("100%"); //$NON-NLS-1$
-    dataSourceTabPanel.getDeckPanel().setWidth("100%");
+    dataSourceTabPanel.getDeckPanel().setWidth("100%"); //$NON-NLS-1$
     dataSourceTabPanel.selectTab(GENERAL_PANEL_ID);
     DockPanel dockPanel = new DockPanel();
     dockPanel.add(dataSourceTabPanel, DockPanel.CENTER);
