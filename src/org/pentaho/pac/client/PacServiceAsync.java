@@ -1,6 +1,5 @@
 package org.pentaho.pac.client;
 
-import org.pentaho.pac.common.PacServiceException;
 import org.pentaho.pac.common.datasources.IPentahoDataSource;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
 import org.pentaho.pac.common.users.ProxyPentahoUser;
