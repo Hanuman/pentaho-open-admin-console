@@ -16,7 +16,7 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
    * Must refer to a valid module that sources this class.
    */
   public String getModuleName() {
-    return "org.pentaho.pac.PentahoAdminConsole";
+    return "org.pentaho.pac.PentahoAdminConsole"; //$NON-NLS-1$
   }
 
   /**
@@ -101,14 +101,14 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
     Timer timer = new Timer() {
       public void run() {
         PentahoDataSource dataSource = new PentahoDataSource();
-        String driverClass = "";
+        String driverClass = ""; //$NON-NLS-1$
         int idleConn = 20;
-        String jndiName = "myJndi";
+        String jndiName = "myJndi"; //$NON-NLS-1$
         int maxActConn = 25;
-        String userName = "hibuser";
-        String password = "password";
-        String query = "select * from users;";
-        String url = "jdbc:hsqldb:hsql://localhost:9001/hibernate";
+        String userName = "hibuser"; //$NON-NLS-1$
+        String password = "password"; //$NON-NLS-1$
+        String query = "select * from users;"; //$NON-NLS-1$
+        String url = "jdbc:hsqldb:hsql://localhost:9001/hibernate"; //$NON-NLS-1$
         long wait = 1000;
         dataSource.setDriverClass(driverClass);
         dataSource.setIdleConn(idleConn);
@@ -155,14 +155,14 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
     Timer timer = new Timer() {
       public void run() {
         PentahoDataSource dataSource = new PentahoDataSource();
-        String driverClass = "";
+        String driverClass = ""; //$NON-NLS-1$
         int idleConn = 20;
-        String jndiName = "myJndi";
+        String jndiName = "myJndi"; //$NON-NLS-1$
         int maxActConn = 25;
-        String userName = "hibuser";
-        String password = "password";
-        String query = "select * from users;";
-        String url = "jdbc:hsqldb:hsql://localhost:9001/hibernate";
+        String userName = "hibuser"; //$NON-NLS-1$
+        String password = "password"; //$NON-NLS-1$
+        String query = "select * from users;"; //$NON-NLS-1$
+        String url = "jdbc:hsqldb:hsql://localhost:9001/hibernate"; //$NON-NLS-1$
         long wait = 1000;
         dataSource.setDriverClass(driverClass);
         dataSource.setIdleConn(idleConn);
@@ -208,14 +208,14 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
     Timer timer = new Timer() {
       public void run() {
         PentahoDataSource dataSource = new PentahoDataSource();
-        String driverClass = "";
+        String driverClass = ""; //$NON-NLS-1$
         int idleConn = 20;
-        String jndiName = "myJndi";
+        String jndiName = "myJndi"; //$NON-NLS-1$
         int maxActConn = 25;
-        String userName = "pentaho_user";
-        String password = "password";
-        String query = "select * from orders;";
-        String url = "jdbc:hsqldb:hsql://localhost:9001/sampledata";
+        String userName = "pentaho_user"; //$NON-NLS-1$
+        String password = "password"; //$NON-NLS-1$
+        String query = "select * from orders;"; //$NON-NLS-1$
+        String url = "jdbc:hsqldb:hsql://localhost:9001/sampledata"; //$NON-NLS-1$
         long wait = 1000;
         dataSource.setDriverClass(driverClass);
         dataSource.setIdleConn(idleConn);
@@ -260,14 +260,14 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
       public void run() {
         PentahoDataSource dataSource = new PentahoDataSource();
         PentahoDataSource[] dataSources = new PentahoDataSource[1];
-        String driverClass = "";
+        String driverClass = ""; //$NON-NLS-1$
         int idleConn = 20;
-        String jndiName = "myJndi";
+        String jndiName = "myJndi"; //$NON-NLS-1$
         int maxActConn = 25;
-        String userName = "pentaho_user";
-        String password = "password";
-        String query = "select * from orders;";
-        String url = "jdbc:hsqldb:hsql://localhost:9001/sampledata";
+        String userName = "pentaho_user"; //$NON-NLS-1$
+        String password = "password"; //$NON-NLS-1$
+        String query = "select * from orders;"; //$NON-NLS-1$
+        String url = "jdbc:hsqldb:hsql://localhost:9001/sampledata"; //$NON-NLS-1$
         long wait = 1000;
         dataSource.setDriverClass(driverClass);
         dataSource.setIdleConn(idleConn);
@@ -339,10 +339,10 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
     Timer timer = new Timer() {
       public void run() {
         ProxyPentahoUser user = new ProxyPentahoUser();
-        String description = "myuser";
+        String description = "myuser"; //$NON-NLS-1$
         boolean enabled = true;
-        String name = "hibuser";
-        String password = "password";
+        String name = "hibuser"; //$NON-NLS-1$
+        String password = "password"; //$NON-NLS-1$
         user.setDescription(description);
         user.setEnabled(enabled);
         user.setName(name);
@@ -382,10 +382,10 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
     Timer timer = new Timer() {
       public void run() {
         ProxyPentahoUser user = new ProxyPentahoUser();
-        String description = "myuser";
+        String description = "myuser"; //$NON-NLS-1$
         boolean enabled = true;
-        String name = "hibuser";
-        String password = "password";
+        String name = "hibuser"; //$NON-NLS-1$
+        String password = "password"; //$NON-NLS-1$
         user.setDescription(description);
         user.setEnabled(enabled);
         user.setName(name);
@@ -427,10 +427,10 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
       public void run() {
         ProxyPentahoUser[] users = new ProxyPentahoUser[1];
         ProxyPentahoUser user  = new ProxyPentahoUser();
-        String description = "myuser";
+        String description = "myuser"; //$NON-NLS-1$
         boolean enabled = true;
-        String name = "hibuser";
-        String password = "password";
+        String name = "hibuser"; //$NON-NLS-1$
+        String password = "password"; //$NON-NLS-1$
         user.setDescription(description);
         user.setEnabled(enabled);
         user.setName(name);
@@ -496,8 +496,8 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
     Timer timer = new Timer() {
       public void run() {
         ProxyPentahoRole role = new ProxyPentahoRole();
-        String description = "poweruser";
-        String name = "poweruser";
+        String description = "poweruser"; //$NON-NLS-1$
+        String name = "poweruser"; //$NON-NLS-1$
         role.setDescription(description);
         role.setName(name);
 
@@ -535,8 +535,8 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
     Timer timer = new Timer() {
       public void run() {
         ProxyPentahoRole role = new ProxyPentahoRole();
-        String description = "poweruser";
-        String name = "poweruser";
+        String description = "poweruser"; //$NON-NLS-1$
+        String name = "poweruser"; //$NON-NLS-1$
         role.setDescription(description);
         role.setName(name);
 
@@ -576,8 +576,8 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
       public void run() {
         ProxyPentahoRole[] roles = new ProxyPentahoRole[1];
         ProxyPentahoRole role = new ProxyPentahoRole();
-        String description = "poweruser";
-        String name = "poweruser";
+        String description = "poweruser"; //$NON-NLS-1$
+        String name = "poweruser"; //$NON-NLS-1$
         role.setDescription(description);
         role.setName(name);
         roles[0] = role;
@@ -615,7 +615,7 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
     // has been populated.
     Timer timer = new Timer() {
       public void run() {
-        String url = "http://www.pentaho.com/console_home";
+        String url = "http://www.pentaho.com/console_home"; //$NON-NLS-1$
         AsyncCallback callback = new AsyncCallback() {
           public void onSuccess(Object result) {
             assertTrue(true);
@@ -652,14 +652,14 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
     Timer timer = new Timer() {
       public void run() {
         PentahoDataSource dataSource = new PentahoDataSource();
-        String driverClass = "";
+        String driverClass = ""; //$NON-NLS-1$
         int idleConn = 20;
-        String jndiName = "myJndi";
+        String jndiName = "myJndi"; //$NON-NLS-1$
         int maxActConn = 25;
-        String userName = "hibuser";
-        String password = "password";
-        String query = "select * from users;";
-        String url = "jdbc:hsqldb:hsql://localhost:9001/hibernate";
+        String userName = "hibuser"; //$NON-NLS-1$
+        String password = "password"; //$NON-NLS-1$
+        String query = "select * from users;"; //$NON-NLS-1$
+        String url = "jdbc:hsqldb:hsql://localhost:9001/hibernate"; //$NON-NLS-1$
         long wait = 1000;
         dataSource.setDriverClass(driverClass);
         dataSource.setIdleConn(idleConn);
@@ -709,16 +709,16 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
         
         ProxyPentahoRole[] roles = new ProxyPentahoRole[1];
         ProxyPentahoRole role = new ProxyPentahoRole();
-        String description = "poweruser";
-        String name = "poweruser";
+        String description = "poweruser"; //$NON-NLS-1$
+        String name = "poweruser"; //$NON-NLS-1$
         role.setDescription(description);
         role.setName(name);
         roles[0] = role;
         ProxyPentahoUser user  = new ProxyPentahoUser();
-        String uDescription = "myuser";
+        String uDescription = "myuser"; //$NON-NLS-1$
         boolean enabled = true;
-        String uName = "hibuser";
-        String password = "password";
+        String uName = "hibuser"; //$NON-NLS-1$
+        String password = "password"; //$NON-NLS-1$
         user.setDescription(uDescription);
         user.setEnabled(enabled);
         user.setName(uName);
@@ -764,15 +764,15 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
       public void run() {
         ProxyPentahoUser[] users = new ProxyPentahoUser[1];
         ProxyPentahoRole role = new ProxyPentahoRole();
-        String description = "poweruser";
-        String name = "poweruser";
+        String description = "poweruser"; //$NON-NLS-1$
+        String name = "poweruser"; //$NON-NLS-1$
         role.setDescription(description);
         role.setName(name);
         ProxyPentahoUser user  = new ProxyPentahoUser();
-        String uDescription = "myuser";
+        String uDescription = "myuser"; //$NON-NLS-1$
         boolean enabled = true;
-        String uName = "hibuser";
-        String password = "password";
+        String uName = "hibuser"; //$NON-NLS-1$
+        String password = "password"; //$NON-NLS-1$
         user.setDescription(uDescription);
         user.setEnabled(enabled);
         user.setName(uName);
