@@ -37,7 +37,6 @@ public class BasicDialog extends DialogBox {
     rootPanel.setStyleName("basicDialog.rootPanel"); //$NON-NLS-1$
     
     clientPanel = new VerticalPanel();
-    clientPanel.setSpacing( 10 );
     setClientSize( "250px", "140px" ); //$NON-NLS-1$ //$NON-NLS-2$
     clientPanel.setStyleName("basicDialog.clientPanel"); //$NON-NLS-1$
 
