@@ -974,4 +974,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key services
    */
   String services();
+
+  /**
+   * Translated "Details:".
+   * 
+   * @return translated "Details:"
+   * @gwt.key userDetails
+   */
+  String userDetails();
+  
+  
 }

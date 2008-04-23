@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -30,9 +31,16 @@ public class UsersAndRolesPanel extends DockPanel implements ClickListener {
   
   public UsersAndRolesPanel() {
     HorizontalPanel horizontalPanel = new HorizontalPanel();
+    horizontalPanel.setStyleName("deckToolbar"); //$NON-NLS-1$
+
     horizontalPanel.add(rolesButton);
     horizontalPanel.add(usersButton);
+    Label spacer = new Label(""); //$NON-NLS-1$
+    horizontalPanel.add(spacer);
+    horizontalPanel.setCellWidth(spacer, "100%"); //$NON-NLS-1$
+    this.setSpacing(4);
     add(horizontalPanel, DockPanel.NORTH);
+    
     setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 
     usersButton.setTitle( MSGS.clickEditUsers() );

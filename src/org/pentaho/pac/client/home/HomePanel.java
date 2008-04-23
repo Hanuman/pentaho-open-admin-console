@@ -60,8 +60,8 @@ public class HomePanel extends SimplePanel {
    * @param html the panel's HTML
    */
   public HomePanel(String url) {
-    groupbox = new GroupBox("Welcome");
-    groupbox.setStyleName("homeGroupBox");
+    groupbox = new GroupBox("Welcome"); //$NON-NLS-1$
+    groupbox.setStyleName("homeGroupBox"); //$NON-NLS-1$
     this.add(groupbox);
     
 	 PacServiceAsync pacService = PacServiceFactory.getPacService();

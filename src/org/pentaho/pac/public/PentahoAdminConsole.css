@@ -722,6 +722,7 @@ a:visited {
   height: 32px;
   margin: 5px 0px 0px 10px; /* top right bottom left*/
   font-size: .8em;
+  cursor: pointer;
 }
 .usersToggleBtn-up-hovering {
   background-image:url(style/images/users_over.png);
@@ -731,6 +732,7 @@ a:visited {
   height: 32px;
   margin: 5px 0px 0px 10px; /* top right bottom left*/
   font-size: .8em;
+  cursor: pointer;
 }
 .usersToggleBtn-down {
   background-image:url(style/images/users_selected.png);
@@ -740,6 +742,7 @@ a:visited {
   height: 32px;
   margin: 5px 0px 0px 10px; /* top right bottom left*/
   font-size: .8em;
+  cursor: none;
 }
 .usersToggleBtn-down-hovering {
   background-image:url(style/images/users_selected.png);
@@ -749,6 +752,7 @@ a:visited {
   height: 32px;
   margin: 5px 0px 0px 10px; /* top right bottom left*/
   font-size: .8em;
+  cursor: none;
 }
 
 .usersToggleBtn div {
@@ -765,6 +769,7 @@ a:visited {
   height: 32px;
   margin: 5px 0px 0px 10px; /* top right bottom left*/
   font-size: .8em;
+  cursor: pointer;
 }
 .rolesToggleBtn-up-hovering {
   background-image:url(style/images/roles_over.png);
@@ -774,6 +779,7 @@ a:visited {
   height: 32px;
   margin: 5px 0px 0px 10px; /* top right bottom left*/
   font-size: .8em;
+  cursor: pointer;
 }
 .rolesToggleBtn-down {
   background-image:url(style/images/roles_selected.png);
@@ -783,6 +789,7 @@ a:visited {
   height: 32px;
   margin: 5px 0px 0px 10px; /* top right bottom left*/
   font-size: .8em;
+  cursor: none;
 }
 .rolesToggleBtn-down-hovering {
   background-image:url(style/images/roles_selected.png);
@@ -792,6 +799,7 @@ a:visited {
   height: 32px;
   margin: 5px 0px 0px 10px; /* top right bottom left*/
   font-size: .8em;
+  cursor: none;
 }
 
 .rolesToggleBtn div {
@@ -1219,7 +1227,8 @@ a:visited {
 }
 
 .groupbox-c {
-	background-color: #ffffff
+	background-color: #ffffff;
+	text-align:center;
 }
 /* end styles for group box */
 
@@ -1276,3 +1285,21 @@ margin-right: 10px;
 	height: 42px;
 }
 /* end toolbar styles */
+
+
+.deckToolbar{
+	border: 1px solid #888888;
+	background-color: white;
+	padding:2px;
+	width:100%;
+}
+
+.borderPane{
+	border: 1px solid #888888;
+	background-color: #FAFAFA;
+	padding:4px;
+}
+
+.fieldsetPanel{
+	padding:4px;
+}

@@ -6,6 +6,7 @@ import java.util.Arrays;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.client.common.ui.ConfirmDialog;
+import org.pentaho.pac.client.common.ui.FieldsetPanel;
 import org.pentaho.pac.client.common.ui.ICallbackHandler;
 import org.pentaho.pac.client.common.ui.IListBoxFilter;
 import org.pentaho.pac.client.common.ui.MessageDialog;
@@ -18,6 +19,8 @@ import org.pentaho.pac.common.roles.ProxyPentahoRole;
 import org.pentaho.pac.common.users.NonExistingUserException;
 import org.pentaho.pac.common.users.ProxyPentahoUser;
 
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
@@ -29,6 +32,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class UsersPanel extends DockPanel implements ClickListener, ChangeListener, PopupListener, KeyboardListener {
@@ -76,8 +80,13 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
   
 	public UsersPanel() {
 	  DockPanel userListPanel = buildUsersListPanel();
+	  userListPanel.setStyleName("borderPane"); //$NON-NLS-1$
+	  userListPanel.setSpacing(4);
 	  
-	  DockPanel userDetailsDockPanel = buildUserDetailsDockPanel();
+	  VerticalPanel userDetailsDockPanel = buildUserDetailsDockPanel();
+
+	  userDetailsDockPanel.setStyleName("borderPane"); //$NON-NLS-1$
+    userDetailsDockPanel.setSpacing(4);
     add(userListPanel, DockPanel.WEST);
     add(userDetailsDockPanel, DockPanel.CENTER);
     
@@ -121,27 +130,40 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     });
  	}
 
-	public DockPanel buildUserDetailsDockPanel() {
+	public VerticalPanel buildUserDetailsDockPanel() {
 	  
-    DockPanel assignedRolesPanel = buildAssignedRolesPanel();
+	  FieldsetPanel assignedRolesPanel = buildAssignedRolesPanel();
     
-	  DockPanel dockPanel = new DockPanel();
-	  dockPanel.add(userDetailsPanel, DockPanel.NORTH);
-    dockPanel.add(updateUserBtn, DockPanel.NORTH);
-	  dockPanel.add(assignedRolesPanel, DockPanel.CENTER);
+    VerticalPanel mainUserDetailsPanel = new VerticalPanel();
+    
+
+    VerticalPanel userPanelFieldsetContent = new VerticalPanel();
+    userPanelFieldsetContent.setSpacing(4);
+    userPanelFieldsetContent.add(userDetailsPanel);
+    userPanelFieldsetContent.add(updateUserBtn );
+    userPanelFieldsetContent.setCellWidth(userDetailsPanel, "100%"); //$NON-NLS-1$
+    
+    userPanelFieldsetContent.setCellHorizontalAlignment(updateUserBtn, VerticalPanel.ALIGN_RIGHT);
+    
+    FieldsetPanel fieldsetPanel = new FieldsetPanel();
+    fieldsetPanel.setLegend(MSGS.userDetails()); //$NON-NLS-1$
+    fieldsetPanel.add(userPanelFieldsetContent);
+    userPanelFieldsetContent.setWidth("100%"); //$NON-NLS-1$
+    
+    mainUserDetailsPanel.add(fieldsetPanel);
+    mainUserDetailsPanel.add(assignedRolesPanel);
 	  
-	  dockPanel.setCellHorizontalAlignment(updateUserBtn, HasHorizontalAlignment.ALIGN_RIGHT);
+    mainUserDetailsPanel.setCellHorizontalAlignment(updateUserBtn, HasHorizontalAlignment.ALIGN_RIGHT);
     
-	  dockPanel.setCellWidth(userDetailsPanel, "100%"); //$NON-NLS-1$
-	  dockPanel.setCellHeight(assignedRolesPanel, "100%"); //$NON-NLS-1$
-	  dockPanel.setCellWidth(assignedRolesPanel, "100%"); //$NON-NLS-1$
+    mainUserDetailsPanel.setCellHeight(assignedRolesPanel, "100%"); //$NON-NLS-1$
+    mainUserDetailsPanel.setCellWidth(assignedRolesPanel, "100%"); //$NON-NLS-1$
 	  
 	  userDetailsPanel.setWidth("100%"); //$NON-NLS-1$
     assignedRolesPanel.setWidth("100%"); //$NON-NLS-1$
     assignedRolesPanel.setHeight("100%"); //$NON-NLS-1$
 	  
     updateUserBtn.addClickListener(this);
-	  return dockPanel;
+	  return mainUserDetailsPanel;
 	}
 	
 	public DockPanel buildUsersListPanel() {
@@ -177,13 +199,17 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     return userListPanel;
 	}
 	
-	public DockPanel buildAssignedRolesPanel() {
+	public FieldsetPanel buildAssignedRolesPanel() {
     DockPanel headerDockPanel = new DockPanel();
+    
+    FieldsetPanel fieldsetPanel = new FieldsetPanel();
+    fieldsetPanel.setLegend(MSGS.assignedRoles());
+    
     headerDockPanel.add(deleteRoleAssignmentBtn, DockPanel.EAST);
     headerDockPanel.add(addRoleAssignmentBtn, DockPanel.EAST);
-    Label label = new Label(MSGS.assignedRoles()); //$NON-NLS-1$
-    headerDockPanel.add(label, DockPanel.WEST);
-    headerDockPanel.setCellWidth(label, "100%"); //$NON-NLS-1$
+    Label spacer = new Label(""); //$NON-NLS-1$
+    headerDockPanel.add(spacer, DockPanel.WEST);
+    headerDockPanel.setCellWidth(spacer, "100%"); //$NON-NLS-1$
     
 	  DockPanel assignedRolesPanel = new DockPanel();
 	  assignedRolesPanel.add(headerDockPanel, DockPanel.NORTH);
@@ -201,7 +227,12 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     assignedRolesList.addChangeListener(this);
 	  deleteRoleAssignmentBtn.addClickListener(this);
 	  addRoleAssignmentBtn.addClickListener(this);
-	  return assignedRolesPanel;
+	  
+
+    fieldsetPanel.add(assignedRolesPanel);
+    assignedRolesPanel.setWidth("100%"); //$NON-NLS-1$
+    assignedRolesPanel.setHeight("100%"); //$NON-NLS-1$
+	  return fieldsetPanel;
 	}
 	
 	public void onClick(Widget sender) {
