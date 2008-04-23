@@ -50,11 +50,6 @@
   cursor: n-resize;
 }
 
-* {
-  margin: 0px;
-  padding: 0px;
-}
-
 #loading {
   position: absolute;
   left: 48%;
@@ -963,6 +958,11 @@ a:visited {
 
 /* begin scheduler panel */
 .schedulerPanel {
+	padding: 10px;
+}
+
+.schedulerInstructionLabel {
+	margin-bottom: 20px;
 }
 
 .schedulerPanel a {
@@ -1101,11 +1101,6 @@ a:visited {
 	padding: 0px;
 }
 /* end jobs table */
-
-.schedulerInstructionLabel {
-	margin-top: 20px;
-	margin-bottom: 20px;
-}
 /* end scheduler panel */
 
 /* begin styles for BasicDialog, also see: ".gwt-DialogBox" and ".gwt-DialogBox .Caption" */
