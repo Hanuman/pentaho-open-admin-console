@@ -20,7 +20,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class NewUserDialogBox extends ConfirmDialog {
 
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   UserDetailsPanel userDetailsPanel = new UserDetailsPanel();
   boolean userCreated = false;
   MessageDialog messageDialog = new MessageDialog( MSGS.error() );
