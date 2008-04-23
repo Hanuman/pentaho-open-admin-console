@@ -2,11 +2,13 @@ package org.pentaho.pac.common.roles;
 
 import java.io.Serializable;
 
-import org.pentaho.pac.common.users.ProxyPentahoUser;
-
 
 public class ProxyPentahoRole implements Serializable, Cloneable{
 
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 69L;
   String name;
   String description;
 
