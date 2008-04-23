@@ -1,10 +1,16 @@
 package org.pentaho.pac.client.common.ui;
 
+import org.pentaho.pac.client.utils.PacImageBundle;
+
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.KeyboardListener;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -12,6 +18,12 @@ public class BasicDialog extends DialogBox {
 
   private HorizontalPanel btnPanel = null;
   private VerticalPanel clientPanel = null;
+  
+  private static int idCounter = 0;
+  private String titleBarSpanId = null;
+  private String title = ""; //$NON-NLS-1$
+  private RootPanel titleBarSpan = null;
+  private Label titleBarLabel = new Label();
 
   public BasicDialog() {
     this( "" ); //$NON-NLS-1$
@@ -20,7 +32,6 @@ public class BasicDialog extends DialogBox {
   public BasicDialog( String title ) {
     super();
 
-    setTitle( title );
     VerticalPanel rootPanel = new VerticalPanel();
     rootPanel.setSpacing( 0 );
     rootPanel.setStyleName("basicDialog.rootPanel"); //$NON-NLS-1$
@@ -37,6 +48,9 @@ public class BasicDialog extends DialogBox {
     btnPanel.setStyleName("basicDialog.buttonPanel"); //$NON-NLS-1$
     rootPanel.setHorizontalAlignment( HasHorizontalAlignment.ALIGN_RIGHT );
     rootPanel.add(btnPanel);
+    
+    setTitle( title );
+    initTitleBar();
     
     setWidget(rootPanel);
   }
@@ -68,7 +82,38 @@ public class BasicDialog extends DialogBox {
   }
   
   public void setTitle( String title ) {
-    setText( title );
+    this.title = title;
+  }
+  
+  private void initTitleBar() {
+    // add a span tag to the title bar to store the title and X icon later
+    titleBarSpanId = "basicDialogTitle" + Integer.toString( idCounter ); //$NON-NLS-1$
+    idCounter++;
+    setHTML("<span class='basicDialog.titleBarContent' id='" + titleBarSpanId + "'/>");  //$NON-NLS-1$//$NON-NLS-2$
+  }
+  
+  public void show() {
+    super.show();
+
+    if ( null == titleBarSpan ) {
+      titleBarSpan = RootPanel.get(titleBarSpanId);
+      final BasicDialog localThis = this;
+      Image img = PacImageBundle.getBundle().closeIcon().createImage();
+      img.setStyleName( "basicDialog.closeIcon" ); //$NON-NLS-1$
+      img.addClickListener( new ClickListener() {
+        public void onClick(Widget sender) {
+          localThis.hide();
+        }
+      });
+      HorizontalPanel p = new HorizontalPanel();
+      p.setWidth( "99%" ); //$NON-NLS-1$
+      p.setHorizontalAlignment( HasHorizontalAlignment.ALIGN_LEFT );
+      p.add( titleBarLabel );
+      p.setHorizontalAlignment( HasHorizontalAlignment.ALIGN_RIGHT );
+      p.add( img );
+      titleBarSpan.add( p );
+    }
+    titleBarLabel.setText( title );
   }
 
   /**
@@ -83,5 +128,9 @@ public class BasicDialog extends DialogBox {
       default:
         return true;
     }
+  }
+  
+  public void setText(String text) {
+    setTitle( text );
   }
 }
