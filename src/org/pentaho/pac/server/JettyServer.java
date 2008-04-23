@@ -1,8 +1,6 @@
 package org.pentaho.pac.server;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.BindException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -19,18 +17,13 @@ import org.mortbay.jetty.bio.SocketConnector;
 import org.mortbay.jetty.handler.AbstractHandler;
 import org.mortbay.jetty.handler.ContextHandlerCollection;
 import org.mortbay.jetty.handler.ResourceHandler;
-import org.mortbay.jetty.security.Constraint;
-import org.mortbay.jetty.security.ConstraintMapping;
-import org.mortbay.jetty.security.HashUserRealm;
-import org.mortbay.jetty.security.SecurityHandler;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
 
 public class JettyServer {
   private Server server;
   private int portNumber = 8099;
-  private String hostname = "localhost";
-  private boolean running;
+  private String hostname = "localhost"; //$NON-NLS-1$
   
   private static final Log logger = LogFactory.getLog(JettyServer.class);
   
@@ -52,9 +45,12 @@ public class JettyServer {
     
     try {
       server.start();
-      running = true;
+    } catch (RuntimeException e) {
+      // let runtime exceptions leak, developer should handle them before release.
+      logger.error("Error starting server", e); //$NON-NLS-1$
+      throw e;
     } catch (Exception e) {
-      logger.error("error starting server", e); //$NON-NLS-1$
+      logger.error("Error starting server", e); //$NON-NLS-1$
     }
   }
   
@@ -67,7 +63,7 @@ public class JettyServer {
     // Start execution
     Context startExecution = new Context(contexts, "/", Context.SESSIONS);  //$NON-NLS-1$
     startExecution.setResourceBase("www/org.pentaho.pac.PentahoAdminConsole"); //$NON-NLS-1$
-    startExecution.setWelcomeFiles(new String[]{"PentahoAdminConsole.html"});
+    startExecution.setWelcomeFiles(new String[]{"PentahoAdminConsole.html"}); //$NON-NLS-1$
     
     ServletHolder pacsvc = new ServletHolder(new org.pentaho.pac.server.PacServiceImpl() );
     startExecution.addServlet(pacsvc, "/pacsvc"); //$NON-NLS-1$
@@ -77,8 +73,8 @@ public class JettyServer {
     
     //resource handler
     ResourceHandler resources = new ResourceHandler();
-    resources.setResourceBase("www/org.pentaho.pac.PentahoAdminConsole");
-    resources.setWelcomeFiles(new String[]{"PentahoAdminConsole.html"});
+    resources.setResourceBase("www/org.pentaho.pac.PentahoAdminConsole"); //$NON-NLS-1$
+    resources.setWelcomeFiles(new String[]{"PentahoAdminConsole.html"}); //$NON-NLS-1$
     
     server.setHandlers(new Handler[] { resources, startExecution }); //, contexts });
     
@@ -121,7 +117,7 @@ public class JettyServer {
           base_request.setHandled(true);
           
           response.setStatus(HttpServletResponse.SC_OK);
-          response.setContentType("text/html");
+          response.setContentType("text/html"); //$NON-NLS-1$
           response.getWriter().println("<h1>Hello OneContext</h1>");
           
       }
