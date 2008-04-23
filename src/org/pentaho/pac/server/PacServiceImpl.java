@@ -680,7 +680,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     try {
       biServerStatusCheckPeriod = Integer.parseInt( strBiServerStatusCheckPeriod );
     } catch( NumberFormatException e ) {
-      logger.error( "Failed to schedule the BI Server status thread.", e );
+      logger.error( Messages.getString( "PacService.THREAD_SCHEDULING_FAILED" ), e ); //$NON-NLS-1$
     }
   }
 
@@ -735,7 +735,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       throw new PacServiceException( errorMsg );
     }
     
-    return Messages.getString( "PacService.ACTION_COMPLETE" );
+    return Messages.getString( "PacService.ACTION_COMPLETE" );//$NON-NLS-1$
   }
   
   private String resetSolutionRepository(String userid ) throws PacServiceException {
@@ -883,12 +883,12 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     ThreadSafeHttpClient client = new ThreadSafeHttpClient( url );
 
     Map params = new HashMap();
-    // TODO sbarkdull, 15000 belongs in the config file
-    params.put( "http.socket.timeout", "15000" ); //$NON-NLS-1$ //$NON-NLS-2$
+    String timeOut = getAppProperty( "getHomePageTimeout" );//$NON-NLS-1$
+    params.put( "http.socket.timeout", timeOut ); //$NON-NLS-1$
     
     String html = null;
     try {
-      html = client.execRemoteMethod( null, params, "text/html" );
+      html = client.execRemoteMethod( null, params, "text/html" );//$NON-NLS-1$
     } catch (PacServiceException e) {
       html = showStatic();
     }
@@ -981,7 +981,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
 
   public void isBiServerAlive() throws PacServiceException {
     ThreadSafeHttpClient c = new ThreadSafeHttpClient( biServerBaseURL );
-    String response = c.execRemoteMethod( "ping/alive.gif", null );
+    String response = c.execRemoteMethod( "ping/alive.gif", null ); //$NON-NLS-1$
   }
   
   public int getBiServerStatusCheckPeriod() {
