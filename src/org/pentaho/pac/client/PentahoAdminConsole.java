@@ -11,6 +11,7 @@ import org.pentaho.pac.client.utils.PacImageBundle;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DeckPanel;
@@ -262,7 +263,15 @@ public void onClick(Widget sender) {
       HorizontalPanel buttonsPanel = new HorizontalPanel();
       buttonsPanel.setStyleName("buttons"); //$NON-NLS-1$
       buttonsPanel.add(PacImageBundle.getBundle().refreshIcon().createImage());
-      buttonsPanel.add(PacImageBundle.getBundle().helpIcon().createImage());
+      Image helpImage = PacImageBundle.getBundle().helpIcon().createImage();
+      helpImage.addClickListener( new ClickListener() {
+
+        public void onClick(Widget sender) {
+          Window.open( "http://www.youtube.com/watch?v=9ibX3TejlZE", "Help", null );
+        }
+        
+      });
+      buttonsPanel.add( helpImage );
       add(buttonsPanel);
       this.setCellHorizontalAlignment(buttonsPanel, HorizontalPanel.ALIGN_RIGHT);
       this.setCellVerticalAlignment(buttonsPanel, HorizontalPanel.ALIGN_MIDDLE);

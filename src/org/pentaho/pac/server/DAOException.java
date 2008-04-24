@@ -6,6 +6,11 @@ import org.pentaho.pac.common.CheckedException;
 public class DAOException extends CheckedException {
   
 
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 666L;
+
   public DAOException() {
     super();
   }
