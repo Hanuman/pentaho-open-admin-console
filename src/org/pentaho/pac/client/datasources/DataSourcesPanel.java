@@ -33,7 +33,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 
   TabPanel generalAdvanceDbPanel = new TabPanel();
 
-  MessageDialog messageDialog = new MessageDialog(); //$NON-NLS-1$
+  MessageDialog messageDialog = new MessageDialog();
 
   DataSourcesList dataSourcesList = new DataSourcesList();
 
@@ -205,7 +205,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
       AsyncCallback callback = new AsyncCallback() {
         public void onSuccess(Object result) {
           messageDialog.setText(MSGS.deleteDataSources());
-          messageDialog.setMessage("Successfully Deleted the selected datasource(s)");
+          messageDialog.setMessage(MSGS.successfulDataSourceDelete()); 
           messageDialog.center();
           refresh();
         }
@@ -259,7 +259,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
       AsyncCallback callback = new AsyncCallback() {
         public void onSuccess(Object result) {
           messageDialog.setText(MSGS.updateDataSource());
-          messageDialog.setMessage("Successfully updated the DataSource");
+          messageDialog.setMessage(MSGS.successfulDataSourceUpdate()); 
           messageDialog.center();
           dataSourcesList.setDataSource(index, dataSource);
           ((Button) sender).setEnabled(true);

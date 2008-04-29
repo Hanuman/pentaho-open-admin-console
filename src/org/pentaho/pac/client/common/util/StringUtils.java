@@ -5,7 +5,7 @@ package org.pentaho.pac.client.common.util;
 public class StringUtils {
 
   public static boolean isEmpty( String str ) {
-    return null == str || "".equals( str );
+    return null == str || "".equals( str ); //$NON-NLS-1$
   }
   
   public static String defaultString( String str, String xdefault )

@@ -18,10 +18,10 @@ public class AccumulatorDialog extends ConfirmDialog {
   }
   
   private void initDialog() {
-    accumulatorPanel.setWidth("100%");
-    accumulatorPanel.setHeight("100%");
+    accumulatorPanel.setWidth("100%"); //$NON-NLS-1$
+    accumulatorPanel.setHeight("100%");//$NON-NLS-1$
     addWidgetToClientArea(accumulatorPanel);
-    setTitle("");
+    setTitle(""); //$NON-NLS-1$
   }
 
   public ListBox getAccumulatedItemsListBox() {

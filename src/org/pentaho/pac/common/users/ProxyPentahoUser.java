@@ -5,11 +5,16 @@ import java.io.Serializable;
 
 public class ProxyPentahoUser implements Serializable, Cloneable {
 
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 1L;
+
   private String name;
 
-  private String password = "";
+  private String password = ""; //$NON-NLS-1$
 
-  private String description = "";
+  private String description = ""; //$NON-NLS-1$
 
   private boolean enabled = true;
 

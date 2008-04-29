@@ -8,9 +8,9 @@ public class PentahoUser implements IPentahoUser {
 
   private String name;
 
-  private String password = "";
+  private String password = ""; //$NON-NLS-1$
 
-  private String description = "test description";
+  private String description = "test description"; //$NON-NLS-1$
 
   private boolean enabled = true;
 

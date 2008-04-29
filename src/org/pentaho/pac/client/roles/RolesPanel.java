@@ -65,8 +65,8 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
   Button updateRoleBtn = new Button(MSGS.update());
   Button addRoleBtn = new Button("+"); //$NON-NLS-1$
   Button deleteRoleBtn = new Button("-"); //$NON-NLS-1$
-  Button addRoleAssignmentBtn = new Button("+");
-  Button deleteRoleAssignmentBtn = new Button("-");
+  Button addRoleAssignmentBtn = new Button("+"); //$NON-NLS-1$
+  Button deleteRoleAssignmentBtn = new Button("-"); //$NON-NLS-1$
   TextBox filterTextBox = new TextBox();
   NewRoleDialogBox newRoleDialogBox = new NewRoleDialogBox();
   ConfirmDialog confirmDeleteRolesDialog = new ConfirmDialog();
@@ -181,7 +181,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     DockPanel headerDockPanel = new DockPanel();
     headerDockPanel.add(deleteRoleAssignmentBtn, DockPanel.EAST);
     headerDockPanel.add(addRoleAssignmentBtn, DockPanel.EAST);
-    Label label = new Label(MSGS.assignedUsers()); //$NON-NLS-1$
+    Label label = new Label(MSGS.assignedUsers());
     headerDockPanel.add(label, DockPanel.WEST);
     headerDockPanel.setCellWidth(label, "100%"); //$NON-NLS-1$
     
@@ -354,7 +354,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
       ProxyPentahoRole newRole = newRoleDialogBox.getRole();
       IListBoxFilter filter = rolesList.getFilter();
       if ((filter != null) && !filter.accepts(newRole)){
-        filterTextBox.setText("");
+        filterTextBox.setText(""); //$NON-NLS-1$
         rolesList.setFilter(null);
       }
       rolesList.addRole(newRole);

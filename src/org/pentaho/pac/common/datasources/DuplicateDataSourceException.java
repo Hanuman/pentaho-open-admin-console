@@ -4,6 +4,11 @@ import org.pentaho.pac.common.CheckedException;
 
 public class DuplicateDataSourceException extends CheckedException {
 
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 1L;
+
   public DuplicateDataSourceException() {
     super();
   }

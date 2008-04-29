@@ -20,7 +20,7 @@ public class HibernateSessionFactory {
      * in the default package. Use #setConfigFile() to update 
      * the location of the configuration file for the current session.   
      */
-    private static String CONFIG_FILE_LOCATION = "hibernate.cfg.xml";
+    private static String CONFIG_FILE_LOCATION = "hibernate.cfg.xml"; //$NON-NLS-1$
     private static final ThreadLocal<Session> threadLocal = new ThreadLocal<Session>();
     private  static org.hibernate.cfg.Configuration configuration = new Configuration();
     private static org.hibernate.SessionFactory sessionFactory;
@@ -32,7 +32,7 @@ public class HibernateSessionFactory {
 			sessionFactory = configuration.buildSessionFactory();
 		} catch (Exception e) {
 			System.err
-					.println("%%%% Error Creating SessionFactory %%%%");
+					.println("%%%% Error Creating SessionFactory %%%%"); //$NON-NLS-1$
 			e.printStackTrace();
 		}
     }
@@ -71,7 +71,7 @@ public class HibernateSessionFactory {
 			sessionFactory = configuration.buildSessionFactory();
 		} catch (Exception e) {
 			System.err
-					.println("%%%% Error Creating SessionFactory %%%%");
+					.println("%%%% Error Creating SessionFactory %%%%"); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 	}

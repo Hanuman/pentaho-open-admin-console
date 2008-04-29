@@ -284,8 +284,8 @@ public class XmlSerializer {
   public String getPublishStatusFromXml( String strXml )
   {
     String errorMsg = null;
-    int startIdx = strXml.indexOf( "PentahoSystem.ERROR" );
-    int endIdx = strXml.indexOf( "\n", startIdx );
+    int startIdx = strXml.indexOf( "PentahoSystem.ERROR" ); //$NON-NLS-1$
+    int endIdx = strXml.indexOf( "\n", startIdx ); //$NON-NLS-1$
     if ( -1 != startIdx ) {
       errorMsg = strXml.substring( startIdx, endIdx-1 );
     }

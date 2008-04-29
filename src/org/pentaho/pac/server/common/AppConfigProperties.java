@@ -38,7 +38,7 @@ public class AppConfigProperties {
   static {
     InputStream s = null;
     try {
-      URL url = ClassLoader.getSystemResource("pac.properties");
+      URL url = ClassLoader.getSystemResource("pac.properties"); //$NON-NLS-1$
       File propFile = new File(url.toURI());
       s = new FileInputStream(propFile);
     } catch (FileNotFoundException e1) {

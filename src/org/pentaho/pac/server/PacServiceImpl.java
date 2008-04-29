@@ -526,19 +526,19 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
 
     String driverClass = ds.getDriverClass();
     if (StringUtils.isEmpty(driverClass)) {
-      throw new DataSourceManagementException("Connection attempt failed, no driver class available: " + driverClass);
+      throw new DataSourceManagementException("Connection attempt failed, no driver class available: " + driverClass); //$NON-NLS-1$
     }
     Class<?> driverC = null;
 
     try {
       driverC = Class.forName(driverClass);
     } catch (ClassNotFoundException e) {
-      throw new DataSourceManagementException("Connection attempt failed, driver class " + driverClass
-          + " not in classpath. ");
+      throw new DataSourceManagementException("Connection attempt failed, driver class " + driverClass  //$NON-NLS-1$ 
+          + " not in classpath. "); //$NON-NLS-1$
     }
     if (!Driver.class.isAssignableFrom(driverC)) {
-      throw new DataSourceManagementException("Connection attempt failed, driver class " + driverClass
-          + " not in classpath. ");
+      throw new DataSourceManagementException("Connection attempt failed, driver class " + driverClass //$NON-NLS-1$
+          + " not in classpath. "); //$NON-NLS-1$
     }
 
     Driver driver = null;
@@ -546,10 +546,10 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     try {
       driver = driverC.asSubclass(Driver.class).newInstance();
     } catch (InstantiationException e) {
-      throw new DataSourceManagementException("Connection attempt failed, unable to create driver class instance: "
-          + driverClass, e);
+      throw new DataSourceManagementException("Connection attempt failed, unable to create driver class instance: " //$NON-NLS-1$
+          + driverClass, e); 
     } catch (IllegalAccessException e) {
-      throw new DataSourceManagementException("Connection attempt failed, unable to create driver class instance: "
+      throw new DataSourceManagementException("Connection attempt failed, unable to create driver class instance: " //$NON-NLS-1$
           + driverClass, e);
     }
 
@@ -558,7 +558,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       conn = DriverManager.getConnection(ds.getUrl(), ds.getUserName(), ds.getPassword());
       return conn;
     } catch (SQLException e) {
-      throw new DataSourceManagementException("Connection attempt failed. " + e.getMessage(), e);
+      throw new DataSourceManagementException("Connection attempt failed. " + e.getMessage(), e); //$NON-NLS-1$
     }
   }
 
@@ -591,12 +591,12 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
         stmt = conn.createStatement();
         rs = stmt.executeQuery(ds.getQuery());
       } else {
-        throw new PacServiceException("Data Source configuration does not contain a validation query.");
+        throw new PacServiceException("Data Source configuration does not contain a validation query."); //$NON-NLS-1$
       }
     } catch (DataSourceManagementException dme) {
-      throw new PacServiceException("Data Source validation query failed. Query: " + ds.getQuery(), dme);
+      throw new PacServiceException("Data Source validation query failed. Query: " + ds.getQuery(), dme); //$NON-NLS-1$
     } catch (SQLException e) {
-      throw new PacServiceException("Data Source validation query failed. Query: " + ds.getQuery(), e);
+      throw new PacServiceException("Data Source validation query failed. Query: " + ds.getQuery(), e); //$NON-NLS-1$
     } finally {
       try {
         if (rs != null) {
@@ -675,7 +675,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     jmxPortNumber = StringUtils.defaultIfEmpty( p.getProperty("jmxPortNumber"), System.getProperty("jmxPortNumber") ); //$NON-NLS-1$ //$NON-NLS-2$
     userName = StringUtils.defaultIfEmpty( p.getProperty("pentaho.platform.userName"), System.getProperty("pentaho.platform.userName") ); //$NON-NLS-1$ //$NON-NLS-2$
     pciContextPath = StringUtils.defaultIfEmpty( p.getProperty("pciContextPath"), System.getProperty("pciContextPath") ); //$NON-NLS-1$ //$NON-NLS-2$
-    biServerBaseURL = StringUtils.defaultIfEmpty( p.getProperty("biServerBaseURL"), System.getProperty("biServerBaseURL") ); //$NON-NLS-1$ //$NON-NLS-2$biServerBaseURL = StringUtils.defaultIfEmpty( p.getProperty("biServerBaseURL"), System.getProperty("biServerBaseURL") ); //$NON-NLS-1$ //$NON-NLS-2$
+    biServerBaseURL = StringUtils.defaultIfEmpty( p.getProperty("biServerBaseURL"), System.getProperty("biServerBaseURL") ); //$NON-NLS-1$ //$NON-NLS-2$biServerBaseURL = StringUtils.defaultIfEmpty( p.getProperty("biServerBaseURL"), System.getProperty("biServerBaseURL") );
     String strBiServerStatusCheckPeriod = StringUtils.defaultIfEmpty( p.getProperty("consoleToolBar.biServerStatusCheckPeriod"), System.getProperty("consoleToolBar.biServerStatusCheckPeriod") ); //$NON-NLS-1$ //$NON-NLS-2$
     try {
       biServerStatusCheckPeriod = Integer.parseInt( strBiServerStatusCheckPeriod );
@@ -718,7 +718,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       throw new PacServiceException( errorMsg );
     }
     
-    return Messages.getString( "PacService.ACTION_COMPLETE" );
+    return Messages.getString( "PacService.ACTION_COMPLETE" ); //$NON-NLS-1$
   }
   
   private String executePublishRequest(String publisherClassName ) throws PacServiceException {

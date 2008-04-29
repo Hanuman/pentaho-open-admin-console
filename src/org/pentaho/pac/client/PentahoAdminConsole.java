@@ -267,7 +267,7 @@ public void onClick(Widget sender) {
       helpImage.addClickListener( new ClickListener() {
 
         public void onClick(Widget sender) {
-          Window.open( "http://www.youtube.com/watch?v=9ibX3TejlZE", "Help", null );
+          Window.open( "http://www.youtube.com/watch?v=9ibX3TejlZE", "Help", null ); //$NON-NLS-1$ //$NON-NLS-2$
         }
         
       });
@@ -324,9 +324,9 @@ public void onClick(Widget sender) {
       vertPanel.add(headerPanel);
       
       VerticalPanel list = new VerticalPanel();
-      list.add(new Hyperlink("Link 1 text","Link1")); //$NON-NLS-2$
-      list.add(new Hyperlink("Link 2 text","Link2")); //$NON-NLS-2$
-      list.add(new Hyperlink("Link 3 text","Link3")); //$NON-NLS-2$
+      list.add(new Hyperlink("Link 1 text","Link1")); //$NON-NLS-1$ //$NON-NLS-2$
+      list.add(new Hyperlink("Link 2 text","Link2")); //$NON-NLS-1$ //$NON-NLS-2$
+      list.add(new Hyperlink("Link 3 text","Link3")); //$NON-NLS-1$ //$NON-NLS-2$
       list.setStyleName("CommonTasksLinks"); //$NON-NLS-1$
       vertPanel.add(list);
       

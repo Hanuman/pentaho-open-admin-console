@@ -61,7 +61,7 @@ public class UserRoleHibernateDAO implements IUserRoleDAO {
 
   public List<IPentahoUser> getUsers() throws DAOException {
     try {
-      String queryString = "from PentahoUser";
+      String queryString = "from PentahoUser"; //$NON-NLS-1$
       Query queryObject = getSession().createQuery(queryString);
       return queryObject.list();
     } catch (HibernateException ex) {
@@ -124,7 +124,7 @@ public class UserRoleHibernateDAO implements IUserRoleDAO {
 
   public List<IPentahoRole> getRoles() throws DAOException {
     try {
-      String queryString = "from PentahoRole";
+      String queryString = "from PentahoRole"; //$NON-NLS-1$
       Query queryObject = getSession().createQuery(queryString);
       return queryObject.list();
     } catch (HibernateException ex) {

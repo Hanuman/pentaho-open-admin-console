@@ -37,11 +37,11 @@ public class JettyServer {
     SocketConnector connector = new SocketConnector();
     connector.setPort(portNumber);
     connector.setHost(hostname);
-    connector.setName("Pentaho Console HTTP listener for ["+hostname+":" + portNumber + "]"); //$NON-NLS-2$ //$NON-NLS-3$
+    connector.setName("Pentaho Console HTTP listener for ["+hostname+":" + portNumber + "]");  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     logger.info("starting " + connector.getName()); //$NON-NLS-1$
     server.setConnectors( new Connector[] { connector });
     
-    logger.info( "Console Starting" );
+    logger.info( "Console Starting" );  //$NON-NLS-1$
     
     try {
       server.start();
@@ -118,7 +118,7 @@ public class JettyServer {
           
           response.setStatus(HttpServletResponse.SC_OK);
           response.setContentType("text/html"); //$NON-NLS-1$
-          response.getWriter().println("<h1>Hello OneContext</h1>");
+          response.getWriter().println("<h1>Hello OneContext</h1>");  //$NON-NLS-1$
           
       }
   }

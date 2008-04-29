@@ -67,8 +67,8 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
   Button updateUserBtn = new Button(MSGS.update());
   Button addUserBtn = new Button("+"); //$NON-NLS-1$
   Button deleteUserBtn = new Button("-"); //$NON-NLS-1$
-  Button addRoleAssignmentBtn = new Button("+");
-  Button deleteRoleAssignmentBtn = new Button("-");
+  Button addRoleAssignmentBtn = new Button("+"); //$NON-NLS-1$
+  Button deleteRoleAssignmentBtn = new Button("-"); //$NON-NLS-1$
   TextBox filterTextBox = new TextBox();
   NewUserDialogBox newUserDialogBox = new NewUserDialogBox();
   ConfirmDialog confirmDeleteUsersDialog = new ConfirmDialog();
@@ -393,7 +393,7 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
       ProxyPentahoUser newUser = newUserDialogBox.getUser();
       IListBoxFilter filter = usersList.getFilter();
       if ((filter != null) && !filter.accepts(newUser)){
-        filterTextBox.setText("");
+        filterTextBox.setText(""); //$NON-NLS-1$
         usersList.setFilter(null);
       }
       usersList.addUser(newUser);

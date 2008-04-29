@@ -7,6 +7,11 @@ import org.pentaho.pac.common.CheckedException;
 
 public class NonExistingUserException extends CheckedException implements Serializable {
 
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 1L;
+
   public NonExistingUserException() {
     super();
   }

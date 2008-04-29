@@ -54,7 +54,7 @@ public class DataSourceHibernateDAO implements IDataSourceDAO {
 
   public List<IPentahoDataSource> getDataSources() throws DAOException {
     try {
-      String queryString = "from PentahoDataSource";
+      String queryString = "from PentahoDataSource";  //$NON-NLS-1$
       Query queryObject = getSession().createQuery(queryString);
       return queryObject.list();
     } catch (HibernateException ex) {
