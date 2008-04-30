@@ -5,4 +5,4 @@ REM   BATCH SCRIPT TO STOP MGMG CONSOLE
 REM ***************************************
 
 
-call java -jar lib/pentaho-adminstration-console.jar STOP
+call java -jar lib/pentaho-admin-console.jar STOP
