@@ -36,13 +36,13 @@ import org.pentaho.pac.common.roles.ProxyPentahoRole;
 import org.pentaho.pac.common.users.DuplicateUserException;
 import org.pentaho.pac.common.users.NonExistingUserException;
 import org.pentaho.pac.common.users.ProxyPentahoUser;
-import org.pentaho.pac.messages.Messages;
 import org.pentaho.pac.server.common.AppConfigProperties;
 import org.pentaho.pac.server.common.BiServerTrustedProxy;
 import org.pentaho.pac.server.common.DAOException;
 import org.pentaho.pac.server.common.ThreadSafeHttpClient;
 import org.pentaho.pac.server.datasources.DataSourceMgmtService;
 import org.pentaho.pac.server.datasources.IDataSourceMgmtService;
+import org.pentaho.pac.server.i18n.Messages;
 import org.pentaho.pac.server.scheduler.SchedulerAdminUIComponentProxy;
 import org.pentaho.pac.server.scheduler.XmlSerializer;
 

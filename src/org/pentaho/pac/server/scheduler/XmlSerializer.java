@@ -32,7 +32,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.pentaho.pac.client.scheduler.Job;
 import org.pentaho.pac.common.PacServiceException;
-import org.pentaho.pac.messages.Messages;
+import org.pentaho.pac.server.i18n.Messages;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;

@@ -16,18 +16,14 @@
 
 package org.pentaho.pac.server.common;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.pentaho.pac.messages.Messages;
+import org.pentaho.pac.server.i18n.Messages;
 
 public class AppConfigProperties {
 
@@ -39,11 +35,8 @@ public class AppConfigProperties {
     InputStream s = null;
     try {
       URL url = ClassLoader.getSystemResource("pac.properties"); //$NON-NLS-1$
-      File propFile = new File(url.toURI());
-      s = new FileInputStream(propFile);
-    } catch (FileNotFoundException e1) {
-      logger.error( Messages.getString( "PacService.OPEN_PROPS_FAILED", PROPERTIES_FILE_NAME ) ); //$NON-NLS-1$
-    } catch (URISyntaxException e) {
+      s = url.openStream();
+    } catch (IOException e1) {
       logger.error( Messages.getString( "PacService.OPEN_PROPS_FAILED", PROPERTIES_FILE_NAME ) ); //$NON-NLS-1$
     }
     if ( null != s ) {
