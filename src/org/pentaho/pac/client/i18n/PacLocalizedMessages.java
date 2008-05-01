@@ -1,11 +1,13 @@
 package org.pentaho.pac.client.i18n;
 
+import com.google.gwt.i18n.client.Messages;
+
 
 /**
  * Interface to represent the messages contained in resource  bundle:
  * 	C:/code/platform/pentaho-open-admin-console/src/org/pentaho/pac/client/i18n/PacLocalizedMessages.properties'.
  */
-public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Messages {
+public interface PacLocalizedMessages extends Messages {
   
   /**
    * Translated "Assigned Roles".

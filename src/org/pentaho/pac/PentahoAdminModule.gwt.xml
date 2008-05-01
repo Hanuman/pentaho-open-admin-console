@@ -4,7 +4,6 @@
 	<inherits name='com.google.gwt.user.User'/>
 
 	<!-- Specify the app entry point class.                   -->
-	<entry-point class='org.pentaho.pac.client.PentahoAdminConsoleEntryPoint'/>
     <servlet path='/pacsvc' class='org.pentaho.pac.server.PacServiceImpl'/>  
     <stylesheet src='PentahoAdminConsole.css'/>
     <source path="client"/>
