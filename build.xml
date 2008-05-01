@@ -98,7 +98,7 @@
 		</jar>
 	</target>
 	
-	<target name="jar-open-admin-gwt-module" depends="init,compile">
+	<target name="jar-gwt-module" depends="init,compile">
 		<jar destfile="${build.jars.dir}/pentaho-admin-module.jar">
 			<manifest>
 				<attribute name="Implementation-Title" value="${impl.title}" />
