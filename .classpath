@@ -29,5 +29,6 @@
 	<classpathentry kind="lib" path="lib/hibernate/hibernate3.jar"/>
 	<classpathentry kind="lib" path="lib/commons-httpclient-3.1.jar" sourcepath="C:/software/commons-httpclient-3.1/src"/>
 	<classpathentry kind="lib" path="config"/>
+	<classpathentry kind="lib" path="lib/gwt/gwt-datepicker-r17.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
