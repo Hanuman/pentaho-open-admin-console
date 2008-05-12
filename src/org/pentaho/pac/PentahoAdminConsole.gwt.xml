@@ -8,8 +8,8 @@
 	<inherits name='org.zenika.widget.DatePickerModule'/>
 	<!--
 	<inherits name='com.google.gwt.widgetideas.DatePicker'/>
-	--> 
 	<inherits name='org.gwt.advanced.Grid'/>
+	--> 
 
 	<!-- Specify the app entry point class.                   -->
 	<entry-point class='org.pentaho.pac.client.PentahoAdminConsoleEntryPoint'/>
