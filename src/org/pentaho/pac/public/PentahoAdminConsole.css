@@ -266,7 +266,7 @@ a:visited {
 }
 
 .gwt-DialogBox {
-  background-color: #e8eefa;
+  background-color: #EDEDED;
   border-top: 2px solid #CCCCCC;
   border-right: 2px solid #777777;
   border-bottom: 2px solid #777777;
@@ -382,7 +382,7 @@ a:visited {
 }
 
 .gwt-TabPanelBottom {
-		background-color:#EDEDED;
+		/*background-color:#EDEDED;*/
 		border-color:#95A22C;
 		border-style:solid;
 		border-width: 1px;
@@ -1049,8 +1049,8 @@ a:visited {
 	padding: 0px;
 }
 
-/* begin jobs table */
-.jobsTable {
+/* begin schedules table */
+.schedulesTable {
 	border-top: 1px solid #808080;
 	border-left: 1px solid #808080;
 	width: 100%;
@@ -1068,14 +1068,14 @@ a:visited {
 	background-color: #FFFFFF;
 }
 
-.jobsTable td {
+.schedulesTable td {
 	border-right: 1px solid #808080;
 	border-bottom: 1px solid #808080;
 	padding: 5px;
 	vertical-align: top;
 }
 
-.jobsTableHeader td {
+.schedulesTableHeader td {
 	background-color:#C2CFA2;
 	border-bottom:1px solid #818F49;
 	border-left:1px solid #778645;
@@ -1100,13 +1100,14 @@ a:visited {
 	border: 0px solid purple;
 	padding: 0px;
 }
-/* end jobs table */
+/* end schedules table */
 /* end scheduler panel */
 
 /* begin styles for BasicDialog, also see: ".gwt-DialogBox" and ".gwt-DialogBox .Caption" */
 .basicDialog\.rootPanel {
 	/*background-color: red;*/
 	margin: 20px 20px 10px 20px;	/* top right bottom left*/
+	background-color: #EDEDED;
 	padding: 0px;
 }
 
@@ -1160,6 +1161,10 @@ a:visited {
 
 .addRoleAssignmentsDialogBox\.rolesList {
 	width: 100%;
+}
+
+.simpleGroupBox {
+	padding: 4px;
 }
 
 /* begin styles for group box */
@@ -1232,7 +1237,7 @@ margin-right: 10px;
 }
 
 /* begin toolbar styles */
-.ToolBarIndicators{
+.toolBarIndicators{
 	margin:  6px 0 0 18px;
 	padding:0;
 	float:left;
@@ -1297,4 +1302,27 @@ margin-right: 10px;
 
 .fieldsetPanel{
 	padding:4px;
+}
+
+/* begain */
+.filterPanel {
+	border: 1px dotted purple;
+}
+/* end */
+
+/* begin recurrance dialog ------------------------------------------------------*/
+.temporalRadioGroup {
+	border-right: 1px solid #95A22C;
+}
+
+.weeklyRecurrancePanel {
+}
+
+/* end recurrance dialog ----------------------------------------------------------*/
+
+.datepicker {
+	background-color: #AAAAFF;
+}
+.advanced-Calendar {
+	background-color: #AAAAFF;
 }
