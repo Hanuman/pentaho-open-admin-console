@@ -2,6 +2,7 @@ package org.pentaho.pac.client;
 
 import org.pentaho.pac.client.common.ui.MessageDialog;
 import org.pentaho.pac.client.datasources.DataSourcesPanel;
+import org.pentaho.pac.client.scheduler.SchedulerController;
 import org.pentaho.pac.client.scheduler.SchedulerPanel;
 import org.pentaho.pac.client.services.AdminServicesPanel;
 
@@ -19,7 +20,7 @@ public class AdministrationTabPanel extends TabPanel {
   AdminServicesPanel servicesPanel = new AdminServicesPanel();
   UsersAndRolesPanel usersAndRolesPanel = new UsersAndRolesPanel();
   DataSourcesPanel dataSourcesPanel = new DataSourcesPanel();
-  SchedulerPanel schedulerPanel = new SchedulerPanel();
+  SchedulerController schedulerController = null;
   
   boolean securityInfoInitialized = false;  
   
@@ -32,7 +33,9 @@ public class AdministrationTabPanel extends TabPanel {
     add(usersAndRolesPanel, PentahoAdminConsole.MSGS.usersAndRoles());
     add(dataSourcesPanel, PentahoAdminConsole.MSGS.dataSources());
     add(servicesPanel, PentahoAdminConsole.MSGS.services());
+    SchedulerPanel schedulerPanel = new SchedulerPanel();
     add(schedulerPanel, PentahoAdminConsole.MSGS.scheduler());
+    schedulerController = new SchedulerController( schedulerPanel );
     
     usersAndRolesPanel.setWidth("100%"); //$NON-NLS-1$
     usersAndRolesPanel.setHeight("100%"); //$NON-NLS-1$
@@ -58,10 +61,8 @@ public class AdministrationTabPanel extends TabPanel {
       case ADMIN_SERVICES_TAB_INDEX:
         // do nothing;
         break;
-      case ADMIN_SCHEDULER_TAB_INDEX: 
-        if (!schedulerPanel.isInitialized()) {
-          schedulerPanel.refresh();
-        }
+      case ADMIN_SCHEDULER_TAB_INDEX:
+        schedulerController.init();
         break;
       default:
         throw new RuntimeException(PentahoAdminConsole.MSGS.invalidTabIndex(Integer.toString(tabIndex)));
