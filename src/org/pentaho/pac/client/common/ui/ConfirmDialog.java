@@ -7,7 +7,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class ConfirmDialog extends MessageDialog {
 
   protected Button cancelBtn = null;
-  private ICallbackHandler cancelHandler = new ICallbackHandler() {
+  private ICallback cancelHandler = new ICallback() {
     public void onHandle(Object o) {
       hide();
     }
@@ -33,7 +33,7 @@ public class ConfirmDialog extends MessageDialog {
     this( "", "" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
   
-  public void setOnCancelHandler( final ICallbackHandler handler )
+  public void setOnCancelHandler( final ICallback handler )
   {
     cancelHandler = handler;
   }
