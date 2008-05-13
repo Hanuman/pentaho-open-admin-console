@@ -15,7 +15,7 @@ public class MessageDialog extends BasicDialog {
   protected static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   protected Label msgLabel = null;
   private Button okBtn = null;
-  ICallbackHandler okHandler = new ICallbackHandler() {
+  ICallback okHandler = new ICallback() {
     public void onHandle(Object o) {
       hide();
     }
@@ -63,7 +63,7 @@ public class MessageDialog extends BasicDialog {
     }
   }
   
-  public void setOnOkHandler( final ICallbackHandler handler )
+  public void setOnOkHandler( final ICallback handler )
   {
     okHandler = handler;
   }
