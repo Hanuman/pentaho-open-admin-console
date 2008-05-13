@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import org.pentaho.pac.client.home.HomePanel;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.scheduler.RecurranceDialog;
+import org.pentaho.pac.client.scheduler.ScheduleCreatorDialog;
 import org.pentaho.pac.client.utils.PacImageBundle;
 
 import com.google.gwt.core.client.GWT;
@@ -20,6 +22,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
@@ -195,7 +198,7 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
       this.setCellWidth(rightCap, "6px"); //$NON-NLS-1$
       
       SimplePanel indicatorsPanel = new SimplePanel();
-      indicatorsPanel.setStyleName("ToolBarIndicators"); //$NON-NLS-1$
+      indicatorsPanel.setStyleName("toolBarIndicators"); //$NON-NLS-1$
       centerPanel.add(indicatorsPanel);
       
       SimplePanel indicatorsLeft = new SimplePanel();
@@ -272,6 +275,9 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
   }
   
   private class CommonTasks extends SimplePanel{
+    // TODO sbarkdull
+    ScheduleCreatorDialog d = new ScheduleCreatorDialog();
+    
     public CommonTasks(){
       super();
       VerticalPanel vertPanel = new VerticalPanel();
@@ -288,6 +294,16 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
       list.add(new Hyperlink("Link 1 text","Link1")); //$NON-NLS-1$ //$NON-NLS-2$
       list.add(new Hyperlink("Link 2 text","Link2")); //$NON-NLS-1$ //$NON-NLS-2$
       list.add(new Hyperlink("Link 3 text","Link3")); //$NON-NLS-1$ //$NON-NLS-2$
+
+
+      
+      PushButton reBtn = new PushButton( "Sched", new ClickListener() {
+        public void onClick(Widget sender) {
+          d.center();
+        }
+      });  
+      list.add( reBtn );
+      
       list.setStyleName("CommonTasksLinks"); //$NON-NLS-1$
       vertPanel.add(list);
       
