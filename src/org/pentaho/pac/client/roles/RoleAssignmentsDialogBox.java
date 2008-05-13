@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.client.common.ui.AccumulatorDialog;
-import org.pentaho.pac.client.common.ui.ICallbackHandler;
+import org.pentaho.pac.client.common.ui.ICallback;
 import org.pentaho.pac.client.common.ui.MessageDialog;
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.roles.NonExistingRoleException;
@@ -29,7 +29,7 @@ public class RoleAssignmentsDialogBox extends AccumulatorDialog {
     
     setTitle(MSGS.assignedRoles());
 
-    setOnOkHandler( new ICallbackHandler() {
+    setOnOkHandler( new ICallback() {
       public void onHandle( Object o ) {
         assignSelectedRoles();
       }

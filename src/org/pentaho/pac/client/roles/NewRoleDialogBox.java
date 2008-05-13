@@ -2,7 +2,7 @@ package org.pentaho.pac.client.roles;
 
 import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.client.common.ui.ConfirmDialog;
-import org.pentaho.pac.client.common.ui.ICallbackHandler;
+import org.pentaho.pac.client.common.ui.ICallback;
 import org.pentaho.pac.client.common.ui.MessageDialog;
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
@@ -25,7 +25,7 @@ public class NewRoleDialogBox extends ConfirmDialog {
     roleDetailsPanel.setStyleName( "newRoleDialogBox.detailsPanel" ); //$NON-NLS-1$
     addWidgetToClientArea( roleDetailsPanel );
     
-    setOnOkHandler( new ICallbackHandler() {
+    setOnOkHandler( new ICallback() {
       public void onHandle( Object o ) {
         createRole();
       }
