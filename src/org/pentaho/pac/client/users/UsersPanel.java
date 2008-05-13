@@ -7,7 +7,7 @@ import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.client.common.ui.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.FieldsetPanel;
-import org.pentaho.pac.client.common.ui.ICallbackHandler;
+import org.pentaho.pac.client.common.ui.ICallback;
 import org.pentaho.pac.client.common.ui.IListBoxFilter;
 import org.pentaho.pac.client.common.ui.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
@@ -109,7 +109,7 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     
     confirmDeleteUsersDialog.setText(MSGS.deleteUsers());
     confirmDeleteUsersDialog.setMessage(MSGS.confirmUserDeletionMsg());
-    confirmDeleteUsersDialog.setOnOkHandler( new ICallbackHandler() {
+    confirmDeleteUsersDialog.setOnOkHandler( new ICallback() {
       public void onHandle(Object o) {
         confirmDeleteUsersDialog.hide();
         deleteSelectedUsers();
@@ -119,7 +119,7 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     
     confirmRemoveRoleAssignmentDialog.setText(MSGS.assignedRoles());
     confirmRemoveRoleAssignmentDialog.setMessage(MSGS.confirmRemoveRoleAssignmentMsg());
-    confirmRemoveRoleAssignmentDialog.setOnOkHandler( new ICallbackHandler() {
+    confirmRemoveRoleAssignmentDialog.setOnOkHandler( new ICallback() {
       public void onHandle(Object o) {
         confirmRemoveRoleAssignmentDialog.hide();
         unassignSelectedRoles();

@@ -2,7 +2,7 @@ package org.pentaho.pac.client.users;
 
 import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.client.common.ui.ConfirmDialog;
-import org.pentaho.pac.client.common.ui.ICallbackHandler;
+import org.pentaho.pac.client.common.ui.ICallback;
 import org.pentaho.pac.client.common.ui.MessageDialog;
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.users.DuplicateUserException;
@@ -26,7 +26,7 @@ public class NewUserDialogBox extends ConfirmDialog {
     userDetailsPanel.setStyleName( "newUserDialogBox.detailsPanel" ); //$NON-NLS-1$
     addWidgetToClientArea( userDetailsPanel );
     
-    setOnOkHandler( new ICallbackHandler() {
+    setOnOkHandler( new ICallback() {
       public void onHandle( Object o ) {
         createUser();
       }

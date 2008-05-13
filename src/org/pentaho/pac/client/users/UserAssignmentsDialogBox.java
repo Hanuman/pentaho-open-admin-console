@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.client.common.ui.AccumulatorDialog;
-import org.pentaho.pac.client.common.ui.ICallbackHandler;
+import org.pentaho.pac.client.common.ui.ICallback;
 import org.pentaho.pac.client.common.ui.MessageDialog;
 import org.pentaho.pac.client.roles.RolesList;
 import org.pentaho.pac.common.PentahoSecurityException;
@@ -30,7 +30,7 @@ public class UserAssignmentsDialogBox extends AccumulatorDialog {
     
     setTitle(MSGS.assignedUsers());
 
-    setOnOkHandler( new ICallbackHandler() {
+    setOnOkHandler( new ICallback() {
       public void onHandle( Object o ) {
         assignSelectedUsers();
       }
