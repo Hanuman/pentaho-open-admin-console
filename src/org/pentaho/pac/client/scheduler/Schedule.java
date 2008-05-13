@@ -26,22 +26,29 @@ import java.io.Serializable;
  * @author Steven Barkdull
  *
  */
-public class Job implements Serializable {
+public class Schedule implements Serializable {
 
   /**
    * 
    */
   private static final long serialVersionUID = 69L;
   
-  public String triggerName;
-  public String triggerGroup;
-  public String triggerState;
-  public String nextFireTime;
-  public String prevFireTime;
-  public String jobName;
-  public String jobGroup;
-  public String description;
+  private String triggerName = null;
+  private String triggerGroup = null;
+  private String triggerState = null;
+  private String nextFireTime = null;
+  private String prevFireTime = null;
+  private String jobName = null;
+  private String jobGroup = null;
+  private String description = null;
+  private String cronString = null;
   
+  public String getCronString() {
+    return cronString;
+  }
+  public void setCronString(String cronString) {
+    this.cronString = cronString;
+  }
   public String getTriggerName() {
     return triggerName;
   }
