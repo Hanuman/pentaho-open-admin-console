@@ -41,15 +41,6 @@ public interface PacServiceAsync {
   public void refreshReportingMetadata(AsyncCallback callback);
   public void getHomePage(String url, AsyncCallback callback);
   
-  public void deleteJob( String jobName, String jobGroup, AsyncCallback callback );
-  public void executeJobNow( String jobName, String jobGroup, AsyncCallback callback );
-  public void getJobNames( AsyncCallback callback );
-  public void isSchedulerPaused( AsyncCallback callback );
-  public void pauseAll( AsyncCallback callback );
-  public void pauseJob( String jobName, String jobGroup, AsyncCallback callback );
-  public void resumeAll( AsyncCallback callback );
-  public void resumeJob( String jobName, String jobGroup, AsyncCallback callback );
-  
   public void isBiServerAlive( AsyncCallback callback );
   public void getBiServerStatusCheckPeriod( AsyncCallback callback );
   public void getAppProperty( String propName, AsyncCallback callback );

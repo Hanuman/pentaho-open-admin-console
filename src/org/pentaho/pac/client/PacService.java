@@ -4,6 +4,7 @@ package org.pentaho.pac.client;
 
 import java.util.List;
 
+import org.pentaho.pac.client.scheduler.Schedule;
 import org.pentaho.pac.common.PacServiceException;
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.UserRoleSecurityInfo;
@@ -51,18 +52,6 @@ public interface PacService extends RemoteService {
   public String executeGlobalActions() throws PacServiceException;
   public String refreshReportingMetadata() throws PacServiceException;
   public String getHomePage(String url) throws PacServiceException;
-  
-  public void deleteJob( String jobName, String jobGroup ) throws PacServiceException;
-  public void executeJobNow( String jobName, String jobGroup ) throws PacServiceException;
-  /**
-   * @gwt.typeArgs <org.pentaho.pac.client.scheduler.Job>
-   */
-  public List/*<Job>*/ getJobNames() throws PacServiceException;
-  public boolean isSchedulerPaused() throws PacServiceException;
-  public void pauseAll() throws PacServiceException;
-  public void pauseJob( String jobName, String jobGroup ) throws PacServiceException;
-  public void resumeAll() throws PacServiceException;
-  public void resumeJob( String jobName, String jobGroup ) throws PacServiceException;
   
   public void isBiServerAlive() throws PacServiceException;
   public int getBiServerStatusCheckPeriod();
