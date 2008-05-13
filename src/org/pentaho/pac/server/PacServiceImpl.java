@@ -21,6 +21,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.pentaho.pac.client.PacService;
+import org.pentaho.pac.client.scheduler.Schedule;
 import org.pentaho.pac.common.PacServiceException;
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.UserRoleSecurityInfo;
@@ -56,8 +57,6 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
 
   private static final Log logger = LogFactory.getLog(PacServiceImpl.class);
 
-  // TODO sbarkdull, damn it would be nice to inject this with Spring (and some of these other props)
-  private static SchedulerAdminUIComponentProxy schedulerProxy = null;
   private static BiServerTrustedProxy biServerProxy;
   static {
     biServerProxy = BiServerTrustedProxy.getInstance();
@@ -74,7 +73,6 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   public PacServiceImpl()
   {
     initFromConfiguration();
-    schedulerProxy = new SchedulerAdminUIComponentProxy( getUserName() );
   }
 
   public UserRoleSecurityInfo getUserRoleSecurityInfo() throws PacServiceException {
@@ -915,70 +913,6 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     }
   }
   
-
-  // begin Scheduler Admin interfaces -----------------------------------------------------
-  public void deleteJob(String jobName, String jobGroup) throws PacServiceException {
-    schedulerProxy.deleteJob(jobName, jobGroup);
-  }
-
-  /**
-   * query string: schedulerAction=executeJob&jobName=PentahoSystemVersionCheck&jobGroup=DEFAULT
-   * @throws PacServiceException 
-   */
-  public void executeJobNow(String jobName, String jobGroup) throws PacServiceException {
-    schedulerProxy.executeJobNow(jobName, jobGroup);
-  }
-
-  /**
-   * query string: schedulerAction=getJobNames
-   * @throws PacServiceException 
-   */
-  public List/*<Job>*/getJobNames() throws PacServiceException {
-    List l = schedulerProxy.getJobNames();
-    return l;
-  }
-
-  /**
-   * query string: schedulerAction=isSchedulerPaused
-   * @throws PacServiceException 
-   */
-  public boolean isSchedulerPaused() throws PacServiceException {
-    return schedulerProxy.isSchedulerPaused();
-  }
-
-  /**
-   * query string: schedulerAction=pauseAll
-   * @throws PacServiceException 
-   */
-  public void pauseAll() throws PacServiceException {
-    schedulerProxy.pauseAll();
-  }
-
-  /**
-   * query string: schedulerAction=pauseJob&jobName=PentahoSystemVersionCheck&jobGroup=DEFAULT
-   * @throws PacServiceException 
-   */
-  public void pauseJob(String jobName, String jobGroup) throws PacServiceException {
-    schedulerProxy.pauseJob(jobName, jobGroup);
-  }
-
-  /**
-   * query string: schedulerAction=resumeAll
-   * @throws PacServiceException 
-   */
-  public void resumeAll() throws PacServiceException {
-    schedulerProxy.resumeAll();
-  }
-
-  /**
-   * query string: schedulerAction=resumeJob&jobName=PentahoSystemVersionCheck&jobGroup=DEFAULT
-   * @throws PacServiceException 
-   */
-  public void resumeJob(String jobName, String jobGroup) throws PacServiceException {
-    schedulerProxy.resumeJob(jobName, jobGroup);
-  }
-  // end Scheduler Admin interfaces -----------------------------------------------------
-
   public void isBiServerAlive() throws PacServiceException {
     ThreadSafeHttpClient c = new ThreadSafeHttpClient( biServerBaseURL );
     String response = c.execRemoteMethod( "ping/alive.gif", null ); //$NON-NLS-1$
