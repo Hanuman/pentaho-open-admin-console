@@ -30,7 +30,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.pentaho.pac.client.scheduler.Job;
+import org.pentaho.pac.client.scheduler.Schedule;
 import org.pentaho.pac.common.PacServiceException;
 import org.pentaho.pac.server.i18n.Messages;
 import org.xml.sax.Attributes;
@@ -57,10 +57,9 @@ public class XmlSerializer {
     STATE_STRINGS.put( "5", Messages.getString( "XmlSerializer.stateNone" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  public List<Job> getJobNamesFromXml( String strXml ) throws PacServiceException
+  public List<Schedule> getScheduleNamesFromXml( String strXml ) throws PacServiceException
   {
     JobsParserHandler h = null;
-    // TODO sbarkdull, lets do something better
     try {
       h = parseJobNamesXml( strXml );
     } catch (SAXException e) {
@@ -73,12 +72,11 @@ public class XmlSerializer {
       logger.error( e.getMessage() );
       throw new PacServiceException( e.getMessage() );
     }
-    return h.jobList;
+    return h.scheduleList;
   }
   
   private JobsParserHandler parseJobNamesXml( String strXml ) throws SAXException, IOException, ParserConfigurationException
   {
-
       SAXParser parser = getSAXParserFactory().newSAXParser();
       JobsParserHandler h = new JobsParserHandler();
       // TODO sbarkdull, need to set encoding
@@ -94,8 +92,8 @@ public class XmlSerializer {
 
     public String currentText = null;
     public boolean isGetJobNames = false;
-    public List<Job> jobList = new ArrayList<Job>();
-    private Job currentJob = null;
+    public List<Schedule> scheduleList = new ArrayList<Schedule>();
+    private Schedule currentSchedule = null;
     
     public JobsParserHandler()
     {
@@ -110,9 +108,8 @@ public class XmlSerializer {
     {
       if ( qName.equals( "job" ) ) { //$NON-NLS-1$
       } else if ( qName.equals( "description" ) ) { //$NON-NLS-1$
-        currentJob.description = currentText;
+        currentSchedule.setDescription( currentText );
       } else {
-        // TODO sbarkdull, error
       }
     }
 
@@ -122,25 +119,28 @@ public class XmlSerializer {
         isGetJobNames = true;
       } else if ( qName.equals( "job" ) ) { //$NON-NLS-1$
 
-        currentJob = new Job();
-        jobList.add( currentJob );
+        currentSchedule = new Schedule();
+        scheduleList.add( currentSchedule );
         String val = attributes.getValue( "triggerName" ); //$NON-NLS-1$
-        currentJob.triggerName = val;
+        currentSchedule.setTriggerName( val );
         val = attributes.getValue( "triggerGroup" ); //$NON-NLS-1$
-        currentJob.triggerGroup = val;
+        currentSchedule.setTriggerGroup( val );
         val = attributes.getValue( "triggerState" ); //$NON-NLS-1$
-        currentJob.triggerState = triggerInt2Name( val );
+        currentSchedule.setTriggerState( triggerInt2Name( val ) );
         val = attributes.getValue( "nextFireTime" ); //$NON-NLS-1$
-        currentJob.nextFireTime = val;
+        currentSchedule.setNextFireTime( val );
         val = attributes.getValue( "prevFireTime" ); //$NON-NLS-1$
-        currentJob.prevFireTime = val;
+        currentSchedule.setPrevFireTime( val );
         val = attributes.getValue( "jobName" ); //$NON-NLS-1$
-        currentJob.jobName = val;
+        currentSchedule.setJobName( val );
         val = attributes.getValue( "jobGroup" ); //$NON-NLS-1$
-        currentJob.jobGroup = val;
+        currentSchedule.setJobGroup( val );
+        val = attributes.getValue( "cronString" ); //$NON-NLS-1$
+        if ( null != val ) {
+          currentSchedule.setCronString( val );
+        }
       } else if ( qName.equals( "description" ) ) { //$NON-NLS-1$
       } else {
-        // TODO sbarkdull, error
       }
     }
   }
@@ -175,7 +175,6 @@ public class XmlSerializer {
   
   public String getXActionResponseStatusFromXml( String strXml ) throws PacServiceException {
     XActionResponseParserHandler h = null;
-    // TODO sbarkdull, lets do something better
     try {
       h = parseXActionResponseXml( strXml );
     } catch (SAXException e) {
