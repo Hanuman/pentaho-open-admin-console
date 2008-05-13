@@ -55,7 +55,7 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
     
     VerticalPanel leftPanel = new VerticalPanel();
     SimplePanel tempPanel = new SimplePanel();
-    tempPanel.setStyleName("leftTabPanel_top");
+    tempPanel.setStyleName("leftTabPanel_top"); //$NON-NLS-1$
     leftPanel.add(tempPanel);
     
     Label spacer = new Label();
@@ -90,7 +90,7 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
     
     centerPanel.add(leftPanelWrapper, DockPanel.WEST);
     centerPanel.add(deckPanelWrapper, DockPanel.CENTER);
-    centerPanel.setHeight("100%");
+    centerPanel.setHeight("100%"); //$NON-NLS-1$
     
     centerPanel.setCellHeight(deckPanelWrapper, "100%"); //$NON-NLS-1$
     centerPanel.setCellWidth(deckPanelWrapper, "100%"); //$NON-NLS-1$
@@ -98,7 +98,7 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
     //Main DockPanel
     setStyleName("main-panel"); //$NON-NLS-1$
     add(topPanel, DockPanel.NORTH);
-    setCellWidth(topPanel, "100%");
+    setCellWidth(topPanel, "100%"); //$NON-NLS-1$
     add(centerPanel, DockPanel.CENTER);
     setCellHeight(centerPanel, "100%"); //$NON-NLS-1$
     
@@ -111,18 +111,18 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
     toggleButton.addClickListener(this);
     componentActivationToggleButtons.add(toggleButton);
     leftVerticalPanel.add(toggleButton);
-    widget.setWidth("100%");
-    widget.setHeight("100%");
+    widget.setWidth("100%"); //$NON-NLS-1$
+    widget.setHeight("100%"); //$NON-NLS-1$
     deckPanel.add(widget);
   }
   
   protected void initTopPanel() {
     SimplePanel logo = new SimplePanel();
     logo.setStyleName("logo"); //$NON-NLS-1$
-    topPanel.setWidth("100%");
+    topPanel.setWidth("100%");  //$NON-NLS-1$
     topPanel.add(logo);
     topPanel.add(toolbar);
-    topPanel.setCellWidth(toolbar, "100%");
+    topPanel.setCellWidth(toolbar, "100%"); //$NON-NLS-1$
   }
   
   public void onClick(Widget sender) {
@@ -179,9 +179,9 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
       
       //Left end-cap
       SimplePanel leftCap = new SimplePanel();
-      leftCap.setStyleName("toolbar_left");
+      leftCap.setStyleName("toolbar_left"); //$NON-NLS-1$
       add(leftCap);
-      this.setCellWidth(leftCap, "5px");
+      this.setCellWidth(leftCap, "5px"); //$NON-NLS-1$
       
       //the body of the toolbar
       HorizontalPanel centerPanel = new HorizontalPanel();
@@ -190,9 +190,9 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
       
       //Right end-cap
       SimplePanel rightCap = new SimplePanel();
-      rightCap.setStyleName("toolbar_right");
+      rightCap.setStyleName("toolbar_right"); //$NON-NLS-1$
       add(rightCap);
-      this.setCellWidth(rightCap, "6px");
+      this.setCellWidth(rightCap, "6px"); //$NON-NLS-1$
       
       SimplePanel indicatorsPanel = new SimplePanel();
       indicatorsPanel.setStyleName("ToolBarIndicators"); //$NON-NLS-1$
