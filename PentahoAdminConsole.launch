@@ -17,5 +17,5 @@
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.GWTShell"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-out www org.pentaho.pac.PentahoAdminConsole/PentahoAdminConsole.html"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="pentaho-admin-console"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dpentaho.platform.username=&quot;Joe&quot; -Dpentaho.platform.password=&quot;password&quot; -DjmxHostName=&quot;localhost&quot; -DjmxPortNumber=&quot;9004&quot;  -DpciContextPath=&quot;/pentaho&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dpentaho.platform.username=&quot;Joe&quot; -Dpentaho.platform.password=&quot;password&quot; -DjmxHostName=&quot;localhost&quot; -DjmxPortNumber=&quot;9004&quot;  -DpciContextPath=&quot;/pentaho&quot; -Xmx128M"/>
 </launchConfiguration>

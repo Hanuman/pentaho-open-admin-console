@@ -15,7 +15,7 @@ public class GroupBox extends DockPanel{
     this.title = new Label(title);
     this.title.setStylePrimaryName("groupBoxHeader"); //$NON-NLS-1$
     
-    grid = new Grid(5, 5);
+    grid = new Grid(3, 3);
     grid.setWidth("100%"); //$NON-NLS-1$
     grid.setHeight("100%"); //$NON-NLS-1$
     grid.setCellPadding(0);

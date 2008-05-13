@@ -7,12 +7,15 @@ import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.utils.PacImageBundle;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Image;
@@ -50,14 +53,19 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
     homePanel = new HomePanel("http://www.pentaho.com/console_home"); //$NON-NLS-1$
     commonTasks = new CommonTasks();
     
+    VerticalPanel leftPanel = new VerticalPanel();
+    SimplePanel tempPanel = new SimplePanel();
+    tempPanel.setStyleName("leftTabPanel_top");
+    leftPanel.add(tempPanel);
+    
     Label spacer = new Label();
     leftVerticalPanel.add(spacer);
     leftVerticalPanel.setCellHeight(spacer, "20px"); //$NON-NLS-1$
     
     initializeAdminDeck();
     
-    adminTabPanel.setWidth("97%"); //$NON-NLS-1$
-    adminTabPanel.setHeight("97%"); //$NON-NLS-1$
+    adminTabPanel.setWidth("100%"); //$NON-NLS-1$
+    adminTabPanel.setHeight("100%"); //$NON-NLS-1$
     adminTabPanel.getDeckPanel().setHeight("100%"); //$NON-NLS-1$
     
     spacer = new Label();
@@ -73,14 +81,24 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
     deckPanel.setWidth("100%"); //$NON-NLS-1$
     deckPanel.setHeight("100%"); //$NON-NLS-1$
 
-    centerPanel.add(leftVerticalPanel, DockPanel.WEST);
-    centerPanel.add(deckPanel, DockPanel.CENTER);
-    centerPanel.setCellHeight(deckPanel, "100%"); //$NON-NLS-1$
-    centerPanel.setCellWidth(deckPanel, "100%"); //$NON-NLS-1$
+    DockPanel deckPanelWrapper = new DeckPanelWrapper(deckPanel);
+    deckPanelWrapper.setWidth("100%"); //$NON-NLS-1$
+    deckPanelWrapper.setHeight("100%"); //$NON-NLS-1$
+    
+    DockPanel leftPanelWrapper = new LeftPanelWrapper(leftVerticalPanel);
+    leftPanelWrapper.setHeight("100%"); //$NON-NLS-1$
+    
+    centerPanel.add(leftPanelWrapper, DockPanel.WEST);
+    centerPanel.add(deckPanelWrapper, DockPanel.CENTER);
+    centerPanel.setHeight("100%");
+    
+    centerPanel.setCellHeight(deckPanelWrapper, "100%"); //$NON-NLS-1$
+    centerPanel.setCellWidth(deckPanelWrapper, "100%"); //$NON-NLS-1$
     
     //Main DockPanel
     setStyleName("main-panel"); //$NON-NLS-1$
     add(topPanel, DockPanel.NORTH);
+    setCellWidth(topPanel, "100%");
     add(centerPanel, DockPanel.CENTER);
     setCellHeight(centerPanel, "100%"); //$NON-NLS-1$
     
@@ -93,14 +111,18 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
     toggleButton.addClickListener(this);
     componentActivationToggleButtons.add(toggleButton);
     leftVerticalPanel.add(toggleButton);
+    widget.setWidth("100%");
+    widget.setHeight("100%");
     deckPanel.add(widget);
   }
   
   protected void initTopPanel() {
     SimplePanel logo = new SimplePanel();
     logo.setStyleName("logo"); //$NON-NLS-1$
+    topPanel.setWidth("100%");
     topPanel.add(logo);
     topPanel.add(toolbar);
+    topPanel.setCellWidth(toolbar, "100%");
   }
   
   public void onClick(Widget sender) {
@@ -154,10 +176,27 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
       super();
 
       setStyleName("toolbar"); //$NON-NLS-1$
-     
+      
+      //Left end-cap
+      SimplePanel leftCap = new SimplePanel();
+      leftCap.setStyleName("toolbar_left");
+      add(leftCap);
+      this.setCellWidth(leftCap, "5px");
+      
+      //the body of the toolbar
+      HorizontalPanel centerPanel = new HorizontalPanel();
+      centerPanel.setStyleName("toolbar_center"); //$NON-NLS-1$
+      add(centerPanel);
+      
+      //Right end-cap
+      SimplePanel rightCap = new SimplePanel();
+      rightCap.setStyleName("toolbar_right");
+      add(rightCap);
+      this.setCellWidth(rightCap, "6px");
+      
       SimplePanel indicatorsPanel = new SimplePanel();
       indicatorsPanel.setStyleName("ToolBarIndicators"); //$NON-NLS-1$
-      add(indicatorsPanel);
+      centerPanel.add(indicatorsPanel);
       
       SimplePanel indicatorsLeft = new SimplePanel();
       indicatorsLeft.setStyleName("indicators_left"); //$NON-NLS-1$
@@ -194,9 +233,9 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
         
       });
       buttonsPanel.add( helpImage );
-      add(buttonsPanel);
-      this.setCellHorizontalAlignment(buttonsPanel, HorizontalPanel.ALIGN_RIGHT);
-      this.setCellVerticalAlignment(buttonsPanel, HorizontalPanel.ALIGN_MIDDLE);
+      centerPanel.add(buttonsPanel);
+      centerPanel.setCellHorizontalAlignment(buttonsPanel, HorizontalPanel.ALIGN_RIGHT);
+      centerPanel.setCellVerticalAlignment(buttonsPanel, HorizontalPanel.ALIGN_MIDDLE);
       
       statusTimer = new Timer() {
         public void run()
@@ -254,6 +293,44 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
       
       setStyleName("CommonTasks"); //$NON-NLS-1$
       this.add(vertPanel);
+    }
+  }
+  
+  private class DeckPanelWrapper extends DockPanel{
+    public DeckPanelWrapper(DeckPanel deck){
+      Grid grid = new Grid(3,2);
+      grid.setWidth("100%"); //$NON-NLS-1$
+      grid.setHeight("100%"); //$NON-NLS-1$
+      grid.setCellPadding(0);
+      grid.setCellSpacing(0);
+      
+      grid.getRowFormatter().setStyleName(0,"deckPanel-top-tr"); //$NON-NLS-1$
+      grid.getCellFormatter().setStyleName(0, 0, "deckPanel-n"); //$NON-NLS-1$
+      grid.getCellFormatter().setStyleName(0, 1, "deckPanel-ne"); //$NON-NLS-1$
+      grid.getCellFormatter().setStyleName(1, 0, "deckPanel-c"); //$NON-NLS-1$
+      grid.getCellFormatter().setStyleName(1, 1, "deckPanel-ce"); //$NON-NLS-1$
+      grid.getCellFormatter().setStyleName(2, 0, "deckPanel-s"); //$NON-NLS-1$
+      grid.getCellFormatter().setStyleName(2, 1, "deckPanel-se"); //$NON-NLS-1$
+      
+      grid.setWidget(1, 0, deck);
+      add(grid, DockPanel.CENTER);
+    }
+  }
+  
+  private class LeftPanelWrapper extends DockPanel{
+    public LeftPanelWrapper(VerticalPanel vertPanel){
+      Grid grid = new Grid(3,1);
+      grid.setWidth("100%"); //$NON-NLS-1$
+      grid.setHeight("100%"); //$NON-NLS-1$
+      grid.setCellPadding(0);
+      grid.setCellSpacing(0);
+      
+      grid.getCellFormatter().setStyleName(0, 0, "deckPanel-nw"); //$NON-NLS-1$
+      grid.getCellFormatter().setStyleName(1, 0, "deckPanel-cw"); //$NON-NLS-1$
+      grid.getCellFormatter().setStyleName(2, 0, "deckPanel-sw"); //$NON-NLS-1$
+      
+      grid.setWidget(1, 0, vertPanel);
+      add(grid, DockPanel.CENTER);
     }
   }
   

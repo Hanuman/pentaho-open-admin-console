@@ -4,25 +4,12 @@
 		<!--                                           -->
 		<!-- Any title is fine                         -->
 		<!--                                           -->
-		<title>Wrapper HTML for PentahoAdminConsole</title>
+		<title>Administration Console</title>
 
 		<!--                                           -->
 		<!-- Use normal html, such as style            -->
 		<!--                                           -->
 		<style>
-			body,td,a,div,.p{font-family:arial,sans-serif}
-			div,td{color:#000000}
-			a:link,.w,.w a:link{color:#0000cc}
-			a:visited{color:#551a8b}
-			a:active{color:#ff0000}
-			
-			#canvas{
-				background: url('style/images/console_bg.png') top center no-repeat;
-				width:980px;
-				height: 603px;
-				padding-top:15px;
-				padding-left:0px;
-			}
 		</style>
 
 		<!--                                           -->
@@ -42,14 +29,44 @@
 	<!--                                           -->
 	<body>
 
-		<table width="100%" height="100%" border="0">
+		<table width="100%" cellspacing="0" cellpadding="0" border="0">
 			<tr>
-				<td height="100%" width="100%" valign="center" align="center">
-								
-					<div id="canvas"/>
+				<td>
+					<table width="980"  height="600" cellspacing="0" cellpadding="0" align="center" valign="center" border="0" style="background: url('style/images/background.png') bottom left">
+					
+						<tr>
+							<td width="7" height="7">
+								<img src="style/images/background_nw.gif" width="7" height="7"/><br/>
+							</td>
+							<td background="style/images/background_n.gif" width="100%">
+							</td>
+							<td width="6" height="7">
+								<img src="style/images/background_ne.gif" width="6" height="7"/><br/>
+							</td>
+						</tr>
+						<tr>
+							<td background="style/images/background_w.gif" height="100%"/>
+							<td height="100%" width="100%" style="padding-top: 14px;">
+							
+								<div id="canvas"/>
+							</td>
+							<td background="style/images/background_e.gif" height="100%"/>
+						</tr>
+						<tr>
+							<td width="7" height="8">
+								<img src="style/images/background_sw.gif" width="7" height="8"/><br/>
+							</td>
+							<td background="style/images/background_s.gif" width="100%">
+							</td>
+							<td width="6" height="8">
+								<img src="style/images/background_se.gif" width="6" height="8"/><br/>
+							</td>
+						</tr>
+					</table>
 				</td>
 			</tr>
 		</table>
+
 		<!-- OPTIONAL: include this if you want history support -->
 		<iframe src="javascript:''" id="__gwt_historyFrame" style="width:0;height:0;border:0"></iframe>
 

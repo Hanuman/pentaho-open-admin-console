@@ -9,14 +9,14 @@ public class FieldsetPanel extends SimplePanel{
   private Element legend;
   public FieldsetPanel(){
     setStyleName("fieldsetPanel"); //$NON-NLS-1$
-    fieldset = DOM.createFieldSet();
-    legend = DOM.createLegend();
-    DOM.appendChild(fieldset,legend);
-    setElement(fieldset);
+    //fieldset = DOM.createFieldSet();
+    //legend = DOM.createLegend();
+    //DOM.appendChild(fieldset,legend);
+    //setElement(fieldset);
   }
   
   public void setLegend(String txt){
-    DOM.setInnerText(legend, txt);
+    //DOM.setInnerText(legend, txt);
   }
   public String getLegend(){
     return DOM.getInnerText(legend);
