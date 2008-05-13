@@ -8,4 +8,12 @@
         <servlet-name>pacsvc</servlet-name> 
         <url-pattern>/org.pentaho.pac.PentahoAdminConsole/pacsvc</url-pattern> 
     </servlet-mapping> 
+    <servlet> 
+        <servlet-name>schedulersvc</servlet-name> 
+        <servlet-class>org.pentaho.pac.server.SchedulerServiceImpl</servlet-class>
+    </servlet> 
+    <servlet-mapping> 
+        <servlet-name>schedulersvc</servlet-name> 
+        <url-pattern>/org.pentaho.pac.PentahoAdminConsole/schedulersvc</url-pattern> 
+    </servlet-mapping> 
 </web-app>

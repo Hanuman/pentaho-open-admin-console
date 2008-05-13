@@ -68,6 +68,9 @@ public class JettyServer {
     ServletHolder pacsvc = new ServletHolder(new org.pentaho.pac.server.PacServiceImpl() );
     startExecution.addServlet(pacsvc, "/pacsvc"); //$NON-NLS-1$
     
+    ServletHolder schedulersvc = new ServletHolder(new org.pentaho.pac.server.SchedulerServiceImpl() );
+    startExecution.addServlet(schedulersvc, "/schedulersvc"); //$NON-NLS-1$
+    
     //sample
     Handler hello = new HomeHandler();
     
