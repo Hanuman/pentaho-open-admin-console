@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.pentaho.pac.client.scheduler.Job;
+import org.pentaho.pac.client.scheduler.Schedule;
 import org.pentaho.pac.common.PacServiceException;
 import org.pentaho.pac.server.common.BiServerTrustedProxy;
 
@@ -69,7 +69,7 @@ public class SchedulerAdminUIComponentProxy {
    * query string: schedulerAction=getJobNames
    * @throws PacServiceException 
    */
-  public List<Job> getJobNames() throws PacServiceException {
+  public List<Schedule> getScheduleNames() throws PacServiceException {
     Map params = new HashMap();
     params.put( "schedulerAction", "getJobNames" ); //$NON-NLS-1$  //$NON-NLS-2$
 
@@ -77,7 +77,7 @@ public class SchedulerAdminUIComponentProxy {
 
     // TODO sbarkdull, should XmlSerializer be a static class?
     XmlSerializer s = new XmlSerializer();
-    List<Job> l = s.getJobNamesFromXml( responseStrXml );
+    List<Schedule> l = s.getScheduleNamesFromXml( responseStrXml );
     return l;
   }
   
