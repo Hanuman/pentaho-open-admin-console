@@ -3,7 +3,7 @@ package org.pentaho.pac.client.datasources;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.ConfirmDialog;
-import org.pentaho.pac.client.common.ui.ICallbackHandler;
+import org.pentaho.pac.client.common.ui.ICallback;
 import org.pentaho.pac.client.common.ui.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
@@ -93,7 +93,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
     newDataSourceDialogBox.addPopupListener(this);
     updateDataSourceBtn.addClickListener(this);
     testDataSourceBtn.addClickListener(this);
-    confirmDataSourceDeleteDialog.setOnOkHandler(new ICallbackHandler() {
+    confirmDataSourceDeleteDialog.setOnOkHandler(new ICallback() {
       public void onHandle(Object o) {
         confirmDataSourceDeleteDialog.hide();
         deleteSelectedDataSources();

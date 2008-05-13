@@ -2,7 +2,7 @@ package org.pentaho.pac.client.datasources;
 
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.common.ui.ConfirmDialog;
-import org.pentaho.pac.client.common.ui.ICallbackHandler;
+import org.pentaho.pac.client.common.ui.ICallback;
 import org.pentaho.pac.client.common.ui.MessageDialog;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
 
@@ -103,7 +103,7 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
     
     addWidgetToClientArea( testButton );
 
-    setOnOkHandler( new ICallbackHandler() {
+    setOnOkHandler( new ICallback() {
       public void onHandle( Object o ) {
         createDataSource();
       }
