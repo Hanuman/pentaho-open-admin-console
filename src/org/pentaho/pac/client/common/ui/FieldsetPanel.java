@@ -4,6 +4,11 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.SimplePanel;
 
+/**
+ * @deprecated used SimpleGroupBox
+ * @author Nick Baker
+ *
+ */
 public class FieldsetPanel extends SimplePanel{
   private Element fieldset;
   private Element legend;
