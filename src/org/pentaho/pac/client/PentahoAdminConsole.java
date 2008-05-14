@@ -41,7 +41,6 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
   HorizontalPanel toolbar = new ConsoleToolbar();
   HorizontalPanel topPanel = new HorizontalPanel();
   
-  TabPanel rightTabPanel = new TabPanel();
   DockPanel dockPanel = new DockPanel();
   DeckPanel deckPanel = new DeckPanel();
   protected AdministrationTabPanel adminTabPanel = new AdministrationTabPanel();

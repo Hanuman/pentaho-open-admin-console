@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.ListBox;
 
 public class ObjectListBox extends ListBox {
   List objects = new ArrayList();
+  List sortedAndFilteredObjects = new ArrayList();
   IListBoxFilter filter;
   Comparator comparator;
   
@@ -22,20 +23,14 @@ public class ObjectListBox extends ListBox {
   }
 
   protected void setObjects(List objects) {
-    if (comparator != null) {
-      Collections.sort(objects, comparator);
-    }
     this.objects.clear();
     this.objects.addAll(objects);
-    clear();
-    applyFilter();
+    sortAndFilter();
   }
 
   public void setComparator(Comparator comparator) {
     this.comparator = comparator;
-    if (comparator != null) {
-      setObjects(objects);
-    }
+    sortAndFilter();
   }
   
   public Comparator getComparator() {
@@ -43,35 +38,8 @@ public class ObjectListBox extends ListBox {
   }
   
   public void addObject(Object object) {
-    if ((comparator == null) || (objects.size() == 0)) {
-      objects.add(object);
-      applyFilter();
-    } else {
-      int index = objects.indexOf(object);
-      if (index >= 0) {
-        objects.set(index, object);
-      } else {
-        index = 0;
-        int comparison = 0;
-        for (Iterator iterator = objects.iterator(); iterator.hasNext();) {
-          comparison = comparator.compare(iterator.next(), object);
-          if (comparison < 0) {
-            index++;
-          } else {
-            break;
-          }
-        }
-        if (comparison == 0) {
-          objects.set(index, object);
-        } else if (comparison > 0) {
-          objects.add(index, object);
-          applyFilter();
-        } else {
-          objects.add(object);
-          applyFilter();
-        }
-      }
-    }
+    objects.add(object);
+    sortAndFilter();
   }
   
   public List getSelectedObjects() {
@@ -79,9 +47,7 @@ public class ObjectListBox extends ListBox {
     int itemCount = getItemCount();
     for (int i = 0; i < itemCount; i++) {
       if (isItemSelected(i)) {
-        String objectLabel = getItemText( i );
-        Object o = getObject( objectLabel );
-        selectedObjects.add( o );
+        selectedObjects.add(sortedAndFilteredObjects.get(i));
       }
     }
     return selectedObjects;
@@ -94,85 +60,63 @@ public class ObjectListBox extends ListBox {
   }
   
   public void setSelectedObjects(List objects) {
-    List objectLabels = new ArrayList();
-    for (Iterator objIt = objects.iterator(); objIt.hasNext();) {
-      objectLabels.add(getObjectText(objIt.next()));
-    }
     int itemCount = getItemCount();
     for (int i = 0; i < itemCount; i++) {
-      setItemSelected(i, objectLabels.contains(getItemText(i)));
+      setItemSelected(i, objects.contains(sortedAndFilteredObjects.get(i)));
     }
   }
   
   public void removeSelectedObjects() {
-    int numObjectsDeleted = 0;
-    int selectedIndex = -1;
-    for (int i = getItemCount() - 1; i >= 0; i--) {
-      if (isItemSelected(i)) {
-        Object object = getObject(getItemText(i));
-        if (object != null) {
-          objects.remove(i);
-        }
-        removeItem(i);
-        numObjectsDeleted++;
-        selectedIndex = i;
-      }
-    }
-    if (numObjectsDeleted == 1) {
-      if (selectedIndex >= getItemCount()) {
-        selectedIndex = getItemCount() - 1;
-      }
-      if (selectedIndex >= 0) {
-        setItemSelected(selectedIndex, true);
-      }
-    }
+    removeObjects(getSelectedObjects());
   }
   
   public void removeObjects(List objectsToRemove) {
-    int numObjectsDeleted = 0;
+    List selectedObjects = getSelectedObjects();
     int selectedIndex = -1;
-    objects.removeAll(objectsToRemove);
-    for (int i = getItemCount() - 1; i >= 0; i--) {
-      if (isItemSelected(i)) {
-        selectedIndex = i;
-      }
-      for (Iterator objIt = objectsToRemove.iterator(); objIt.hasNext();) {
-        if (getItemText(i).equals(getObjectText(objIt.next()))) {
-          removeItem(i);
-          numObjectsDeleted++;
-          break;
-        }
-      }
+    if (selectedObjects.size() == 1) {
+      selectedIndex = sortedAndFilteredObjects.indexOf(selectedObjects.get(0));
     }
-    if (numObjectsDeleted == 1) {
-      if (selectedIndex >= getItemCount()) {
-        selectedIndex = getItemCount() - 1;
-      }
-      if (selectedIndex >= 0) {
-        setItemSelected(selectedIndex, true);
-      }
+    
+    for (Object selectedObject : selectedObjects) {
+      int index = sortedAndFilteredObjects.indexOf(selectedObject);
+      sortedAndFilteredObjects.remove(selectedObject);
+      objects.remove(selectedObject);
+      removeItem(index);
+    }
+    
+    if (selectedIndex >= getItemCount()) {
+      selectedIndex = getItemCount() - 1;
+    }
+    if (selectedIndex >= 0) {
+      setItemSelected(selectedIndex, true);
     }
   }
   
   public void setFilter(IListBoxFilter listBoxFilter) {
     this.filter = listBoxFilter;
-    applyFilter();
+    sortAndFilter();
   }
   
   public IListBoxFilter getFilter() {
     return filter;
   }
 
-  private void applyFilter() {
+
+  private void sortAndFilter() {
     List selectedObjects = getSelectedObjects();
     clear();
-    Iterator objectIt = objects.iterator();
-    while ( objectIt.hasNext() )
-    {
-      Object object = objectIt.next();
-      if ( doesFilterMatch( object ) ) {
-        addItem(getObjectText(object));
+    sortedAndFilteredObjects.clear();
+    sortedAndFilteredObjects.addAll(objects);
+    if (comparator != null) {
+      Collections.sort(sortedAndFilteredObjects, comparator);
+    }
+    for (int i = sortedAndFilteredObjects.size() - 1; i >= 0; i--) {
+      if (!doesFilterMatch(sortedAndFilteredObjects.get(i))) {
+        sortedAndFilteredObjects.remove(i);
       }
+    }
+    for (Object object : sortedAndFilteredObjects) {
+      addItem(getObjectText(object));
     }
     setSelectedObjects(selectedObjects);
   }
@@ -182,18 +126,6 @@ public class ObjectListBox extends ListBox {
     return (filter == null) || (filter.accepts(filterTarget));
   }
 
-  protected Object getObject(String text)
-  {
-    for ( int ii=0; ii<objects.size(); ++ii )
-    {
-      Object o = objects.get( ii );
-      if ( getObjectText(o).equals(text) ) {
-        return o;
-      }
-    }
-    return null;
-  }
-  
   protected String getObjectText(Object object) {
     return object.toString();
   }

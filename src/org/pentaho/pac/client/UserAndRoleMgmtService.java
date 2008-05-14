@@ -123,7 +123,7 @@ public class UserAndRoleMgmtService {
   public void createUser(final ProxyPentahoUser user, final AsyncCallback callback) {
     AsyncCallback innerCallback = new AsyncCallback() {
       public void onSuccess(Object result) {
-        userRoleSecurityInfo.getUsers().add(user.clone());
+        userRoleSecurityInfo.getUsers().add((ProxyPentahoUser)user.clone());
         callback.onSuccess(null);
       }
 
@@ -139,9 +139,9 @@ public class UserAndRoleMgmtService {
       public void onSuccess(Object result) {
         int index = userRoleSecurityInfo.getUsers().indexOf(user);
         if (index >= 0) {
-          userRoleSecurityInfo.getUsers().set(index, user.clone());
+          userRoleSecurityInfo.getUsers().set(index, (ProxyPentahoUser)user.clone());
         } else {
-          userRoleSecurityInfo.getUsers().add(user.clone());
+          userRoleSecurityInfo.getUsers().add((ProxyPentahoUser)user.clone());
         }
         callback.onSuccess(null);
       }
@@ -181,7 +181,7 @@ public class UserAndRoleMgmtService {
   public void createRole(final ProxyPentahoRole role, final AsyncCallback callback) {
     AsyncCallback innerCallback = new AsyncCallback() {
       public void onSuccess(Object result) {
-        userRoleSecurityInfo.getRoles().add(role.clone());
+        userRoleSecurityInfo.getRoles().add((ProxyPentahoRole)role.clone());
         callback.onSuccess(null);
       }
 
@@ -197,9 +197,9 @@ public class UserAndRoleMgmtService {
       public void onSuccess(Object result) {
         int index = userRoleSecurityInfo.getRoles().indexOf(role);
         if (index >= 0) {
-          userRoleSecurityInfo.getRoles().set(index, role.clone());
+          userRoleSecurityInfo.getRoles().set(index, (ProxyPentahoRole)role.clone());
         } else {
-          userRoleSecurityInfo.getRoles().add(role.clone());
+          userRoleSecurityInfo.getRoles().add((ProxyPentahoRole)role.clone());
         }
         callback.onSuccess(null);
       }
