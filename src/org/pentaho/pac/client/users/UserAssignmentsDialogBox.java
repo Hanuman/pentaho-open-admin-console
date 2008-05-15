@@ -2,12 +2,13 @@ package org.pentaho.pac.client.users;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.client.common.ui.AccumulatorDialog;
 import org.pentaho.pac.client.common.ui.ICallback;
 import org.pentaho.pac.client.common.ui.MessageDialog;
-import org.pentaho.pac.client.roles.RolesList;
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.roles.NonExistingRoleException;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
@@ -50,15 +51,17 @@ public class UserAssignmentsDialogBox extends AccumulatorDialog {
     userAssignmentsModified = false;
     this.role = role;
     if (role != null) {
-      ArrayList unassignedUsers = new ArrayList();
+      ArrayList<ProxyPentahoUser> unassignedUsers = new ArrayList<ProxyPentahoUser>();
       unassignedUsers.addAll(Arrays.asList(UserAndRoleMgmtService.instance().getUsers()));
-      ProxyPentahoUser[] assignedUsers = UserAndRoleMgmtService.instance().getUsers(role);
-      unassignedUsers.removeAll(Arrays.asList(assignedUsers));
-      availableUsersList.setUsers((ProxyPentahoUser[])unassignedUsers.toArray(new ProxyPentahoUser[0]));
-      accumulatedUsersList.setUsers(assignedUsers);
+      ArrayList<ProxyPentahoUser> assignedUsers = new ArrayList<ProxyPentahoUser>();
+      assignedUsers.addAll(Arrays.asList(UserAndRoleMgmtService.instance().getUsers(role)));
+      unassignedUsers.removeAll(assignedUsers);
+      availableUsersList.setObjects(unassignedUsers);
+      accumulatedUsersList.setObjects(assignedUsers);
     } else {
-      availableUsersList.setUsers(new ProxyPentahoUser[0]);
-      accumulatedUsersList.setUsers(new ProxyPentahoUser[0]);
+      List<ProxyPentahoUser> emptyList = Collections.emptyList();
+      availableUsersList.setObjects(emptyList);
+      accumulatedUsersList.setObjects(emptyList);
     }
   }
   
@@ -88,7 +91,7 @@ public class UserAssignmentsDialogBox extends AccumulatorDialog {
         errorDialog.center();
       }
     };
-    UserAndRoleMgmtService.instance().setUsers(role, accumulatedUsersList.getUsers(), callback);
+    UserAndRoleMgmtService.instance().setUsers(role, accumulatedUsersList.getObjects().toArray(new ProxyPentahoUser[0]), callback);
   }
   
   public boolean getUserAssignmentsModified() {
