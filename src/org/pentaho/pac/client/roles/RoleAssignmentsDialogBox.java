@@ -2,6 +2,8 @@ package org.pentaho.pac.client.roles;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.client.common.ui.AccumulatorDialog;
@@ -49,15 +51,16 @@ public class RoleAssignmentsDialogBox extends AccumulatorDialog {
     roleAssignmentsModified = false;
     this.user = user;
     if (user != null) {
-      ArrayList unassignedRoles = new ArrayList();
+      ArrayList<ProxyPentahoRole> unassignedRoles = new ArrayList<ProxyPentahoRole>();
       unassignedRoles.addAll(Arrays.asList(UserAndRoleMgmtService.instance().getRoles()));
-      ProxyPentahoRole[] assignedRoles = UserAndRoleMgmtService.instance().getRoles(user);
-      unassignedRoles.removeAll(Arrays.asList(assignedRoles));
-      availableRolesList.setRoles((ProxyPentahoRole[])unassignedRoles.toArray(new ProxyPentahoRole[0]));
-      accumulatedRolesList.setRoles(assignedRoles);
+      List<ProxyPentahoRole> assignedRoles = Arrays.asList(UserAndRoleMgmtService.instance().getRoles(user));
+      unassignedRoles.removeAll(assignedRoles);
+      availableRolesList.setObjects(unassignedRoles);
+      accumulatedRolesList.setObjects(assignedRoles);
     } else {
-      availableRolesList.setRoles(new ProxyPentahoRole[0]);
-      accumulatedRolesList.setRoles(new ProxyPentahoRole[0]);
+      List<ProxyPentahoRole> emptyList = Collections.emptyList();
+      availableRolesList.setObjects(emptyList);
+      accumulatedRolesList.setObjects(emptyList);
     }
   }
   
@@ -87,7 +90,7 @@ public class RoleAssignmentsDialogBox extends AccumulatorDialog {
         errorDialog.center();
       }
     };
-    UserAndRoleMgmtService.instance().setRoles(user, accumulatedRolesList.getRoles(), callback);
+    UserAndRoleMgmtService.instance().setRoles(user, accumulatedRolesList.getObjects().toArray(new ProxyPentahoRole[0]), callback);
   }
   
   public boolean getRoleAssignmentsModified() {

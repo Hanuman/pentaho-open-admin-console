@@ -2,6 +2,8 @@ package org.pentaho.pac.client.roles;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
@@ -209,19 +211,19 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 	  if (sender == updateRoleBtn) {
 	    updateRoleDetails(sender);
 	  } else if (sender == deleteRoleBtn) {
-      if (rolesList.getSelectedRoles().length > 0) {
+      if (rolesList.getSelectedObjects().size() > 0) {
         confirmDeleteRolesDialog.center();
       }
 	  } else if (sender == addRoleBtn) {
 	    addNewRole();
 	  } else if (sender == deleteRoleAssignmentBtn) {
-      if (assignedUsersList.getSelectedUsers().length > 0) {
+      if (assignedUsersList.getSelectedObjects().size() > 0) {
         confirmRemoveRoleAssignmentDialog.center();
       }
     } else if (sender == addRoleAssignmentBtn) {
-      ProxyPentahoRole[] selectedRoles = rolesList.getSelectedRoles();
-      if (selectedRoles.length == 1) {
-        modifyUserAssignments(selectedRoles[0]);
+      List<ProxyPentahoRole> selectedRoles = rolesList.getSelectedObjects();
+      if (selectedRoles.size() == 1) {
+        modifyUserAssignments(selectedRoles.get(0));
       }
     }
 	}
@@ -237,11 +239,11 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
    }
 	
 	private void deleteSelectedRoles() {
-	  final ProxyPentahoRole[] selectedRoles = rolesList.getSelectedRoles();
-	  if (selectedRoles.length > 0) {
+	  final List<ProxyPentahoRole> selectedRoles = rolesList.getSelectedObjects();
+	  if (selectedRoles.size() > 0) {
 	    AsyncCallback callback = new AsyncCallback() {
 	      public void onSuccess(Object result) {
-	        rolesList.removeRoles(selectedRoles);
+	        rolesList.removeObjects(selectedRoles);
 	        roleSelectionChanged();
 	      }
 
@@ -256,21 +258,21 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
           errorDialog.center();
 	      }
 	    };
-	    UserAndRoleMgmtService.instance().deleteRoles(selectedRoles, callback);
+	    UserAndRoleMgmtService.instance().deleteRoles(selectedRoles.toArray(new ProxyPentahoRole[0]), callback);
 	  }
 	}
 	
   private void unassignSelectedUsers() {
-    ProxyPentahoRole[] selectedRoles = rolesList.getSelectedRoles();
-    if (selectedRoles.length == 1) {
-      ArrayList assignedUsers = new ArrayList();
-      assignedUsers.addAll(Arrays.asList(UserAndRoleMgmtService.instance().getUsers(selectedRoles[0])));
-      final ProxyPentahoUser[] usersToUnassign = assignedUsersList.getSelectedUsers();
-      assignedUsers.removeAll(Arrays.asList(usersToUnassign));      
+    List<ProxyPentahoRole> selectedRoles = rolesList.getSelectedObjects();
+    if (selectedRoles.size() == 1) {
+      ArrayList<ProxyPentahoUser> assignedUsers = new ArrayList<ProxyPentahoUser>();
+      assignedUsers.addAll(Arrays.asList(UserAndRoleMgmtService.instance().getUsers(selectedRoles.get(0))));
+      final List<ProxyPentahoUser> usersToUnassign = assignedUsersList.getSelectedObjects();
+      assignedUsers.removeAll(usersToUnassign);      
       
       AsyncCallback callback = new AsyncCallback() {
         public void onSuccess(Object result) {
-          assignedUsersList.removeUsers(usersToUnassign);
+          assignedUsersList.removeObjects(usersToUnassign);
         }
 
         public void onFailure(Throwable caught) {
@@ -286,27 +288,29 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
           errorDialog.center();
         }
       };
-      UserAndRoleMgmtService.instance().setUsers(selectedRoles[0], (ProxyPentahoUser[])assignedUsers.toArray(new ProxyPentahoUser[0]), callback);
+      UserAndRoleMgmtService.instance().setUsers(selectedRoles.get(0), (ProxyPentahoUser[])assignedUsers.toArray(new ProxyPentahoUser[0]), callback);
     }
   }
   
   private void assignedUserSelectionChanged() {
-    deleteRoleAssignmentBtn.setEnabled(assignedUsersList.getSelectedUsers().length > 0);
+    deleteRoleAssignmentBtn.setEnabled(assignedUsersList.getSelectedObjects().size() > 0);
   }
   
 	private void roleSelectionChanged() {
-    ProxyPentahoRole[] selectedRoles = rolesList.getSelectedRoles();
-    if (selectedRoles.length == 1) {
-      roleDetailsPanel.setRole(selectedRoles[0]);
-      assignedUsersList.setUsers(UserAndRoleMgmtService.instance().getUsers(selectedRoles[0]));
+    List<ProxyPentahoRole> selectedRoles = rolesList.getSelectedObjects();
+    if (selectedRoles.size() == 1) {
+      roleDetailsPanel.setRole(selectedRoles.get(0));
+      List<ProxyPentahoUser>userList = Arrays.asList(UserAndRoleMgmtService.instance().getUsers(selectedRoles.get(0)));
+      assignedUsersList.setObjects(userList);
     } else {
       roleDetailsPanel.setRole(null);
-      assignedUsersList.setUsers(new ProxyPentahoUser[0]);
+      List<ProxyPentahoUser> emptyUserList = Collections.emptyList();
+      assignedUsersList.setObjects(emptyUserList);
     }
-    roleDetailsPanel.setEnabled(selectedRoles.length == 1);
-    updateRoleBtn.setEnabled(selectedRoles.length == 1);
-    deleteRoleBtn.setEnabled(selectedRoles.length > 0);
-    addRoleAssignmentBtn.setEnabled(selectedRoles.length == 1);
+    roleDetailsPanel.setEnabled(selectedRoles.size() == 1);
+    updateRoleBtn.setEnabled(selectedRoles.size() == 1);
+    deleteRoleBtn.setEnabled(selectedRoles.size() > 0);
+    addRoleAssignmentBtn.setEnabled(selectedRoles.size() == 1);
     
     roleDetailsPanel.getRoleNameTextBox().setEnabled(false);
     assignedUserSelectionChanged();
@@ -316,7 +320,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     final ProxyPentahoRole role = roleDetailsPanel.getRole();
     AsyncCallback callback = new AsyncCallback() {
       public void onSuccess(Object result) {
-        rolesList.addRole(role);
+        rolesList.addObject((ProxyPentahoRole)role);
       }
 
       public void onFailure(Throwable caught) {
@@ -345,7 +349,8 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 	}
 	
 	public void refresh() {
-	  rolesList.setRoles(UserAndRoleMgmtService.instance().getRoles());
+	  List<ProxyPentahoRole> roleList = Arrays.asList(UserAndRoleMgmtService.instance().getRoles());
+	  rolesList.setObjects(roleList);
 	  roleSelectionChanged();
 	}
 	
@@ -357,11 +362,12 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
         filterTextBox.setText(""); //$NON-NLS-1$
         rolesList.setFilter(null);
       }
-      rolesList.addRole(newRole);
-      rolesList.setSelectedRole(newRole);
+      rolesList.addObject(newRole);
+      rolesList.setSelectedObject(newRole);
       roleSelectionChanged();
     } else if ((sender == userAssignmentsDialog) && userAssignmentsDialog.getUserAssignmentsModified()) {
-      assignedUsersList.setUsers(UserAndRoleMgmtService.instance().getUsers(userAssignmentsDialog.getRole()));
+      List<ProxyPentahoUser>userList = Arrays.asList(UserAndRoleMgmtService.instance().getUsers(userAssignmentsDialog.getRole()));
+      assignedUsersList.setObjects(userList);
       assignedUserSelectionChanged();
     }
   }

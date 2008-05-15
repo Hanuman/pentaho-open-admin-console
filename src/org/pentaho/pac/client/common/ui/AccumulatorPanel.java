@@ -18,16 +18,16 @@ import com.google.gwt.user.client.ui.Widget;
 public class AccumulatorPanel extends HorizontalPanel implements ClickListener {
   Button addToAccumulationBtn = new Button("X"); //$NON-NLS-1$
   Button removeFromAccumulationBtn = new Button("Y"); //$NON-NLS-1$
-  ObjectListBox availableItemsListBox = new ObjectListBox(true);
-  ObjectListBox accumulatedItemsListBox = new ObjectListBox(true);
+  GenericObjectListBox availableItemsListBox = new GenericObjectListBox(true);
+  GenericObjectListBox accumulatedItemsListBox = new GenericObjectListBox(true);
   Label availableItemsLabel = new Label(PentahoAdminConsole.getLocalizedMessages().availableItemsTitle());
   Label accumulatedItemsLabel = new Label(PentahoAdminConsole.getLocalizedMessages().assignedItemsTitle());
 
   public AccumulatorPanel() {
-    this(new ObjectListBox(true), new ObjectListBox(true));
+    this(new GenericObjectListBox(true), new GenericObjectListBox(true));
   }
   
-  public AccumulatorPanel(ObjectListBox availableItemsListBox, ObjectListBox accumulatedItemsListBox) {
+  public AccumulatorPanel(GenericObjectListBox availableItemsListBox, GenericObjectListBox accumulatedItemsListBox) {
     this.accumulatedItemsListBox = accumulatedItemsListBox;
     this.availableItemsListBox  = availableItemsListBox;
     

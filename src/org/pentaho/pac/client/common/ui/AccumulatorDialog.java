@@ -7,7 +7,7 @@ import com.google.gwt.user.client.ui.ListBox;
 public class AccumulatorDialog extends ConfirmDialog {
   AccumulatorPanel accumulatorPanel;
   
-  public AccumulatorDialog(ObjectListBox availableItemsListBox, ObjectListBox accumulatedItemsListBox) {
+  public AccumulatorDialog(GenericObjectListBox availableItemsListBox, GenericObjectListBox accumulatedItemsListBox) {
     accumulatorPanel = new AccumulatorPanel(availableItemsListBox, accumulatedItemsListBox);
     initDialog();
   }

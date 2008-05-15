@@ -3,47 +3,50 @@ package org.pentaho.pac.client.common.ui;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.user.client.ui.ListBox;
 
-public class ObjectListBox extends ListBox {
-  List objects = new ArrayList();
-  List sortedAndFilteredObjects = new ArrayList();
+public class GenericObjectListBox<T> extends ListBox {
+  List<T> objects = new ArrayList<T>();
+  List<T> sortedAndFilteredObjects = new ArrayList<T>();
   IListBoxFilter filter;
-  Comparator comparator;
+  Comparator<T> comparator;
   
-  public ObjectListBox(boolean isMultiSelect) {
+  public GenericObjectListBox(boolean isMultiSelect) {
     super(isMultiSelect);
   }
 
-  protected List getObjects() {
+  public List<T> getObjects() {
     return objects;
   }
 
-  protected void setObjects(List objects) {
+  public List<T> getSortedAndFilteredObjects() {
+    return sortedAndFilteredObjects;
+  }
+  
+  public void setObjects(List<T> objects) {
     this.objects.clear();
     this.objects.addAll(objects);
     sortAndFilter();
   }
 
-  public void setComparator(Comparator comparator) {
+  public void setComparator(Comparator<T> comparator) {
     this.comparator = comparator;
     sortAndFilter();
   }
   
-  public Comparator getComparator() {
+  public Comparator<T> getComparator() {
     return comparator;
   }
   
-  public void addObject(Object object) {
+  public void addObject(T object) {
     objects.add(object);
     sortAndFilter();
   }
   
-  public List getSelectedObjects() {
-    List selectedObjects = new ArrayList();
+  public List<T> getSelectedObjects() {
+    List<T> selectedObjects = new ArrayList<T>();
     int itemCount = getItemCount();
     for (int i = 0; i < itemCount; i++) {
       if (isItemSelected(i)) {
@@ -53,13 +56,13 @@ public class ObjectListBox extends ListBox {
     return selectedObjects;
   }
   
-  public void setSelectedObject(Object object) {
-    List objects = new ArrayList();
+  public void setSelectedObject(T object) {
+    List<T> objects = new ArrayList<T>();
     objects.add(object);
     setSelectedObjects(objects);
   }
   
-  public void setSelectedObjects(List objects) {
+  public void setSelectedObjects(List<T> objects) {
     int itemCount = getItemCount();
     for (int i = 0; i < itemCount; i++) {
       setItemSelected(i, objects.contains(sortedAndFilteredObjects.get(i)));
@@ -70,14 +73,14 @@ public class ObjectListBox extends ListBox {
     removeObjects(getSelectedObjects());
   }
   
-  public void removeObjects(List objectsToRemove) {
-    List selectedObjects = getSelectedObjects();
+  public void removeObjects(List<T> objectsToRemove) {
+    List<T> selectedObjects = getSelectedObjects();
     int selectedIndex = -1;
     if (selectedObjects.size() == 1) {
       selectedIndex = sortedAndFilteredObjects.indexOf(selectedObjects.get(0));
     }
     
-    for (Object selectedObject : selectedObjects) {
+    for (T selectedObject : selectedObjects) {
       int index = sortedAndFilteredObjects.indexOf(selectedObject);
       sortedAndFilteredObjects.remove(selectedObject);
       objects.remove(selectedObject);
@@ -103,7 +106,7 @@ public class ObjectListBox extends ListBox {
 
 
   private void sortAndFilter() {
-    List selectedObjects = getSelectedObjects();
+    List<T> selectedObjects = getSelectedObjects();
     clear();
     sortedAndFilteredObjects.clear();
     sortedAndFilteredObjects.addAll(objects);
@@ -115,18 +118,18 @@ public class ObjectListBox extends ListBox {
         sortedAndFilteredObjects.remove(i);
       }
     }
-    for (Object object : sortedAndFilteredObjects) {
+    for (T object : sortedAndFilteredObjects) {
       addItem(getObjectText(object));
     }
     setSelectedObjects(selectedObjects);
   }
   
-  private boolean doesFilterMatch( Object filterTarget )
+  private boolean doesFilterMatch(T filterTarget )
   {
     return (filter == null) || (filter.accepts(filterTarget));
   }
 
-  protected String getObjectText(Object object) {
+  protected String getObjectText(T object) {
     return object.toString();
   }
 
