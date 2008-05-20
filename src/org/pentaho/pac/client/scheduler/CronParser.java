@@ -14,7 +14,6 @@
  * 
  */
 package org.pentaho.pac.client.scheduler;
-
 import java.util.EnumSet;
 
 /**
@@ -70,27 +69,31 @@ public class CronParser {
     return num >= low && num <= high;
   }
   
-  private static boolean isNumDayOfMonth( int num ) {
+  private static boolean isDayOfMonth( int num ) {
     return isNumBetween( 1, num, 31 );
   }
   
-  private static boolean isNumDayOfWeek( int num ) {
+  private static boolean isDayOfWeek( int num ) {
     return isNumBetween( 1, num, 7 );
   }
   
-  private static boolean isNumWeekOfMonth( int num ) {
+  private static boolean isWeekOfMonth( int num ) {
     return isNumBetween( 1, num, 4 );
   }
   
-  private static boolean isNumSecond( int num ) {
+  private static boolean isMonthOfYear( int num ) {
+    return isNumBetween( 1, num, 12 );
+  }
+  
+  private static boolean isSecond( int num ) {
     return isNumBetween( 0, num, 59 );
   }
   
-  private static boolean isNumMinute( int num ) {
+  private static boolean isMinute( int num ) {
     return isNumBetween( 0, num, 59 );
   }
   
-  private static boolean isNumHour( int num ) {
+  private static boolean isHour( int num ) {
     return isNumBetween( 0, num, 23 );
   }
   
@@ -264,7 +267,7 @@ public class CronParser {
     
     if ( isInt( tokens[CronField.SECONDS.value] ) ) {
       int num = Integer.parseInt( tokens[CronField.SECONDS.value] );
-      if ( !isNumSecond( num ) ) {
+      if ( !isSecond( num ) ) {
         throw new CronParseException( "Seconds token must be an integer between 0 and 59, but it is: " + tokens[0] );
       } else {
         startSecond = num;
@@ -273,7 +276,7 @@ public class CronParser {
     
     if ( isInt( tokens[CronField.MINUTES.value] ) ) {
       int num = Integer.parseInt( tokens[CronField.MINUTES.value] );
-      if ( !isNumMinute( num ) ) {
+      if ( !isMinute( num ) ) {
         throw new CronParseException( "Minute token must be an integer between 0 and 59, but it is: " + tokens[0] );
       } else {
         startMinute = num;
@@ -282,7 +285,7 @@ public class CronParser {
     
     if ( isInt( tokens[CronField.HOURS.value] ) ) {
       int num = Integer.parseInt( tokens[CronField.HOURS.value] );
-      if ( !isNumHour( num ) ) {
+      if ( !isHour( num ) ) {
         throw new CronParseException( "Hours token must be an integer between 0 and 23, but it is: " + tokens[0] );
       } else {
         startHour = num;
@@ -327,8 +330,11 @@ public class CronParser {
       //oops
       throw new CronParseException( "getDayOfMonth() not valid for recurrance type: " + this.schedType.toString() );
     }
-    
-    return Integer.parseInt( strVal );
+    int dayOfMonth = Integer.parseInt( strVal );
+    if ( !isDayOfMonth( dayOfMonth ) ) {
+      throw new CronParseException( "Invalid day of month: " + strVal ); 
+    }
+    return dayOfMonth;
   }
 
   public boolean isDaysOfWeekValid() {
@@ -348,6 +354,9 @@ public class CronParser {
       int[] intDays = new int[ days.length ];
       for ( int ii=0; ii<days.length; ++ii ) {
         intDays[ii] = Integer.parseInt( days[ ii ] );
+        if ( !isDayOfWeek( intDays[ii] ) ) {
+          throw new CronParseException( "Invalid day of week: " + days[ii] );
+        }
       }
       return intDays;
     default:
@@ -380,7 +389,11 @@ public class CronParser {
     case NthDayNameOfMonthName:
       // token 5 is N#DAY, want N
       strVal = dayOfWeekToke.split( "#" )[1];
-      return Integer.parseInt( strVal );
+      int weekOfMonth = Integer.parseInt( strVal );
+      if ( !isWeekOfMonth( weekOfMonth ) ) {
+        throw new CronParseException( "Invalid week of month: " + strVal );
+      }
+      return weekOfMonth;
     default:
       throw new CronParseException( "getWhichWeekOfMonth() not valid for recurrance type: " + this.schedType.toString() );
     }
@@ -408,21 +421,29 @@ public class CronParser {
    * @throws CronParseException
    */
   public int getWhichDayOfWeek() throws CronParseException {
+    int dayOfWeek;
     switch( this.schedType ) {
     case NthDayNameOfMonth:
       // fall through
     case NthDayNameOfMonthName:
       // token 5 is N#DAY, want DAY
-      return Integer.parseInt( dayOfWeekToke.split( "#" )[0] );
+      dayOfWeek = Integer.parseInt( dayOfWeekToke.split( "#" )[0] );
+      break;
     case LastDayNameOfMonth:
       // fall through
     case LastDayNameOfMonthName:
       // token 5 is NL, want N
       String strDay = dayOfWeekToke.substring( 0, dayOfWeekToke.length() - 1 ); // trim off the trailing L
-      return Integer.parseInt( strDay );
+      dayOfWeek = Integer.parseInt( strDay );
+      break;
     default:
       throw new CronParseException( "getWhichDayOfWeek() not valid for recurrance type: " + this.schedType.toString() );
     }
+    
+    if ( !isDayOfWeek( dayOfWeek) ) {
+      throw new CronParseException( "Invalid day of week: " + Integer.toString( dayOfWeek ) );
+    }
+    return dayOfWeek;
   }
   
   public boolean isWhichMonthOfYearValid() {
@@ -445,6 +466,7 @@ public class CronParser {
    * @throws CronParseException
    */
   public int getWhichMonthOfYear() throws CronParseException {
+    int monthOfYear;
     switch( this.schedType ) {
     case EveryMonthNameN:
       // fall through
@@ -452,10 +474,15 @@ public class CronParser {
       // fall through
     case LastDayNameOfMonthName:
       // token 4 is N
-      return Integer.parseInt( monthToke );
+      monthOfYear = Integer.parseInt( monthToke );
+      break;
     default:
       throw new CronParseException( "getWhichMonthOfYear() not valid for recurrance type: " + this.schedType.toString() );
     }
+    if ( !isMonthOfYear( monthOfYear ) ) {
+      throw new CronParseException( "Invalid month of year: " + monthToke );
+    }
+    return monthOfYear;
   }
   
   public static void main( String[] args ) {
