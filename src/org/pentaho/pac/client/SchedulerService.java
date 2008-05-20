@@ -28,4 +28,6 @@ public interface SchedulerService extends RemoteService {
   public void pauseJob( String jobName, String jobGroup ) throws PacServiceException;
   public void resumeAll() throws PacServiceException;
   public void resumeJob( String jobName, String jobGroup ) throws PacServiceException;
+  public void createJob( String jobName, String jobGroup, String description,
+      String cronString, String solutionName, String solutionPath, String actionName ) throws PacServiceException;
 }

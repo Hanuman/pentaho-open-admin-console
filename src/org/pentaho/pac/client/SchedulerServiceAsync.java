@@ -1,5 +1,7 @@
 package org.pentaho.pac.client;
 
+import org.pentaho.pac.common.PacServiceException;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface SchedulerServiceAsync {
@@ -12,4 +14,6 @@ public interface SchedulerServiceAsync {
   public void pauseJob( String jobName, String jobGroup, AsyncCallback callback );
   public void resumeAll( AsyncCallback callback );
   public void resumeJob( String jobName, String jobGroup, AsyncCallback callback );
+  public void createJob( String jobName, String jobGroup, String description,
+      String cronString, String solutionName, String solutionPath, String actionName, AsyncCallback callback );
 }
