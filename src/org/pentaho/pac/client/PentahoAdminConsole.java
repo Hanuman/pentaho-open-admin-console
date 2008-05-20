@@ -4,12 +4,10 @@ import java.util.ArrayList;
 
 import org.pentaho.pac.client.home.HomePanel;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
-import org.pentaho.pac.client.scheduler.RecurranceDialog;
 import org.pentaho.pac.client.scheduler.ScheduleCreatorDialog;
 import org.pentaho.pac.client.utils.PacImageBundle;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -17,14 +15,12 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -37,24 +33,38 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
   ArrayList componentActivationToggleButtons = new ArrayList();
   
   VerticalPanel leftVerticalPanel = new VerticalPanel();
-  DockPanel centerPanel = new DockPanel();
-  HorizontalPanel toolbar = new ConsoleToolbar();
+  ConsoleToolbar toolbar = new ConsoleToolbar();
   HorizontalPanel topPanel = new HorizontalPanel();
   
-  DockPanel dockPanel = new DockPanel();
+
   DeckPanel deckPanel = new DeckPanel();
   protected AdministrationTabPanel adminTabPanel = new AdministrationTabPanel();
-  
+  HorizontalPanel horizontalPanel;
+  Widget widget; 
   
   protected HomePanel homePanel;
   CommonTasks commonTasks;
   
   public PentahoAdminConsole() {
-    initTopPanel();
+    horizontalPanel = buildTopPanel() ;
+    horizontalPanel.setWidth("100%");    //$NON-NLS-1$
+    widget = buildBody();
+    widget.setWidth("100%");//$NON-NLS-1$
+    widget.setHeight("100%");
+    add(horizontalPanel, DockPanel.NORTH);
+    setCellWidth(horizontalPanel, "100%"); //$NON-NLS-1$
+    add(widget, DockPanel.CENTER);
+    setStyleName("main-panel"); //$NON-NLS-1$
+    setCellWidth(widget, "100%"); //$NON-NLS-1$
+    setCellHeight(widget, "100%"); //$NON-NLS-1$    
     
+    activateWidgetOnAdminDeck(getDefaultActiveAdminDeckWidget());
+  }
+  
+  public Widget buildBody() {
+    DockPanel centerPanel = new DockPanel();
     homePanel = new HomePanel("http://www.pentaho.com/console_home"); //$NON-NLS-1$
     commonTasks = new CommonTasks();
-    
     VerticalPanel leftPanel = new VerticalPanel();
     SimplePanel tempPanel = new SimplePanel();
     tempPanel.setStyleName("leftTabPanel_top"); //$NON-NLS-1$
@@ -97,16 +107,12 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
     centerPanel.setCellHeight(deckPanelWrapper, "100%"); //$NON-NLS-1$
     centerPanel.setCellWidth(deckPanelWrapper, "100%"); //$NON-NLS-1$
     
-    //Main DockPanel
-    setStyleName("main-panel"); //$NON-NLS-1$
-    add(topPanel, DockPanel.NORTH);
-    setCellWidth(topPanel, "100%"); //$NON-NLS-1$
-    add(centerPanel, DockPanel.CENTER);
-    setCellHeight(centerPanel, "100%"); //$NON-NLS-1$
-    
-    activateWidgetOnAdminDeck(getDefaultActiveAdminDeckWidget());
+    return centerPanel;
   }
   
+  public ConsoleToolbar getConsoleToolbar() {
+    return this.toolbar;
+  }
   public void addWidgetToAdminDeck(String toggleButtonLabel, Widget widget) {
     ToggleButton toggleButton = new ToggleButton(toggleButtonLabel);
     toggleButton.setStylePrimaryName("leftToggleButtons"); //$NON-NLS-1$
@@ -117,7 +123,16 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
     widget.setHeight("100%"); //$NON-NLS-1$
     deckPanel.add(widget);
   }
-  
+  public HorizontalPanel buildTopPanel() {
+    HorizontalPanel topPanel = new HorizontalPanel();
+    SimplePanel logo = new SimplePanel();
+    logo.setStyleName("logo"); //$NON-NLS-1$
+    topPanel.setWidth("100%");  //$NON-NLS-1$
+    topPanel.add(logo);
+    topPanel.add(toolbar);
+    topPanel.setCellWidth(toolbar, "100%"); //$NON-NLS-1$
+    return topPanel;
+  }
   protected void initTopPanel() {
     SimplePanel logo = new SimplePanel();
     logo.setStyleName("logo"); //$NON-NLS-1$
@@ -167,13 +182,18 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
     addWidgetToAdminDeck(PentahoAdminConsole.MSGS.administration(), adminTabPanel);
   }
   //TOP Toolbar
-  private class ConsoleToolbar extends HorizontalPanel{
+  public class ConsoleToolbar extends HorizontalPanel{
     
     private Label statusLabel;
     private Timer statusTimer = null;
     private SimplePanel serverIcon = new SimplePanel();
     private Image statusIcon = PacImageBundle.getBundle().statusWorkingIcon().createImage();
+    HorizontalPanel buttonsPanel = new HorizontalPanel();
     
+    public void addImageButton(Image image) {
+      buttonsPanel.setStyleName("buttons"); //$NON-NLS-1$
+      buttonsPanel.add(image);
+    }
     public ConsoleToolbar(){
       super();
 
@@ -222,11 +242,8 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
       indicators.add(statusIcon);
       
       indicatorsRight.add(indicators);
-      
-      HorizontalPanel buttonsPanel = new HorizontalPanel();
-      buttonsPanel.setStyleName("buttons"); //$NON-NLS-1$
-      buttonsPanel.add(PacImageBundle.getBundle().refreshIcon().createImage());
       Image helpImage = PacImageBundle.getBundle().helpIcon().createImage();
+      Image createImage = PacImageBundle.getBundle().refreshIcon().createImage();
       helpImage.addClickListener( new ClickListener() {
 
         public void onClick(Widget sender) {
@@ -234,7 +251,10 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
         }
         
       });
-      buttonsPanel.add( helpImage );
+
+      addImageButton(createImage);
+      addImageButton(helpImage);
+      
       centerPanel.add(buttonsPanel);
       centerPanel.setCellHorizontalAlignment(buttonsPanel, HorizontalPanel.ALIGN_RIGHT);
       centerPanel.setCellVerticalAlignment(buttonsPanel, HorizontalPanel.ALIGN_MIDDLE);
@@ -270,6 +290,10 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
           }
         }
       );
+    }
+    
+    public HorizontalPanel getButtonPanel() {
+      return buttonsPanel;
     }
   }
   
