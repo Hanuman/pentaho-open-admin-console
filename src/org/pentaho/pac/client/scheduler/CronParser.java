@@ -369,7 +369,7 @@ public class CronParser {
     switch( this.recurrenceType ) {
     case WeeklyOn:
       // token 5 is comma separated list of 1-7 unique integers between 1 and 7
-      String[] days = dayOfWeekToke.split( "," );
+      String[] days = dayOfWeekToke.split( "," ); //$NON-NLS-1$
       int[] intDays = new int[ days.length ];
       for ( int ii=0; ii<days.length; ++ii ) {
         intDays[ii] = Integer.parseInt( days[ ii ] );
@@ -549,7 +549,23 @@ public class CronParser {
     
     return sb.toString().trim(); 
   }
+
+  private static void validateIsInt( String strInt ) throws CronParseException {
+    if ( !isInt( strInt ) ) {
+      throw new CronParseException( "Invalid token, must be an integer: " + strInt );
+    }
+  }
   
+  private static void validateIsCommaSeparatedListOfInt( String strInts ) throws CronParseException {
+
+    String[] ints = strInts.split( "," ); //$NON-NLS-1$
+    for ( int ii=0; ii<ints.length; ++ii ) {
+      String strInt = ints[ii];
+      if ( !isInt( strInt ) ) {
+        throw new CronParseException( "Invalid token, must be a list of integers: " + strInts );
+      }
+    }
+  }
   /**
    * Given a recurrenceTokenString, generate the corresponding CRON string.
    * 
@@ -561,7 +577,10 @@ public class CronParser {
     StringBuilder sb = new StringBuilder();
     String cronToken3, cronToken4, cronToken5;
     String[] recurrenceTokens = recurrenceTokenString.trim().split( "\\s+" ); //$NON-NLS-1$
-    //$NON-NLS-1$
+
+    validateIsInt( recurrenceTokens[1] );
+    validateIsInt( recurrenceTokens[2] );
+    validateIsInt( recurrenceTokens[3] );
     sb.append( recurrenceTokens[1] ).append( " " ) //$NON-NLS-1$
       .append( recurrenceTokens[2] ).append( " " ) //$NON-NLS-1$
       .append( recurrenceTokens[3] ).append( " " ); //$NON-NLS-1$
@@ -569,6 +588,7 @@ public class CronParser {
     RecurrenceType st = RecurrenceType.stringToScheduleType( recurrenceTokens[0] );
     switch ( st ) {
     case EveryNthDayOfMonth:
+      validateIsInt( recurrenceTokens[4] );
       cronToken3 = "0/" + recurrenceTokens[4]; //$NON-NLS-1$
       cronToken4 = ALL;
       cronToken5 = DONT_CARE;
@@ -579,31 +599,41 @@ public class CronParser {
       cronToken5 = "2-6"; //$NON-NLS-1$
       break;
     case WeeklyOn:
+      validateIsCommaSeparatedListOfInt( recurrenceTokens[4] );
       cronToken3 = DONT_CARE;
       cronToken4 = ALL;
       cronToken5 = recurrenceTokens[4];
       break;
     case DayNOfMonth:
+      validateIsInt( recurrenceTokens[4] );
       cronToken3 = recurrenceTokens[4];
       cronToken4 = ALL;
       cronToken5 = DONT_CARE;
       break;
     case NthDayNameOfMonth:
+      validateIsInt( recurrenceTokens[4] );
+      validateIsInt( recurrenceTokens[5] );
       cronToken3 = DONT_CARE;
       cronToken4 = ALL;
       cronToken5 = recurrenceTokens[4] + N_TH + recurrenceTokens[5];
       break;
     case LastDayNameOfMonth:
+      validateIsInt( recurrenceTokens[4] );
       cronToken3 = DONT_CARE;
       cronToken4 = ALL;
       cronToken5 = recurrenceTokens[4] + LAST;
       break;
     case EveryMonthNameN:
+      validateIsInt( recurrenceTokens[4] );
+      validateIsInt( recurrenceTokens[5] );
       cronToken3 = recurrenceTokens[4];
       cronToken4 = recurrenceTokens[5];
       cronToken5 = DONT_CARE;
       break;
     case NthDayNameOfMonthName:
+      validateIsInt( recurrenceTokens[4] );
+      validateIsInt( recurrenceTokens[5] );
+      validateIsInt( recurrenceTokens[6] );
       cronToken3 = DONT_CARE;
       cronToken4 = recurrenceTokens[6];
       cronToken5 = recurrenceTokens[4] + N_TH + recurrenceTokens[5];
@@ -614,7 +644,7 @@ public class CronParser {
       cronToken5 = recurrenceTokens[4] + LAST;
       break;
     default:
-      throw new CronParseException( "TODO sbarkdull" );
+      throw new CronParseException( "Invalid recurrenceType: " + recurrenceTokens[0] );
     }
     sb.append( cronToken3 ).append( " " ); //$NON-NLS-1$
     sb.append( cronToken4 ).append( " " ); //$NON-NLS-1$
@@ -709,7 +739,6 @@ public class CronParser {
       System.out.println( "recurrenceTokens: " + recurrenceTokens + " [" + RecurrenceStringToCronString(recurrenceTokens ) + "]  (" + cp.getCronString()  + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       assert cp.getCronString().equals( RecurrenceStringToCronString( recurrenceTokens ) ) : "Failed on: " + recurrenceTokens; //$NON-NLS-1$ 
     } catch (CronParseException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     assert cp.isDayOfMonthValid() : "isDayOfMonthValid EveryNthDayOfMonth"; //$NON-NLS-1$
@@ -730,7 +759,6 @@ public class CronParser {
       System.out.println( "recurrenceTokens: " + recurrenceTokens + " [" + RecurrenceStringToCronString(recurrenceTokens ) + "]  (" + cp.getCronString()  + ")");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       assert cp.getCronString().equals( RecurrenceStringToCronString( recurrenceTokens ) ) : "Failed on: " + recurrenceTokens; //$NON-NLS-1$
     } catch (CronParseException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     assert !cp.isDayOfMonthValid() : "isDayOfMonthValid EveryWeekday"; //$NON-NLS-1$
@@ -751,7 +779,6 @@ public class CronParser {
       System.out.println( "recurrenceTokens: " + recurrenceTokens + " [" + RecurrenceStringToCronString(recurrenceTokens ) + "]  (" + cp.getCronString()  + ")");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       assert cp.getCronString().equals( RecurrenceStringToCronString( recurrenceTokens ) ) : "Failed on: " + recurrenceTokens; //$NON-NLS-1$
     } catch (CronParseException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     assert !cp.isDayOfMonthValid() : "isDayOfMonthValid WeeklyOn"; //$NON-NLS-1$
@@ -778,7 +805,6 @@ public class CronParser {
       System.out.println( "recurrenceTokens: " + recurrenceTokens + " [" + RecurrenceStringToCronString(recurrenceTokens ) + "]  (" + cp.getCronString()  + ")");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       assert cp.getCronString().equals( RecurrenceStringToCronString( recurrenceTokens ) ) : "Failed on: " + recurrenceTokens; //$NON-NLS-1$
     } catch (CronParseException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     assert cp.isDayOfMonthValid() : "isDayOfMonthValid DayNOfMonth"; //$NON-NLS-1$
@@ -800,7 +826,6 @@ public class CronParser {
       System.out.println( "recurrenceTokens: " + recurrenceTokens + " [" + RecurrenceStringToCronString(recurrenceTokens ) + "]  (" + cp.getCronString()  + ")");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       assert cp.getCronString().equals( RecurrenceStringToCronString( recurrenceTokens ) ) : "Failed on: " + recurrenceTokens; //$NON-NLS-1$
     } catch (CronParseException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     assert !cp.isDayOfMonthValid() : "isDayOfMonthValid NthDayNameOfMonth"; //$NON-NLS-1$
@@ -823,7 +848,6 @@ public class CronParser {
       System.out.println( "recurrenceTokens: " + recurrenceTokens + " [" + RecurrenceStringToCronString(recurrenceTokens ) + "]  (" + cp.getCronString()  + ")");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       assert cp.getCronString().equals( RecurrenceStringToCronString( recurrenceTokens ) ) : "Failed on: " + recurrenceTokens; //$NON-NLS-1$
     } catch (CronParseException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     assert !cp.isDayOfMonthValid() : "isDayOfMonthValid LastDayNameOfMonth"; //$NON-NLS-1$
@@ -868,7 +892,6 @@ public class CronParser {
       System.out.println( "recurrenceTokens: " + recurrenceTokens + " [" + RecurrenceStringToCronString(recurrenceTokens ) + "]  (" + cp.getCronString()  + ")");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       assert cp.getCronString().equals( RecurrenceStringToCronString( recurrenceTokens ) ) : "Failed on: " + recurrenceTokens; //$NON-NLS-1$
     } catch (CronParseException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     assert !cp.isDayOfMonthValid() : "isDayOfMonthValid NthDayNameOfMonthName"; //$NON-NLS-1$
@@ -891,7 +914,6 @@ public class CronParser {
       System.out.println( "recurrenceTokens: " + recurrenceTokens + " [" + RecurrenceStringToCronString(recurrenceTokens ) + "]  (" + cp.getCronString()  + ")");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
       assert cp.getCronString().equals( RecurrenceStringToCronString( recurrenceTokens ) ) : "Failed on: " + recurrenceTokens; //$NON-NLS-1$
     } catch (CronParseException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
     }
     assert !cp.isDayOfMonthValid() : "isDayOfMonthValid LastDayNameOfMonthName"; //$NON-NLS-1$
@@ -908,5 +930,36 @@ public class CronParser {
     System.out.println( "NthDayNameOfMonth=" + st.toString() ); //$NON-NLS-1$
     st = RecurrenceType.stringToScheduleType( RecurrenceType.EveryMonthNameN.toString() );
     System.out.println( "EveryMonthNameN=" + st.toString() ); //$NON-NLS-1$
+
+    String r;
+    boolean bThrewException = false;
+    try {
+      r = RecurrenceStringToCronString( "EveryNthDayOfMonth 0 22 4 toke" );
+    } catch (CronParseException e) {
+      bThrewException = true;
+    }
+    assert bThrewException : "Should have throw exception";
+    bThrewException = false;
+    try {
+      r = RecurrenceStringToCronString( "WeeklyOn 0 33 6 1,toke,5" );
+    } catch (CronParseException e) {
+      bThrewException = true;
+    }
+    assert bThrewException : "Should have throw exception";
+    bThrewException = false;
+    try {
+      r = RecurrenceStringToCronString( "DayNOfMonth 0 5 toke 13" );
+    } catch (CronParseException e) {
+      bThrewException = true;
+    }
+    assert bThrewException : "Should have throw exception";
+    bThrewException = false;
+    try {
+      r = RecurrenceStringToCronString( "NthDayNameOfMonthName 0 3 5 7 3 toke" );
+    } catch (CronParseException e) {
+      bThrewException = true;
+    }
+    assert bThrewException : "Should have throw exception";
+    bThrewException = false;
   }
 }
