@@ -1,3 +1,3 @@
 @echo off
 
-call java -jar lib/pentaho-admin-console.jar
+call java -jar lib/console-adminconsole.jar
