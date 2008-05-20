@@ -57,7 +57,7 @@ public class XmlSerializer {
     STATE_STRINGS.put( "5", Messages.getString( "XmlSerializer.stateNone" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  public List<Schedule> getScheduleNamesFromXml( String strXml ) throws PacServiceException
+  public List<Schedule> getAllSchedulePropertiesFromXml( String strXml ) throws PacServiceException
   {
     JobsParserHandler h = null;
     try {
