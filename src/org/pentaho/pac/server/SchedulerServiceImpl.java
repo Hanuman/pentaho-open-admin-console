@@ -70,7 +70,7 @@ public class SchedulerServiceImpl extends RemoteServiceServlet implements Schedu
    * @throws PacServiceException 
    */
   public List<Schedule> getJobNames() throws PacServiceException {
-    List<Schedule> l = schedulerProxy.getScheduleNames();
+    List<Schedule> l = schedulerProxy.getAllScheduleProperties();
     return l;
   }
 
@@ -112,5 +112,17 @@ public class SchedulerServiceImpl extends RemoteServiceServlet implements Schedu
    */
   public void resumeJob(String jobName, String jobGroup) throws PacServiceException {
     schedulerProxy.resumeJob(jobName, jobGroup);
+  }
+  
+
+
+  /**
+   * query string: schedulerAction=createJob&jobName=PentahoSystemVersionCheck&jobGroup=DEFAULT
+   * @throws PacServiceException 
+   */
+  public void createJob( String jobName, String jobGroup, String description,
+      String cronString, String solutionName, String solutionPath, String actionName) throws PacServiceException {
+    schedulerProxy.createSchedule( jobName, jobGroup, description,
+      cronString, solutionName, solutionPath, actionName );
   }
 }

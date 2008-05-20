@@ -1102,6 +1102,19 @@ a:visited {
 	vertical-align: top;
 }
 
+/* some cells in the schedule table contain tables to support multiple rows in the cell */
+.schedulesTableCellTable {
+	border: 0px;
+	padding: 0px;
+	margin: 0px;
+}
+
+.schedulesTableCellTable td {
+	border: 0px;
+	padding: 0px;
+	margin: 0px;
+}
+
 .schedulesTableHeader td {
 	background-color:#C2CFA2;
 	border-bottom:1px solid #818F49;
@@ -1191,7 +1204,7 @@ a:visited {
 }
 
 .simpleGroupBox {
-	padding: 4px;
+	padding: 5px;
 }
 
 /* begin styles for group box */
@@ -1401,11 +1414,31 @@ a:visited {
 /* begin recurrance dialog ------------------------------------------------------*/
 .temporalRadioGroup {
 	border-right: 1px solid #95A22C;
+	padding-right: 5px;
+	margin-right: 5px;
 }
 
 .weeklyRecurrancePanel {
 }
 
+.startLabel {
+	padding-right: 1ex;
+	/*border:1px dotted red;*/
+}
+.middleLabel {
+	padding-right: 1ex;
+	padding-left: 1ex;
+	/*border:1px dotted red;*/
+}
+.endLabel {
+	padding-left: 1ex;
+	/*border:1px dotted red;*/
+}
+
+.recurranceRadioButton label {
+	/*background-color: magenta;*/
+	padding-right: 1ex;
+}
 /* end recurrance dialog ----------------------------------------------------------*/
 
 .datepicker {

@@ -1,3 +1,18 @@
+/*
+ * Copyright 2006-2008 Pentaho Corporation.  All rights reserved. 
+ * This software was developed by Pentaho Corporation and is provided under the terms 
+ * of the Mozilla Public License, Version 1.1, or any later version. You may not use 
+ * this file except in compliance with the license. If you need a copy of the license, 
+ * please go to http://www.mozilla.org/MPL/MPL-1.1.txt. The Original Code is the Pentaho 
+ * BI Platform.  The Initial Developer is Pentaho Corporation.
+ *
+ * Software distributed under the Mozilla Public License is distributed on an "AS IS" 
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or  implied. Please refer to 
+ * the license for the specific language governing your rights and limitations.
+ *
+ * @created May 19, 2008
+ * 
+ */
 package org.pentaho.pac.client.scheduler;
 
 import org.pentaho.pac.client.common.ui.ICallback;
@@ -20,6 +35,7 @@ public class SchedulerToolbar extends HorizontalPanel {
   private PushButton deleteBtn = null;
   private PushButton resumeBtn = null;
   private PushButton suspendBtn = null;
+  private PushButton refreshBtn = null;
   private PushButton toggleResumeSuspendAllBtn = null;
   private ListBox filterList = null;
 
@@ -30,6 +46,7 @@ public class SchedulerToolbar extends HorizontalPanel {
   private ICallback onDeleteListener = null;
   private ICallback onResumeListener = null;
   private ICallback onSuspendListener = null;
+  private ICallback onRefreshListener = null;
   private ICallback onToggleResumeSuspendAllListener = null;
   private ICallback onFilterListChangeListener = null;
   
@@ -105,6 +122,15 @@ public class SchedulerToolbar extends HorizontalPanel {
     });  
     add( suspendBtn );
     
+    refreshBtn = new PushButton( "Refresh", new ClickListener() {
+      public void onClick(Widget sender) {
+        if ( null != onRefreshListener ) {
+          onRefreshListener.onHandle( null );
+        }
+      }
+    });  
+    add( refreshBtn );
+    
     toggleResumeSuspendAllBtn = new PushButton( "RSAll", new ClickListener() {
       public void onClick(Widget sender) {
         if ( null != onToggleResumeSuspendAllListener ) {
@@ -169,6 +195,10 @@ public class SchedulerToolbar extends HorizontalPanel {
   
   public void setOnSuspendListener( ICallback cb ) {
     this.onSuspendListener = cb;
+  }
+  
+  public void setOnRefreshListener( ICallback cb ) {
+    this.onRefreshListener = cb;
   }
   
   public void setOnFilterListChangeListener( ICallback cb ) {
