@@ -30,13 +30,12 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
   public static PacLocalizedMessages pacLocalizedMessages = (PacLocalizedMessages)GWT.create(PacLocalizedMessages.class);
   public static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   
-  ArrayList componentActivationToggleButtons = new ArrayList();
+  ArrayList<ToggleButton> componentActivationToggleButtons = new ArrayList<ToggleButton>();
   
   VerticalPanel leftVerticalPanel = new VerticalPanel();
   ConsoleToolbar toolbar = new ConsoleToolbar();
   HorizontalPanel topPanel = new HorizontalPanel();
   
-
   DeckPanel deckPanel = new DeckPanel();
   protected AdministrationTabPanel adminTabPanel = new AdministrationTabPanel();
   HorizontalPanel horizontalPanel;
@@ -113,7 +112,9 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
   public ConsoleToolbar getConsoleToolbar() {
     return this.toolbar;
   }
-  public void addWidgetToAdminDeck(String toggleButtonLabel, Widget widget) {
+
+  public ToggleButton addWidgetToAdminDeck(String toggleButtonLabel, Widget widget) {
+
     ToggleButton toggleButton = new ToggleButton(toggleButtonLabel);
     toggleButton.setStylePrimaryName("leftToggleButtons"); //$NON-NLS-1$
     toggleButton.addClickListener(this);
@@ -122,7 +123,10 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
     widget.setWidth("100%"); //$NON-NLS-1$
     widget.setHeight("100%"); //$NON-NLS-1$
     deckPanel.add(widget);
+    
+    return toggleButton;
   }
+  
   public HorizontalPanel buildTopPanel() {
     HorizontalPanel topPanel = new HorizontalPanel();
     SimplePanel logo = new SimplePanel();
@@ -178,8 +182,9 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
   }
   
   protected void initializeAdminDeck() {
-    addWidgetToAdminDeck(PentahoAdminConsole.MSGS.home(), homePanel);
+    ToggleButton tb = addWidgetToAdminDeck(PentahoAdminConsole.MSGS.home(), homePanel);
     addWidgetToAdminDeck(PentahoAdminConsole.MSGS.administration(), adminTabPanel);
+    tb.setDown( true );
   }
   //TOP Toolbar
   public class ConsoleToolbar extends HorizontalPanel{
