@@ -56,6 +56,15 @@ public class GenericObjectListBox<T> extends ListBox {
     return selectedObjects;
   }
   
+  public T getSelectedObject() {
+    T result = null;
+    List<T> selectedObjects = getSelectedObjects();
+    if (selectedObjects.size() > 0) {
+      result = selectedObjects.get(0);
+    }
+    return result;
+  }
+  
   public void setSelectedObject(T object) {
     List<T> objects = new ArrayList<T>();
     objects.add(object);
