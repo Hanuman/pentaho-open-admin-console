@@ -13,7 +13,7 @@
  * @created May 19, 2008
  * 
  */
-package org.pentaho.pac.client.scheduler;
+package org.pentaho.pac.client.common.ui;
 
 import java.util.Date;
 
