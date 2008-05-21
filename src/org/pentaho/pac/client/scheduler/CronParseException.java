@@ -17,7 +17,6 @@ package org.pentaho.pac.client.scheduler;
 
 public class CronParseException extends Exception {
 
-	private String msg;
 	public CronParseException( String msg ) {
 		super( msg );
 	}
