@@ -1,29 +1,16 @@
-/*
- * Copyright 2006-2008 Pentaho Corporation.  All rights reserved. 
- * This software was developed by Pentaho Corporation and is provided under the terms 
- * of the Mozilla Public License, Version 1.1, or any later version. You may not use 
- * this file except in compliance with the license. If you need a copy of the license, 
- * please go to http://www.mozilla.org/MPL/MPL-1.1.txt. The Original Code is the Pentaho 
- * BI Platform.  The Initial Developer is Pentaho Corporation.
- *
- * Software distributed under the Mozilla Public License is distributed on an "AS IS" 
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or  implied. Please refer to 
- * the license for the specific language governing your rights and limitations.
- *
- * @created May 19, 2008
- * 
- */
 package org.pentaho.pac.client.scheduler;
 
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.pentaho.pac.client.common.ui.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.SimpleGroupBox;
+import org.pentaho.pac.client.scheduler.CronParser.RecurrenceType;
 
+import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -36,30 +23,41 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class RecurranceDialog extends ConfirmDialog {
+public class RecurrenceEditor extends VerticalPanel {
 
   private TimePicker runTimePicker = null;
 
   private DatePickerEx startDatePicker = null;
 
   private DatePickerEx endDatePicker = null;
+  
+  private ListBox temporalCombo = null;
 
-  private Panel dailyPanel = null;
+  private SecondlyRecurrencePanel secondlyPanel = null;
 
-  private Panel weeklyPanel = null;
+  private MinutelyRecurrencePanel minutelyPanel = null;
 
-  private Panel monthlyPanel = null;
+  private HourlyRecurrencePanel hourlyPanel = null;
 
-  private Panel yearlyPanel = null;
+  private DailyRecurrencePanel dailyPanel = null;
+
+  private WeeklyRecurrencePanel weeklyPanel = null;
+
+  private MonthlyRecurrencePanel monthlyPanel = null;
+
+  private YearlyRecurrencePanel yearlyPanel = null;
 
   //private Panel customPanel = null;
   private Map<TemporalValue, Panel> temporalPanelMap = new HashMap<TemporalValue, Panel>();
 
   enum TemporalValue {
-    DAILY(0, "Daily"), 
-    WEEKLY(1, "Weekly"), 
-    MONTHLY(2, "Monthly"), 
-    YEARLY(3, "Yearly");
+    SECONDS(0, "Seconds"), 
+    MINUTES(1, "Minutes"), 
+    HOURS(2, "Hours"), 
+    DAILY(3, "Daily"), 
+    WEEKLY(4, "Weekly"), 
+    MONTHLY(5, "Monthly"), 
+    YEARLY(6, "Yearly");
 
     TemporalValue(int value, String name) {
       this.value = value;
@@ -70,7 +68,10 @@ public class RecurranceDialog extends ConfirmDialog {
 
     private final String name;
 
-    private static TemporalValue[] temporalValues = { 
+    private static TemporalValue[] temporalValues = {
+      SECONDS, 
+      MINUTES, 
+      HOURS,
       DAILY, 
       WEEKLY, 
       MONTHLY, 
@@ -91,6 +92,15 @@ public class RecurranceDialog extends ConfirmDialog {
 
     public static int length() {
       return temporalValues.length;
+    }
+    
+    public static TemporalValue stringToTemporalValue( String temporalValue ) throws EnumException {
+      for (TemporalValue v : EnumSet.range(TemporalValue.SECONDS, TemporalValue.YEARLY)) {
+        if ( v.toString().equals( temporalValue ) ) {
+          return v;
+        }
+      }
+      throw new EnumException( "Invalid String for temporal value: " + temporalValue );
     }
   } /* end enum */
 
@@ -210,55 +220,67 @@ public class RecurranceDialog extends ConfirmDialog {
 
   private static final String LAST = "last";
 
-  private static final String TEMPORAL_RB_GROUP = "temporal-group";
+  private static final String DAILY_RB_GROUP = "daily-group"; //$NON-NLS-1$
 
-  private static final String DAILY_RB_GROUP = "daily-group";
+  private static final String MONTHLY_RB_GROUP = "monthly-group"; //$NON-NLS-1$
 
-  private static final String MONTHLY_RB_GROUP = "monthly-group";
+  private static final String END_DATE_RB_GROUP = "end-date-group"; //$NON-NLS-1$
+  
+  private static final String DEFAULT_RECURRENCE_STR = "";
 
-  private static final String END_DATE_RB_GROUP = "end-date-group";
-
-  public RecurranceDialog() {
+  public RecurrenceEditor() {
     super();
-    setClientSize("470px", "300px");
 
     Panel p = createStartTimePanel();
-    addWidgetToClientArea(p);
-    setTitle("Schedule Recurrence");
+    add(p);
 
-    p = createRecurrancePanel();
-    addWidgetToClientArea(p);
+    p = createRecurrencePanel();
+    add(p);
 
     p = createRangePanel();
-    addWidgetToClientArea(p);
+    add(p);
+    
+    inititalizeWithRecurrenceString( DEFAULT_RECURRENCE_STR );
   }
+  
+  public void inititalizeWithRecurrenceString( String recurrenceStr ) {
+    
+    
+  }
+  
+  /**
+   * 
+   * @param strRepeatInSecs
+   */
+  public void inititalizeWithRepeat( int repeatInSecs ) {
 
-  public void inititalizeWithCronString(String cronStr) {
-    CronParser cp = new CronParser(cronStr);
-    switch (cp.getSchedType()) {
-      case EveryNthDayOfMonth:
-        break;
-      case EveryWeekday:
-        break;
-      case WeeklyOn:
-        break;
-      case DayNOfMonth:
-        break;
-      case NthDayNameOfMonth:
-        break;
-      case LastDayNameOfMonth:
-        break;
-      case EveryMonthNameN:
-        break;
-      case NthDayNameOfMonthName:
-        break;
-      case LastDayNameOfMonthName:
-        break;
-      default:
-        break;
+    TemporalValue currentVal;
+    int repeatTime;
+    if ( TimeUtil.isSecondsWholeDay( repeatInSecs ) ) {
+      repeatTime = TimeUtil.secsToDays( repeatInSecs );
+      currentVal = TemporalValue.DAILY;
+      dailyPanel.setRepeatValue( Integer.toString( repeatTime ) );
+    } else { 
+      SimpleRecurrencePanel p = null;
+      if ( TimeUtil.isSecondsWholeHour( repeatInSecs ) ) {
+        repeatTime = TimeUtil.secsToHours( repeatInSecs );
+        currentVal = TemporalValue.HOURS;
+      } else if ( TimeUtil.isSecondsWholeMinute( repeatInSecs ) ) {
+        repeatTime = TimeUtil.secsToMinutes( repeatInSecs );
+        currentVal = TemporalValue.MINUTES;
+      } else {
+        // the repeat time is seconds
+        repeatTime = repeatInSecs;
+        currentVal = TemporalValue.SECONDS;
+      }
+      p = (SimpleRecurrencePanel)temporalPanelMap.get(currentVal);
+      p.setValue( Integer.toString( repeatTime ) );
     }
+    temporalCombo.setSelectedIndex( currentVal.value );
+    selectTemporalPanel( currentVal );
   }
 
+  
   private Panel createStartTimePanel() {
     SimpleGroupBox startTimeGB = new SimpleGroupBox("Start Time");
 
@@ -269,32 +291,35 @@ public class RecurranceDialog extends ConfirmDialog {
     return startTimeGB;
   }
 
-  private Panel createRecurrancePanel() {
+  private Panel createRecurrencePanel() {
 
-    SimpleGroupBox recurranceGB = new SimpleGroupBox("Recurrence pattern");
+    SimpleGroupBox recurrenceGB = new SimpleGroupBox("Recurrence pattern");
 
-    HorizontalPanel hp = new HorizontalPanel();
-    recurranceGB.add(hp);
+    VerticalPanel p = new VerticalPanel();
+    recurrenceGB.add(p);
 
-    dailyPanel = createDailyRecurrancePanel();
-    weeklyPanel = createWeeklyRecurrancePanel();
-    monthlyPanel = createMonthlyRecurrancePanel();
-    yearlyPanel = createYearlyRecurrancePanel();
-    //customPanel = createCustomRecurrancePanel();
+    secondlyPanel = new SecondlyRecurrencePanel();
+    minutelyPanel = new MinutelyRecurrencePanel();
+    hourlyPanel = new HourlyRecurrencePanel();
+    dailyPanel = new DailyRecurrencePanel();
+    weeklyPanel = new WeeklyRecurrencePanel();
+    monthlyPanel = new MonthlyRecurrencePanel();
+    yearlyPanel = new YearlyRecurrencePanel();
 
     // must come after creation of temporal panels
     assert null != dailyPanel : "";
-    Panel p = createTemporalRadioGroup();
-    p.setStyleName("temporalRadioGroup");
-    hp.add(p);
+    temporalCombo = createTemporalCombo();
+    p.add(temporalCombo);
 
-    hp.add(dailyPanel);
-    hp.add(weeklyPanel);
-    hp.add(monthlyPanel);
-    hp.add(yearlyPanel);
-    //hp.add( customPanel );
+    p.add(secondlyPanel);
+    p.add(minutelyPanel);
+    p.add(hourlyPanel);
+    p.add(dailyPanel);
+    p.add(weeklyPanel);
+    p.add(monthlyPanel);
+    p.add(yearlyPanel);
 
-    return recurranceGB;
+    return recurrenceGB;
   }
 
   private Panel createRangePanel() {
@@ -326,55 +351,110 @@ public class RecurranceDialog extends ConfirmDialog {
     return rangeGB;
   }
 
-  private RadioButton createTemporalRadioButton(final TemporalValue temporalVal, Panel temporalPanel) {
+  private void addTemporalListItem(ListBox lb, final TemporalValue temporalVal, Panel temporalPanel) {
 
     String name = temporalVal.toString();
-    RadioButton rb = new RadioButton(TEMPORAL_RB_GROUP, name);
-    rb.addClickListener(new ClickListener() {
-      public void onClick(Widget sender) {
-        selectTemporalPanel(temporalVal);
+    lb.addItem( name );
+    temporalPanelMap.put(temporalVal, temporalPanel);
+  }
+
+  private ListBox createTemporalCombo() {
+    assert dailyPanel != null : "Temporal panels must be initialized before calling createTemporalCombo.";
+    
+    final RecurrenceEditor localThis = this;
+    ListBox lb = new ListBox();
+    lb.setVisibleItemCount( 1 );
+    lb.setStyleName("temporalCombo"); //$NON-NLS-1$
+    lb.addChangeListener( new ChangeListener() {
+      public void onChange(Widget sender) {
+        ListBox localLb = (ListBox)sender;
+        String strTemporalVal = localLb.getItemText( localLb.getSelectedIndex() );
+        try {
+          TemporalValue t = TemporalValue.stringToTemporalValue( strTemporalVal );
+          selectTemporalPanel( t );
+        } catch (EnumException e) {
+          // TODO sbarkdull, popup dialog
+          e.printStackTrace();
+        }
       }
     });
-    temporalPanelMap.put(temporalVal, temporalPanel);
+    
+    addTemporalListItem( lb, TemporalValue.SECONDS, secondlyPanel );
+    lb.setItemSelected( 0, true );
+    secondlyPanel.setVisible(true);
 
-    return rb;
+    addTemporalListItem( lb, TemporalValue.MINUTES, minutelyPanel );
+    addTemporalListItem( lb, TemporalValue.HOURS, hourlyPanel );
+    addTemporalListItem( lb, TemporalValue.DAILY, dailyPanel );
+    addTemporalListItem( lb, TemporalValue.WEEKLY, weeklyPanel);
+    addTemporalListItem( lb, TemporalValue.MONTHLY, monthlyPanel);
+    addTemporalListItem( lb, TemporalValue.YEARLY, yearlyPanel);
+
+    return lb;
   }
 
-  private Panel createTemporalRadioGroup() {
-    assert dailyPanel != null : "Temporal panels must be initialized before calling createTemporalRadioGroup.";
-    VerticalPanel vp = new VerticalPanel();
+  private class SimpleRecurrencePanel extends HorizontalPanel {
+    private TextBox valueTb = new TextBox();
+    
+    public SimpleRecurrencePanel( String strLabel ) {
+      setVisible(false);
 
-    RadioButton rb = createTemporalRadioButton(TemporalValue.DAILY, dailyPanel);
-    rb.setChecked(true);
-    dailyPanel.setVisible(true);
-    vp.add(rb);
+      Label l = new Label( "Every");
+      l.setStyleName("startLabel");
+      add(l);
 
-    rb = createTemporalRadioButton(TemporalValue.WEEKLY, weeklyPanel);
-    vp.add(rb);
+      valueTb.setWidth("3em");
+      valueTb.setTitle("Number of " + strLabel + " to repeat.");
+      add(valueTb);
 
-    rb = createTemporalRadioButton(TemporalValue.MONTHLY, monthlyPanel);
-    vp.add(rb);
-
-    rb = createTemporalRadioButton(TemporalValue.YEARLY, yearlyPanel);
-    vp.add(rb);
-
-    return vp;
+      l = new Label( strLabel );
+      l.setStyleName("endLabel");
+      add(l);
+    }
+    
+    public String getValue() {
+      return valueTb.getText();
+    }
+    
+    public void setValue( String val ) {
+      valueTb.setText( val );
+    }
   }
 
-  private class DailyRecurrancePanel extends VerticalPanel {
-    public DailyRecurrancePanel() {
+  private class SecondlyRecurrencePanel extends SimpleRecurrencePanel {
+    public SecondlyRecurrencePanel() {
+      super( "second(s)" );
+    }
+  }
+
+  private class MinutelyRecurrencePanel extends SimpleRecurrencePanel {
+    public MinutelyRecurrencePanel() {
+      super( "minute(s)" );
+    }
+  }
+
+  private class HourlyRecurrencePanel extends SimpleRecurrencePanel {
+    public HourlyRecurrencePanel() {
+      super( "hour(s)" );
+    }
+  }
+
+  private class DailyRecurrencePanel extends VerticalPanel {
+
+    public TextBox repeatValueTb = new TextBox();
+    
+    public DailyRecurrencePanel() {
       setVisible(false);
 
       HorizontalPanel hp = new HorizontalPanel();
       RadioButton rb = new RadioButton(DAILY_RB_GROUP, "Every");
-      rb.setStyleName("recurranceRadioButton");
+      rb.setStyleName("recurrenceRadioButton");
       rb.setChecked(true);
       hp.add(rb);
 
-      TextBox tb = new TextBox();
-      tb.setWidth("3em");
-      tb.setTitle("Number of days to repeat.");
-      hp.add(tb);
+      repeatValueTb.setWidth("3em");
+      repeatValueTb.setTitle("Number of days to repeat.");
+      hp.add(repeatValueTb);
 
       Label l = new Label("day(s)");
       l.setStyleName("endLabel");
@@ -382,14 +462,22 @@ public class RecurranceDialog extends ConfirmDialog {
       add(hp);
 
       rb = new RadioButton(DAILY_RB_GROUP, "Every weekday");
-      rb.setStyleName("recurranceRadioButton");
+      rb.setStyleName("recurrenceRadioButton");
       add(rb);
+    }
+    
+    public String getRepeatValue() {
+      return repeatValueTb.getText();
+    }
+    
+    public void setRepeatValue( String repeatValue ) {
+      repeatValueTb.setText( repeatValue );
     }
   }
 
-  private class WeeklyRecurrancePanel extends VerticalPanel {
-    public WeeklyRecurrancePanel() {
-      setStyleName("weeklyRecurrancePanel");
+  private class WeeklyRecurrencePanel extends VerticalPanel {
+    public WeeklyRecurrencePanel() {
+      setStyleName("weeklyRecurrencePanel");
       setVisible(false);
 
       Label l = new Label("Recur every week on:");
@@ -420,13 +508,13 @@ public class RecurranceDialog extends ConfirmDialog {
     }
   }
 
-  private class MonthlyRecurrancePanel extends VerticalPanel {
-    public MonthlyRecurrancePanel() {
+  private class MonthlyRecurrencePanel extends VerticalPanel {
+    public MonthlyRecurrencePanel() {
       setVisible(false);
 
       HorizontalPanel hp = new HorizontalPanel();
       RadioButton rb = new RadioButton(MONTHLY_RB_GROUP, "Day");
-      rb.setStyleName("recurranceRadioButton");
+      rb.setStyleName("recurrenceRadioButton");
       hp.add(rb);
       TextBox tb = new TextBox();
       tb.setWidth("3em");
@@ -438,7 +526,7 @@ public class RecurranceDialog extends ConfirmDialog {
 
       hp = new HorizontalPanel();
       rb = new RadioButton(MONTHLY_RB_GROUP, "The");
-      rb.setStyleName("recurranceRadioButton");
+      rb.setStyleName("recurrenceRadioButton");
       hp.add(rb);
       ListBox lb = new ListBox();
       for (int ii = 0; ii < WHICH_WEEK.length; ++ii) {
@@ -456,7 +544,7 @@ public class RecurranceDialog extends ConfirmDialog {
 
       hp = new HorizontalPanel();
       rb = new RadioButton(MONTHLY_RB_GROUP, "The last");
-      rb.setStyleName("recurranceRadioButton");
+      rb.setStyleName("recurrenceRadioButton");
       hp.add(rb);
       lb = createDayOfWeekListBox();
       lb.addItem(WEEKDAY);
@@ -468,19 +556,19 @@ public class RecurranceDialog extends ConfirmDialog {
     }
   }
 
-  private class YearlyRecurrancePanel extends VerticalPanel {
+  private class YearlyRecurrencePanel extends VerticalPanel {
     private RadioButton rb = null;
 
     private TextBox tb = null;
 
     private static final String YEARLY_RB_GROUP = "yearly-group";
 
-    public YearlyRecurrancePanel() {
+    public YearlyRecurrencePanel() {
       setVisible(false);
 
       HorizontalPanel p = new HorizontalPanel();
       rb = new RadioButton(YEARLY_RB_GROUP, "Every");
-      rb.setStyleName("recurranceRadioButton");
+      rb.setStyleName("recurrenceRadioButton");
       rb.setChecked(true);
       p.add(rb);
       ListBox lb = createMonthOfYearListBox();
@@ -492,7 +580,7 @@ public class RecurranceDialog extends ConfirmDialog {
 
       p = new HorizontalPanel();
       rb = new RadioButton(YEARLY_RB_GROUP, "The");
-      rb.setStyleName("recurranceRadioButton");
+      rb.setStyleName("recurrenceRadioButton");
       p.add(rb);
       lb = createWhichWeekListBox();
       p.add(lb);
@@ -507,7 +595,7 @@ public class RecurranceDialog extends ConfirmDialog {
 
       p = new HorizontalPanel();
       rb = new RadioButton(YEARLY_RB_GROUP, "The last");
-      rb.setStyleName("recurranceRadioButton");
+      rb.setStyleName("recurrenceRadioButton");
       p.add(rb);
       lb = createDayOfWeekListBox();
       p.add(lb);
@@ -518,22 +606,6 @@ public class RecurranceDialog extends ConfirmDialog {
       p.add(lb);
       add(p);
     }
-  }
-
-  private Panel createDailyRecurrancePanel() {
-    return new DailyRecurrancePanel();
-  }
-
-  private Panel createWeeklyRecurrancePanel() {
-    return new WeeklyRecurrancePanel();
-  }
-
-  private Panel createMonthlyRecurrancePanel() {
-    return new MonthlyRecurrancePanel();
-  }
-
-  private Panel createYearlyRecurrancePanel() {
-    return new YearlyRecurrancePanel();
   }
 
   private ListBox createDayOfWeekListBox() {
@@ -568,19 +640,19 @@ public class RecurranceDialog extends ConfirmDialog {
   }
 
   private Panel createEndDatePanel() {
-    final RecurranceDialog localThis = this;
+    final RecurrenceEditor localThis = this;
 
     VerticalPanel vp = new VerticalPanel();
 
     RadioButton noEndDateRb = new RadioButton(END_DATE_RB_GROUP, "No end date");
-    noEndDateRb.setStyleName("recurranceRadioButton");
+    noEndDateRb.setStyleName("recurrenceRadioButton");
     noEndDateRb.setChecked(true);
     vp.add(noEndDateRb);
     HorizontalPanel hp = new HorizontalPanel();
     vp.add(hp);
 
     RadioButton endByRb = new RadioButton(END_DATE_RB_GROUP, "End by:");
-    endByRb.setStyleName("recurranceRadioButton");
+    endByRb.setStyleName("recurrenceRadioButton");
     hp.add(endByRb);
     endDatePicker = new DatePickerEx();
     endDatePicker.setEnabled(false);
