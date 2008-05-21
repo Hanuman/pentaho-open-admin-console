@@ -1412,8 +1412,7 @@ a:visited {
 /* end */
 
 /* begin recurrance dialog ------------------------------------------------------*/
-.temporalRadioGroup {
-	border-right: 1px solid #95A22C;
+.temporalCombo {
 	padding-right: 5px;
 	margin-right: 5px;
 }
