@@ -15,6 +15,8 @@
  */
 package org.pentaho.pac.client.scheduler;
 
+import org.pentaho.pac.client.common.util.StringUtils;
+
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -29,7 +31,10 @@ public class ScheduleEditor extends FlexTable {
   private TextBox descriptionTb = new TextBox();
   private TextBox cronStringTb = new TextBox();
   
-  private RecurranceDialog recurranceDialog = new RecurranceDialog();
+  // TODO sbarkdull, remove false initialization, init to null, controller should init it
+  private String repeatInSec = "518400";
+  
+  private RecurrenceDialog recurrenceDialog = new RecurrenceDialog();
   public ScheduleEditor() {
     super();
 
@@ -54,9 +59,22 @@ public class ScheduleEditor extends FlexTable {
     setWidget( 3 , 1, cronStringTb );
     Button b = new Button( "Edit...", new ClickListener() {
       public void onClick(Widget sender) {
-        // TODO sbarkdull
-        recurranceDialog.inititalizeWithCronString( getCronString() );
-        recurranceDialog.center();
+        String cronStr = getCronString();
+        if ( !StringUtils.isEmpty( cronStr ) ) {
+          CronParser cp = new CronParser( cronStr );
+          try {
+            cp.parse();
+            recurrenceDialog.getRecurrenceEditor().inititalizeWithRecurrenceString( cp.getRecurrenceString() );
+            recurrenceDialog.center();
+          } catch (CronParseException e) {
+            // TODO sbarkdull, show error dialog
+            e.printStackTrace();
+          }
+        } else {
+          int secs = Integer.parseInt( repeatInSec );
+          recurrenceDialog.getRecurrenceEditor().inititalizeWithRepeat( secs );
+          recurrenceDialog.center();
+        }
       }
     });
     setWidget( 3 , 2, b );
@@ -93,5 +111,13 @@ public class ScheduleEditor extends FlexTable {
   
   public void setCronString( String cronStr ) {
     cronStringTb.setText( cronStr );
+  }
+
+  public String getRepeatInSec() {
+    return repeatInSec;
+  }
+
+  public void setRepeatInSec(String repeatInSec) {
+    this.repeatInSec = repeatInSec;
   }
 }
