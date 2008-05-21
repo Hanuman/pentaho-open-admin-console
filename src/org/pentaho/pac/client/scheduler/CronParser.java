@@ -938,28 +938,28 @@ public class CronParser {
     } catch (CronParseException e) {
       bThrewException = true;
     }
-    assert bThrewException : "Should have throw exception";
+    assert bThrewException : "Should have thrown exception";
     bThrewException = false;
     try {
       r = RecurrenceStringToCronString( "WeeklyOn 0 33 6 1,toke,5" );
     } catch (CronParseException e) {
       bThrewException = true;
     }
-    assert bThrewException : "Should have throw exception";
+    assert bThrewException : "Should have thrown exception";
     bThrewException = false;
     try {
       r = RecurrenceStringToCronString( "DayNOfMonth 0 5 toke 13" );
     } catch (CronParseException e) {
       bThrewException = true;
     }
-    assert bThrewException : "Should have throw exception";
+    assert bThrewException : "Should have thrown exception";
     bThrewException = false;
     try {
       r = RecurrenceStringToCronString( "NthDayNameOfMonthName 0 3 5 7 3 toke" );
     } catch (CronParseException e) {
       bThrewException = true;
     }
-    assert bThrewException : "Should have throw exception";
+    assert bThrewException : "Should have thrown exception";
     bThrewException = false;
   }
 }
