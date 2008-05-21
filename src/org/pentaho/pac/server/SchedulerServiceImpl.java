@@ -120,9 +120,17 @@ public class SchedulerServiceImpl extends RemoteServiceServlet implements Schedu
    * query string: schedulerAction=createJob&jobName=PentahoSystemVersionCheck&jobGroup=DEFAULT
    * @throws PacServiceException 
    */
-  public void createJob( String jobName, String jobGroup, String description,
+  public void createCronJob( String jobName, String jobGroup, String description,
       String cronString, String solutionName, String solutionPath, String actionName) throws PacServiceException {
-    schedulerProxy.createSchedule( jobName, jobGroup, description,
+    schedulerProxy.createCronSchedule( jobName, jobGroup, description,
       cronString, solutionName, solutionPath, actionName );
+  }
+
+  public void createRepeatJob( String jobName, String jobGroup, String description,
+      String startTime, String repeatInSecs, 
+      String solutionName, String solutionPath, String actionName ) throws PacServiceException {
+    schedulerProxy.createRepeatSchedule( jobName, jobGroup, description,
+        startTime, repeatInSecs, solutionName, solutionPath, actionName );
+  
   }
 }
