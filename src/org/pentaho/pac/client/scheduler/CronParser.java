@@ -17,6 +17,8 @@ package org.pentaho.pac.client.scheduler;
 
 import java.util.EnumSet;
 
+import org.pentaho.pac.client.common.EnumException;
+
 /**
  * 
  * @author Steven Barkdull
@@ -25,7 +27,7 @@ import java.util.EnumSet;
 public class CronParser {
 
   private String cronStr;
-  private RecurrenceType recurrenceType = RecurrenceType.Invalid;
+  private RecurrenceType recurrenceType = RecurrenceType.EveryWeekday;
   private int startSecond = -1;
   private int startMinute = -1;
   private int startHour = -1;
@@ -56,9 +58,8 @@ public class CronParser {
     private final int value;
     public int value() { return value; }
   }
-  enum RecurrenceType {
-    Invalid,
-    EveryNthDayOfMonth,
+  public enum RecurrenceType {
+    EveryNthDayOfMonth, // TODO sbarkdull, need to get rid of this no longer valid
     EveryWeekday,
     WeeklyOn,
     DayNOfMonth,
@@ -68,13 +69,13 @@ public class CronParser {
     NthDayNameOfMonthName,
     LastDayNameOfMonthName;
     
-    public static RecurrenceType stringToScheduleType( String str ) {
+    public static RecurrenceType stringToScheduleType( String str ) throws EnumException {
       for (RecurrenceType d : EnumSet.range(RecurrenceType.EveryNthDayOfMonth, RecurrenceType.LastDayNameOfMonthName)) {
         if ( d.toString().equals( str ) ) {
           return d;
         }
       }
-      return Invalid;
+      throw new EnumException( "Invalid String for RecurrenceType: " + str );
     }
   };
   
@@ -556,16 +557,18 @@ public class CronParser {
     }
   }
   
-  private static void validateIsCommaSeparatedListOfInt( String strInts ) throws CronParseException {
+  private static final String COMMA_SEPARATED_LIST_OF_WEEKDAY_INTS = "^[1-7](,[1-7]){0,6}$?$"; //$NON-NLS-1$
+  private static void validateIsCommaSeparatedListOfWeekdays( String strInts ) throws CronParseException {
 
-    String[] ints = strInts.split( "," ); //$NON-NLS-1$
-    for ( int ii=0; ii<ints.length; ++ii ) {
-      String strInt = ints[ii];
-      if ( !isInt( strInt ) ) {
-        throw new CronParseException( "Invalid token, must be a list of integers: " + strInts );
-      }
+    // TODO, could make sure that the ints are unique
+    boolean matches = strInts.matches( COMMA_SEPARATED_LIST_OF_WEEKDAY_INTS );
+    if ( !matches ) {
+      throw new CronParseException( "Invalid token, must be a list of integers: " + strInts );
     }
   }
+  
+  // TODO sbarkdull, instead of validating that values are int, validate that the are
+  // second, minute, hour, day of week, day of month, month of year, week of month
   /**
    * Given a recurrenceTokenString, generate the corresponding CRON string.
    * 
@@ -573,7 +576,7 @@ public class CronParser {
    * @return
    * @throws CronParseException
    */
-  public static String RecurrenceStringToCronString( String recurrenceTokenString ) throws CronParseException {
+  public static String recurrenceStringToCronString( String recurrenceTokenString ) throws CronParseException {
     StringBuilder sb = new StringBuilder();
     String cronToken3, cronToken4, cronToken5;
     String[] recurrenceTokens = recurrenceTokenString.trim().split( "\\s+" ); //$NON-NLS-1$
@@ -585,7 +588,12 @@ public class CronParser {
       .append( recurrenceTokens[2] ).append( " " ) //$NON-NLS-1$
       .append( recurrenceTokens[3] ).append( " " ); //$NON-NLS-1$
     
-    RecurrenceType st = RecurrenceType.stringToScheduleType( recurrenceTokens[0] );
+    RecurrenceType st;
+    try {
+      st = RecurrenceType.stringToScheduleType( recurrenceTokens[0] );
+    } catch (EnumException e) {
+      throw new CronParseException( e.getMessage() );
+    }
     switch ( st ) {
     case EveryNthDayOfMonth:
       validateIsInt( recurrenceTokens[4] );
@@ -599,7 +607,7 @@ public class CronParser {
       cronToken5 = "2-6"; //$NON-NLS-1$
       break;
     case WeeklyOn:
-      validateIsCommaSeparatedListOfInt( recurrenceTokens[4] );
+      validateIsCommaSeparatedListOfWeekdays( recurrenceTokens[4] );
       cronToken3 = DONT_CARE;
       cronToken4 = ALL;
       cronToken5 = recurrenceTokens[4];
@@ -736,8 +744,8 @@ public class CronParser {
     }
     try {
       String recurrenceTokens = cp.getRecurrenceString();
-      System.out.println( "recurrenceTokens: " + recurrenceTokens + " [" + RecurrenceStringToCronString(recurrenceTokens ) + "]  (" + cp.getCronString()  + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-      assert cp.getCronString().equals( RecurrenceStringToCronString( recurrenceTokens ) ) : "Failed on: " + recurrenceTokens; //$NON-NLS-1$ 
+      System.out.println( "recurrenceTokens: " + recurrenceTokens + " [" + recurrenceStringToCronString(recurrenceTokens ) + "]  (" + cp.getCronString()  + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      assert cp.getCronString().equals( recurrenceStringToCronString( recurrenceTokens ) ) : "Failed on: " + recurrenceTokens; //$NON-NLS-1$ 
     } catch (CronParseException e) {
       e.printStackTrace();
     }
@@ -756,8 +764,8 @@ public class CronParser {
     }
     try {
       String recurrenceTokens = cp.getRecurrenceString();
-      System.out.println( "recurrenceTokens: " + recurrenceTokens + " [" + RecurrenceStringToCronString(recurrenceTokens ) + "]  (" + cp.getCronString()  + ")");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-      assert cp.getCronString().equals( RecurrenceStringToCronString( recurrenceTokens ) ) : "Failed on: " + recurrenceTokens; //$NON-NLS-1$
+      System.out.println( "recurrenceTokens: " + recurrenceTokens + " [" + recurrenceStringToCronString(recurrenceTokens ) + "]  (" + cp.getCronString()  + ")");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      assert cp.getCronString().equals( recurrenceStringToCronString( recurrenceTokens ) ) : "Failed on: " + recurrenceTokens; //$NON-NLS-1$
     } catch (CronParseException e) {
       e.printStackTrace();
     }
@@ -776,8 +784,8 @@ public class CronParser {
     }
     try {
       String recurrenceTokens = cp.getRecurrenceString();
-      System.out.println( "recurrenceTokens: " + recurrenceTokens + " [" + RecurrenceStringToCronString(recurrenceTokens ) + "]  (" + cp.getCronString()  + ")");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-      assert cp.getCronString().equals( RecurrenceStringToCronString( recurrenceTokens ) ) : "Failed on: " + recurrenceTokens; //$NON-NLS-1$
+      System.out.println( "recurrenceTokens: " + recurrenceTokens + " [" + recurrenceStringToCronString(recurrenceTokens ) + "]  (" + cp.getCronString()  + ")");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      assert cp.getCronString().equals( recurrenceStringToCronString( recurrenceTokens ) ) : "Failed on: " + recurrenceTokens; //$NON-NLS-1$
     } catch (CronParseException e) {
       e.printStackTrace();
     }
@@ -802,8 +810,8 @@ public class CronParser {
     }
     try {
       String recurrenceTokens = cp.getRecurrenceString();
-      System.out.println( "recurrenceTokens: " + recurrenceTokens + " [" + RecurrenceStringToCronString(recurrenceTokens ) + "]  (" + cp.getCronString()  + ")");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-      assert cp.getCronString().equals( RecurrenceStringToCronString( recurrenceTokens ) ) : "Failed on: " + recurrenceTokens; //$NON-NLS-1$
+      System.out.println( "recurrenceTokens: " + recurrenceTokens + " [" + recurrenceStringToCronString(recurrenceTokens ) + "]  (" + cp.getCronString()  + ")");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      assert cp.getCronString().equals( recurrenceStringToCronString( recurrenceTokens ) ) : "Failed on: " + recurrenceTokens; //$NON-NLS-1$
     } catch (CronParseException e) {
       e.printStackTrace();
     }
@@ -823,8 +831,8 @@ public class CronParser {
     }
     try {
       String recurrenceTokens = cp.getRecurrenceString();
-      System.out.println( "recurrenceTokens: " + recurrenceTokens + " [" + RecurrenceStringToCronString(recurrenceTokens ) + "]  (" + cp.getCronString()  + ")");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-      assert cp.getCronString().equals( RecurrenceStringToCronString( recurrenceTokens ) ) : "Failed on: " + recurrenceTokens; //$NON-NLS-1$
+      System.out.println( "recurrenceTokens: " + recurrenceTokens + " [" + recurrenceStringToCronString(recurrenceTokens ) + "]  (" + cp.getCronString()  + ")");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      assert cp.getCronString().equals( recurrenceStringToCronString( recurrenceTokens ) ) : "Failed on: " + recurrenceTokens; //$NON-NLS-1$
     } catch (CronParseException e) {
       e.printStackTrace();
     }
@@ -845,8 +853,8 @@ public class CronParser {
     }
     try {
       String recurrenceTokens = cp.getRecurrenceString();
-      System.out.println( "recurrenceTokens: " + recurrenceTokens + " [" + RecurrenceStringToCronString(recurrenceTokens ) + "]  (" + cp.getCronString()  + ")");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-      assert cp.getCronString().equals( RecurrenceStringToCronString( recurrenceTokens ) ) : "Failed on: " + recurrenceTokens; //$NON-NLS-1$
+      System.out.println( "recurrenceTokens: " + recurrenceTokens + " [" + recurrenceStringToCronString(recurrenceTokens ) + "]  (" + cp.getCronString()  + ")");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      assert cp.getCronString().equals( recurrenceStringToCronString( recurrenceTokens ) ) : "Failed on: " + recurrenceTokens; //$NON-NLS-1$
     } catch (CronParseException e) {
       e.printStackTrace();
     }
@@ -866,8 +874,8 @@ public class CronParser {
     }
     try {
       String recurrenceTokens = cp.getRecurrenceString();
-      System.out.println( "recurrenceTokens: " + recurrenceTokens + " [" + RecurrenceStringToCronString(recurrenceTokens ) + "]  (" + cp.getCronString()  + ")");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-      assert cp.getCronString().equals( RecurrenceStringToCronString( recurrenceTokens ) ) : "Failed on: " + recurrenceTokens; //$NON-NLS-1$
+      System.out.println( "recurrenceTokens: " + recurrenceTokens + " [" + recurrenceStringToCronString(recurrenceTokens ) + "]  (" + cp.getCronString()  + ")");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      assert cp.getCronString().equals( recurrenceStringToCronString( recurrenceTokens ) ) : "Failed on: " + recurrenceTokens; //$NON-NLS-1$
     } catch (CronParseException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
@@ -889,8 +897,8 @@ public class CronParser {
     }
     try {
       String recurrenceTokens = cp.getRecurrenceString();
-      System.out.println( "recurrenceTokens: " + recurrenceTokens + " [" + RecurrenceStringToCronString(recurrenceTokens ) + "]  (" + cp.getCronString()  + ")");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-      assert cp.getCronString().equals( RecurrenceStringToCronString( recurrenceTokens ) ) : "Failed on: " + recurrenceTokens; //$NON-NLS-1$
+      System.out.println( "recurrenceTokens: " + recurrenceTokens + " [" + recurrenceStringToCronString(recurrenceTokens ) + "]  (" + cp.getCronString()  + ")");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      assert cp.getCronString().equals( recurrenceStringToCronString( recurrenceTokens ) ) : "Failed on: " + recurrenceTokens; //$NON-NLS-1$
     } catch (CronParseException e) {
       e.printStackTrace();
     }
@@ -911,8 +919,8 @@ public class CronParser {
     }    
     try {
       String recurrenceTokens = cp.getRecurrenceString();
-      System.out.println( "recurrenceTokens: " + recurrenceTokens + " [" + RecurrenceStringToCronString(recurrenceTokens ) + "]  (" + cp.getCronString()  + ")");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-      assert cp.getCronString().equals( RecurrenceStringToCronString( recurrenceTokens ) ) : "Failed on: " + recurrenceTokens; //$NON-NLS-1$
+      System.out.println( "recurrenceTokens: " + recurrenceTokens + " [" + recurrenceStringToCronString(recurrenceTokens ) + "]  (" + cp.getCronString()  + ")");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+      assert cp.getCronString().equals( recurrenceStringToCronString( recurrenceTokens ) ) : "Failed on: " + recurrenceTokens; //$NON-NLS-1$
     } catch (CronParseException e) {
       e.printStackTrace();
     }
@@ -924,38 +932,57 @@ public class CronParser {
     try { assert cp.getWhichMonthOfYear() == 6 : "cp.getWhichMonthOfYear() == 6"; } catch (CronParseException e1) {assert false : "CronParseException"; } //$NON-NLS-1$ //$NON-NLS-2$
     assert !cp.isWhichWeekOfMonthValid() : "isWhichWeekOfMonthValid LastDayNameOfMonthName"; //$NON-NLS-1$
 
-    RecurrenceType st = RecurrenceType.stringToScheduleType( RecurrenceType.DayNOfMonth.toString() );
-    System.out.println( "DayNOfMonth=" + st.toString() ); //$NON-NLS-1$
-    st = RecurrenceType.stringToScheduleType( RecurrenceType.NthDayNameOfMonth.toString() );
-    System.out.println( "NthDayNameOfMonth=" + st.toString() ); //$NON-NLS-1$
-    st = RecurrenceType.stringToScheduleType( RecurrenceType.EveryMonthNameN.toString() );
-    System.out.println( "EveryMonthNameN=" + st.toString() ); //$NON-NLS-1$
+    boolean bThrewException = false;
+    RecurrenceType st;
+    try {
+      st = RecurrenceType.stringToScheduleType( RecurrenceType.DayNOfMonth.toString() );
+      System.out.println( "DayNOfMonth=" + st.toString() ); //$NON-NLS-1$
+    } catch (EnumException e1) {
+      bThrewException = true;
+    }
+    assert !bThrewException : "Should not have thrown exception";
+    bThrewException = false;
+    try {
+      st = RecurrenceType.stringToScheduleType( RecurrenceType.NthDayNameOfMonth.toString() );
+      System.out.println( "NthDayNameOfMonth=" + st.toString() ); //$NON-NLS-1$
+    } catch (EnumException e1) {
+      bThrewException = true;
+    }
+    assert !bThrewException : "Should not have thrown exception";
+    bThrewException = false;
+    try {
+      st = RecurrenceType.stringToScheduleType( RecurrenceType.EveryMonthNameN.toString() );
+      System.out.println( "EveryMonthNameN=" + st.toString() ); //$NON-NLS-1$
+    } catch (EnumException e1) {
+      bThrewException = true;
+    }
+    assert !bThrewException : "Should not have thrown exception";
+    bThrewException = false;
 
     String r;
-    boolean bThrewException = false;
     try {
-      r = RecurrenceStringToCronString( "EveryNthDayOfMonth 0 22 4 toke" );
+      r = recurrenceStringToCronString( "EveryNthDayOfMonth 0 22 4 toke" );
     } catch (CronParseException e) {
       bThrewException = true;
     }
     assert bThrewException : "Should have thrown exception";
     bThrewException = false;
     try {
-      r = RecurrenceStringToCronString( "WeeklyOn 0 33 6 1,toke,5" );
+      r = recurrenceStringToCronString( "WeeklyOn 0 33 6 1,toke,5" );
     } catch (CronParseException e) {
       bThrewException = true;
     }
     assert bThrewException : "Should have thrown exception";
     bThrewException = false;
     try {
-      r = RecurrenceStringToCronString( "DayNOfMonth 0 5 toke 13" );
+      r = recurrenceStringToCronString( "DayNOfMonth 0 5 toke 13" );
     } catch (CronParseException e) {
       bThrewException = true;
     }
     assert bThrewException : "Should have thrown exception";
     bThrewException = false;
     try {
-      r = RecurrenceStringToCronString( "NthDayNameOfMonthName 0 3 5 7 3 toke" );
+      r = recurrenceStringToCronString( "NthDayNameOfMonthName 0 3 5 7 3 toke" );
     } catch (CronParseException e) {
       bThrewException = true;
     }
