@@ -6,9 +6,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.pentaho.pac.client.UserAndRoleMgmtService;
-import org.pentaho.pac.client.common.ui.AccumulatorDialog;
 import org.pentaho.pac.client.common.ui.ICallback;
-import org.pentaho.pac.client.common.ui.MessageDialog;
+import org.pentaho.pac.client.common.ui.dialog.AccumulatorDialog;
+import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.roles.NonExistingRoleException;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;

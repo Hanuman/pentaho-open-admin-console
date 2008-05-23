@@ -7,11 +7,11 @@ import java.util.List;
 
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
-import org.pentaho.pac.client.common.ui.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.FieldsetPanel;
 import org.pentaho.pac.client.common.ui.ICallback;
 import org.pentaho.pac.client.common.ui.IListBoxFilter;
-import org.pentaho.pac.client.common.ui.MessageDialog;
+import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
+import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.roles.RoleAssignmentsDialogBox;
 import org.pentaho.pac.client.roles.RolesList;
