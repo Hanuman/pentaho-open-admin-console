@@ -16,6 +16,7 @@
 package org.pentaho.pac.client.scheduler;
 
 import org.pentaho.pac.client.common.util.StringUtils;
+import org.pentaho.pac.client.scheduler.RecurrenceEditor.RecurrenceEditorException;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -29,7 +30,6 @@ public class ScheduleEditor extends FlexTable {
   private TextBox nameTb = new TextBox();
   private TextBox groupNameTb = new TextBox();
   private TextBox descriptionTb = new TextBox();
-  private TextBox cronStringTb = new TextBox();
   
   // TODO sbarkdull, remove false initialization, init to null, controller should init it
   private String repeatInSec = "518400";
@@ -52,14 +52,11 @@ public class ScheduleEditor extends FlexTable {
     l = new Label( "Description:" );
     setWidget( 2 , 0, l );
     setWidget( 2 , 1, descriptionTb );
-      
-    l = new Label( "Cron String:" );
-    setWidget( 3 , 0, l );
-    //crontStringTb.setReadOnly( true );
-    setWidget( 3 , 1, cronStringTb );
-    Button b = new Button( "Edit...", new ClickListener() {
+    
+    Button btn = new Button( "Recurrence...", new ClickListener() {
       public void onClick(Widget sender) {
-        String cronStr = getCronString();
+        // TODO sbarkdull, fix me
+        String cronStr = null; //getCronString();
         if ( !StringUtils.isEmpty( cronStr ) ) {
           CronParser cp = new CronParser( cronStr );
           try {
@@ -77,7 +74,7 @@ public class ScheduleEditor extends FlexTable {
         }
       }
     });
-    setWidget( 3 , 2, b );
+    setWidget( 3 , 1, btn );
   }
   
   public String getName() {
@@ -104,20 +101,25 @@ public class ScheduleEditor extends FlexTable {
     descriptionTb.setText( description );
   }
   
-  public String getCronString() {
+  public String getCronString() throws RecurrenceEditorException {
     // TODO sbarkdull
-    return cronStringTb.getText();
+    return recurrenceDialog.getRecurrenceEditor().getCronString();
   }
   
   public void setCronString( String cronStr ) {
-    cronStringTb.setText( cronStr );
+    // TODO sbarkdull
   }
 
-  public String getRepeatInSec() {
-    return repeatInSec;
+  public String getRepeatInSecs() throws RecurrenceEditorException {
+    return recurrenceDialog.getRecurrenceEditor().getRepeatInSecs();
   }
 
-  public void setRepeatInSec(String repeatInSec) {
-    this.repeatInSec = repeatInSec;
+  public void setRepeatInSecs(String repeatInSec) {
+    // TODO sbarkdull
+    throw new RuntimeException( "not implemented" ); //$NON-NLS-1$
+  }
+  
+  public String getStartDateTime() {
+    return recurrenceDialog.getRecurrenceEditor().getStartDateTime();
   }
 }
