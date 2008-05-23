@@ -1,6 +1,6 @@
 package org.pentaho.pac.client;
 
-import org.pentaho.pac.client.common.ui.MessageDialog;
+import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.datasources.DataSourcesPanel;
 import org.pentaho.pac.client.scheduler.SchedulerController;
 import org.pentaho.pac.client.scheduler.SchedulerPanel;
@@ -50,12 +50,12 @@ public class AdministrationTabPanel extends TabPanel {
     switch (tabIndex) {
       case ADMIN_USERS_ROLES_TAB_INDEX:
         if (!securityInfoInitialized) {
-          initializeSecurityInfo();
+          //initializeSecurityInfo();
         }
         break;
       case ADMIN_DATA_SOURCES_TAB_INDEX: 
         if (!dataSourcesPanel.isInitialized()) {
-          dataSourcesPanel.refresh();
+          //dataSourcesPanel.refresh();
         }
         break;
       case ADMIN_SERVICES_TAB_INDEX:
