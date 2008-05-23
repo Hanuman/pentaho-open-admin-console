@@ -1,4 +1,7 @@
-package org.pentaho.pac.client.common.ui;
+package org.pentaho.pac.client.common.ui.dialog;
+
+import org.pentaho.pac.client.common.ui.AccumulatorPanel;
+import org.pentaho.pac.client.common.ui.GenericObjectListBox;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ListBox;

@@ -1,4 +1,4 @@
-package org.pentaho.pac.client.common.ui;
+package org.pentaho.pac.client.common.ui.dialog;
 
 import org.pentaho.pac.client.utils.PacImageBundle;
 
