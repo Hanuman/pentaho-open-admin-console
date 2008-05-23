@@ -127,10 +127,10 @@ public class SchedulerServiceImpl extends RemoteServiceServlet implements Schedu
   }
 
   public void createRepeatJob( String jobName, String jobGroup, String description,
-      String startTime, String repeatInSecs, 
+      String startDateTime, String repeatTimeMillisecs, 
       String solutionName, String solutionPath, String actionName ) throws PacServiceException {
     schedulerProxy.createRepeatSchedule( jobName, jobGroup, description,
-        startTime, repeatInSecs, solutionName, solutionPath, actionName );
+        startDateTime, repeatTimeMillisecs, solutionName, solutionPath, actionName );
   
   }
 }
