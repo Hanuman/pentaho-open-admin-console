@@ -460,7 +460,7 @@ public class RecurrenceEditor extends VerticalPanel {
     private RadioButton dayNOfMonthRb = new RadioButton(MONTHLY_RB_GROUP, "Day");
     private RadioButton nthDayNameOfMonthRb = new RadioButton(MONTHLY_RB_GROUP, "The");
     private TextBox dayOfMonthTb = new TextBox();
-    private ListBox whichWeekLb = new ListBox();
+    private ListBox whichWeekLb = createWhichWeekListBox();
     private ListBox dayOfWeekLb = createDayOfWeekListBox();
     
     public MonthlyRecurrencePanel() {
@@ -480,9 +480,6 @@ public class RecurrenceEditor extends VerticalPanel {
       hp = new HorizontalPanel();
       nthDayNameOfMonthRb.setStyleName("recurrenceRadioButton");
       hp.add(nthDayNameOfMonthRb);
-      for ( WeekOfMonth week : EnumSet.range(WeekOfMonth.FIRST, WeekOfMonth.LAST)) {
-        whichWeekLb.addItem( week.toString() );
-      }
       hp.add(whichWeekLb);
 
       hp.add(dayOfWeekLb);
@@ -534,45 +531,101 @@ public class RecurrenceEditor extends VerticalPanel {
   }
 
   private class YearlyRecurrencePanel extends VerticalPanel {
-    private RadioButton rb = null;
+    
+    private RadioButton everyMonthOnNthDayRb = new RadioButton(YEARLY_RB_GROUP, "Every");
+    private RadioButton nthWeekOfMonthOfDayOfWeekOfMonth = new RadioButton(YEARLY_RB_GROUP, "The");
+    private TextBox dayOfMonthTb = new TextBox();
+    private ListBox monthOfYearLb0 = createMonthOfYearListBox();
+    private ListBox monthOfYearLb1 = createMonthOfYearListBox();
+    private ListBox whichWeekLb = createWhichWeekListBox();
+    private ListBox dayOfWeekLb = createDayOfWeekListBox();
 
-    private TextBox tb = null;
-
-    private static final String YEARLY_RB_GROUP = "yearly-group";
+    private static final String YEARLY_RB_GROUP = "yearly-group"; //$NON-NLS-1$
 
     public YearlyRecurrencePanel() {
       setVisible(false);
 
       HorizontalPanel p = new HorizontalPanel();
-      rb = new RadioButton(YEARLY_RB_GROUP, "Every");
-      rb.setStyleName("recurrenceRadioButton");
-      rb.setChecked(true);
-      p.add(rb);
-      ListBox lb = createMonthOfYearListBox();
-      p.add(lb);
-      tb = new TextBox();
-      tb.setWidth("3em");
-      p.add(tb);
+      everyMonthOnNthDayRb.setStyleName("recurrenceRadioButton"); //$NON-NLS-1$
+      everyMonthOnNthDayRb.setChecked(true);
+      p.add(everyMonthOnNthDayRb);
+      p.add( monthOfYearLb0 );
+      dayOfMonthTb.setWidth("3em"); //$NON-NLS-1$
+      p.add(dayOfMonthTb);
       add(p);
 
       p = new HorizontalPanel();
-      rb = new RadioButton(YEARLY_RB_GROUP, "The");
-      rb.setStyleName("recurrenceRadioButton");
-      p.add(rb);
-      lb = createWhichWeekListBox();
-      p.add(lb);
-      lb = createDayOfWeekListBox();
-      p.add(lb);
+      nthWeekOfMonthOfDayOfWeekOfMonth.setStyleName("recurrenceRadioButton"); //$NON-NLS-1$
+      p.add(nthWeekOfMonthOfDayOfWeekOfMonth);
+      p.add(whichWeekLb);
+      p.add(dayOfWeekLb);
       Label l = new Label("of");
-      l.setStyleName("middleLabel");
+      l.setStyleName("middleLabel"); //$NON-NLS-1$
       p.add(l);
-      lb = createMonthOfYearListBox();
-      p.add(lb);
+      p.add( monthOfYearLb1 );
       add(p);
+    }
+    
+    public boolean isEveryMonthOnNthDayRb() {
+      return everyMonthOnNthDayRb.isChecked();
+    }
+    
+    public void setEveryMonthOnNthDayRb() {
+      everyMonthOnNthDayRb.setChecked( true );
+    }
+    
+    public boolean isNthWeekOfMonthOfDayOfWeekOfMonth() {
+      return nthWeekOfMonthOfDayOfWeekOfMonth.isChecked();
+    }
+    
+    public void setNthWeekOfMonthOfDayOfWeekOfMonth() {
+      nthWeekOfMonthOfDayOfWeekOfMonth.setChecked( true );
+    }
+    
+    public String getDayOfMonth() {
+      return dayOfMonthTb.getText();
+    }
+    
+    public void setDayOfMonth( String dayOfMonth ) {
+      dayOfMonthTb.setText( dayOfMonth );
+    }
+    
+    public WeekOfMonth getWeekOfMonth() {
+      return WeekOfMonth.get( whichWeekLb.getSelectedIndex() );
+    }
+    
+    public void setWeekOfMonth( WeekOfMonth week ) {
+      whichWeekLb.setSelectedIndex( week.value() );
+    }
+    
+    public DayOfWeek getDayOfWeek() {
+      return DayOfWeek.get( dayOfWeekLb.getSelectedIndex() );
+    }
+    
+    public void setDayOfWeek( DayOfWeek day ) {
+      dayOfWeekLb.setSelectedIndex( day.value() );
+    }
+    
+    public MonthOfYear getMonthOfYear0() {
+      return MonthOfYear.get( monthOfYearLb0.getSelectedIndex() );
+    }
+    
+    public void setMonthOfYear0( MonthOfYear month ) {
+      monthOfYearLb0.setSelectedIndex( month.value() );
+    }
+    
+    public MonthOfYear getMonthOfYear1() {
+      return MonthOfYear.get( monthOfYearLb1.getSelectedIndex() );
+    }
+    
+    public void setMonthOfYear1( MonthOfYear month ) {
+      monthOfYearLb1.setSelectedIndex( month.value() );
     }
   }
 
   public class RecurrenceEditorException extends Exception {
+    private static final long serialVersionUID = 666L;
+
     public RecurrenceEditorException( String msg ) {
       super( msg );
     }
@@ -692,9 +745,7 @@ public class RecurrenceEditor extends VerticalPanel {
    * @throws RecurrenceEditorException
    */
   public String getCronString() throws RecurrenceEditorException {
-    StringBuilder recurranceSb = new StringBuilder();
     TemporalValue tv = TemporalValue.get( temporalCombo.getSelectedIndex() );
-    String cronStr;
     switch ( tv ) {
       case SECONDS:
         // fall through
@@ -703,63 +754,120 @@ public class RecurrenceEditor extends VerticalPanel {
       case HOURS:
         return null;
       case DAILY:
-        if ( dailyPanel.isEveryNDays() ) {
-          return null;
-        } else {
-          // must be every weekday
-          recurranceSb.append( RecurrenceType.EveryWeekday ).append( SPACE )
-            .append( getTimeOfRecurrance() );
-          try {
-            cronStr = CronParser.recurrenceStringToCronString( recurranceSb.toString() );
-          } catch (CronParseException e) {
-            throw new RecurrenceEditorException( "Invalid recurrence string: " + recurranceSb.toString() );
-          }
-          return cronStr;
-        }
+        return getDailyCronString();
       case WEEKLY:
-        // WeeklyOn 0 33 6 1,3,5
-        recurranceSb.append( RecurrenceType.WeeklyOn ).append( SPACE )
-          .append( getTimeOfRecurrance() ).append( SPACE )
-          .append( weeklyPanel.getCheckedDaysAsString( 1 ) );
-        try {
-          cronStr = CronParser.recurrenceStringToCronString( recurranceSb.toString() );
-        } catch (CronParseException e) {
-          throw new RecurrenceEditorException( "Invalid recurrence string: " + recurranceSb.toString() );
-        }
-        return cronStr;
+        return getWeeklyCronString();
       case MONTHLY:
-        if ( monthlyPanel.isDayNOfMonth() ) {
-          recurranceSb.append( RecurrenceType.DayNOfMonth ).append( SPACE )
-            .append( getTimeOfRecurrance() ).append( SPACE )
-            .append( monthlyPanel.getDayOfMonth() );
-        } else if ( monthlyPanel.isNthDayNameOfMonth() ) {
-          if ( monthlyPanel.getWeekOfMonth() == WeekOfMonth.LAST ) {
-            String dayOfWeek = Integer.toString( monthlyPanel.getDayOfWeek().value() + 1 );
-            recurranceSb.append( RecurrenceType.LastDayNameOfMonth ).append( SPACE )
-              .append( getTimeOfRecurrance() ).append( SPACE )
-              .append( dayOfWeek );
-          } else {
-            String weekOfMonth = Integer.toString( monthlyPanel.getWeekOfMonth().value() + 1 );
-            String dayOfWeek = Integer.toString( monthlyPanel.getDayOfWeek().value() + 1 );
-            recurranceSb.append( RecurrenceType.NthDayNameOfMonth ).append( SPACE )
-              .append( getTimeOfRecurrance() ).append( SPACE )
-              .append( dayOfWeek ).append( SPACE )
-              .append( weekOfMonth );
-          }
-        } else {
-          throw new RecurrenceEditorException( "There seems to not be any radio button selected, which is theoretically impossible." );
-        }
-        try {
-          cronStr = CronParser.recurrenceStringToCronString( recurranceSb.toString() );
-        } catch (CronParseException e) {
-          throw new RecurrenceEditorException( "Invalid recurrence string: " + recurranceSb.toString() );
-        }
-        return cronStr;
+        return getMonthlyCronString();
       case YEARLY:
-      
+        return getYearlyCronString();
       default:
         throw new RecurrenceEditorException( "Invalid TemporalValue in UI: " + tv );
     }
+  }
+  
+  private String getDailyCronString() throws RecurrenceEditorException {
+    String cronStr;
+    StringBuilder recurranceSb = new StringBuilder();
+    if ( dailyPanel.isEveryNDays() ) {
+      return null;
+    } else {
+      // must be every weekday
+      recurranceSb.append( RecurrenceType.EveryWeekday ).append( SPACE )
+        .append( getTimeOfRecurrance() );
+      try {
+        cronStr = CronParser.recurrenceStringToCronString( recurranceSb.toString() );
+      } catch (CronParseException e) {
+        throw new RecurrenceEditorException( "Invalid recurrence string: " + recurranceSb.toString() );
+      }
+      return cronStr;
+    }
+  }
+  
+  private String getWeeklyCronString() throws RecurrenceEditorException {
+    String cronStr;
+    StringBuilder recurranceSb = new StringBuilder();
+    // WeeklyOn 0 33 6 1,3,5
+    recurranceSb.append( RecurrenceType.WeeklyOn ).append( SPACE )
+      .append( getTimeOfRecurrance() ).append( SPACE )
+      .append( weeklyPanel.getCheckedDaysAsString( 1 ) );
+    try {
+      cronStr = CronParser.recurrenceStringToCronString( recurranceSb.toString() );
+    } catch (CronParseException e) {
+      throw new RecurrenceEditorException( "Invalid recurrence string: " + recurranceSb.toString() );
+    }
+    return cronStr;
+    
+  }
+  
+  private String getMonthlyCronString() throws RecurrenceEditorException {
+    String cronStr;
+    StringBuilder recurranceSb = new StringBuilder();
+    if ( monthlyPanel.isDayNOfMonth() ) {
+      recurranceSb.append( RecurrenceType.DayNOfMonth ).append( SPACE )
+        .append( getTimeOfRecurrance() ).append( SPACE )
+        .append( monthlyPanel.getDayOfMonth() );
+    } else if ( monthlyPanel.isNthDayNameOfMonth() ) {
+      if ( monthlyPanel.getWeekOfMonth() != WeekOfMonth.LAST ) {
+        String weekOfMonth = Integer.toString( monthlyPanel.getWeekOfMonth().value() + 1 );
+        String dayOfWeek = Integer.toString( monthlyPanel.getDayOfWeek().value() + 1 );
+        recurranceSb.append( RecurrenceType.NthDayNameOfMonth ).append( SPACE )
+          .append( getTimeOfRecurrance() ).append( SPACE )
+          .append( dayOfWeek ).append( SPACE )
+          .append( weekOfMonth );
+      } else {
+        String dayOfWeek = Integer.toString( monthlyPanel.getDayOfWeek().value() + 1 );
+        recurranceSb.append( RecurrenceType.LastDayNameOfMonth ).append( SPACE )
+          .append( getTimeOfRecurrance() ).append( SPACE )
+          .append( dayOfWeek );
+      }
+    } else {
+      throw new RecurrenceEditorException( "There seems to not be any radio button selected, which is theoretically impossible." );
+    }
+    try {
+      cronStr = CronParser.recurrenceStringToCronString( recurranceSb.toString() );
+    } catch (CronParseException e) {
+      throw new RecurrenceEditorException( "Invalid recurrence string: " + recurranceSb.toString() );
+    }
+    return cronStr;
+  }
+  
+  private String getYearlyCronString() throws RecurrenceEditorException {
+    String cronStr;
+    StringBuilder recurranceSb = new StringBuilder();
+    if ( yearlyPanel.isEveryMonthOnNthDayRb() ) {
+      String monthOfYear = Integer.toString( yearlyPanel.getMonthOfYear0().value() + 1 );
+      recurranceSb.append( RecurrenceType.EveryMonthNameN ).append( SPACE )
+      .append( getTimeOfRecurrance() ).append( SPACE )
+      .append( yearlyPanel.getDayOfMonth() ).append( SPACE )
+      .append( monthOfYear );
+    } else if ( yearlyPanel.isNthWeekOfMonthOfDayOfWeekOfMonth() ) {
+      if ( yearlyPanel.getWeekOfMonth() != WeekOfMonth.LAST ) {
+        String monthOfYear = Integer.toString( yearlyPanel.getMonthOfYear1().value() + 1 );
+        String dayOfWeek = Integer.toString( yearlyPanel.getDayOfWeek().value() + 1 );
+        String weekOfMonth = Integer.toString( yearlyPanel.getWeekOfMonth().value() + 1 );
+        recurranceSb.append( RecurrenceType.NthDayNameOfMonthName ).append( SPACE )
+          .append( getTimeOfRecurrance() ).append( SPACE )
+          .append( dayOfWeek ).append( SPACE )
+          .append( weekOfMonth ).append( SPACE )
+          .append( monthOfYear );
+      } else {
+        String monthOfYear = Integer.toString( yearlyPanel.getMonthOfYear1().value() + 1 );
+        String dayOfWeek = Integer.toString( yearlyPanel.getDayOfWeek().value() + 1 );
+        recurranceSb.append( RecurrenceType.LastDayNameOfMonthName ).append( SPACE )
+          .append( getTimeOfRecurrance() ).append( SPACE )
+          .append( dayOfWeek ).append( SPACE )
+          .append( monthOfYear );
+      }
+    } else {
+      throw new RecurrenceEditorException( "There seems to not be any radio button selected, which is theoretically impossible." );
+    }
+    try {
+      cronStr = CronParser.recurrenceStringToCronString( recurranceSb.toString() );
+    } catch (CronParseException e) {
+      throw new RecurrenceEditorException( "Invalid recurrence string: " + recurranceSb.toString() );
+    }
+    return cronStr;
   }
   
   private StringBuilder getTimeOfRecurrance() {
