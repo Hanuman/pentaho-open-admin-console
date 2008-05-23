@@ -47,7 +47,7 @@ public class XmlSerializer {
    * Locate the keys in messages.properties by looking for:
    * UI.USER_TRIGGER_STATE_<the state>
    */
-  private static final Map STATE_STRINGS = new HashMap();
+  private static final Map<String,String> STATE_STRINGS = new HashMap<String,String>();
   static {
     STATE_STRINGS.put( "0", Messages.getString( "XmlSerializer.stateNormal" ) ); //$NON-NLS-1$ //$NON-NLS-2$
     STATE_STRINGS.put( "1", Messages.getString( "XmlSerializer.stateSuspended" ) ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -147,7 +147,7 @@ public class XmlSerializer {
   
   private static String triggerInt2Name( String strInt )
   {
-    return (String)STATE_STRINGS.get( strInt );
+    return STATE_STRINGS.get( strInt );
   }
   
   // TODO sbarkdull, threading?
