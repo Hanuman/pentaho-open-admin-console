@@ -19,6 +19,7 @@ import java.util.Date;
 
 import com.google.gwt.user.client.Event;
 
+// TODO sbarkdull, should not extend DatePicker, should aggregate it
 public class DatePickerEx extends org.zenika.widget.client.datePicker.DatePicker {
 
   public DatePickerEx() {
@@ -33,20 +34,20 @@ public class DatePickerEx extends org.zenika.widget.client.datePicker.DatePicker
     super( selectedDate );
   }
   
-  /**
-   * Create a DatePicker which uses a specific theme.
-   * @param theme Theme name
-   */
-  public DatePickerEx(String theme) {
-    super( theme );
-  }
-  
-  /**
-   * Create a DatePicker which specifics date and theme.
-   * @param selectedDate Date to show
-   * @param theme Theme name
-   */
-  public DatePickerEx(Date selectedDate, String theme) {
-    super(selectedDate, theme);
-  }
+//  /**
+//   * Create a DatePicker which uses a specific theme.
+//   * @param theme Theme name
+//   */
+//  public DatePickerEx(String theme) {
+//    super( theme );
+//  }
+//  
+//  /**
+//   * Create a DatePicker which specifics date and theme.
+//   * @param selectedDate Date to show
+//   * @param theme Theme name
+//   */
+//  public DatePickerEx(Date selectedDate, String theme) {
+//    super(selectedDate, theme);
+//  }
 }
