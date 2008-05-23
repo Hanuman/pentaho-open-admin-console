@@ -15,7 +15,7 @@
  */
 package org.pentaho.pac.client.scheduler;
 
-import org.pentaho.pac.client.common.ui.ConfirmDialog;
+import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 
 public class RecurrenceDialog extends ConfirmDialog {
 
