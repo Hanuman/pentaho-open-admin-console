@@ -2,9 +2,9 @@ package org.pentaho.pac.client.datasources;
 
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.common.ui.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.ICallback;
-import org.pentaho.pac.client.common.ui.MessageDialog;
+import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
+import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
 
@@ -31,7 +31,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 
   public static final int ADVANCE_PANEL_ID = 1;
 
-  TabPanel generalAdvanceDbPanel = new TabPanel();
+//  TabPanel generalAdvanceDbPanel = new TabPanel();
 
   MessageDialog messageDialog = new MessageDialog();
 

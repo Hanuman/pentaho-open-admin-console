@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.common.ui.MessageDialog;
+import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.common.datasources.IPentahoDataSource;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
