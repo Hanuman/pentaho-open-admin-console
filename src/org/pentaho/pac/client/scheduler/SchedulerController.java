@@ -25,7 +25,9 @@ import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.ICallback;
 import org.pentaho.pac.client.common.ui.MessageDialog;
+import org.pentaho.pac.client.common.util.TimeUtil;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.scheduler.RecurrenceEditor.RecurrenceEditorException;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.PushButton;
@@ -248,29 +250,66 @@ public class SchedulerController {
   }
   
   private void createSchedule() {
-    PacServiceFactory.getSchedulerService().createJob(
-        scheduleCreatorDialog.getScheduleEditor().getName().trim(), 
-        scheduleCreatorDialog.getScheduleEditor().getGroupName().trim(), 
-        scheduleCreatorDialog.getScheduleEditor().getDescription().trim(), 
-        scheduleCreatorDialog.getScheduleEditor().getCronString().trim(), 
-        scheduleCreatorDialog.getSolutionRepositoryItemPicker().getSolution().trim(),
-        scheduleCreatorDialog.getSolutionRepositoryItemPicker().getPath().trim(),
-        scheduleCreatorDialog.getSolutionRepositoryItemPicker().getAction().trim(),
+    // TODO, List<Schedule> is probably not what we will get back
+    AsyncCallback<List<Schedule>> responseCallback = new AsyncCallback<List<Schedule>>() {
+      public void onSuccess( List<Schedule> pSchedulesList ) {
+        MessageDialog messageDialog = new MessageDialog( "Kool!", 
+            "Success, I guess!" );
+        messageDialog.center();
+        scheduleCreatorDialog.hide();
+      }
 
-        new AsyncCallback<List<Schedule>>() {
-          public void onSuccess( List<Schedule> pSchedulesList ) {
-            MessageDialog messageDialog = new MessageDialog( "Kool!", 
-                "Success, I guess!" );
-            messageDialog.center();
-            scheduleCreatorDialog.hide();
-          }
+      public void onFailure(Throwable caught) {
+        MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
+            caught.getMessage() );
+        messageDialog.center();
+      }
+    };
     
-          public void onFailure(Throwable caught) {
-            MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
-                caught.getMessage() );
-            messageDialog.center();
-          }
-        }
-      );
+    String cronStr;
+    try {
+      cronStr = scheduleCreatorDialog.getScheduleEditor().getCronString();
+    } catch( RecurrenceEditorException ex ) {
+      MessageDialog d = new MessageDialog();
+      d.setTitle( "Error" );
+      d.setMessage( "Doh! " + ex.getMessage() );
+      d.center();
+      return;
+    }
+    if ( null != cronStr ) {
+      PacServiceFactory.getSchedulerService().createCronJob(
+          scheduleCreatorDialog.getScheduleEditor().getName().trim(), 
+          scheduleCreatorDialog.getScheduleEditor().getGroupName().trim(), 
+          scheduleCreatorDialog.getScheduleEditor().getDescription().trim(), 
+          cronStr.trim(), 
+          scheduleCreatorDialog.getSolutionRepositoryItemPicker().getSolution().trim(),
+          scheduleCreatorDialog.getSolutionRepositoryItemPicker().getPath().trim(),
+          scheduleCreatorDialog.getSolutionRepositoryItemPicker().getAction().trim(),
+          responseCallback
+        );
+    } else {
+      String repeatTimeMillisecs;
+      try {
+        repeatTimeMillisecs = Integer.toString( TimeUtil.secsToMillisecs( 
+            Integer.parseInt( scheduleCreatorDialog.getScheduleEditor().getRepeatInSecs() ) ) );
+      } catch( RecurrenceEditorException ex ) {
+        MessageDialog d = new MessageDialog();
+        d.setTitle( "Error" );
+        d.setMessage( "Doh! " + ex.getMessage() );
+        d.center();
+        return;
+      }
+      PacServiceFactory.getSchedulerService().createRepeatJob(
+          scheduleCreatorDialog.getScheduleEditor().getName().trim(), 
+          scheduleCreatorDialog.getScheduleEditor().getGroupName().trim(), 
+          scheduleCreatorDialog.getScheduleEditor().getDescription().trim(), 
+          scheduleCreatorDialog.getScheduleEditor().getStartDateTime().trim(), 
+          repeatTimeMillisecs.trim(), 
+          scheduleCreatorDialog.getSolutionRepositoryItemPicker().getSolution().trim(),
+          scheduleCreatorDialog.getSolutionRepositoryItemPicker().getPath().trim(),
+          scheduleCreatorDialog.getSolutionRepositoryItemPicker().getAction().trim(),
+          responseCallback
+        );
+    }
   }
 }
