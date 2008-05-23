@@ -144,7 +144,7 @@ public class SchedulerAdminUIComponentProxy {
     String responseStrXml=  biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, userName, params );
   }
   
-  public void createSchedule( String jobName, String jobGroup, String description,
+  public void createCronSchedule( String jobName, String jobGroup, String description,
       String cronString, String solutionName, String solutionPath, String actionName ) throws PacServiceException {
     Map<String, String> params = new HashMap<String, String>();
     // TODO sbarkdull, some of these params may not be used, clean up
@@ -153,6 +153,28 @@ public class SchedulerAdminUIComponentProxy {
     params.put( "jobGroup", jobGroup ); //$NON-NLS-1$
     params.put( "description", description ); //$NON-NLS-1$
     params.put( "cron-string", cronString ); //$NON-NLS-1$
+    params.put( "solution", solutionName ); //$NON-NLS-1$
+    params.put( "path", solutionPath ); //$NON-NLS-1$
+    params.put( "action", actionName ); //$NON-NLS-1$
+
+    String responseStrXml=  biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, userName, params );
+    
+    int ii=0; // TODO clean up
+    // TODO sbarkdull, need to return a status
+    // TODO sbarkdull, get strings into static finals for all parameters
+  }
+  
+  public void createRepeatSchedule( String jobName, String jobGroup, String description,
+      String startDateTime, String repeatTimeMillisecs,
+      String solutionName, String solutionPath, String actionName ) throws PacServiceException {
+    Map<String, String> params = new HashMap<String, String>();
+    // TODO sbarkdull, some of these params may not be used, clean up
+    params.put( "schedulerAction", "createJob" ); //$NON-NLS-1$  //$NON-NLS-2$
+    params.put( "jobName", jobName ); //$NON-NLS-1$
+    params.put( "jobGroup", jobGroup ); //$NON-NLS-1$
+    params.put( "description", description ); //$NON-NLS-1$
+    params.put( "repeat-time-millisecs", repeatTimeMillisecs ); //$NON-NLS-1$
+    params.put( "start-date-time", startDateTime ); //$NON-NLS-1$
     params.put( "solution", solutionName ); //$NON-NLS-1$
     params.put( "path", solutionPath ); //$NON-NLS-1$
     params.put( "action", actionName ); //$NON-NLS-1$
