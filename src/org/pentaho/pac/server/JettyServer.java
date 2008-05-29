@@ -21,7 +21,7 @@ import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
 
 public class JettyServer {
-  private Server server;
+  protected Server server;
   private int portNumber = 8099;
   private String hostname = "localhost"; //$NON-NLS-1$
   
@@ -54,8 +54,7 @@ public class JettyServer {
     }
   }
   
-  
-  private void setupServer(){
+  protected void setupServer(){
     server = new Server();
 
     ContextHandlerCollection contexts = new ContextHandlerCollection();
