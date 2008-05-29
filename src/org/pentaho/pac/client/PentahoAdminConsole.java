@@ -322,15 +322,6 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
       list.add(new Hyperlink("Link 1 text","Link1")); //$NON-NLS-1$ //$NON-NLS-2$
       list.add(new Hyperlink("Link 2 text","Link2")); //$NON-NLS-1$ //$NON-NLS-2$
       list.add(new Hyperlink("Link 3 text","Link3")); //$NON-NLS-1$ //$NON-NLS-2$
-
-
-      
-      PushButton reBtn = new PushButton( "Sched", new ClickListener() {
-        public void onClick(Widget sender) {
-          d.center();
-        }
-      });  
-      list.add( reBtn );
       
       list.setStyleName("CommonTasksLinks"); //$NON-NLS-1$
       vertPanel.add(list);
