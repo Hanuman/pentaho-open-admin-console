@@ -30,26 +30,27 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
   public static PacLocalizedMessages pacLocalizedMessages = (PacLocalizedMessages)GWT.create(PacLocalizedMessages.class);
   public static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   
-  ArrayList<ToggleButton> componentActivationToggleButtons = new ArrayList<ToggleButton>();
+  protected ArrayList<ToggleButton> componentActivationToggleButtons = new ArrayList<ToggleButton>();
   
-  VerticalPanel leftVerticalPanel = new VerticalPanel();
-  ConsoleToolbar toolbar = new ConsoleToolbar();
-  HorizontalPanel topPanel = new HorizontalPanel();
+  protected VerticalPanel leftVerticalPanel = new VerticalPanel();
+  protected ConsoleToolbar toolbar = new ConsoleToolbar();
+  protected HorizontalPanel topPanel = new HorizontalPanel();
   
-  DeckPanel deckPanel = new DeckPanel();
+  protected DeckPanel deckPanel = new DeckPanel();
   protected AdministrationTabPanel adminTabPanel = new AdministrationTabPanel();
-  HorizontalPanel horizontalPanel;
-  Widget widget; 
+  protected HorizontalPanel horizontalPanel;
+  protected Widget widget; 
   
   protected HomePanel homePanel;
-  CommonTasks commonTasks;
+  protected CommonTasks commonTasks;
+  protected Widget defaultWidget;
   
   public PentahoAdminConsole() {
     horizontalPanel = buildTopPanel() ;
     horizontalPanel.setWidth("100%");    //$NON-NLS-1$
     widget = buildBody();
     widget.setWidth("100%");//$NON-NLS-1$
-    widget.setHeight("100%");
+    widget.setHeight("100%");   //$NON-NLS-1$
     add(horizontalPanel, DockPanel.NORTH);
     setCellWidth(horizontalPanel, "100%"); //$NON-NLS-1$
     add(widget, DockPanel.CENTER);
@@ -62,7 +63,6 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
   
   public Widget buildBody() {
     DockPanel centerPanel = new DockPanel();
-    homePanel = new HomePanel("http://www.pentaho.com/console_home"); //$NON-NLS-1$
     commonTasks = new CommonTasks();
     VerticalPanel leftPanel = new VerticalPanel();
     SimplePanel tempPanel = new SimplePanel();
@@ -165,9 +165,12 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
   }
   
   protected Widget getDefaultActiveAdminDeckWidget() {
-    return homePanel;
+    return defaultWidget;
   }
-  
+
+  protected void setDefaultActiveAdminDeckWidget(Widget w) {
+    defaultWidget = w;
+  }
   protected void activateWidgetOnAdminDeck(Widget widget) {
     if (widget == adminTabPanel) {
       int selectedTab = adminTabPanel.getTabBar().getSelectedTab();
@@ -182,6 +185,8 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
   }
   
   protected void initializeAdminDeck() {
+    homePanel = new HomePanel("http://www.pentaho.com/console_home"); //$NON-NLS-1$
+    setDefaultActiveAdminDeckWidget(homePanel);
     ToggleButton tb = addWidgetToAdminDeck(PentahoAdminConsole.MSGS.home(), homePanel);
     addWidgetToAdminDeck(PentahoAdminConsole.MSGS.administration(), adminTabPanel);
     tb.setDown( true );
