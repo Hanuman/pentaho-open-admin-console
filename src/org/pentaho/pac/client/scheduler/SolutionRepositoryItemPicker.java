@@ -27,6 +27,14 @@ public class SolutionRepositoryItemPicker extends FlexTable {
     l = new Label( "Action:" );
     setWidget( 2 , 0, l );
     setWidget( 2 , 1, actionTb );
+
+  }
+  
+  public void reset() {    
+    // TODO sbarkdull tmp
+    solutionTb.setText( "samples" );
+    pathTb.setText( "getting-started" );
+    actionTb.setText( "HelloWorld.xaction" );
   }
   
   public String getSolution() {
