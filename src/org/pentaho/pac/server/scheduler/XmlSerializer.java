@@ -82,7 +82,7 @@ public class XmlSerializer {
       // TODO sbarkdull, need to set encoding
 //      String encoding = CleanXmlHelper.getEncoding( strXml );
 //      InputStream is = new ByteArrayInputStream( strXml.getBytes( encoding ) );
-      InputStream is = new ByteArrayInputStream( strXml.getBytes( "UTF-8") ); //$NON-NLS-1$
+      InputStream is = new ByteArrayInputStream( strXml.getBytes( "UTF-8" ) ); //$NON-NLS-1$
      
       parser.parse( is, h );
       return h;
@@ -135,9 +135,17 @@ public class XmlSerializer {
         currentSchedule.setJobName( val );
         val = attributes.getValue( "jobGroup" ); //$NON-NLS-1$
         currentSchedule.setJobGroup( val );
-        val = attributes.getValue( "cronString" ); //$NON-NLS-1$
+        val = attributes.getValue( "start-date-time" ); //$NON-NLS-1$
+        currentSchedule.setStartDate( val );
+        val = attributes.getValue( "end-date-time" ); //$NON-NLS-1$
+        currentSchedule.setEndDate( val );
+        val = attributes.getValue( "cron-string" ); //$NON-NLS-1$
         if ( null != val ) {
           currentSchedule.setCronString( val );
+        }
+        val = attributes.getValue( "repeat-time-millisecs" ); //$NON-NLS-1$
+        if ( null != val ) {
+          currentSchedule.setRepeatTimeInMillisecs( val );
         }
       } else if ( qName.equals( "description" ) ) { //$NON-NLS-1$
       } else {
@@ -230,7 +238,7 @@ public class XmlSerializer {
    * @author Steven Barkdull
    *
    */
-  class XActionResponseParserHandler extends DefaultHandler {
+  static class XActionResponseParserHandler extends DefaultHandler {
 
     public String currentText = null;
     private boolean foundFaultStr = false;
