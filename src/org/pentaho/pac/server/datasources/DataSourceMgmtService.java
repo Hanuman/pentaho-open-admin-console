@@ -26,8 +26,8 @@ public class DataSourceMgmtService implements IDataSourceMgmtService {
 
   public void deleteDataSource(String jndiName) throws NonExistingDataSourceException, DAOException, PentahoSecurityException {
     IPentahoDataSource dataSource = dataSourceDAO.getDataSource(jndiName);
-    if (jndiName != null) {
-      deleteDataSource(jndiName);
+    if (dataSource != null) {
+      deleteDataSource(dataSource);
     } else {
       throw new NonExistingDataSourceException(jndiName);
     }
