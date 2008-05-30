@@ -55,7 +55,7 @@ public class ThreadSafeHttpClient {
       this.proxyUrl = proxyUrl;
     }
 
-    public String execRemoteMethod( String serviceName, Map mapParams )
+    public String execRemoteMethod( String serviceName, Map<String, String> mapParams )
         throws PacServiceException {
       return execRemoteMethod( serviceName, mapParams, "text/xml" ); //$NON-NLS-1$
     }
@@ -68,7 +68,7 @@ public class ThreadSafeHttpClient {
      * @return
      * @throws PacServiceException
      */
-    public String execRemoteMethod( String serviceName, Map mapParams, String contentType )
+    public String execRemoteMethod( String serviceName, Map<String, String> mapParams, String contentType )
         throws PacServiceException {
       
       InputStream responseStrm = null;
@@ -102,19 +102,13 @@ public class ThreadSafeHttpClient {
       }
     }
     
-    private static NameValuePair[] mapToNameValuePair( Map paramMap )
+    private static NameValuePair[] mapToNameValuePair( Map<String, String> paramMap )
     {
-      NameValuePair[] pairAr = null; 
-      if ( null != paramMap ) {
-        pairAr = new NameValuePair[ paramMap.size() ];
-        
-        Iterator it = paramMap.keySet().iterator();
-        
-        for ( int ii=0; ii<pairAr.length; ++ii ) {
-          String key = (String)it.next();
-          String val = (String)paramMap.get( key );
-          pairAr[ii] = new NameValuePair( key, val );
-        }
+      NameValuePair[] pairAr = new NameValuePair[ paramMap.size() ];
+      int idx = 0;
+      for ( Map.Entry<String,String> me : paramMap.entrySet() ) {
+        pairAr[ idx ] = new NameValuePair( me.getKey(), me.getValue() );
+        idx++;
       }
       return pairAr;
     }
