@@ -22,4 +22,16 @@ public class StringUtils {
   {
     return StringUtils.isEmpty( str ) ? xdefault : str;
   }
+  
+  public static String addStringToInt( String strAddend, int addend ) {
+    return Integer.toString( Integer.parseInt( strAddend ) + addend );
+  }
+  
+  public static String multiplyStringWithInt( String strMultiplicand, int multiplier ) {
+    return Integer.toString( Integer.parseInt( strMultiplicand ) * multiplier );
+  }
+  
+  public static String divideStringWithInt( String strDividend, int divisor ) {
+    return Integer.toString( Integer.parseInt( strDividend ) / divisor );
+  }
 }
