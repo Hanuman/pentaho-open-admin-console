@@ -42,7 +42,22 @@ public class Schedule implements Serializable {
   private String jobGroup = null;
   private String description = null;
   private String cronString = null;
+  private String repeatTimeInMillisecs = null;
+  private String startDate = null;
+  private String endDate = null;
   
+  public String getStartDate() {
+    return startDate;
+  }
+  public void setStartDate(String startDate) {
+    this.startDate = startDate;
+  }
+  public String getEndDate() {
+    return endDate;
+  }
+  public void setEndDate(String endDate) {
+    this.endDate = endDate;
+  }
   public String getCronString() {
     return cronString;
   }
@@ -96,6 +111,13 @@ public class Schedule implements Serializable {
   }
   public void setDescription(String description) {
     this.description = description;
+  }
+  public String getRepeatTimeInMillisecs() {
+    return repeatTimeInMillisecs;
+  }
+  
+  public void setRepeatTimeInMillisecs(String repeatTimeInMillisecs) {
+    this.repeatTimeInMillisecs = repeatTimeInMillisecs;
   }
   
 }
