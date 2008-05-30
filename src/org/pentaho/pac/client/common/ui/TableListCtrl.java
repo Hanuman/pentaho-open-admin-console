@@ -1,6 +1,7 @@
 package org.pentaho.pac.client.common.ui;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.pentaho.pac.client.PentahoAdminConsole;
@@ -12,9 +13,16 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class TableListCtrl extends ScrollPanel {
+/**
+ * 
+ * @author Steven Barkdull
+ *
+ * @param <RowDataType> type of the object that can be stored as data with each row in the list.
+ */
+public class TableListCtrl<RowDataType> extends ScrollPanel {
 
   private FlexTable table = null;
+  private List<RowDataType> dataList = new LinkedList<RowDataType>();
   private static final int HEADER_ROW = 0;
   private static final int FIRST_ROW = HEADER_ROW+1;
   private static final int SELECT_COLUMN = 0;
@@ -98,10 +106,12 @@ public class TableListCtrl extends ScrollPanel {
     for ( int rowNum=table.getRowCount()-1; rowNum>=FIRST_ROW; --rowNum ) {
       table.removeRow( rowNum );
     }
+    dataList.clear();
   }
   
   public void remove( int rowNum ) {
     table.removeRow( rowNum+FIRST_ROW );
+    dataList.remove( rowNum );
   }
   
   public void selectAll() {
@@ -119,25 +129,31 @@ public class TableListCtrl extends ScrollPanel {
   }
   
   public void select( int rowNum ) {
-    CheckBox cb = getSelectCheckBox( rowNum );
+    CheckBox cb = getSelectCheckBox( rowNum+FIRST_ROW );
     cb.setChecked( true );
   }
   
   public void unselect( int rowNum ) {
-    CheckBox cb = getSelectCheckBox( rowNum );
+    CheckBox cb = getSelectCheckBox( rowNum+FIRST_ROW );
     cb.setChecked( false );
   }
 
-  private CheckBox getSelectCheckBox( int rowNum ) {
-    return (CheckBox)table.getWidget( rowNum+FIRST_ROW, SELECT_COLUMN );
+  private CheckBox getSelectCheckBox( int actualRowNum ) {
+    return (CheckBox)table.getWidget( actualRowNum, SELECT_COLUMN );
   }
   
   public void addRow( Widget[] widgets ) {
+    addRow( widgets, null );
+  }
+  
+  public void addRow( Widget[] widgets, RowDataType data ) {
     int newRowNum = table.getRowCount();
     table.setWidget( newRowNum, 0, new CheckBox() );
     for ( int ii=0; ii<widgets.length; ++ii ) {
       setCellWidget( newRowNum-FIRST_ROW, ii+1, widgets[ii] );
     }
+    dataList.add( data );
+    assert dataList.size() == (table.getRowCount()-FIRST_ROW) : "Number of items in data list does not equal the number of items in the list.";
   }
 
   public void setCellWidget( int rowNum, int colNum, Widget w ) {
@@ -148,8 +164,13 @@ public class TableListCtrl extends ScrollPanel {
     return table.getWidget( rowNum+FIRST_ROW, colNum+SELECT_COLUMN );
   }
 
-  public void setCellData( int rowNum, int colNum, Widget w ) {
-    table.setWidget( rowNum+FIRST_ROW, colNum+SELECT_COLUMN, w );
+  public void setRowData( int rowNum, RowDataType data ) {
+    dataList.remove( rowNum );
+    dataList.add( rowNum, data );
+  }
+
+  public RowDataType getRowData( int rowNum ) {
+    return dataList.get( rowNum );
   }
   
   public int getNumRows() {
