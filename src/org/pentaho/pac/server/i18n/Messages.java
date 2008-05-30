@@ -45,31 +45,6 @@ public class Messages {
     return bundle;
   }
 
-  public static String getEncodedString(String rawValue) {
-    if (rawValue == null) {
-      return (""); //$NON-NLS-1$
-    }
-
-    StringBuffer value = new StringBuffer();
-    for (int n = 0; n < rawValue.length(); n++) {
-      int charValue = rawValue.charAt(n);
-      if (charValue >= 0x80) {
-        value.append("&#x"); //$NON-NLS-1$
-        value.append(Integer.toString(charValue, 0x10));
-        value.append(";"); //$NON-NLS-1$
-      } else {
-        value.append((char) charValue);
-      }
-    }
-    return value.toString();
-
-  }
-
-  public static String getXslString(String key) {
-    String rawValue = getString(key);
-    return getEncodedString(rawValue);
-  }
-
   public static String getString(String key) {
     try {
       return getBundle().getString(key);
