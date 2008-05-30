@@ -37,8 +37,6 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 
   DataSourcesList dataSourcesList = new DataSourcesList();
 
-  PentahoDataSource[] dataSources = null;
-
   DataSourceGeneralPanel dataSourceGeneralPanel = new DataSourceGeneralPanel();
 
   DataSourceAdvancePanel dataSourceAdvancePanel = new DataSourceAdvancePanel();
