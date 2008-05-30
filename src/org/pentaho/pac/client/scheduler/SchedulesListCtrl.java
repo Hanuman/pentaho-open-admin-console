@@ -15,11 +15,14 @@
  */
 package org.pentaho.pac.client.scheduler;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.TableListCtrl;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
-public class SchedulesListCtrl extends TableListCtrl {
+public class SchedulesListCtrl extends TableListCtrl<Schedule> {
 
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   private static final String[] COLUMN_HEADER_TITLE = {
@@ -36,5 +39,16 @@ public class SchedulesListCtrl extends TableListCtrl {
     setHeight( "230px" ); //$NON-NLS-1$
     setTableStyleName( "schedulesTable" ); //$NON-NLS-1$
     setTableHeaderStyleName( "schedulesTableHeader" ); //$NON-NLS-1$
+  }
+  
+  public List<Schedule> getSelectedSchedules() {
+    List<Integer> selectedIdxs = getSelectedIndexes();
+    final List<Schedule> scheduleList = new LinkedList<Schedule>();
+    
+    for ( int rowNum : selectedIdxs ) {
+      Schedule schedule = getRowData( rowNum );
+      scheduleList.add( schedule );
+    }
+    return scheduleList;
   }
 }
