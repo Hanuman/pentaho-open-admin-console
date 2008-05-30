@@ -1,5 +1,6 @@
 package org.pentaho.pac.server;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -17,52 +18,52 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class SchedulerServiceImpl extends RemoteServiceServlet implements SchedulerService  {
 
-  private String userName = null;
+  private static String userName = null;
   private static final Log logger = LogFactory.getLog(SchedulerServiceImpl.class);
 
   // TODO sbarkdull, damn it would be nice to inject this with Spring (and some of these other props)
   private static SchedulerAdminUIComponentProxy schedulerProxy = null;
+  static {
+    initFromConfiguration();
+    schedulerProxy = new SchedulerAdminUIComponentProxy( getUserName() );
+  }
+  
   private static BiServerTrustedProxy biServerProxy;
   static {
     biServerProxy = BiServerTrustedProxy.getInstance();
   }
   
   public SchedulerServiceImpl() {
-    initFromConfiguration();
-    schedulerProxy = new SchedulerAdminUIComponentProxy( getUserName() );
   }
 
-  private void initFromConfiguration()
+  private static void initFromConfiguration()
   {
     Properties p = AppConfigProperties.getProperties();
-//    appConfigProperties = p;
-//    jmxHostName = StringUtils.defaultIfEmpty( p.getProperty("jmxHostName"), System.getProperty("jmxHostName") ); //$NON-NLS-1$ //$NON-NLS-2$
-//    jmxPortNumber = StringUtils.defaultIfEmpty( p.getProperty("jmxPortNumber"), System.getProperty("jmxPortNumber") ); //$NON-NLS-1$ //$NON-NLS-2$
     userName = StringUtils.defaultIfEmpty( p.getProperty("pentaho.platform.userName"), System.getProperty("pentaho.platform.userName") ); //$NON-NLS-1$ //$NON-NLS-2$
-//    pciContextPath = StringUtils.defaultIfEmpty( p.getProperty("pciContextPath"), System.getProperty("pciContextPath") ); //$NON-NLS-1$ //$NON-NLS-2$
-//    biServerBaseURL = StringUtils.defaultIfEmpty( p.getProperty("biServerBaseURL"), System.getProperty("biServerBaseURL") ); //$NON-NLS-1$ //$NON-NLS-2$biServerBaseURL = StringUtils.defaultIfEmpty( p.getProperty("biServerBaseURL"), System.getProperty("biServerBaseURL") );
-//    String strBiServerStatusCheckPeriod = StringUtils.defaultIfEmpty( p.getProperty("consoleToolBar.biServerStatusCheckPeriod"), System.getProperty("consoleToolBar.biServerStatusCheckPeriod") ); //$NON-NLS-1$ //$NON-NLS-2$
-//    try {
-//      biServerStatusCheckPeriod = Integer.parseInt( strBiServerStatusCheckPeriod );
-//    } catch( NumberFormatException e ) {
-//      logger.error( Messages.getString( "PacService.THREAD_SCHEDULING_FAILED" ), e ); //$NON-NLS-1$
-//    }
   }
 
-  private String getUserName() {
+  private static String getUserName() {
     return userName;
   }
   
   public void deleteJob(String jobName, String jobGroup) throws PacServiceException {
     schedulerProxy.deleteJob(jobName, jobGroup);
   }
+  
+  public void deleteJobs( List<Schedule> scheduleList ) throws PacServiceException {
+    schedulerProxy.deleteJobs( scheduleList );
+  }
 
   /**
    * query string: schedulerAction=executeJob&jobName=PentahoSystemVersionCheck&jobGroup=DEFAULT
    * @throws PacServiceException 
    */
-  public void executeJobNow(String jobName, String jobGroup) throws PacServiceException {
-    schedulerProxy.executeJobNow(jobName, jobGroup);
+  public void executeJob(String jobName, String jobGroup) throws PacServiceException {
+    schedulerProxy.executeJob(jobName, jobGroup);
+  }
+  
+  public void executeJobs( List<Schedule> scheduleList ) throws PacServiceException {
+    schedulerProxy.executeJobs( scheduleList );
   }
 
   /**
@@ -97,6 +98,10 @@ public class SchedulerServiceImpl extends RemoteServiceServlet implements Schedu
   public void pauseJob(String jobName, String jobGroup) throws PacServiceException {
     schedulerProxy.pauseJob(jobName, jobGroup);
   }
+  
+  public void pauseJobs( List<Schedule> scheduleList ) throws PacServiceException {
+    schedulerProxy.pauseJobs( scheduleList );
+  }
 
   /**
    * query string: schedulerAction=resumeAll
@@ -114,23 +119,47 @@ public class SchedulerServiceImpl extends RemoteServiceServlet implements Schedu
     schedulerProxy.resumeJob(jobName, jobGroup);
   }
   
-
+  public void resumeJobs( List<Schedule> scheduleList ) throws PacServiceException {
+    schedulerProxy.resumeJobs( scheduleList );
+  }
 
   /**
    * query string: schedulerAction=createJob&jobName=PentahoSystemVersionCheck&jobGroup=DEFAULT
    * @throws PacServiceException 
    */
   public void createCronJob( String jobName, String jobGroup, String description,
-      String cronString, String solutionName, String solutionPath, String actionName) throws PacServiceException {
+      Date startDate, Date endDate,
+      String cronString,
+      String solutionName, String solutionPath, String actionName) throws PacServiceException {
     schedulerProxy.createCronSchedule( jobName, jobGroup, description,
-      cronString, solutionName, solutionPath, actionName );
+        startDate, endDate, cronString, solutionName, solutionPath, actionName );
   }
 
   public void createRepeatJob( String jobName, String jobGroup, String description,
-      String startDateTime, String repeatTimeMillisecs, 
+      Date startDate, Date endDate,
+      String repeatTimeMillisecs, 
       String solutionName, String solutionPath, String actionName ) throws PacServiceException {
     schedulerProxy.createRepeatSchedule( jobName, jobGroup, description,
-        startDateTime, repeatTimeMillisecs, solutionName, solutionPath, actionName );
+        startDate, endDate, repeatTimeMillisecs, solutionName, solutionPath, actionName );
   
+  }
+
+  public void updateCronJob( String oldJobName, String oldJobGroup,
+      String jobName, String jobGroup, String description,
+      Date startDate, Date endDate,
+      String cronString,
+      String solutionName, String solutionPath, String actionName ) throws PacServiceException {
+    schedulerProxy.updateCronSchedule( oldJobName, oldJobGroup, jobName, jobGroup, description,
+        startDate, endDate, cronString, solutionName, solutionPath, actionName );
+    
+  }
+  
+  public void updateRepeatJob( String oldJobName, String oldJobGroup,
+      String jobName, String jobGroup, String description,
+      Date startDate, Date endDate,
+      String repeatTimeMillisecs, 
+      String solutionName, String solutionPath, String actionName ) throws PacServiceException {
+    schedulerProxy.updateRepeatSchedule( oldJobName, oldJobGroup, jobName, jobGroup, description,
+        startDate, endDate, repeatTimeMillisecs, solutionName, solutionPath, actionName );
   }
 }
