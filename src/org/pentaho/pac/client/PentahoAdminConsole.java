@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class PentahoAdminConsole extends DockPanel implements ClickListener {
   
-  public static PacLocalizedMessages pacLocalizedMessages = (PacLocalizedMessages)GWT.create(PacLocalizedMessages.class);
+  final public static PacLocalizedMessages pacLocalizedMessages = (PacLocalizedMessages)GWT.create(PacLocalizedMessages.class);
   public static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   
   protected ArrayList<ToggleButton> componentActivationToggleButtons = new ArrayList<ToggleButton>();
@@ -308,9 +308,6 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
   }
   
   private class CommonTasks extends SimplePanel{
-    // TODO sbarkdull
-    ScheduleCreatorDialog d = new ScheduleCreatorDialog();
-    
     public CommonTasks(){
       super();
       VerticalPanel vertPanel = new VerticalPanel();
