@@ -12,7 +12,6 @@ public class DataSourceAdvancePanel extends VerticalPanel {
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   TextBox maxActiveConnTextBox = new TextBox();
   TextBox idleConnTextBox = new TextBox();
-  TextBox urlTextBox = new TextBox();
   TextBox validationQueryTextBox = new TextBox();
   TextBox waitTextBox = new TextBox();
   
