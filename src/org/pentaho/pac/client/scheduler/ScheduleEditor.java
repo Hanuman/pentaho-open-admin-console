@@ -15,8 +15,13 @@
  */
 package org.pentaho.pac.client.scheduler;
 
+import java.util.Date;
+
+import org.pentaho.pac.client.common.ui.DatePickerEx;
+import org.pentaho.pac.client.common.ui.ICallback;
+import org.pentaho.pac.client.common.ui.TimePicker;
+import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.common.util.StringUtils;
-import org.pentaho.pac.client.scheduler.RecurrenceEditor.RecurrenceEditorException;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -31,10 +36,26 @@ public class ScheduleEditor extends FlexTable {
   private TextBox groupNameTb = new TextBox();
   private TextBox descriptionTb = new TextBox();
   
-  // TODO sbarkdull, remove false initialization, init to null, controller should init it
-  private String repeatInSec = "518400";
+  private TimePicker startTimePicker = new TimePicker();
+  private DatePickerEx startDatePicker = new DatePickerEx();
+
+  private String cronStr = null;
+  private String repeatInSecs = null;
+  
+  private static final String DEFAULT_NAME = ""; //$NON-NLS-1$
+  private static final String DEFAULT_GROUP_NAME = ""; //$NON-NLS-1$
+  private static final String DEFAULT_DESCRIPTION = ""; //$NON-NLS-1$
+  private static final String DEFAULT_CRONSTRING = null;
+  private static final String DEFAULT_REPEAT_IN_SECS = null;
   
   private RecurrenceDialog recurrenceDialog = new RecurrenceDialog();
+  private boolean bRecurrenceEditorValid = false;
+  
+  
+//  need to provide on on ok callback for recurrence dialog, set the callback in the scheduleeditor, 
+//  on ok, it should set schedule editors cronStr or repeatinSecs value. clients should no longer 
+//  reach around the scheudle editor to get the cron string from the recurernce dialog
+//  
   public ScheduleEditor() {
     super();
 
@@ -53,28 +74,74 @@ public class ScheduleEditor extends FlexTable {
     setWidget( 2 , 0, l );
     setWidget( 2 , 1, descriptionTb );
     
+    recurrenceDialog.setOnOkHandler( new ICallback<Object>() {
+      public void onHandle(Object o) {
+        bRecurrenceEditorValid = true;
+        cronStr = recurrenceDialog.getRecurrenceEditor().getCronString();
+        if ( null == cronStr ) {
+          repeatInSecs = recurrenceDialog.getRecurrenceEditor().getRepeatInSecs();
+        }
+        startTimePicker.setTime( recurrenceDialog.getRecurrenceEditor().getStartTime() );
+        startDatePicker.setSelectedDate( recurrenceDialog.getRecurrenceEditor().getStartDate() );
+        recurrenceDialog.hide();
+      }
+    });
+    
+    recurrenceDialog.setOnRemoveRecurrence( new ICallback<Object>() {
+      public void onHandle(Object o) {
+        bRecurrenceEditorValid = false;
+      }
+    });
+    
     Button btn = new Button( "Recurrence...", new ClickListener() {
       public void onClick(Widget sender) {
-        // TODO sbarkdull, fix me
-        String cronStr = null; //getCronString();
         if ( !StringUtils.isEmpty( cronStr ) ) {
           CronParser cp = new CronParser( cronStr );
           try {
             cp.parse();
             recurrenceDialog.getRecurrenceEditor().inititalizeWithRecurrenceString( cp.getRecurrenceString() );
-            recurrenceDialog.center();
           } catch (CronParseException e) {
-            // TODO sbarkdull, show error dialog
-            e.printStackTrace();
+            final MessageDialog errorDialog = new MessageDialog( "Error", "Attempt to initialize the recurrence dialog with an invalid CRON string: " + cronStr );
+            errorDialog.setOnOkHandler( new ICallback() {
+              public void onHandle(Object o) {
+                recurrenceDialog.getRecurrenceEditor().reset();
+                recurrenceDialog.center();
+                errorDialog.hide();
+              }
+            });
+            errorDialog.center();
+            return;
           }
+        } else if ( !StringUtils.isEmpty( repeatInSecs ) ) {
+          int secs = Integer.parseInt( repeatInSecs );
+          recurrenceDialog.getRecurrenceEditor().inititalizeWithRepeatInSecs( secs );
         } else {
-          int secs = Integer.parseInt( repeatInSec );
-          recurrenceDialog.getRecurrenceEditor().inititalizeWithRepeat( secs );
-          recurrenceDialog.center();
+          // fine, do nothing, default initialization
         }
+        recurrenceDialog.getRecurrenceEditor().setStartTime( startTimePicker.getTime() );
+        recurrenceDialog.getRecurrenceEditor().setStartDate( startDatePicker.getSelectedDate() );
+        recurrenceDialog.center();
       }
     });
     setWidget( 3 , 1, btn );
+    
+    l = new Label( "Start Date:" );
+    setWidget( 4 , 0, l );
+    setWidget( 4 , 1, startDatePicker );
+    startDatePicker.setYoungestDate( new Date() );
+    
+    l = new Label( "Start Time:" );
+    setWidget( 5 , 0, l );
+    setWidget( 5 , 1, startTimePicker );
+  }
+
+  public void reset() {
+    setName( DEFAULT_NAME );
+    setGroupName( DEFAULT_GROUP_NAME );
+    setDescription( DEFAULT_DESCRIPTION );
+    setCronString( DEFAULT_CRONSTRING );
+    setRepeatInSecs( DEFAULT_REPEAT_IN_SECS );
+    recurrenceDialog.getRecurrenceEditor().reset();
   }
   
   public String getName() {
@@ -101,25 +168,65 @@ public class ScheduleEditor extends FlexTable {
     descriptionTb.setText( description );
   }
   
-  public String getCronString() throws RecurrenceEditorException {
-    // TODO sbarkdull
-    return recurrenceDialog.getRecurrenceEditor().getCronString();
+  public String getCronString() {
+    return bRecurrenceEditorValid 
+    ? cronStr
+    : null;
   }
   
   public void setCronString( String cronStr ) {
-    // TODO sbarkdull
+    this.cronStr = cronStr;
+    this.repeatInSecs = null;
   }
 
-  public String getRepeatInSecs() throws RecurrenceEditorException {
-    return recurrenceDialog.getRecurrenceEditor().getRepeatInSecs();
+  public String getRepeatInSecs() {
+    return bRecurrenceEditorValid
+      ? repeatInSecs
+      : null;
   }
 
   public void setRepeatInSecs(String repeatInSec) {
-    // TODO sbarkdull
-    throw new RuntimeException( "not implemented" ); //$NON-NLS-1$
+    this.cronStr = null;
+    this.repeatInSecs = repeatInSec;
   }
   
-  public String getStartDateTime() {
-    return recurrenceDialog.getRecurrenceEditor().getStartDateTime();
+  public void setStartTime( String startTime ) {
+    startTimePicker.setTime( startTime );
+  }
+  
+  public String getStartTime() {
+    return startTimePicker.getTime();
+  }
+  
+  public void setStartDate( Date startDate ) {
+    startDatePicker.setSelectedDate( startDate );
+  }
+  
+  public Date getStartDate() {
+    return startDatePicker.getSelectedDate();
+  }
+
+  // TODO sbarkdull, this only works if they have set a recurrence, what to do if they havent?
+  // recurrence editor needs a state indicating if it's values are active or not.
+  public void setEndDate( Date endDate ) {
+    recurrenceDialog.getRecurrenceEditor().setEndDate( endDate );
+  }
+  // TODO sbarkdull, this only works if they have set a recurrence, what to do if they havent?
+  public Date getEndDate() {
+    return bRecurrenceEditorValid
+      ? recurrenceDialog.getRecurrenceEditor().getEndDate()
+      : null;
+  }
+
+  public void setNoEndDate() {
+    recurrenceDialog.getRecurrenceEditor().setNoEndDate();
+  }
+
+  public void setEndBy() {
+    recurrenceDialog.getRecurrenceEditor().setEndBy();
+  }
+  
+  public boolean isRecurrenceEditorValid() {
+    return bRecurrenceEditorValid;
   }
 }
