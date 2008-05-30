@@ -1,8 +1,11 @@
 package org.pentaho.pac.client.common.util;
 
+import java.util.Date;
 import java.util.EnumSet;
 
 import org.pentaho.pac.client.common.EnumException;
+
+import com.google.gwt.i18n.client.DateTimeFormat;
 
 public class TimeUtil {
 
@@ -235,6 +238,43 @@ public class TimeUtil {
   }
   
   /**
+   * Time of day is element of {AM, PM}
+   * @param hour
+   * @return
+   */
+  public static TimeOfDay getTimeOfDayBy0To23Hour( String hour ) {
+    return Integer.parseInt( hour ) < MAX_HOUR ? TimeOfDay.AM : TimeOfDay.PM;
+  }
+  
+  /**
+   * Convert a 24 hour time, where hours are 0-23, to a twelve hour time,
+   * where 0-23 maps to 0...11 AM and 0...11 PM
+   * @param int0To23hour int integer in the range 0..23
+   * @return int integer in the range 0..11
+   */
+  public static int to12HourClock( int int0To23hour ) {
+    assert int0To23hour >=0 && int0To23hour<=23 : "int0To23hour is out of range";
+    
+    int int0To11 = int0To23hour < MAX_HOUR
+      ? int0To23hour
+      : int0To23hour - MAX_HOUR;
+    return int0To11;
+  }
+  
+  /**
+   * map 0..11 to 12,1..11
+   */
+  public static int map0Through11To12Through11( int int0To11 ) {
+    return int0To11 == 0 ? 12 : int0To11;
+  }
+  
+  // NOTE: this method will produce rounding errors, since it doesn't round, it truncates
+  public static int millsecondsToSecs( int milliseconds ) {
+    return milliseconds / MILLISECS_IN_SECONDS;
+  }
+  /**
+   * TODO sbarkdull, gwt 1.5 has a DateTimeFormatter, change this method to use it.
+   * 
    * sample output: May 21, 2008 8:29:21 PM
    * This is consistent with the formatter constructed like this:
    * DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.MEDIUM, Locale.getDefault());
@@ -253,7 +293,33 @@ public class TimeUtil {
       .append( timeOfDay.toString() ).toString();
   }
   
+  // this code runs in a single thread, so it is ok to share these two DateTimeFormats
+  private static DateTimeFormat dateFormatter = DateTimeFormat.getLongDateFormat();
+  private static DateTimeFormat dateTimeFormatter = DateTimeFormat.getFormat( "MMM dd, yyyy HH:mm:ss a" );
+  
+  public static Date getDateTime( String time, Date date ) {
+    String strDate = dateFormatter.format( date );
+    return dateTimeFormatter.parse( strDate + " " + time ); //$NON-NLS-1$
+  }
+  
   /**
+   * 
+   * @param strDate String representing the date, in this format: MMM dd, yyyy HH:mm:ss a
+   * @return
+   */
+  public static Date getDate( String strDate ) {
+    return dateTimeFormatter.parse( strDate );
+  }
+  
+  public static String getTime( String dateTime ) {
+    String[] parts = dateTime.split( "\\s" );
+    
+    return parts[3] + " " + parts[4];
+  }
+  
+  /**
+   * TODO sbarkdull, gwt 1.5 has a DateTimeFormatter, change this method to use it.
+   * 
    * sample output: May 21, 2008
    * This is consistent with the formatter constructed like this:
    * DateFormat formatter = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault());
@@ -303,6 +369,17 @@ public class TimeUtil {
     assert isSecondsWholeMinute( 780 ) : ""; //$NON-NLS-1$
     assert !isSecondsWholeMinute( 781 ) : ""; //$NON-NLS-1$
     assert !isSecondsWholeMinute( 779 ) : ""; //$NON-NLS-1$
+
+    assert getTimeOfDayBy0To23Hour( "0" ) == TimeOfDay.AM : "hour 0 is AM"; //$NON-NLS-1$ //$NON-NLS-2$
+    assert getTimeOfDayBy0To23Hour( "11" ) == TimeOfDay.AM : "hour 11 is AM"; //$NON-NLS-1$ //$NON-NLS-2$
+    assert getTimeOfDayBy0To23Hour( "12" ) == TimeOfDay.PM: "hour 12 is PM"; //$NON-NLS-1$ //$NON-NLS-2$
+    assert getTimeOfDayBy0To23Hour( "13" ) == TimeOfDay.PM : "hour 13 is PM"; //$NON-NLS-1$ //$NON-NLS-2$
+    assert getTimeOfDayBy0To23Hour( "23" ) == TimeOfDay.PM : "hour 23 is PM"; //$NON-NLS-1$ //$NON-NLS-2$
+
+    assert to12HourClock( 0 )==( 1 ) : "0 is 1"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    assert to12HourClock( 11 )==( 12 ) : "11 is 12"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    assert to12HourClock( 12 )==( 1 ) : "12 is 1"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    assert to12HourClock( 23 )==( 11 ) : "23 is 11"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     
     System.out.println( "done" ); //$NON-NLS-1$
   }
