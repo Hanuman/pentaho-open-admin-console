@@ -1,6 +1,6 @@
 package org.pentaho.pac.client.common.ui;
 
-public interface ICallback {
+public interface ICallback<T> {
 
-  public void onHandle( Object o );
+  public void onHandle( T o );
 }
