@@ -16,6 +16,7 @@
 package org.pentaho.pac.client.scheduler;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -24,10 +25,10 @@ import java.util.Set;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.ICallback;
+import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.common.util.TimeUtil;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
-import org.pentaho.pac.client.scheduler.RecurrenceEditor.RecurrenceEditorException;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.PushButton;
@@ -35,17 +36,13 @@ import com.google.gwt.user.client.ui.PushButton;
 public class SchedulerController {
 
   private SchedulerPanel schedulerPanel = null; // this is the view
-  private List<Schedule> schedulesList = null;   // this is the model
-  
+  private SchedulesModel schedulesModel = null;   // this is the model
+
   private SchedulesListController schedulesListController = null;
   private ScheduleCreatorDialog scheduleCreatorDialog = null;
   
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   private static final int INVALID_SCROLL_POS = -1;
-  private static final String DEFAULT_NAME = ""; //$NON-NLS-1$
-  private static final String DEFAULT_GROUP_NAME = ""; //$NON-NLS-1$
-  private static final String DEFAULT_DESCRIPTION = ""; //$NON-NLS-1$
-  private static final String DEFAULT_CRONSTRING = ""; //$NON-NLS-1$
   
   public SchedulerController( SchedulerPanel schedulerPanel ) {
     assert (null != schedulerPanel ) : "schedulerPanel cannot be null.";
@@ -63,101 +60,56 @@ public class SchedulerController {
       SchedulerToolbar schedulerToolbar = schedulerPanel.getSchedulerToolbar();
       final SchedulerController localThis = this;
       
-      schedulerToolbar.setOnSelectAllListener( new ICallback() { 
+      schedulerToolbar.setOnSelectAllListener( new ICallback<Object>() { 
         public void onHandle(Object o) {
-          localThis.schedulerPanel.getSchedulesListCtrl().selectAll();
+          localThis.handleSelectAllSchedules();
         }
       });
       
-      schedulerToolbar.setOnUnselectAllListener( new ICallback() { 
+      schedulerToolbar.setOnUnselectAllListener( new ICallback<Object>() { 
         public void onHandle(Object o) {
-          localThis.schedulerPanel.getSchedulesListCtrl().unselectAll();
+          localThis.handleUnselectAllSchedules();
         }
       });
       
-      schedulerToolbar.setOnCreateListener( new ICallback() { 
+      schedulerToolbar.setOnCreateListener( new ICallback<Object>() { 
         public void onHandle(Object o) {
-          // initialize w/ default values
-          scheduleCreatorDialog.getScheduleEditor().setName( DEFAULT_NAME );
-          scheduleCreatorDialog.getScheduleEditor().setGroupName( DEFAULT_GROUP_NAME );
-          scheduleCreatorDialog.getScheduleEditor().setDescription( DEFAULT_DESCRIPTION );
-          scheduleCreatorDialog.getScheduleEditor().setCronString( DEFAULT_CRONSTRING );
-          scheduleCreatorDialog.center();
+          localThis.handleCreateSchedule();
         }
       });
       
-      schedulerToolbar.setOnUpdateListener( new ICallback() { 
+      schedulerToolbar.setOnUpdateListener( new ICallback<Object>() { 
         public void onHandle(Object o) {
-          // TODO sbarkdull, call setter methods on the dialog
-          scheduleCreatorDialog.getScheduleEditor().setName( "x" );
-          scheduleCreatorDialog.getScheduleEditor().setGroupName( "x" );
-          scheduleCreatorDialog.getScheduleEditor().setDescription( "x" );
-          scheduleCreatorDialog.getScheduleEditor().setCronString( "0 13 12 0/3 * ?" );
-          scheduleCreatorDialog.center();
+          localThis.handleUpdateSchedule();
         }
       });
 
-      
-      ICallback onDeleteCallback = new ICallback() {
+      schedulerToolbar.setOnDeleteListener( new ICallback<Object>() {
         public void onHandle(Object o) {
-//          SchedulesListCtrl schedulesListCtrl = schedulerPanel.getSchedulesListCtrl();
-//          List selectedIdxs = schedulesListCtrl.getSelectedIndexes();
-//          
-//          PacServiceFactory.getSchedulerService().deleteJob( String jobName, String jobGroup, AsyncCallback callback )
-//          
-//          // TODO sbarkdull, still need startdate and end date
-//          PacServiceFactory.getSchedulerService().createJob( "my jobName", "my jobGroup", "my description",
-//              cronString, "samples", "getting-started", "HelloWorld.xaction",
-//              new AsyncCallback<Object>() {
-//                public void onSuccess(Object result) {
-//                  MessageDialog d = new MessageDialog( "done", "done");
-//                  d.center();
-//                  
-//                  SchedulesListCtrl l = localThis.schedulerPanel.getSchedulesListCtrl();
-//                  List selectedIdxs = l.getSelectedIndexes();
-//                  for ( int ii=selectedIdxs.size()-1; ii>=0; --ii ) {
-//                    int selectedIdx = ((Integer)selectedIdxs.get( ii )).intValue();
-//                    l.remove( selectedIdx );
-//                  }
-//                  
-//                  
-//                  
-//                }  
-//                public void onFailure(Throwable caught) {
-//                }
-//          });  
-        }
-      };
-      schedulerToolbar.setOnDeleteListener( onDeleteCallback );
-      
-      schedulerToolbar.setOnResumeListener( new ICallback() { 
-        public void onHandle(Object o) {
-          SchedulesListCtrl l = localThis.schedulerPanel.getSchedulesListCtrl();
-          List selectedIdxs = l.getSelectedIndexes();
-          for ( int ii=selectedIdxs.size()-1; ii>=0; --ii ) {
-            int selectedIdx = ((Integer)selectedIdxs.get( ii )).intValue();
-// what?
-          }
+          localThis.handleDeleteSchedules();
         }
       });
       
-      schedulerToolbar.setOnSuspendListener( new ICallback() { 
+      schedulerToolbar.setOnResumeListener( new ICallback<Object>() { 
         public void onHandle(Object o) {
-          SchedulesListCtrl l = localThis.schedulerPanel.getSchedulesListCtrl();
-          List selectedIdxs = l.getSelectedIndexes();
-          for ( int ii=selectedIdxs.size()-1; ii>=0; --ii ) {
-            int selectedIdx = ((Integer)selectedIdxs.get( ii )).intValue();
-// what?
-          }
+          localThis.handleResumeSchedules();
         }
       });
       
-      schedulerToolbar.setOnRefreshListener( new ICallback() { 
+      schedulerToolbar.setOnPauseListener( new ICallback<Object>() { 
         public void onHandle(Object o) {
+          localThis.handlePauseSchedules();
         }
       });
       
-      schedulerToolbar.setOnToggleResumeSuspendAllListener( new ICallback() { 
+      schedulerToolbar.setOnRefreshListener( new ICallback<Object>() { 
+        public void onHandle(Object o) {
+          loadJobsTable();
+        }
+      });
+      
+      // TODO sbarkdull, uh, ya, this needs some work
+      schedulerToolbar.setOnToggleResumePauseAllListener( new ICallback<Object>() { 
         public void onHandle(Object o) {
           PushButton b = (PushButton)o;
           // TODO sbarkdull
@@ -167,52 +119,46 @@ public class SchedulerController {
         }
       });
       
-      schedulerToolbar.setOnFilterListChangeListener( new ICallback() { 
+      schedulerToolbar.setOnFilterListChangeListener( new ICallback<Object>() { 
         public void onHandle(Object o) {
           updateSchedulesTable();
         }
       });
-    }
-
-    final SchedulerController localThis = this;
-    this.scheduleCreatorDialog.setOnOkHandler( new ICallback() {
-      public void onHandle(Object o) {
-        localThis.createSchedule();
-      }
-    });
+    } // end isInitialized
   }
   
   private boolean isInitialized() {
-    return null != schedulesList;
+    return null != schedulesModel;
   }
   
   private void initFilterList() {
     
-    Set groupNames = new HashSet();
-    for ( int ii=0; ii<schedulesList.size(); ++ii ) {
-      Schedule s = (Schedule) schedulesList.get( ii );
+    Set<String> groupNames = new HashSet<String>();
+    List<Schedule> scheduleList = schedulesModel.getScheduleList();
+    for ( int ii=0; ii<scheduleList.size(); ++ii ) {
+      Schedule s = scheduleList.get( ii );
       String groupName = s.getJobGroup();
       if ( !groupNames.contains( groupName ) ) {
         groupNames.add( groupName );
       }
     }
-    Iterator it = groupNames.iterator();
+    Iterator<String> it = groupNames.iterator();
     while ( it.hasNext() ) {
-      String name = (String)it.next();
+      String name = it.next();
       schedulerPanel.getSchedulerToolbar().addFilterItem(name );
     }
-    
   }
   
-  private List getFilteredSchedulesList() {
-    List filteredList = null;
+  private List<Schedule> getFilteredSchedulesList() {
+    List<Schedule> filteredList = null;
     String filterVal = schedulerPanel.getSchedulerToolbar().getFilterValue();
     if ( SchedulerToolbar.ALL_FILTER.equals( filterVal ) ) {
-      filteredList = schedulesList;
+      filteredList = schedulesModel.getScheduleList();
     } else {
-      filteredList = new ArrayList();
-      for ( int ii=0; ii<schedulesList.size(); ++ii ) {
-        Schedule s = (Schedule)schedulesList.get( ii );
+      filteredList = new ArrayList<Schedule>();
+      List<Schedule> scheduleList = schedulesModel.getScheduleList();
+      for ( int ii=0; ii<scheduleList.size(); ++ii ) {
+        Schedule s = scheduleList.get( ii );
         if ( filterVal.equals( s.getJobGroup() ) ) {
           filteredList.add( s );
         }
@@ -232,7 +178,8 @@ public class SchedulerController {
     PacServiceFactory.getSchedulerService().getJobNames(
         new AsyncCallback<List<Schedule>>() {
           public void onSuccess( List<Schedule> pSchedulesList ) {
-            schedulesList = pSchedulesList;
+            schedulesModel = new SchedulesModel();
+            schedulesModel.add( pSchedulesList );
             initFilterList();
             updateSchedulesTable();
             if ( INVALID_SCROLL_POS != currScrollPos ) { 
@@ -249,7 +196,12 @@ public class SchedulerController {
       );
   }
   
-  private void createSchedule() {
+  private void updateSchedule() {
+
+    SchedulesListCtrl schedulesListCtrl = schedulerPanel.getSchedulesListCtrl();
+    final List<Schedule> scheduleList = schedulesListCtrl.getSelectedSchedules();
+    Schedule oldSchedule = scheduleList.get( 0 );
+    
     // TODO, List<Schedule> is probably not what we will get back
     AsyncCallback<List<Schedule>> responseCallback = new AsyncCallback<List<Schedule>>() {
       public void onSuccess( List<Schedule> pSchedulesList ) {
@@ -257,6 +209,7 @@ public class SchedulerController {
             "Success, I guess!" );
         messageDialog.center();
         scheduleCreatorDialog.hide();
+        loadJobsTable();
       }
 
       public void onFailure(Throwable caught) {
@@ -265,22 +218,22 @@ public class SchedulerController {
         messageDialog.center();
       }
     };
+
+    ScheduleEditor scheduleEditor = scheduleCreatorDialog.getScheduleEditor();
     
-    String cronStr;
-    try {
-      cronStr = scheduleCreatorDialog.getScheduleEditor().getCronString();
-    } catch( RecurrenceEditorException ex ) {
-      MessageDialog d = new MessageDialog();
-      d.setTitle( "Error" );
-      d.setMessage( "Doh! " + ex.getMessage() );
-      d.center();
-      return;
-    }
+    String cronStr = scheduleEditor.getCronString();
+    Date startDate = TimeUtil.getDateTime(scheduleEditor.getStartTime(),
+          scheduleEditor.getStartDate());
+    Date endDate = scheduleEditor.getEndDate();
     if ( null != cronStr ) {
-      PacServiceFactory.getSchedulerService().createCronJob(
-          scheduleCreatorDialog.getScheduleEditor().getName().trim(), 
-          scheduleCreatorDialog.getScheduleEditor().getGroupName().trim(), 
-          scheduleCreatorDialog.getScheduleEditor().getDescription().trim(), 
+      PacServiceFactory.getSchedulerService().updateCronJob(
+          oldSchedule.getJobName(),
+          oldSchedule.getJobGroup(),
+          scheduleEditor.getName().trim(), 
+          scheduleEditor.getGroupName().trim(), 
+          scheduleEditor.getDescription().trim(),
+          startDate,
+          endDate,
           cronStr.trim(), 
           scheduleCreatorDialog.getSolutionRepositoryItemPicker().getSolution().trim(),
           scheduleCreatorDialog.getSolutionRepositoryItemPicker().getPath().trim(),
@@ -288,22 +241,17 @@ public class SchedulerController {
           responseCallback
         );
     } else {
-      String repeatTimeMillisecs;
-      try {
-        repeatTimeMillisecs = Integer.toString( TimeUtil.secsToMillisecs( 
-            Integer.parseInt( scheduleCreatorDialog.getScheduleEditor().getRepeatInSecs() ) ) );
-      } catch( RecurrenceEditorException ex ) {
-        MessageDialog d = new MessageDialog();
-        d.setTitle( "Error" );
-        d.setMessage( "Doh! " + ex.getMessage() );
-        d.center();
-        return;
-      }
-      PacServiceFactory.getSchedulerService().createRepeatJob(
-          scheduleCreatorDialog.getScheduleEditor().getName().trim(), 
-          scheduleCreatorDialog.getScheduleEditor().getGroupName().trim(), 
-          scheduleCreatorDialog.getScheduleEditor().getDescription().trim(), 
-          scheduleCreatorDialog.getScheduleEditor().getStartDateTime().trim(), 
+      String repeatTimeMillisecs = Integer.toString( TimeUtil.secsToMillisecs( 
+            Integer.parseInt( scheduleEditor.getRepeatInSecs() ) ) );
+
+      PacServiceFactory.getSchedulerService().updateRepeatJob(
+          oldSchedule.getJobName(),
+          oldSchedule.getJobGroup(),
+          scheduleEditor.getName().trim(), 
+          scheduleEditor.getGroupName().trim(), 
+          scheduleEditor.getDescription().trim(), 
+          startDate,
+          endDate,
           repeatTimeMillisecs.trim(), 
           scheduleCreatorDialog.getSolutionRepositoryItemPicker().getSolution().trim(),
           scheduleCreatorDialog.getSolutionRepositoryItemPicker().getPath().trim(),
@@ -311,5 +259,211 @@ public class SchedulerController {
           responseCallback
         );
     }
+  }
+  
+  private void createSchedule() {
+    // TODO, List<Schedule> is probably not what we will get back
+    AsyncCallback<List<Schedule>> responseCallback = new AsyncCallback<List<Schedule>>() {
+      public void onSuccess( List<Schedule> pSchedulesList ) {
+        MessageDialog messageDialog = new MessageDialog( "Kool!", 
+            "Success, I guess!" );
+        messageDialog.center();
+        scheduleCreatorDialog.hide();
+        loadJobsTable();
+      }
+
+      public void onFailure(Throwable caught) {
+        MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
+            caught.getMessage() );
+        messageDialog.center();
+      }
+    };
+    // TODO sbarkdull scheduleCreatorDialog -> scheduleEditorDialog
+    ScheduleEditor scheduleEditor = scheduleCreatorDialog.getScheduleEditor();
+    if ( scheduleEditor.isRecurrenceEditorValid() ) {
+      String cronStr = scheduleEditor.getCronString();
+      Date startDate = TimeUtil.getDateTime(scheduleEditor.getStartTime(),
+            scheduleEditor.getStartDate());
+      Date endDate = scheduleEditor.getEndDate();
+      if ( null != cronStr ) {
+        PacServiceFactory.getSchedulerService().createCronJob(
+            scheduleEditor.getName().trim(), 
+            scheduleEditor.getGroupName().trim(), 
+            scheduleEditor.getDescription().trim(), 
+            startDate,
+            endDate,
+            cronStr.trim(), 
+            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getSolution().trim(),
+            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getPath().trim(),
+            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getAction().trim(),
+            responseCallback
+          );
+      } else {
+        String repeatTimeMillisecs = Integer.toString( TimeUtil.secsToMillisecs( 
+              Integer.parseInt( scheduleEditor.getRepeatInSecs() ) ) );
+        PacServiceFactory.getSchedulerService().createRepeatJob(
+            scheduleEditor.getName().trim(), 
+            scheduleEditor.getGroupName().trim(), 
+            scheduleEditor.getDescription().trim(), 
+            startDate,
+            endDate,
+            repeatTimeMillisecs.trim(), 
+            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getSolution().trim(),
+            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getPath().trim(),
+            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getAction().trim(),
+            responseCallback
+          );
+      }
+    } else {
+      // recurrence editor is not valid, generate a one-shot schedule
+    }
+  }
+  
+  private void deleteSelectedSchedules() {
+   
+    SchedulesListCtrl schedulesListCtrl = schedulerPanel.getSchedulesListCtrl();
+    final List<Schedule> scheduleList = schedulesListCtrl.getSelectedSchedules();
+    
+    AsyncCallback<Object> callback = new AsyncCallback<Object>() {
+      public void onSuccess(Object result) {
+        loadJobsTable();
+      }
+      public void onFailure(Throwable caught) {
+        // TODO sbarkdull
+        MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
+            caught.getMessage() );
+        messageDialog.center();
+      }
+    };
+    PacServiceFactory.getSchedulerService().deleteJobs( scheduleList, callback );
+    
+  }
+  
+  private void handleSelectAllSchedules() {
+    schedulerPanel.getSchedulesListCtrl().selectAll();
+  }
+  
+  private void handleUnselectAllSchedules() {
+    schedulerPanel.getSchedulesListCtrl().unselectAll();
+  }
+
+  private void handleCreateSchedule() {
+    final SchedulerController localThis = this;
+    
+    scheduleCreatorDialog.getScheduleEditor().reset();
+    scheduleCreatorDialog.getSolutionRepositoryItemPicker().reset();
+    scheduleCreatorDialog.setOnOkHandler( new ICallback<Object>() {
+      public void onHandle(Object o) {
+        localThis.createSchedule();
+      }
+    });
+    scheduleCreatorDialog.center();
+  }
+  
+  private void handleUpdateSchedule() {
+    final SchedulerController localThis = this;
+
+    SchedulesListCtrl schedulesListCtrl = schedulerPanel.getSchedulesListCtrl();
+    final List<Schedule> scheduleList = schedulesListCtrl.getSelectedSchedules();
+    scheduleCreatorDialog.setOnOkHandler( new ICallback<Object>() {
+      public void onHandle(Object o) {
+        localThis.updateSchedule();
+      }
+    });
+    // the update button should be enabled/disabled to guarantee that one and only one schedule is selected
+    assert scheduleList.size() == 1 : "When clicking update, exactly one schedule should be seleced.";
+    
+    Schedule s = scheduleList.get( 0 );
+    ScheduleEditor scheduleEditor = scheduleCreatorDialog.getScheduleEditor();
+    initScheduleEditor( scheduleEditor, s );
+
+    scheduleCreatorDialog.center();
+  }
+  
+  /**
+   * initialize the <code>scheduleEditor</code>'s user interface with 
+   * the contents of the <code>sched</code>.
+   * 
+   * @param scheduleEditor
+   * @param sched
+   */
+  private static void initScheduleEditor( ScheduleEditor scheduleEditor, Schedule sched ) {
+    scheduleEditor.reset();
+
+    scheduleEditor.setName( sched.getJobName() );
+    scheduleEditor.setGroupName( sched.getJobGroup() );
+    scheduleEditor.setDescription( sched.getDescription() );
+    String cronStr = sched.getCronString();
+    String repeatInMillisecs;
+    if ( null != cronStr ) {
+      scheduleEditor.setCronString( sched.getCronString() );
+    } else if ( null != ( repeatInMillisecs = sched.getRepeatTimeInMillisecs() ) ) {
+      String strRepeatTimeInSecs = Integer.toString( TimeUtil.millsecondsToSecs( Integer.parseInt( repeatInMillisecs ) ) );
+      scheduleEditor.setRepeatInSecs( strRepeatTimeInSecs );
+    } // else we got a problem.
+
+    String strDate = sched.getStartDate();
+    if ( null != strDate ) {
+      String startTime = TimeUtil.getTime( strDate );
+      scheduleEditor.setStartTime( startTime );
+    }
+    
+    strDate = sched.getEndDate();
+    if ( null != strDate ) {
+      scheduleEditor.setEndBy();
+      Date endDate = TimeUtil.getDate( strDate );
+      scheduleEditor.setEndDate(endDate);
+    } else {
+      scheduleEditor.setNoEndDate();
+    }
+  }
+  
+  private void handleDeleteSchedules() {
+    final SchedulerController localThis = this;
+    final ConfirmDialog confirm = new ConfirmDialog( "Confirm Delete",
+        "Are you sure you would like to delete all checked schedules?" );
+    confirm.setOnOkHandler( new ICallback<Object>() {
+      public void onHandle( Object o ) {
+        confirm.hide();
+        localThis.deleteSelectedSchedules();
+      }
+    });
+    confirm.center();
+  }
+  
+  private void handleResumeSchedules() {
+    SchedulesListCtrl schedulesListCtrl = schedulerPanel.getSchedulesListCtrl();
+    final List<Schedule> scheduleList = schedulesListCtrl.getSelectedSchedules();
+    
+    AsyncCallback<Object> callback = new AsyncCallback<Object>() {
+      public void onSuccess(Object result) {
+        loadJobsTable();
+      }
+      public void onFailure(Throwable caught) {
+        // TODO sbarkdull
+        MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
+            caught.getMessage() );
+        messageDialog.center();
+      }
+    };
+    PacServiceFactory.getSchedulerService().resumeJobs( scheduleList, callback );
+  }
+  
+  private void handlePauseSchedules() {
+    SchedulesListCtrl schedulesListCtrl = schedulerPanel.getSchedulesListCtrl();
+    final List<Schedule> scheduleList = schedulesListCtrl.getSelectedSchedules();
+    
+    AsyncCallback<Object> callback = new AsyncCallback<Object>() {
+      public void onSuccess(Object result) {
+        loadJobsTable();
+      }
+      public void onFailure(Throwable caught) {
+        // TODO sbarkdull
+        MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
+            caught.getMessage() );
+        messageDialog.center();
+      }
+    };
+    PacServiceFactory.getSchedulerService().pauseJobs( scheduleList, callback );
   }
 }
