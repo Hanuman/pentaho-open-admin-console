@@ -15,21 +15,42 @@
  */
 package org.pentaho.pac.client.scheduler;
 
+import org.pentaho.pac.client.common.ui.ICallback;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
+
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.Widget;
 
 public class RecurrenceDialog extends ConfirmDialog {
 
   private RecurrenceEditor recurrenceEditor = new RecurrenceEditor();
+  private ICallback<Object> onRemoveRecurrence = null;
   
   public RecurrenceDialog() {
     super();
-    setClientSize("470px", "300px");
+    setClientSize("470px", "300px");  //$NON-NLS-1$//$NON-NLS-2$
     setTitle("Schedule Recurrence");
 
     addWidgetToClientArea( recurrenceEditor );
+
+    final RecurrenceDialog localThis = this;
+    Button removeRecurrenceBtn = new Button( "Remove Recurrence", new ClickListener() {
+      public void onClick(Widget sender) {
+        if ( null != onRemoveRecurrence ) {
+          onRemoveRecurrence.onHandle( null );
+        }
+        localThis.hide();
+      }
+    });
+    addButton(removeRecurrenceBtn);
   }
   
   public RecurrenceEditor getRecurrenceEditor() {
     return recurrenceEditor;
+  }
+  
+  public void setOnRemoveRecurrence( ICallback<Object> callback ) {
+    onRemoveRecurrence = callback;
   }
 }
