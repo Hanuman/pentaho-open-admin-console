@@ -36,7 +36,7 @@ public class SchedulerToolbar extends HorizontalPanel {
   private PushButton resumeBtn = null;
   private PushButton suspendBtn = null;
   private PushButton refreshBtn = null;
-  private PushButton toggleResumeSuspendAllBtn = null;
+  private PushButton toggleResumePauseAllBtn = null;
   private ListBox filterList = null;
 
   private ICallback onSelectAllListener = null;
@@ -45,9 +45,9 @@ public class SchedulerToolbar extends HorizontalPanel {
   private ICallback onUpdateListener = null;
   private ICallback onDeleteListener = null;
   private ICallback onResumeListener = null;
-  private ICallback onSuspendListener = null;
+  private ICallback onPauseListener = null;
   private ICallback onRefreshListener = null;
-  private ICallback onToggleResumeSuspendAllListener = null;
+  private ICallback onToggleResumePauseAllListener = null;
   private ICallback onFilterListChangeListener = null;
   
   public SchedulerToolbar() {
@@ -115,8 +115,8 @@ public class SchedulerToolbar extends HorizontalPanel {
     
     suspendBtn = new PushButton( "Susp", new ClickListener() {
       public void onClick(Widget sender) {
-        if ( null != onSuspendListener ) {
-          onSuspendListener.onHandle( null );
+        if ( null != onPauseListener ) {
+          onPauseListener.onHandle( null );
         }
       }
     });  
@@ -131,14 +131,14 @@ public class SchedulerToolbar extends HorizontalPanel {
     });  
     add( refreshBtn );
     
-    toggleResumeSuspendAllBtn = new PushButton( "RSAll", new ClickListener() {
+    toggleResumePauseAllBtn = new PushButton( "RSAll", new ClickListener() {
       public void onClick(Widget sender) {
-        if ( null != onToggleResumeSuspendAllListener ) {
-          onToggleResumeSuspendAllListener.onHandle( sender );
+        if ( null != onToggleResumePauseAllListener ) {
+          onToggleResumePauseAllListener.onHandle( sender );
         }
       }
     });  
-    add( toggleResumeSuspendAllBtn );
+    add( toggleResumePauseAllBtn );
     
     HorizontalPanel filterPanel = new HorizontalPanel();
     filterPanel.setStyleName( "filterPanel" );
@@ -193,8 +193,8 @@ public class SchedulerToolbar extends HorizontalPanel {
     this.onResumeListener = cb;
   }
   
-  public void setOnSuspendListener( ICallback cb ) {
-    this.onSuspendListener = cb;
+  public void setOnPauseListener( ICallback cb ) {
+    this.onPauseListener = cb;
   }
   
   public void setOnRefreshListener( ICallback cb ) {
@@ -205,7 +205,7 @@ public class SchedulerToolbar extends HorizontalPanel {
     this.onFilterListChangeListener = cb;
   }
 
-  public void setOnToggleResumeSuspendAllListener(ICallback cb) {
-    this.onToggleResumeSuspendAllListener = cb;
+  public void setOnToggleResumePauseAllListener(ICallback cb) {
+    this.onToggleResumePauseAllListener = cb;
   }
 }
