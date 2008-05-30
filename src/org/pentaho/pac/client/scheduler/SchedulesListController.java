@@ -32,8 +32,6 @@ public class SchedulesListController {
         vp.setStyleName( "schedulesTableCellTable" ); //$NON-NLS-1$
         vp.add( new Label( schedule.getTriggerName()) );
         vp.add( new Label( schedule.getTriggerGroup() ) );
-        // TODO remove next line, only for debug
-        vp.add( new Label( schedule.getCronString()) );
         widgets[ 0 ] = vp;
 
         // column 1
@@ -58,8 +56,8 @@ public class SchedulesListController {
             "<span>&nbsp;</span>" ); //$NON-NLS-1$
         l.getElement().setInnerHTML( txt );
         widgets[ 3 ] = l;
-        
-        schedulesListCtrl.addRow(widgets);
+
+        schedulesListCtrl.addRow( widgets, schedule );
       }
     } else {
       showNoScheduledSchedulesRow();
@@ -75,5 +73,4 @@ public class SchedulesListController {
 //    schedulesTable.setHTML( FIRST_ROW, 4, "&nbsp;" ); //$NON-NLS-1$
 //    schedulesTable.setHTML( FIRST_ROW, 5, "&nbsp;" ); //$NON-NLS-1$
   }
-  
 }
