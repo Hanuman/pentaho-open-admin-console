@@ -161,6 +161,10 @@ public class SchedulerToolbar extends HorizontalPanel {
     add( filterPanel );
   }
   
+  public void clearFilters() {
+    filterList.clear();
+  }
+  
   public void addFilterItem( String name ) {
     filterList.addItem( name );
   }
