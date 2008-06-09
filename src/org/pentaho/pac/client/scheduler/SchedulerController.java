@@ -142,6 +142,7 @@ public class SchedulerController {
         groupNames.add( groupName );
       }
     }
+    schedulerPanel.getSchedulerToolbar().clearFilters();
     Iterator<String> it = groupNames.iterator();
     while ( it.hasNext() ) {
       String name = it.next();
