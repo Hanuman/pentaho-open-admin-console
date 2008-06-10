@@ -33,6 +33,7 @@ import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.PushButton;
 
+
 public class SchedulerController {
 
   private SchedulerPanel schedulerPanel = null; // this is the view
@@ -144,6 +145,8 @@ public class SchedulerController {
     }
     schedulerPanel.getSchedulerToolbar().clearFilters();
     Iterator<String> it = groupNames.iterator();
+    
+    schedulerPanel.getSchedulerToolbar().addFilterItem( SchedulerToolbar.ALL_FILTER );
     while ( it.hasNext() ) {
       String name = it.next();
       schedulerPanel.getSchedulerToolbar().addFilterItem(name );
