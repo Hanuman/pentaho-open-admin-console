@@ -228,7 +228,9 @@ public class SchedulerAdminUIComponentProxy {
       String solutionName, String solutionPath, String actionName ) throws PacServiceException {
     
     String strStartDate = dateTimeFormatter.format( startDate );
-    String strEndDate = dateTimeFormatter.format( endDate );
+    String strEndDate = null != endDate
+      ? dateTimeFormatter.format( endDate )
+      : null;
     Map<String, String> params = new HashMap<String, String>();
     // TODO sbarkdull, some of these params may not be used, clean up
     params.put( "schedulerAction", "createJob" ); //$NON-NLS-1$  //$NON-NLS-2$
@@ -236,7 +238,9 @@ public class SchedulerAdminUIComponentProxy {
     params.put( "jobGroup", jobGroup ); //$NON-NLS-1$
     params.put( "description", description ); //$NON-NLS-1$
     params.put( "start-date-time", strStartDate ); //$NON-NLS-1$
-    params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
+    if ( null != strEndDate ) {
+      params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
+    }
     params.put( "cron-string", cronString ); //$NON-NLS-1$
     params.put( "solution", solutionName ); //$NON-NLS-1$
     params.put( "path", solutionPath ); //$NON-NLS-1$
@@ -251,11 +255,13 @@ public class SchedulerAdminUIComponentProxy {
   
   public void createRepeatSchedule( String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
-      String repeatTimeMillisecs,
+      String strRepeatCount, String repeatTimeMillisecs,
       String solutionName, String solutionPath, String actionName ) throws PacServiceException {
     
     String strStartDate = dateTimeFormatter.format( startDate );
-    String strEndDate = dateTimeFormatter.format( endDate );
+    String strEndDate = null != endDate
+      ? dateTimeFormatter.format( endDate )
+      : null;
     Map<String, String> params = new HashMap<String, String>();
     // TODO sbarkdull, some of these params may not be used, clean up
     params.put( "schedulerAction", "createJob" ); //$NON-NLS-1$  //$NON-NLS-2$
@@ -263,7 +269,12 @@ public class SchedulerAdminUIComponentProxy {
     params.put( "jobGroup", jobGroup ); //$NON-NLS-1$
     params.put( "description", description ); //$NON-NLS-1$
     params.put( "start-date-time", strStartDate ); //$NON-NLS-1$
-    params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
+    if ( null != strEndDate ) {
+      params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
+    }
+    if ( null != strRepeatCount ) {
+      params.put( "repeat-count", strRepeatCount ); //$NON-NLS-1$
+    }
     params.put( "repeat-time-millisecs", repeatTimeMillisecs ); //$NON-NLS-1$
     params.put( "solution", solutionName ); //$NON-NLS-1$
     params.put( "path", solutionPath ); //$NON-NLS-1$
@@ -282,7 +293,9 @@ public class SchedulerAdminUIComponentProxy {
       String cronString, String solutionName, String solutionPath, String actionName ) throws PacServiceException {
     
     String strStartDate = dateTimeFormatter.format( startDate );
-    String strEndDate = dateTimeFormatter.format( endDate );
+    String strEndDate = null != endDate
+      ? dateTimeFormatter.format( endDate )
+      : null;
     Map<String, String> params = new HashMap<String, String>();
     // TODO sbarkdull, some of these params may not be used, clean up
     params.put( "schedulerAction", "updateJob" ); //$NON-NLS-1$  //$NON-NLS-2$
@@ -292,7 +305,9 @@ public class SchedulerAdminUIComponentProxy {
     params.put( "jobGroup", jobGroup ); //$NON-NLS-1$
     params.put( "description", description ); //$NON-NLS-1$
     params.put( "start-date-time", strStartDate ); //$NON-NLS-1$
-    params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
+    if ( null != strEndDate ) {
+      params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
+    }
     params.put( "cron-string", cronString ); //$NON-NLS-1$
     params.put( "solution", solutionName ); //$NON-NLS-1$
     params.put( "path", solutionPath ); //$NON-NLS-1$
@@ -308,11 +323,13 @@ public class SchedulerAdminUIComponentProxy {
   public void updateRepeatSchedule(  String oldJobName, String oldJobGroup,
       String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
-      String repeatTimeMillisecs,
+      String strRepeatCount, String repeatTimeMillisecs,
       String solutionName, String solutionPath, String actionName ) throws PacServiceException {
 
     String strStartDate = dateTimeFormatter.format( startDate );
-    String strEndDate = dateTimeFormatter.format( endDate );
+    String strEndDate = null != endDate
+      ? dateTimeFormatter.format( endDate )
+      : null;
     Map<String, String> params = new HashMap<String, String>();
     // TODO sbarkdull, some of these params may not be used, clean up
     params.put( "schedulerAction", "updateJob" ); //$NON-NLS-1$  //$NON-NLS-2$
@@ -322,7 +339,12 @@ public class SchedulerAdminUIComponentProxy {
     params.put( "jobGroup", jobGroup ); //$NON-NLS-1$
     params.put( "description", description ); //$NON-NLS-1$
     params.put( "start-date-time", strStartDate ); //$NON-NLS-1$
-    params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
+    if ( null != strEndDate ) {
+      params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
+    }
+    if ( null != strRepeatCount ) {
+      params.put( "repeat-count", strRepeatCount ); //$NON-NLS-1$
+    }
     params.put( "repeat-time-millisecs", repeatTimeMillisecs ); //$NON-NLS-1$
     params.put( "solution", solutionName ); //$NON-NLS-1$
     params.put( "path", solutionPath ); //$NON-NLS-1$
