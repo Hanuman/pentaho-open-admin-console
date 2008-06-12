@@ -79,7 +79,7 @@ public class ScheduleEditor extends FlexTable {
         bRecurrenceEditorValid = true;
         cronStr = recurrenceDialog.getRecurrenceEditor().getCronString();
         if ( null == cronStr ) {
-          repeatInSecs = recurrenceDialog.getRecurrenceEditor().getRepeatInSecs();
+          repeatInSecs = Integer.toString( recurrenceDialog.getRecurrenceEditor().getRepeatInSecs() );
         }
         startTimePicker.setTime( recurrenceDialog.getRecurrenceEditor().getStartTime() );
         startDatePicker.setSelectedDate( recurrenceDialog.getRecurrenceEditor().getStartDate() );
@@ -98,8 +98,12 @@ public class ScheduleEditor extends FlexTable {
         if ( !StringUtils.isEmpty( cronStr ) ) {
           CronParser cp = new CronParser( cronStr );
           try {
-            cp.parse();
-            recurrenceDialog.getRecurrenceEditor().inititalizeWithRecurrenceString( cp.getRecurrenceString() );
+            String recurrenceStr = cp.parseToRecurrenceString();
+            if ( null != recurrenceStr ) {
+              recurrenceDialog.getRecurrenceEditor().inititalizeWithRecurrenceString( recurrenceStr );
+            } else {
+              // its a cron string that I don't recognize, switch to cron string editor.
+            }
           } catch (CronParseException e) {
             final MessageDialog errorDialog = new MessageDialog( "Error", "Attempt to initialize the recurrence dialog with an invalid CRON string: " + cronStr );
             errorDialog.setOnOkHandler( new ICallback() {

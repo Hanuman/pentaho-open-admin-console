@@ -50,7 +50,6 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
     
     addWidgetToClientArea( tp );
   }
-
   public ScheduleEditor getScheduleEditor() {
     return scheduleEditor;
   }
