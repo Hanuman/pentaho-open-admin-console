@@ -311,10 +311,44 @@ public class TimeUtil {
     return dateTimeFormatter.parse( strDate );
   }
   
-  public static String getTime( String dateTime ) {
+  /**
+   * Get the time part of a date string.
+   * 
+   * @param dateTime String in this format: MMM dd, yyyy HH:mm:ss a
+   * @return String HH:mm:ss a
+   */
+  public static String getTimePart( String dateTime ) {
     String[] parts = dateTime.split( "\\s" );
-    
+
+    //TODO sbarkdull, use StringBuilder
     return parts[3] + " " + parts[4];
+  }
+  
+  /**
+   * Get the time part of a date string.
+   * 
+   * @param dateTime String in this format: MMM dd, yyyy HH:mm:ss a
+   * @return String HH:mm:ss a
+   */
+  public static String getDatePart( String dateTime ) {
+    String[] parts = dateTime.split( "\\s" );
+    //TODO sbarkdull, use StringBuilder
+    return parts[0] + " " + parts[1] + " " + parts[2];
+  }
+  
+  public static String get0thTime() {
+    //TODO sbarkdull, use StringBuilder
+    return "12:00:00 " + TimeOfDay.AM.toString();
+  }
+  
+  public static String zeroTimePart( String dateTime ) {
+    //TODO sbarkdull, use StringBuilder
+    return getDatePart( dateTime ) + " " + get0thTime();
+  }
+  
+  public static Date zeroTimePart( Date dateTime ) {
+    //TODO sbarkdull, use StringBuilder
+    return getDateTime( get0thTime(), dateTime );
   }
   
   /**
