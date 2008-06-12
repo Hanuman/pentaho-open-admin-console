@@ -256,6 +256,7 @@ public class SchedulerController {
           scheduleEditor.getDescription().trim(), 
           startDate,
           endDate,
+          /*repeat count*/null,
           repeatTimeMillisecs.trim(), 
           scheduleCreatorDialog.getSolutionRepositoryItemPicker().getSolution().trim(),
           scheduleCreatorDialog.getSolutionRepositoryItemPicker().getPath().trim(),
@@ -311,6 +312,7 @@ public class SchedulerController {
             scheduleEditor.getDescription().trim(), 
             startDate,
             endDate,
+            null /*repeat count*/,
             repeatTimeMillisecs.trim(), 
             scheduleCreatorDialog.getSolutionRepositoryItemPicker().getSolution().trim(),
             scheduleCreatorDialog.getSolutionRepositoryItemPicker().getPath().trim(),
@@ -408,7 +410,7 @@ public class SchedulerController {
 
     String strDate = sched.getStartDate();
     if ( null != strDate ) {
-      String startTime = TimeUtil.getTime( strDate );
+      String startTime = TimeUtil.getTimePart( strDate );
       scheduleEditor.setStartTime( startTime );
     }
     
