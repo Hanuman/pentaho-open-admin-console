@@ -17,8 +17,6 @@ package org.pentaho.pac.client.scheduler;
 
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 
-import com.google.gwt.user.client.ui.SourcesTabEvents;
-import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.TabPanel;
 
 public class ScheduleCreatorDialog extends ConfirmDialog {
@@ -50,6 +48,7 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
     
     addWidgetToClientArea( tp );
   }
+
   public ScheduleEditor getScheduleEditor() {
     return scheduleEditor;
   }
