@@ -16,42 +16,89 @@
 package org.pentaho.pac.client.scheduler;
 
 import java.util.Date;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.pentaho.pac.client.common.ui.DatePickerEx;
-import org.pentaho.pac.client.common.ui.ICallback;
-import org.pentaho.pac.client.common.ui.TimePicker;
-import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
-import org.pentaho.pac.client.common.util.StringUtils;
+import org.pentaho.pac.client.common.EnumException;
+import org.pentaho.pac.client.common.ui.SimpleGroupBox;
+import org.pentaho.pac.client.common.util.TimeUtil;
 
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ScheduleEditor extends FlexTable {
+  public enum RunType {
+    RUN_ONCE(0, "Run Once"), 
+    RECURRENCE(1, "Simple"), 
+    CRON(2, "Advanced");
 
+    RunType(int value, String name) {
+      this.value = value;
+      this.name = name;
+    }
+
+    private final int value;
+
+    private final String name;
+
+    private static RunType[] runTypes = {
+      RUN_ONCE, 
+      RECURRENCE, 
+      CRON 
+    };
+
+    public int value() {
+      return value;
+    }
+
+    public String toString() {
+      return name;
+    }
+
+    public static RunType get(int idx) {
+      return runTypes[idx];
+    }
+
+    public static int length() {
+      return runTypes.length;
+    }
+    
+    public static RunType stringToRunType( String strRunType ) throws EnumException {
+      for (RunType v : EnumSet.range(RunType.RUN_ONCE, RunType.CRON)) {
+        if ( v.toString().equals( strRunType ) ) {
+          return v;
+        }
+      }
+      throw new EnumException( "Invalid String for run type value: " + strRunType );
+    }
+  } /* end enum */
+
+  private RunOnceEditor runOnceEditor = null;
+  private RecurrenceEditor recurrenceEditor = null;
+  private CronEditor cronEditor = null;
+  private Map<RunType, Panel> runTypeEditorMap = new HashMap<RunType, Panel>();
+  
   private TextBox nameTb = new TextBox();
   private TextBox groupNameTb = new TextBox();
   private TextBox descriptionTb = new TextBox();
-  
-  private TimePicker startTimePicker = new TimePicker();
-  private DatePickerEx startDatePicker = new DatePickerEx();
+  private ListBox recurrenceCombo = null;
+  private SimpleGroupBox recurrenceGB = null;
 
-  private String cronStr = null;
-  private String repeatInSecs = null;
+//  private String cronStr = null;
+//  private String repeatInSecs = null;
   
   private static final String DEFAULT_NAME = ""; //$NON-NLS-1$
   private static final String DEFAULT_GROUP_NAME = ""; //$NON-NLS-1$
   private static final String DEFAULT_DESCRIPTION = ""; //$NON-NLS-1$
-  private static final String DEFAULT_CRONSTRING = null;
-  private static final String DEFAULT_REPEAT_IN_SECS = null;
   
-  private RecurrenceDialog recurrenceDialog = new RecurrenceDialog();
-  private boolean bRecurrenceEditorValid = false;
-  
-  
+ // TODO, do it, or remvoe comment 
 //  need to provide on on ok callback for recurrence dialog, set the callback in the scheduleeditor, 
 //  on ok, it should set schedule editors cronStr or repeatinSecs value. clients should no longer 
 //  reach around the scheudle editor to get the cron string from the recurernce dialog
@@ -62,90 +109,54 @@ public class ScheduleEditor extends FlexTable {
     setCellPadding( 0 );
     setCellSpacing( 0 );
     
-    Label l = new Label( "Name:" );
-    setWidget( 0 , 0, l );
-    setWidget( 0 , 1, nameTb );
+    int rowNum = 0;
+    Label l = new Label( "(Proto) Name:" );
+    setWidget( rowNum , 0, l );
+    setWidget( rowNum , 1, nameTb );
     
+    rowNum++;
     l = new Label( "Group:" );
-    setWidget( 1 , 0, l );
-    setWidget( 1 , 1, groupNameTb );
-    
+    setWidget( rowNum, 0, l );
+    setWidget( rowNum, 1, groupNameTb );
+
+    rowNum++;
     l = new Label( "Description:" );
-    setWidget( 2 , 0, l );
-    setWidget( 2 , 1, descriptionTb );
+    setWidget( rowNum, 0, l );
+    setWidget( rowNum, 1, descriptionTb );
+
+    rowNum++;
+    recurrenceCombo = createRecurrenceCombo();
+    l = new Label( "Recurrence:" );
+    setWidget( rowNum, 0, l );
+    setWidget( rowNum, 1, recurrenceCombo );
+
+    rowNum++;
+    recurrenceGB = new SimpleGroupBox( RunType.RUN_ONCE.toString() + " Editor" );
+    VerticalPanel vp = new VerticalPanel();
+    recurrenceGB.add( vp );
+    this.getFlexCellFormatter().setColSpan( 4, 0, 3 );
+    setWidget( rowNum, 0, recurrenceGB );
+
+    runOnceEditor = new RunOnceEditor();
+    vp.add( runOnceEditor );
+    runTypeEditorMap.put( RunType.RUN_ONCE, runOnceEditor );
+    runOnceEditor.setVisible( true );
     
-    recurrenceDialog.setOnOkHandler( new ICallback<Object>() {
-      public void onHandle(Object o) {
-        bRecurrenceEditorValid = true;
-        cronStr = recurrenceDialog.getRecurrenceEditor().getCronString();
-        if ( null == cronStr ) {
-          repeatInSecs = Integer.toString( recurrenceDialog.getRecurrenceEditor().getRepeatInSecs() );
-        }
-        startTimePicker.setTime( recurrenceDialog.getRecurrenceEditor().getStartTime() );
-        startDatePicker.setSelectedDate( recurrenceDialog.getRecurrenceEditor().getStartDate() );
-        recurrenceDialog.hide();
-      }
-    });
+    recurrenceEditor = new RecurrenceEditor();
+    vp.add( recurrenceEditor );
+    runTypeEditorMap.put( RunType.RECURRENCE, recurrenceEditor );
+    recurrenceEditor.setVisible( false );
     
-    recurrenceDialog.setOnRemoveRecurrence( new ICallback<Object>() {
-      public void onHandle(Object o) {
-        bRecurrenceEditorValid = false;
-      }
-    });
-    
-    Button btn = new Button( "Recurrence...", new ClickListener() {
-      public void onClick(Widget sender) {
-        if ( !StringUtils.isEmpty( cronStr ) ) {
-          CronParser cp = new CronParser( cronStr );
-          try {
-            String recurrenceStr = cp.parseToRecurrenceString();
-            if ( null != recurrenceStr ) {
-              recurrenceDialog.getRecurrenceEditor().inititalizeWithRecurrenceString( recurrenceStr );
-            } else {
-              // its a cron string that I don't recognize, switch to cron string editor.
-            }
-          } catch (CronParseException e) {
-            final MessageDialog errorDialog = new MessageDialog( "Error", "Attempt to initialize the recurrence dialog with an invalid CRON string: " + cronStr );
-            errorDialog.setOnOkHandler( new ICallback() {
-              public void onHandle(Object o) {
-                recurrenceDialog.getRecurrenceEditor().reset();
-                recurrenceDialog.center();
-                errorDialog.hide();
-              }
-            });
-            errorDialog.center();
-            return;
-          }
-        } else if ( !StringUtils.isEmpty( repeatInSecs ) ) {
-          int secs = Integer.parseInt( repeatInSecs );
-          recurrenceDialog.getRecurrenceEditor().inititalizeWithRepeatInSecs( secs );
-        } else {
-          // fine, do nothing, default initialization
-        }
-        recurrenceDialog.getRecurrenceEditor().setStartTime( startTimePicker.getTime() );
-        recurrenceDialog.getRecurrenceEditor().setStartDate( startDatePicker.getSelectedDate() );
-        recurrenceDialog.center();
-      }
-    });
-    setWidget( 3 , 1, btn );
-    
-    l = new Label( "Start Date:" );
-    setWidget( 4 , 0, l );
-    setWidget( 4 , 1, startDatePicker );
-    startDatePicker.setYoungestDate( new Date() );
-    
-    l = new Label( "Start Time:" );
-    setWidget( 5 , 0, l );
-    setWidget( 5 , 1, startTimePicker );
+    cronEditor = new CronEditor();
+    vp.add( cronEditor );
+    runTypeEditorMap.put( RunType.CRON, cronEditor );
+    cronEditor.setVisible( false );
   }
 
   public void reset() {
     setName( DEFAULT_NAME );
     setGroupName( DEFAULT_GROUP_NAME );
     setDescription( DEFAULT_DESCRIPTION );
-    setCronString( DEFAULT_CRONSTRING );
-    setRepeatInSecs( DEFAULT_REPEAT_IN_SECS );
-    recurrenceDialog.getRecurrenceEditor().reset();
   }
   
   public String getName() {
@@ -172,65 +183,170 @@ public class ScheduleEditor extends FlexTable {
     descriptionTb.setText( description );
   }
   
+//  runOnceEditor
+//  recurrenceEditor
+//  cronEditor
+  
   public String getCronString() {
-    return bRecurrenceEditorValid 
-    ? cronStr
-    : null;
+    switch ( getRunType() ) {
+      case RUN_ONCE:
+        return null;
+      case RECURRENCE:
+        return recurrenceEditor.getCronString();
+      case CRON:
+        return cronEditor.getCronString();
+      default:
+        throw new RuntimeException( "Invalid Run Type: " + getRunType().toString() );
+    }
   }
   
-  public void setCronString( String cronStr ) {
-    this.cronStr = cronStr;
-    this.repeatInSecs = null;
+  /**
+   * 
+   * @param cronStr
+   * @throws CronParseException if cronStr is not a valid CRON string.
+   */
+  public void setCronString( String cronStr ) throws CronParseException {
+
+    CronParser cp = new CronParser( cronStr );
+    String recurrenceStr = null;
+    recurrenceStr = cp.parseToRecurrenceString(); // throws CronParseException
+
+    if ( null != recurrenceStr ) {
+      recurrenceEditor.inititalizeWithRecurrenceString( recurrenceStr );
+      setRunType( RunType.RECURRENCE );
+    } else {
+      // its a cron string that cannot be parsed into a recurrence string, switch to cron string editor.
+      setRunType( RunType.CRON );
+    }
+    
+    cronEditor.setCronString( cronStr );
   }
 
-  public String getRepeatInSecs() {
-    return bRecurrenceEditorValid
-      ? repeatInSecs
-      : null;
+  
+  /**
+   * 
+   * @return null if the selected schedule does not support repeat-in-seconds, otherwise
+   * return the number of seconds between schedule execution.
+   * @throws RuntimeException if the temporal value is invalid. This
+   * condition occurs as a result of programmer error.
+   */
+  public Integer getRepeatInSecs() throws RuntimeException {
+    return recurrenceEditor.getRepeatInSecs();
   }
 
-  public void setRepeatInSecs(String repeatInSec) {
-    this.cronStr = null;
-    this.repeatInSecs = repeatInSec;
+  public void setRepeatInSecs( Integer repeatInSecs ) {
+    recurrenceEditor.inititalizeWithRepeatInSecs( repeatInSecs );
+    setRunType( RunType.RECURRENCE );
+  }
+  
+  private ListBox createRecurrenceCombo() {
+    final ScheduleEditor localThis = this;
+    ListBox lb = new ListBox();
+    lb.setVisibleItemCount( 1 );
+    lb.setStyleName("recurrenceCombo"); //$NON-NLS-1$
+    lb.addChangeListener( new ChangeListener() {
+      public void onChange(Widget sender) {
+        localThis.handleRecurrenceChange();
+      }
+    });
+    
+    lb.addItem( RunType.RUN_ONCE.toString() );
+    lb.setItemSelected( 0, true );
+    lb.addItem( RunType.RECURRENCE.toString() );
+    lb.addItem( RunType.CRON.toString() );
+
+    return lb;
+  }
+  
+  public RunType getRunType() {
+    String selectedValue = recurrenceCombo.getValue( recurrenceCombo.getSelectedIndex() );
+    return RunType.stringToRunType( selectedValue );
+  }
+  
+  public void setRunType( RunType runType ) {
+    recurrenceCombo.setSelectedIndex( runType.value() );
+    selectRunTypeEditor( runType );
   }
   
   public void setStartTime( String startTime ) {
-    startTimePicker.setTime( startTime );
+    runOnceEditor.setStartTime( startTime );
+    recurrenceEditor.setStartTime( startTime );
   }
   
   public String getStartTime() {
-    return startTimePicker.getTime();
+    switch ( getRunType() ) {
+      case RUN_ONCE:
+        return runOnceEditor.getStartTime();
+      case RECURRENCE:
+        return recurrenceEditor.getStartTime();
+      case CRON:
+        return cronEditor.getStartTime();
+      default:
+        throw new RuntimeException( "Invalid Run Type: " + getRunType().toString() );
+    }
   }
-  
+
   public void setStartDate( Date startDate ) {
-    startDatePicker.setSelectedDate( startDate );
+    runOnceEditor.setStartDate( startDate );
+    recurrenceEditor.setStartDate( startDate );
+    cronEditor.setStartDate( startDate );
   }
   
   public Date getStartDate() {
-    return startDatePicker.getSelectedDate();
+    switch ( getRunType() ) {
+      case RUN_ONCE:
+        Date startDate = runOnceEditor.getStartDate();
+        String startTime  = runOnceEditor.getStartTime();
+        Date startDateTime = TimeUtil.getDateTime( startTime, startDate );
+        return startDateTime;
+      case RECURRENCE:
+        return recurrenceEditor.getStartDate();
+      case CRON:
+        return cronEditor.getStartDate();
+      default:
+        throw new RuntimeException( "Invalid Run Type: " + getRunType().toString() );
+    }
   }
 
-  // TODO sbarkdull, this only works if they have set a recurrence, what to do if they havent?
-  // recurrence editor needs a state indicating if it's values are active or not.
   public void setEndDate( Date endDate ) {
-    recurrenceDialog.getRecurrenceEditor().setEndDate( endDate );
+    recurrenceEditor.setEndDate( endDate );
+    cronEditor.setEndDate( endDate );
   }
-  // TODO sbarkdull, this only works if they have set a recurrence, what to do if they havent?
+
   public Date getEndDate() {
-    return bRecurrenceEditorValid
-      ? recurrenceDialog.getRecurrenceEditor().getEndDate()
-      : null;
+    switch ( getRunType() ) {
+      case RUN_ONCE:
+        return null;
+      case RECURRENCE:
+        return recurrenceEditor.getEndDate();
+      case CRON:
+        return cronEditor.getEndDate();
+      default:
+        throw new RuntimeException( "Invalid Run Type: " + getRunType().toString() );
+    }
   }
 
   public void setNoEndDate() {
-    recurrenceDialog.getRecurrenceEditor().setNoEndDate();
+    recurrenceEditor.setNoEndDate();
+    cronEditor.setNoEndDate();
   }
 
   public void setEndBy() {
-    recurrenceDialog.getRecurrenceEditor().setEndBy();
+    recurrenceEditor.setEndBy();
+    cronEditor.setEndBy();
   }
-  
-  public boolean isRecurrenceEditorValid() {
-    return bRecurrenceEditorValid;
+
+  private void handleRecurrenceChange() throws EnumException {
+    RunType rVal = getRunType();
+    selectRunTypeEditor( rVal );
+  }
+
+
+  private void selectRunTypeEditor(RunType selectedRunType) {
+    for ( Map.Entry<RunType, Panel> me : runTypeEditorMap.entrySet() ) {
+      boolean bShow = me.getKey().equals( selectedRunType );
+      me.getValue().setVisible( bShow );
+    }
+    recurrenceGB.setCaption( selectedRunType.toString() + " Editor"  );
   }
 }
