@@ -28,22 +28,15 @@ import com.google.gwt.user.client.ui.ImageBundle;
  */
 public interface IPacImageBundle extends ImageBundle {
 
-  /**
-  * @gwt.resource org/pentaho/pac/public/style/images/help.png
-  */
- public AbstractImagePrototype helpIcon(); 
-  /**
-  * @gwt.resource org/pentaho/pac/public/style/images/refresh.png
-  */
- public AbstractImagePrototype refreshIcon(); 
-  /**
-  * @gwt.resource org/pentaho/pac/public/style/images/status_working.png
-  */
- public AbstractImagePrototype statusWorkingIcon(); 
- 
- 
- /**
-  * @gwt.resource org/pentaho/pac/public/style/images/close.png
-  */
- public AbstractImagePrototype closeIcon(); 
+  @Resource( "org/pentaho/pac/public/style/images/help.png" )
+  public AbstractImagePrototype helpIcon();
+
+  @Resource( "org/pentaho/pac/public/style/images/refresh.png" )
+  public AbstractImagePrototype refreshIcon();
+
+  @Resource( "org/pentaho/pac/public/style/images/status_working.png" )
+  public AbstractImagePrototype statusWorkingIcon();
+  
+  @Resource( "org/pentaho/pac/public/style/images/close.png" )
+  public AbstractImagePrototype closeIcon();
 }
