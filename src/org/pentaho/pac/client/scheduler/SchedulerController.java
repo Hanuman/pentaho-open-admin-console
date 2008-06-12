@@ -427,7 +427,14 @@ public class SchedulerController {
     final List<Schedule> scheduleList = schedulesListCtrl.getSelectedSchedules();
     scheduleCreatorDialog.setOnOkHandler( new ICallback<Object>() {
       public void onHandle(Object o) {
-        localThis.updateSchedule();
+        if ( localThis.isScheduleEditorValid() ) {
+          localThis.updateSchedule();
+        } else {
+          // TODO sbarkdull puke up dialog indicating errors
+          MessageDialog errorDialog = new MessageDialog( "Error",
+              "Editor contains errors" );
+          errorDialog.center();
+        }
       }
     });
     // the update button should be enabled/disabled to guarantee that one and only one schedule is selected
@@ -549,5 +556,11 @@ public class SchedulerController {
       }
     };
     PacServiceFactory.getSchedulerService().pauseJobs( scheduleList, callback );
+  }
+  
+  private boolean isScheduleEditorValid() {
+    ScheduleEditor schedEd = scheduleCreatorDialog.getScheduleEditor();
+    schedEd.setNameError( "holy shit batman" );
+    return false;
   }
 }

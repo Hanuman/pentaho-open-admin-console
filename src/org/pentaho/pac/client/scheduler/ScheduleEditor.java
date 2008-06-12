@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.pentaho.pac.client.common.EnumException;
 import org.pentaho.pac.client.common.ui.SimpleGroupBox;
+import org.pentaho.pac.client.common.ui.widget.ValidationLabel;
 import org.pentaho.pac.client.common.util.TimeUtil;
 
 import com.google.gwt.user.client.ui.ChangeListener;
@@ -90,6 +91,9 @@ public class ScheduleEditor extends FlexTable {
   private TextBox descriptionTb = new TextBox();
   private ListBox recurrenceCombo = null;
   private SimpleGroupBox recurrenceGB = null;
+  
+  // validation labels
+  private ValidationLabel nameLabel;
 
 //  private String cronStr = null;
 //  private String repeatInSecs = null;
@@ -110,12 +114,12 @@ public class ScheduleEditor extends FlexTable {
     setCellSpacing( 0 );
     
     int rowNum = 0;
-    Label l = new Label( "(Proto) Name:" );
-    setWidget( rowNum , 0, l );
+    nameLabel = new ValidationLabel( "Name:" );
+    setWidget( rowNum , 0, nameLabel );
     setWidget( rowNum , 1, nameTb );
     
     rowNum++;
-    l = new Label( "Group:" );
+    Label l = new Label( "Group:" );
     setWidget( rowNum, 0, l );
     setWidget( rowNum, 1, groupNameTb );
 
@@ -348,5 +352,15 @@ public class ScheduleEditor extends FlexTable {
       me.getValue().setVisible( bShow );
     }
     recurrenceGB.setCaption( selectedRunType.toString() + " Editor"  );
+  }
+  
+  /**
+   * 
+   * 
+   * @param errorMsg String null or "" to clear the error msg, else
+   * set the error msg to <param>errorMsg</param>.
+   */
+  public void setNameError( String errorMsg ) {
+    nameLabel.setErrorMsg( errorMsg );
   }
 }
