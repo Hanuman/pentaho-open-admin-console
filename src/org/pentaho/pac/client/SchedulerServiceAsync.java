@@ -26,7 +26,7 @@ public interface SchedulerServiceAsync {
       String cronString, String solutionName, String solutionPath, String actionName, AsyncCallback callback );
   public void createRepeatJob( String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
-      String repeatTimeMillisecs,
+      String strRepeatCount, String repeatTimeMillisecs,
       String solutionName, String solutionPath, String actionName, AsyncCallback callback );
   public void updateCronJob( String oldJobName, String oldJobGroup,
       String jobName, String jobGroup, String description,
@@ -36,6 +36,6 @@ public interface SchedulerServiceAsync {
   public void updateRepeatJob( String oldJobName, String oldJobGroup,
       String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
-      String repeatTimeMillisecs,
+      String strRepeatCount,String repeatTimeMillisecs,
       String solutionName, String solutionPath, String actionName, AsyncCallback callback );
 }

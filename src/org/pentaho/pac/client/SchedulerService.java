@@ -29,7 +29,7 @@ public interface SchedulerService extends RemoteService {
       String solutionName, String solutionPath, String actionName ) throws PacServiceException;
   public void createRepeatJob( String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
-      String repeatTimeMillisecs, 
+      String strRepeatCount, String repeatTimeMillisecs, 
       String solutionName, String solutionPath, String actionName ) throws PacServiceException;
   public void updateCronJob( String oldJobName, String oldJobGroup,
       String jobName, String jobGroup, String description,
@@ -38,6 +38,6 @@ public interface SchedulerService extends RemoteService {
   public void updateRepeatJob( String oldJobName, String oldJobGroup,
       String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
-      String repeatTimeMillisecs,
+      String strRepeatCount, String repeatTimeMillisecs,
       String solutionName, String solutionPath, String actionName ) throws PacServiceException;
 }
