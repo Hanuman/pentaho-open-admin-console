@@ -51,4 +51,12 @@ public class SchedulesListCtrl extends TableListCtrl<Schedule> {
     }
     return scheduleList;
   }
+  
+  public void setStateToLoading() {
+    setTempMessage( "Loading..." );
+  }
+  
+  public void clearStateLoading() {
+    clearTempMessage();
+  }
 }
