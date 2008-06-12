@@ -29,6 +29,7 @@ import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.common.util.TimeUtil;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.scheduler.ScheduleEditor.RunType;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.PushButton;
@@ -177,7 +178,9 @@ public class SchedulerController {
   
   private void loadJobsTable()
   {
-    final int currScrollPos = schedulerPanel.getSchedulesListCtrl().getScrollPosition();
+    SchedulesListCtrl schedListCtrl = schedulerPanel.getSchedulesListCtrl();
+    schedListCtrl.setStateToLoading();
+    final int currScrollPos = schedListCtrl.getScrollPosition();
     
     PacServiceFactory.getSchedulerService().getJobNames(
         new AsyncCallback<List<Schedule>>() {
@@ -185,6 +188,7 @@ public class SchedulerController {
             schedulesModel = new SchedulesModel();
             schedulesModel.add( pSchedulesList );
             initFilterList();
+            schedulerPanel.getSchedulesListCtrl().clearStateLoading();
             updateSchedulesTable();
             if ( INVALID_SCROLL_POS != currScrollPos ) { 
               schedulerPanel.getSchedulesListCtrl().setScrollPosition( currScrollPos );
@@ -222,50 +226,79 @@ public class SchedulerController {
         messageDialog.center();
       }
     };
-
+    // TODO sbarkdull scheduleCreatorDialog -> scheduleEditorDialog
     ScheduleEditor scheduleEditor = scheduleCreatorDialog.getScheduleEditor();
-    
-    String cronStr = scheduleEditor.getCronString();
-    Date startDate = TimeUtil.getDateTime(scheduleEditor.getStartTime(),
-          scheduleEditor.getStartDate());
-    Date endDate = scheduleEditor.getEndDate();
-    if ( null != cronStr ) {
-      PacServiceFactory.getSchedulerService().updateCronJob(
-          oldSchedule.getJobName(),
-          oldSchedule.getJobGroup(),
-          scheduleEditor.getName().trim(), 
-          scheduleEditor.getGroupName().trim(), 
-          scheduleEditor.getDescription().trim(),
-          startDate,
-          endDate,
-          cronStr.trim(), 
-          scheduleCreatorDialog.getSolutionRepositoryItemPicker().getSolution().trim(),
-          scheduleCreatorDialog.getSolutionRepositoryItemPicker().getPath().trim(),
-          scheduleCreatorDialog.getSolutionRepositoryItemPicker().getAction().trim(),
-          responseCallback
-        );
-    } else {
-      String repeatTimeMillisecs = Integer.toString( TimeUtil.secsToMillisecs( 
-            Integer.parseInt( scheduleEditor.getRepeatInSecs() ) ) );
 
-      PacServiceFactory.getSchedulerService().updateRepeatJob(
-          oldSchedule.getJobName(),
-          oldSchedule.getJobGroup(),
-          scheduleEditor.getName().trim(), 
-          scheduleEditor.getGroupName().trim(), 
-          scheduleEditor.getDescription().trim(), 
-          startDate,
-          endDate,
-          /*repeat count*/null,
-          repeatTimeMillisecs.trim(), 
-          scheduleCreatorDialog.getSolutionRepositoryItemPicker().getSolution().trim(),
-          scheduleCreatorDialog.getSolutionRepositoryItemPicker().getPath().trim(),
-          scheduleCreatorDialog.getSolutionRepositoryItemPicker().getAction().trim(),
-          responseCallback
-        );
+    String cronStr = scheduleEditor.getCronString();
+    Date startDate = scheduleEditor.getStartDate();
+    Date endDate = scheduleEditor.getEndDate();
+    RunType rt = scheduleEditor.getRunType(); 
+    switch ( rt ) {
+      case RUN_ONCE:
+        PacServiceFactory.getSchedulerService().updateRepeatJob(
+            oldSchedule.getJobName(),
+            oldSchedule.getJobGroup(),
+            scheduleEditor.getName().trim(), 
+            scheduleEditor.getGroupName().trim(), 
+            scheduleEditor.getDescription().trim(), 
+            startDate,
+            endDate,
+            "0" /*repeat count*/,
+            "0" /*repeat time*/, 
+            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getSolution().trim(),
+            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getPath().trim(),
+            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getAction().trim(),
+            responseCallback
+          );
+        break;
+      case RECURRENCE:
+        if ( null == cronStr ) {
+          String repeatTimeMillisecs = Integer.toString( TimeUtil.secsToMillisecs( 
+                scheduleEditor.getRepeatInSecs() ) );
+          PacServiceFactory.getSchedulerService().updateRepeatJob(
+              oldSchedule.getJobName(),
+              oldSchedule.getJobGroup(),
+              scheduleEditor.getName().trim(), 
+              scheduleEditor.getGroupName().trim(), 
+              scheduleEditor.getDescription().trim(), 
+              startDate,
+              endDate,
+              null /*repeat count*/,
+              repeatTimeMillisecs.trim(), 
+              scheduleCreatorDialog.getSolutionRepositoryItemPicker().getSolution().trim(),
+              scheduleCreatorDialog.getSolutionRepositoryItemPicker().getPath().trim(),
+              scheduleCreatorDialog.getSolutionRepositoryItemPicker().getAction().trim(),
+              responseCallback
+            );
+          break;
+        } else {
+          // fall through to case CRON
+        }
+      case CRON:
+        PacServiceFactory.getSchedulerService().updateCronJob(
+            oldSchedule.getJobName(),
+            oldSchedule.getJobGroup(),
+            scheduleEditor.getName().trim(), 
+            scheduleEditor.getGroupName().trim(), 
+            scheduleEditor.getDescription().trim(), 
+            startDate,
+            endDate,
+            cronStr.trim(), 
+            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getSolution().trim(),
+            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getPath().trim(),
+            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getAction().trim(),
+            responseCallback
+          );
+        break;
+      default:
+        throw new RuntimeException( "Invalid Run Type: " + rt.toString() );
     }
   }
   
+  /**
+   * NOTE: this method is extremely similar to updateSchedule, when modifying this method,
+   * consider modifying updateSchedule in a similar way.
+   */
   private void createSchedule() {
     // TODO, List<Schedule> is probably not what we will get back
     AsyncCallback<List<Schedule>> responseCallback = new AsyncCallback<List<Schedule>>() {
@@ -285,12 +318,49 @@ public class SchedulerController {
     };
     // TODO sbarkdull scheduleCreatorDialog -> scheduleEditorDialog
     ScheduleEditor scheduleEditor = scheduleCreatorDialog.getScheduleEditor();
-    if ( scheduleEditor.isRecurrenceEditorValid() ) {
-      String cronStr = scheduleEditor.getCronString();
-      Date startDate = TimeUtil.getDateTime(scheduleEditor.getStartTime(),
-            scheduleEditor.getStartDate());
-      Date endDate = scheduleEditor.getEndDate();
-      if ( null != cronStr ) {
+
+    String cronStr = scheduleEditor.getCronString();
+    Date startDate = scheduleEditor.getStartDate();
+    Date endDate = scheduleEditor.getEndDate();
+    RunType rt = scheduleEditor.getRunType(); 
+    switch ( rt ) {
+      case RUN_ONCE:
+        PacServiceFactory.getSchedulerService().createRepeatJob(
+            scheduleEditor.getName().trim(), 
+            scheduleEditor.getGroupName().trim(), 
+            scheduleEditor.getDescription().trim(), 
+            startDate,
+            endDate,
+            "0" /*repeat count*/,
+            "0" /*repeat time*/, 
+            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getSolution().trim(),
+            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getPath().trim(),
+            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getAction().trim(),
+            responseCallback
+          );
+        break;
+      case RECURRENCE:
+        if ( null == cronStr ) {
+          String repeatTimeMillisecs = Integer.toString( TimeUtil.secsToMillisecs( 
+                scheduleEditor.getRepeatInSecs() ) );
+          PacServiceFactory.getSchedulerService().createRepeatJob(
+              scheduleEditor.getName().trim(), 
+              scheduleEditor.getGroupName().trim(), 
+              scheduleEditor.getDescription().trim(), 
+              startDate,
+              endDate,
+              null /*repeat count*/,
+              repeatTimeMillisecs.trim(), 
+              scheduleCreatorDialog.getSolutionRepositoryItemPicker().getSolution().trim(),
+              scheduleCreatorDialog.getSolutionRepositoryItemPicker().getPath().trim(),
+              scheduleCreatorDialog.getSolutionRepositoryItemPicker().getAction().trim(),
+              responseCallback
+            );
+          break;
+        } else {
+          // fall through to case CRON
+        }
+      case CRON:
         PacServiceFactory.getSchedulerService().createCronJob(
             scheduleEditor.getName().trim(), 
             scheduleEditor.getGroupName().trim(), 
@@ -303,25 +373,9 @@ public class SchedulerController {
             scheduleCreatorDialog.getSolutionRepositoryItemPicker().getAction().trim(),
             responseCallback
           );
-      } else {
-        String repeatTimeMillisecs = Integer.toString( TimeUtil.secsToMillisecs( 
-              Integer.parseInt( scheduleEditor.getRepeatInSecs() ) ) );
-        PacServiceFactory.getSchedulerService().createRepeatJob(
-            scheduleEditor.getName().trim(), 
-            scheduleEditor.getGroupName().trim(), 
-            scheduleEditor.getDescription().trim(), 
-            startDate,
-            endDate,
-            null /*repeat count*/,
-            repeatTimeMillisecs.trim(), 
-            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getSolution().trim(),
-            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getPath().trim(),
-            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getAction().trim(),
-            responseCallback
-          );
-      }
-    } else {
-      // recurrence editor is not valid, generate a one-shot schedule
+        break;
+      default:
+        throw new RuntimeException( "Invalid Run Type: " + rt.toString() );
     }
   }
   
@@ -377,13 +431,28 @@ public class SchedulerController {
       }
     });
     // the update button should be enabled/disabled to guarantee that one and only one schedule is selected
-    assert scheduleList.size() == 1 : "When clicking update, exactly one schedule should be seleced.";
+    assert scheduleList.size() == 1 : "When clicking update, exactly one schedule should be selected.";
     
     Schedule s = scheduleList.get( 0 );
     ScheduleEditor scheduleEditor = scheduleCreatorDialog.getScheduleEditor();
-    initScheduleEditor( scheduleEditor, s );
-
-    scheduleCreatorDialog.center();
+    try {
+      initScheduleEditor( scheduleEditor, s );
+      scheduleCreatorDialog.center();
+    } catch (CronParseException e) {
+      final MessageDialog errorDialog = new MessageDialog( "Error",
+          "Attempt to initialize the Recurrence Dialog with an invalid CRON string: "
+          + s.getCronString()
+          + " Error details: "
+          + e.getMessage() );
+      errorDialog.setOnOkHandler( new ICallback() {
+        public void onHandle(Object o) {
+          errorDialog.hide();
+          scheduleCreatorDialog.getScheduleEditor().reset();
+          scheduleCreatorDialog.center();
+        }
+      });
+      errorDialog.center();
+    }
   }
   
   /**
@@ -392,8 +461,9 @@ public class SchedulerController {
    * 
    * @param scheduleEditor
    * @param sched
+   * @throws CronParseException if sched has a non-empty CRON string, and the CRON string is not valid.
    */
-  private static void initScheduleEditor( ScheduleEditor scheduleEditor, Schedule sched ) {
+  private static void initScheduleEditor( ScheduleEditor scheduleEditor, Schedule sched ) throws CronParseException {
     scheduleEditor.reset();
 
     scheduleEditor.setName( sched.getJobName() );
@@ -402,16 +472,24 @@ public class SchedulerController {
     String cronStr = sched.getCronString();
     String repeatInMillisecs;
     if ( null != cronStr ) {
-      scheduleEditor.setCronString( sched.getCronString() );
+      scheduleEditor.setCronString( sched.getCronString() );  // throws CronParseException
     } else if ( null != ( repeatInMillisecs = sched.getRepeatTimeInMillisecs() ) ) {
-      String strRepeatTimeInSecs = Integer.toString( TimeUtil.millsecondsToSecs( Integer.parseInt( repeatInMillisecs ) ) );
-      scheduleEditor.setRepeatInSecs( strRepeatTimeInSecs );
-    } // else we got a problem.
+      int repeatTimeInSecs = TimeUtil.millsecondsToSecs( Integer.parseInt( repeatInMillisecs ) );
+      if ( 0 == repeatTimeInSecs ) {
+        // run once
+        scheduleEditor.setRunType( RunType.RUN_ONCE );
+      } else {
+        // run multiple
+        scheduleEditor.setRepeatInSecs( repeatTimeInSecs );
+      }
+    } else {
+      throw new RuntimeException( "Illegal state, must have either a cron string or a repeat time." );
+    }
 
     String strDate = sched.getStartDate();
     if ( null != strDate ) {
-      String startTime = TimeUtil.getTimePart( strDate );
-      scheduleEditor.setStartTime( startTime );
+      Date startDate = TimeUtil.getDate( strDate );
+      scheduleEditor.setStartDate( startDate );
     }
     
     strDate = sched.getEndDate();
