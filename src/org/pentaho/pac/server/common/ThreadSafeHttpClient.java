@@ -72,7 +72,9 @@ public class ThreadSafeHttpClient {
         throws PacServiceException {
       
       InputStream responseStrm = null;
-      NameValuePair[] params = mapToNameValuePair( mapParams );
+      NameValuePair[] params = ( null != mapParams )
+        ? mapToNameValuePair( mapParams )
+        : null;
       String serviceUrl = proxyUrl 
         + ( ( StringUtils.isEmpty( serviceName ) ) ? "" : "/" + serviceName ); //$NON-NLS-1$ //$NON-NLS-2$
       GetMethod method = new GetMethod( serviceUrl );
