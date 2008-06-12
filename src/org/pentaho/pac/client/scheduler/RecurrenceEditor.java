@@ -3,12 +3,9 @@ package org.pentaho.pac.client.scheduler;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 import org.pentaho.pac.client.common.EnumException;
-import org.pentaho.pac.client.common.ui.DatePickerEx;
 import org.pentaho.pac.client.common.ui.SimpleGroupBox;
 import org.pentaho.pac.client.common.ui.TimePicker;
 import org.pentaho.pac.client.common.util.StringUtils;
@@ -21,7 +18,6 @@ import org.pentaho.pac.client.scheduler.CronParser.RecurrenceType;
 
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -35,8 +31,6 @@ import com.google.gwt.user.client.ui.Widget;
 public class RecurrenceEditor extends VerticalPanel {
 
   private TimePicker startTimePicker = null;
-
-  private DatePickerEx startDatePicker = null;
   
   private ListBox temporalCombo = null;
 
@@ -54,7 +48,7 @@ public class RecurrenceEditor extends VerticalPanel {
 
   private YearlyRecurrencePanel yearlyPanel = null;
   
-  private EndDatePanel endDatePanel = null;
+  private DateRangeEditor dateRangeEditor = null;
   
   private static final String SPACE = " "; //$NON-NLS-1$
   
@@ -138,8 +132,6 @@ public class RecurrenceEditor extends VerticalPanel {
 
   private static final String MONTHLY_RB_GROUP = "monthly-group"; //$NON-NLS-1$
 
-  private static final String END_DATE_RB_GROUP = "end-date-group"; //$NON-NLS-1$
-
   public RecurrenceEditor() {
     super();
 
@@ -149,21 +141,19 @@ public class RecurrenceEditor extends VerticalPanel {
     p = createRecurrencePanel();
     add(p);
 
-    p = createRangePanel();
-    add(p);
+    Date now = new Date();
+    dateRangeEditor = new DateRangeEditor( now );
+    add( dateRangeEditor );
   }
   
   public void reset() {
 
-    Date now = new Date();
     startTimePicker.setHour( "12" );
     startTimePicker.setMinute( "00" );
     startTimePicker.setTimeOfDay( TimeUtil.TimeOfDay.AM );
-    
-    startDatePicker.setYoungestDate( now );
-    startDatePicker.setSelectedDate( now );
-    
-    endDatePanel.setNoEndDate();
+
+    Date now = new Date();
+    dateRangeEditor.reset( now );
     
     temporalCombo.setSelectedIndex( TemporalValue.SECONDS.value() );
     
@@ -176,22 +166,19 @@ public class RecurrenceEditor extends VerticalPanel {
     yearlyPanel.reset();
   }
   
-  public void inititalizeWithRecurrenceString( String recurrenceStr ) throws CronParseException {
-    String[] recurrenceTokens = recurrenceStr.split( "\\s" );
+  /**
+   * 
+   * @param recurrenceStr
+   * @throws EnumException thrown if recurrenceTokens[0] is not a valid ScheduleType String.
+   */
+  public void inititalizeWithRecurrenceString( String recurrenceStr ) throws EnumException {
+    String[] recurrenceTokens = recurrenceStr.split( "\\s" ); //$NON-NLS-1$
     
     setStartTime( recurrenceTokens[1], recurrenceTokens[2], recurrenceTokens[3] );
     
-    RecurrenceType rt = null;
-    try {
-      rt = RecurrenceType.stringToScheduleType( recurrenceTokens[0] );
-    } catch (EnumException e) {
-      throw new CronParseException( "Unrecognized recurrence type: " + recurrenceTokens[0] );
-    }
+    RecurrenceType rt = RecurrenceType.stringToScheduleType( recurrenceTokens[0] );
+
     switch( rt ) {
-      case EveryNthDayOfMonth:
-        // ignore, no longer value
-        // TODO sbarkdull
-        break;
       case EveryWeekday:
         setEveryWeekdayRecurrence( recurrenceTokens );
         break;
@@ -359,35 +346,6 @@ public class RecurrenceEditor extends VerticalPanel {
     p.add(yearlyPanel);
 
     return recurrenceGB;
-  }
-
-  private Panel createRangePanel() {
-    SimpleGroupBox rangeGB = new SimpleGroupBox("Range of recurrence");
-
-    HorizontalPanel hp = new HorizontalPanel();
-    rangeGB.add(hp);
-
-    Label l = new Label("Start:");
-    l.setStyleName("startLabel");
-    hp.add(l);
-    startDatePicker = new DatePickerEx();
-    Date now = new Date();
-    startDatePicker.setSelectedDate(now);
-    startDatePicker.setYoungestDate(now);
-    hp.add(startDatePicker);
-
-    VerticalPanel vp = new VerticalPanel();
-    hp.add(vp);
-
-    // add end time radio buttons to vp
-    HorizontalPanel endByHP = new HorizontalPanel();
-    vp.add(endByHP);
-    // add end by radio button and calendar control to endByHp
-
-    endDatePanel = new EndDatePanel( now );
-    vp.add(endDatePanel);
-
-    return rangeGB;
   }
 
   private void addTemporalListItem(ListBox lb, final TemporalValue temporalVal, Panel temporalPanel) {
@@ -837,81 +795,10 @@ public class RecurrenceEditor extends VerticalPanel {
     return l;
   }
 
-  private class EndDatePanel extends VerticalPanel {
-
-    private DatePickerEx endDatePicker = null;
-    private RadioButton noEndDateRb = null;
-    private RadioButton endByRb = null;
-    
-    public EndDatePanel( Date now ) {
-      final EndDatePanel localThis = this;
-  
-      noEndDateRb = new RadioButton(END_DATE_RB_GROUP, "No end date");
-      noEndDateRb.setStyleName("recurrenceRadioButton");
-      noEndDateRb.setChecked(true);
-      add(noEndDateRb);
-      HorizontalPanel hp = new HorizontalPanel();
-      add(hp);
-  
-      endByRb = new RadioButton(END_DATE_RB_GROUP, "End by:");
-      endByRb.setStyleName("recurrenceRadioButton");
-      hp.add(endByRb);
-      endDatePicker = new DatePickerEx();
-      endDatePicker.setEnabled(false);
-
-      endDatePicker.setYoungestDate( now );
-      endDatePicker.setSelectedDate( now );
-      hp.add(endDatePicker);
-  
-      noEndDateRb.addClickListener(new ClickListener() {
-        public void onClick(Widget sender) {
-          localThis.endDatePicker.setEnabled(false);
-        }
-      });
-  
-      endByRb.addClickListener(new ClickListener() {
-        public void onClick(Widget sender) {
-          localThis.endDatePicker.setEnabled(true);
-        }
-      });
-    }
-    
-    public void reset() {
-      setNoEndDate();
-      endDatePicker.setText( "" ); //$NON-NLS-1$
-    }
-    
-    public DatePickerEx getEndDatePicker() {
-      return endDatePicker;
-    }
-    
-    public void setNoEndDate() {
-      noEndDateRb.setChecked( true );
-      endByRb.setChecked( false );
-    }
-    
-    public boolean isEndBy() {
-      return endByRb.isChecked();
-    }
-    
-    public void setEndBy() {
-      endByRb.setChecked( true );
-      noEndDateRb.setChecked( false );
-    }
-    
-    public boolean isNoEndDate() {
-      return noEndDateRb.isChecked();
-    }
-  }
-
   private void selectTemporalPanel(TemporalValue selectedTemporalValue) {
-    Set<TemporalValue> keys = temporalPanelMap.keySet();
-    Iterator<TemporalValue> keysIt = keys.iterator();
-    while (keysIt.hasNext()) {
-      TemporalValue key = keysIt.next();
-      Panel p = temporalPanelMap.get(key);
-      boolean bShow = key.equals(selectedTemporalValue);
-      p.setVisible(bShow);
+    for ( Map.Entry<TemporalValue, Panel> me : temporalPanelMap.entrySet() ) {
+      boolean bShow = me.getKey().equals( selectedTemporalValue );
+      me.getValue().setVisible( bShow );
     }
   }
 
@@ -922,22 +809,35 @@ public class RecurrenceEditor extends VerticalPanel {
       return validNumDaysOfMonth.get(month) <= numDays;
     }
   }
-
-  public String getRepeatInSecs() throws RuntimeException {
+  
+  /**
+   * 
+   * @return null if the selected schedule does not support repeat-in-seconds, otherwise
+   * return the number of seconds between schedule execution.
+   * @throws RuntimeException if the temporal value (tv) is invalid. This
+   * condition occurs as a result of programmer error.
+   */
+  public Integer getRepeatInSecs() throws RuntimeException {
     int selIdx = temporalCombo.getSelectedIndex();
     TemporalValue tv = TemporalValue.get( selIdx );    
     
     switch ( tv ) {
+      case WEEKLY:
+        // fall through
+      case MONTHLY:
+        // fall through
+      case YEARLY:
+        return null;
       case SECONDS:
-        return secondlyPanel.getValue();
+        return Integer.parseInt( secondlyPanel.getValue() );
       case MINUTES:
-        return Integer.toString( TimeUtil.minutesToSecs( Integer.parseInt( minutelyPanel.getValue() ) ) );
+        return TimeUtil.minutesToSecs( Integer.parseInt( minutelyPanel.getValue() ) );
       case HOURS:
-        return Integer.toString( TimeUtil.hoursToSecs( Integer.parseInt( hourlyPanel.getValue() ) ) );
+        return TimeUtil.hoursToSecs( Integer.parseInt( hourlyPanel.getValue() ) );
       case DAILY:
-        return Integer.toString( TimeUtil.daysToSecs( Integer.parseInt( dailyPanel.getRepeatValue() ) ) );
+        return TimeUtil.daysToSecs( Integer.parseInt( dailyPanel.getRepeatValue() ) );
       default:
-        throw new RuntimeException( "Calling getRepeatInSec() is invalid for TemporalType: " + tv.toString() );
+        throw new RuntimeException( "Invalid TemporalValue in getRepeatInSecs(): " + tv );
     }
   }
 
@@ -950,7 +850,8 @@ public class RecurrenceEditor extends VerticalPanel {
    * 
    * @return null if the selected schedule does not support CRON, otherwise
    * return the CRON string.
-   * @throws RuntimeException
+   * @throws RuntimeException if the temporal value (tv) is invalid. This
+   * condition occurs as a result of programmer error.
    */
   public String getCronString() throws RuntimeException {
     TemporalValue tv = TemporalValue.get( temporalCombo.getSelectedIndex() );
@@ -970,10 +871,15 @@ public class RecurrenceEditor extends VerticalPanel {
       case YEARLY:
         return getYearlyCronString();
       default:
-        throw new RuntimeException( "Invalid TemporalValue in UI: " + tv );
+        throw new RuntimeException( "Invalid TemporalValue in getCronString(): " + tv );
     }
   }
   
+  /**
+   * 
+   * @return
+   * @throws RuntimeException
+   */
   private String getDailyCronString() throws RuntimeException {
     String cronStr;
     StringBuilder recurrenceSb = new StringBuilder();
@@ -1100,26 +1006,26 @@ public class RecurrenceEditor extends VerticalPanel {
   }
   
   public void setStartDate( Date startDate ) {
-    startDatePicker.setSelectedDate( startDate );
+    dateRangeEditor.setStartDate( startDate );
   }
   
   public Date getStartDate() {
-    return startDatePicker.getSelectedDate();
+    return dateRangeEditor.getStartDate();
   }
   
   public void setEndDate( Date endDate ) {
-    endDatePanel.getEndDatePicker().setSelectedDate( endDate );
+    dateRangeEditor.setEndDate( endDate );
   }
   
   public Date getEndDate() {
-    return endDatePanel.getEndDatePicker().getSelectedDate();
+    return dateRangeEditor.getEndDate();
   }
   
   public void setNoEndDate() {
-    endDatePanel.setNoEndDate();
+    dateRangeEditor.setNoEndDate();
   }
   
   public void setEndBy() {
-    endDatePanel.setEndBy();
+    dateRangeEditor.setEndBy();
   }
 }
