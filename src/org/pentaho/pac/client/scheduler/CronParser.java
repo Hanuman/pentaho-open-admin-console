@@ -59,7 +59,7 @@ public class CronParser {
     public int value() { return value; }
   }
   public enum RecurrenceType {
-    EveryNthDayOfMonth, // TODO sbarkdull, need to get rid of this no longer valid
+    Unknown,
     EveryWeekday,
     WeeklyOn,
     DayNOfMonth,
@@ -70,7 +70,7 @@ public class CronParser {
     LastDayNameOfMonthName;
     
     public static RecurrenceType stringToScheduleType( String str ) throws EnumException {
-      for (RecurrenceType d : EnumSet.range(RecurrenceType.EveryNthDayOfMonth, RecurrenceType.LastDayNameOfMonthName)) {
+      for (RecurrenceType d : EnumSet.range(RecurrenceType.Unknown, RecurrenceType.LastDayNameOfMonthName)) {
         if ( d.toString().equals( str ) ) {
           return d;
         }
@@ -127,29 +127,18 @@ public class CronParser {
     return sample.matches( IS_NUM_RE );
   }
 
-  public String getCronString() {
+  private String getCronString() {
     return cronStr;
   }
   
-  public int getStartSecond() {
+  private int getStartSecond() {
     return startSecond;
   }
-  public int getStartMinute() {
+  private int getStartMinute() {
     return startMinute;
   }
-  public int getStartHour() {
+  private int getStartHour() {
     return startHour;
-  }
-  
-  private static final String EVERY_N_DAYS_OF_MONTH_RE = "^\\d{1,2}\\s+\\d{1,2}\\s+\\d{1,2}\\s+0/\\d{1,2}\\s+\\*\\s+\\?$"; //$NON-NLS-1$
-  /**
-   * Abstract cron string: 0 MM HH 0/N * ?    fires at hour HH and minute MM, starting on the 1st, every N days.
-   * @param cronStr
-   * @return
-   */
-  private boolean isEveryNthDayOfMonthToken() {
-
-    return cronStr.matches( EVERY_N_DAYS_OF_MONTH_RE );
   }
   
   private static final String EVERY_WEEK_DAY_RE = "^\\d{1,2}\\s+\\d{1,2}\\s+\\d{1,2}\\s+\\?\\s+\\*\\s+2\\-6$"; //$NON-NLS-1$
@@ -186,12 +175,12 @@ public class CronParser {
   }
 
   /**
-   * Abstract cron string: 0 MM HH ? * N#DAY
+   * Abstract cron string: 0 MM HH ? * DAY#N
    * (N ε {1,2,3,4} DAY ε {1,2,3,4,5,6,7})
    */
-  private static final String NTH_DAY_NAME_OF_MONTH_RE = "^\\d{1,2}\\s+\\d{1,2}\\s+\\d{1,2}\\s+\\?\\s\\*\\s+[1-4]{1}#[1-7]{1}$"; //$NON-NLS-1$
+  private static final String NTH_DAY_NAME_OF_MONTH_RE = "^\\d{1,2}\\s+\\d{1,2}\\s+\\d{1,2}\\s+\\?\\s+\\*\\s+[1-7]{1}#[1-4]{1}$"; //$NON-NLS-1$
   /**
-   * Abstract cron string: 0 MM HH ? * N#DAY
+   * Abstract cron string: 0 MM HH ? * DAY#N
    * @param dayOfMonthToke
    * @param monthToke
    * @param dayOfWeekToke
@@ -228,9 +217,9 @@ public class CronParser {
     return bReMatch;
   }
   
-  private static final String N_DAY_NAME_OF_MONTH_NAME_RE = "^\\d{1,2}\\s+\\d{1,2}\\s+\\d{1,2}\\s+\\?\\s+\\d{1,2}\\s+\\d{1}#\\d{1}$"; //$NON-NLS-1$
+  private static final String N_DAY_NAME_OF_MONTH_NAME_RE = "^\\d{1,2}\\s+\\d{1,2}\\s+\\d{1,2}\\s+\\?\\s+\\d{1,2}\\s+[1-7]{1}#[1-4]{1}$"; //$NON-NLS-1$
   /**
-   * Abstract cron string: 0 MM HH ? MONTH N#DAY (MONTH ε {1-12}, N ε {1,2,3,4} DAY ε {1,2,3,4,5,6,7})
+   * Abstract cron string: 0 MM HH ? MONTH DAY#N (MONTH ε {1-12}, N ε {1,2,3,4} DAY ε {1,2,3,4,5,6,7})
    * @param cronStr
    * @return
    */
@@ -250,14 +239,12 @@ public class CronParser {
     return bReMatch;
   }
   
-  public RecurrenceType getSchedType() {
+  private RecurrenceType getSchedType() {
     return recurrenceType;
   }
   
   private RecurrenceType getScheduleType() throws CronParseException {
-    if ( isEveryNthDayOfMonthToken() ) {
-      return RecurrenceType.EveryNthDayOfMonth;
-    } else if ( isEveryWeekdayToken() ) {
+    if ( isEveryWeekdayToken() ) {
       return RecurrenceType.EveryWeekday;
     } else if ( isWeeklyOnToken() ) {
       return RecurrenceType.WeeklyOn;
@@ -274,11 +261,30 @@ public class CronParser {
     } else if ( isLastDayNameOfMonthNameToken() ) {
       return RecurrenceType.LastDayNameOfMonthName;
     } else {
-      throw new CronParseException( "Failed to determine the schedule type." );
+      return RecurrenceType.Unknown;
     }
   }
   
-  public void parse() throws CronParseException {
+  /**
+   * 
+   * @return String the recurrence string, or null if the CRON string is a valid
+   * CRON String but it cannot be parsed into a recurrence string.
+   * 
+   * @throws CronParseException if the CRON string is an invalid CRON string
+   */
+  public String parseToRecurrenceString() throws CronParseException {
+    tokenizeForRecurrence(); // tokenizeForRecurrence() will set recurrenceType.
+    return ( RecurrenceType.Unknown == recurrenceType )
+      ? null
+      : getRecurrenceString();
+  }
+  
+  private void tokenizeForRecurrence() throws CronParseException {
+    
+    recurrenceType = getScheduleType();
+    if ( RecurrenceType.Unknown == recurrenceType ) {
+      return; // CRON string not parse-able into a recurrence string
+    }
     
     String[] tokens = cronStr.split( "\\s" ); // split on white space
     if ( REQUIRED_NUM_TOKENS != tokens.length ) {
@@ -315,14 +321,10 @@ public class CronParser {
     dayOfMonthToke = tokens[CronField.DAY_OF_MONTH.value];
     monthToke = tokens[CronField.MONTH.value];
     dayOfWeekToke = tokens[CronField.DAY_OF_WEEK.value];
-    
-    recurrenceType = getScheduleType();
   }
   
-  public boolean isDayOfMonthValid() {
+  private boolean isDayOfMonthValid() {
     switch( this.recurrenceType ) {
-    case EveryNthDayOfMonth:
-      // fall through
     case DayNOfMonth:
       // fall through
     case EveryMonthNameN:
@@ -332,13 +334,9 @@ public class CronParser {
     }
   }
   
-  public int getDayOfMonth() throws CronParseException {
+  private int getDayOfMonth() throws CronParseException {
     String strVal;
     switch( this.recurrenceType ) {
-    case EveryNthDayOfMonth:
-      // token 3 is 0/N
-      strVal = dayOfMonthToke.split( "/" )[1];
-      break;
     case DayNOfMonth:
       // token 3 is N
       // fall through to next
@@ -357,7 +355,7 @@ public class CronParser {
     return dayOfMonth;
   }
 
-  public boolean isDaysOfWeekValid() {
+  private boolean isDaysOfWeekValid() {
     switch( this.recurrenceType ) {
     case WeeklyOn:
       return true;
@@ -366,7 +364,7 @@ public class CronParser {
     }
   }
   
-  public int[] getDaysOfWeek() throws CronParseException {
+  private int[] getDaysOfWeek() throws CronParseException {
     switch( this.recurrenceType ) {
     case WeeklyOn:
       // token 5 is comma separated list of 1-7 unique integers between 1 and 7
@@ -384,12 +382,12 @@ public class CronParser {
     }
   }
   
-  public boolean isWhichWeekOfMonthValid() {
+  private boolean isWhichWeekOfMonthValid() {
     switch( this.recurrenceType ) {
     case NthDayNameOfMonth:
       // fall through
     case NthDayNameOfMonthName:
-      // token 5 is N#DAY, want N
+      // token 5 is DAY#N, want N
       return true;
     default:
       return false;
@@ -401,13 +399,13 @@ public class CronParser {
    * @return integer between 1 and 4 inclusive
    * @throws CronParseException
    */
-  public int getWhichWeekOfMonth() throws CronParseException {
+  private int getWhichWeekOfMonth() throws CronParseException {
     String strVal;
     switch( this.recurrenceType ) {
     case NthDayNameOfMonth:
       // fall through
     case NthDayNameOfMonthName:
-      // token 5 is N#DAY, want N
+      // token 5 is DAY#N, want N
       strVal = dayOfWeekToke.split( N_TH )[1];
       int weekOfMonth = Integer.parseInt( strVal );
       if ( !isWeekOfMonth( weekOfMonth ) ) {
@@ -419,7 +417,7 @@ public class CronParser {
     }
   }
 
-  public boolean isWhichDayOfWeekValid() {
+  private boolean isWhichDayOfWeekValid() {
     switch( this.recurrenceType ) {
     case NthDayNameOfMonth:
       // fall through
@@ -440,13 +438,13 @@ public class CronParser {
    * @return integer between 1 and 7 inclusive
    * @throws CronParseException
    */
-  public int getWhichDayOfWeek() throws CronParseException {
+  private int getWhichDayOfWeek() throws CronParseException {
     int dayOfWeek;
     switch( this.recurrenceType ) {
     case NthDayNameOfMonth:
       // fall through
     case NthDayNameOfMonthName:
-      // token 5 is N#DAY, want DAY
+      // token 5 is DAY#N, want DAY
       dayOfWeek = Integer.parseInt( dayOfWeekToke.split( N_TH )[0] );
       break;
     case LastDayNameOfMonth:
@@ -466,7 +464,7 @@ public class CronParser {
     return dayOfWeek;
   }
   
-  public boolean isWhichMonthOfYearValid() {
+  private boolean isWhichMonthOfYearValid() {
     switch( this.recurrenceType ) {
     case EveryMonthNameN:
       // fall through
@@ -485,7 +483,7 @@ public class CronParser {
    * @return integer between 1 and 12 inclusive
    * @throws CronParseException
    */
-  public int getWhichMonthOfYear() throws CronParseException {
+  private int getWhichMonthOfYear() throws CronParseException {
     int monthOfYear;
     switch( this.recurrenceType ) {
     case EveryMonthNameN:
@@ -521,32 +519,32 @@ public class CronParser {
    * @return
    * @throws CronParseException
    */
-  public String getRecurrenceString() throws CronParseException {
+  private String getRecurrenceString() throws CronParseException {
     StringBuilder sb = new StringBuilder();
     sb.append( this.recurrenceType.toString() ).append( " " ); //$NON-NLS-1$
 
     sb.append( startSecond ).append( " " ).append( startMinute ).append( " " ).append( startHour ).append( " " ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     
-      if ( isDaysOfWeekValid() ) {
-        int[] days = getDaysOfWeek();
-        for ( int ii=0; ii<days.length; ++ii ) {
-          int day = days[ii];
-          sb.append( day ).append( (ii<days.length-1) ? "," : "" ); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-        sb.append( " " ); //$NON-NLS-1$
+    if ( isDaysOfWeekValid() ) {
+      int[] days = getDaysOfWeek();
+      for ( int ii=0; ii<days.length; ++ii ) {
+        int day = days[ii];
+        sb.append( day ).append( (ii<days.length-1) ? "," : "" ); //$NON-NLS-1$ //$NON-NLS-2$
       }
-      if ( isDayOfMonthValid() ) {
-        sb.append( getDayOfMonth() ).append( " " ); //$NON-NLS-1$
-      }
-      if ( isWhichDayOfWeekValid() ) {
-        sb.append( getWhichDayOfWeek() ).append( " " ); //$NON-NLS-1$
-      }
-      if ( isWhichWeekOfMonthValid() ) {
-        sb.append( getWhichWeekOfMonth() ).append( " " ); //$NON-NLS-1$
-      }
-      if ( isWhichMonthOfYearValid() ) {
-        sb.append( getWhichMonthOfYear() ).append( " " ); //$NON-NLS-1$
-      }
+      sb.append( " " ); //$NON-NLS-1$
+    }
+    if ( isDayOfMonthValid() ) {
+      sb.append( getDayOfMonth() ).append( " " ); //$NON-NLS-1$
+    }
+    if ( isWhichDayOfWeekValid() ) {
+      sb.append( getWhichDayOfWeek() ).append( " " ); //$NON-NLS-1$
+    }
+    if ( isWhichWeekOfMonthValid() ) {
+      sb.append( getWhichWeekOfMonth() ).append( " " ); //$NON-NLS-1$
+    }
+    if ( isWhichMonthOfYearValid() ) {
+      sb.append( getWhichMonthOfYear() ).append( " " ); //$NON-NLS-1$
+    }
     
     return sb.toString().trim(); 
   }
@@ -569,14 +567,15 @@ public class CronParser {
   
   // TODO sbarkdull, instead of validating that values are int, validate that the are
   // second, minute, hour, day of week, day of month, month of year, week of month
+  // TODO should this method be throwing ONLY RuntimeExceptions?
   /**
    * Given a recurrenceTokenString, generate the corresponding CRON string.
    * 
    * @param recurrenceStr String
    * @return
-   * @throws CronParseException
+   * @throws RuntimeException if the recurrenceTokenString contains the Unknown RecurrenceType.
    */
-  public static String recurrenceStringToCronString( String recurrenceTokenString ) throws CronParseException {
+  public static String recurrenceStringToCronString( String recurrenceTokenString ) throws RuntimeException, CronParseException {
     StringBuilder sb = new StringBuilder();
     String cronToken3, cronToken4, cronToken5;
     String[] recurrenceTokens = recurrenceTokenString.trim().split( "\\s+" ); //$NON-NLS-1$
@@ -595,12 +594,6 @@ public class CronParser {
       throw new CronParseException( e.getMessage() );
     }
     switch ( st ) {
-    case EveryNthDayOfMonth:
-      validateIsInt( recurrenceTokens[4] );
-      cronToken3 = "0/" + recurrenceTokens[4]; //$NON-NLS-1$
-      cronToken4 = ALL;
-      cronToken5 = DONT_CARE;
-      break;
     case EveryWeekday:
       cronToken3 = DONT_CARE;
       cronToken4 = ALL;
@@ -651,8 +644,10 @@ public class CronParser {
       cronToken4 = recurrenceTokens[5];
       cronToken5 = recurrenceTokens[4] + LAST;
       break;
+    case Unknown:
+      throw new RuntimeException( "Illegal to call recurrenceStringToCronStr with a RecurrenceType of Unknown." );
     default:
-      throw new CronParseException( "Invalid recurrenceType: " + recurrenceTokens[0] );
+      throw new RuntimeException( "Invalid recurrenceType: " + recurrenceTokens[0] );
     }
     sb.append( cronToken3 ).append( " " ); //$NON-NLS-1$
     sb.append( cronToken4 ).append( " " ); //$NON-NLS-1$
@@ -728,7 +723,7 @@ public class CronParser {
       
       try {
         CronParser cp = new CronParser( cronStr );
-        cp.parse();
+        cp.parseToRecurrenceString();
         System.out.println( "cront str: " + cronStr + "  --  " + cp.getSchedType().toString() ); //$NON-NLS-1$ //$NON-NLS-2$
       } catch (CronParseException e) {
         System.out.println( "cron str: " + cronStr + " " + e.getMessage() ); //$NON-NLS-1$ //$NON-NLS-2$
@@ -738,7 +733,7 @@ public class CronParser {
 
     CronParser cp = new CronParser( "0 22 4 0/3 * ?" ); // EveryNthDayOfMonth //$NON-NLS-1$
     try {
-      cp.parse();
+      cp.parseToRecurrenceString();
     } catch (CronParseException e) {
       System.out.println( e );
     }
@@ -758,7 +753,7 @@ public class CronParser {
 
     cp = new CronParser( "0 14 21 ? * 2-6" ); // EveryWeekday //$NON-NLS-1$
     try {
-      cp.parse();
+      cp.parseToRecurrenceString();
     } catch (CronParseException e) {
       System.out.println( e );
     }
@@ -778,7 +773,7 @@ public class CronParser {
 
     cp = new CronParser( "0 33 6 ? * 1,3,5" ); //WeeklyOn //$NON-NLS-1$
     try {
-      cp.parse();
+      cp.parseToRecurrenceString();
     } catch (CronParseException e) {
       System.out.println( e );
     }
@@ -804,7 +799,7 @@ public class CronParser {
 
     cp = new CronParser( "0 5 5 13 * ?" );  // DayNOfMonth //$NON-NLS-1$
     try {
-      cp.parse();
+      cp.parseToRecurrenceString();
     } catch (CronParseException e) {
       System.out.println( e );
     }
@@ -825,7 +820,7 @@ public class CronParser {
 
     cp = new CronParser( "0 59 23 ? * 2#4" ); // NthDayNameOfMonth //$NON-NLS-1$ 
     try {
-      cp.parse();
+      cp.parseToRecurrenceString();
     } catch (CronParseException e) {
       System.out.println( e );
     }
@@ -847,7 +842,7 @@ public class CronParser {
 
     cp = new CronParser( "0 33 5 ? * 3L" );// LastDayNameOfMonth //$NON-NLS-1$ 
     try {
-      cp.parse();
+      cp.parseToRecurrenceString();
     } catch (CronParseException e) {
       System.out.println( e );
     }
@@ -868,7 +863,7 @@ public class CronParser {
     
     cp = new CronParser( "0 1 2 28 2 ?" );//EveryMonthNameN //$NON-NLS-1$ 
     try {
-      cp.parse();
+      cp.parseToRecurrenceString();
     } catch (CronParseException e) {
       System.out.println( e );
     }
@@ -891,7 +886,7 @@ public class CronParser {
 
     cp = new CronParser( "0 3 5 ? 12 7#3" );//NthDayNameOfMonthName //$NON-NLS-1$
     try {
-      cp.parse();
+      cp.parseToRecurrenceString();
     } catch (CronParseException e) {
       System.out.println( e );
     }
@@ -913,7 +908,7 @@ public class CronParser {
 
     cp = new CronParser( "0 3 8 ? 6 5L" );//LastDayNameOfMonthName //$NON-NLS-1$
     try {
-      cp.parse();
+      cp.parseToRecurrenceString();
     } catch (CronParseException e) {
       System.out.println( e );
     }    
