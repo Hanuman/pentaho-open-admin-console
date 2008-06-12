@@ -17,7 +17,7 @@ package org.pentaho.pac.client.common.ui;
 
 import java.util.Date;
 
-import com.google.gwt.user.client.Event;
+import org.pentaho.pac.client.common.util.TimeUtil;
 
 // TODO sbarkdull, should not extend DatePicker, should aggregate it
 public class DatePickerEx extends org.zenika.widget.client.datePicker.DatePicker {
@@ -32,6 +32,18 @@ public class DatePickerEx extends org.zenika.widget.client.datePicker.DatePicker
    */
   public DatePickerEx(Date selectedDate) {
     super( selectedDate );
+  }
+  
+  /**
+   * Get the selected date.
+   * NOTE: base class implementation sets the time to the current time, which is
+   * not what we want. So, 0-out the time portion to midnight
+   */
+  public Date getSelectedDate() {
+    Date d = super.getSelectedDate();
+    return ( d == null ) 
+      ? null
+      : TimeUtil.zeroTimePart( d );
   }
   
 //  /**
