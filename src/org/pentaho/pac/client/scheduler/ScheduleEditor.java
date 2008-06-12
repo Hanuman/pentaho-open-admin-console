@@ -94,6 +94,7 @@ public class ScheduleEditor extends FlexTable {
   
   // validation labels
   private ValidationLabel nameLabel;
+  private ValidationLabel groupNameLabel;
 
 //  private String cronStr = null;
 //  private String repeatInSecs = null;
@@ -119,12 +120,12 @@ public class ScheduleEditor extends FlexTable {
     setWidget( rowNum , 1, nameTb );
     
     rowNum++;
-    Label l = new Label( "Group:" );
-    setWidget( rowNum, 0, l );
+    groupNameLabel = new ValidationLabel( "Group:" );
+    setWidget( rowNum, 0, groupNameLabel );
     setWidget( rowNum, 1, groupNameTb );
 
     rowNum++;
-    l = new Label( "Description:" );
+    Label l = new Label( "Description:" );
     setWidget( rowNum, 0, l );
     setWidget( rowNum, 1, descriptionTb );
 
@@ -355,12 +356,14 @@ public class ScheduleEditor extends FlexTable {
   }
   
   /**
-   * 
-   * 
    * @param errorMsg String null or "" to clear the error msg, else
    * set the error msg to <param>errorMsg</param>.
    */
   public void setNameError( String errorMsg ) {
     nameLabel.setErrorMsg( errorMsg );
+  }
+  
+  public void setGroupNameError( String errorMsg ) {
+    groupNameLabel.setErrorMsg( errorMsg );
   }
 }

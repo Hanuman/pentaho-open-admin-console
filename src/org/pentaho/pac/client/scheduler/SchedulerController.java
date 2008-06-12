@@ -27,6 +27,7 @@ import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.ICallback;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
+import org.pentaho.pac.client.common.util.StringUtils;
 import org.pentaho.pac.client.common.util.TimeUtil;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.scheduler.ScheduleEditor.RunType;
@@ -414,7 +415,14 @@ public class SchedulerController {
     scheduleCreatorDialog.getSolutionRepositoryItemPicker().reset();
     scheduleCreatorDialog.setOnOkHandler( new ICallback<Object>() {
       public void onHandle(Object o) {
-        localThis.createSchedule();
+        if ( localThis.isScheduleEditorValid() ) {
+          localThis.createSchedule();
+        } else {
+          // TODO sbarkdull puke up dialog indicating errors
+          MessageDialog errorDialog = new MessageDialog( "Error",
+              "Editor contains errors" );
+          errorDialog.center();
+        }
       }
     });
     scheduleCreatorDialog.center();
@@ -559,8 +567,20 @@ public class SchedulerController {
   }
   
   private boolean isScheduleEditorValid() {
+    boolean isValid = true;
     ScheduleEditor schedEd = scheduleCreatorDialog.getScheduleEditor();
-    schedEd.setNameError( "holy shit batman" );
-    return false;
+    String errorMsg = null;
+    
+    String name = schedEd.getName();
+    errorMsg = StringUtils.isEmpty( name ) ? "Name cannot be empty." : null;
+    isValid &= errorMsg == null;
+    schedEd.setNameError( errorMsg );
+
+    String gName = schedEd.getGroupName();
+    errorMsg = StringUtils.isEmpty( gName ) ? "Group cannot be empty." : null;
+    isValid &= errorMsg == null;
+    schedEd.setGroupNameError( errorMsg );
+    
+    return isValid;
   }
 }

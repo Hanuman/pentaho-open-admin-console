@@ -40,10 +40,4 @@ public class RunOnceEditor extends VerticalPanel{
   public void setStartTime( String strTime ) {
     startTimePicker.setTime( strTime );
   }
-  
-  public boolean isValid() {
-    startTimeLabel.setErrorMsg( "this is bad dude" );
-    
-    return false;
-  }
 }
