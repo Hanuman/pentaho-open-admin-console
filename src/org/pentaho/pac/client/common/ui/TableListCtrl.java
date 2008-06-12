@@ -75,13 +75,18 @@ public class TableListCtrl<RowDataType> extends ScrollPanel {
   
   private void addTableHeader( FlexTable tmpTable, Widget[] columnHeaderWidgets )
   {
-    Label l = new Label();
-    l.getElement().setInnerHTML( "<span>&nbsp;</span>" ); //$NON-NLS-1$
-    l.setTitle( "check to select row" );
+    Widget l = getEmptyWidget();
+    l.setTitle( "Check to select row" );
     tmpTable.setWidget( HEADER_ROW, SELECT_COLUMN, l );
     for ( int ii=0; ii<columnHeaderWidgets.length; ++ii ) {
       tmpTable.setWidget( HEADER_ROW, ii+FIRST_COLUMN, columnHeaderWidgets[ii] );
     }
+  }
+  
+  private Widget getEmptyWidget() {
+    Label l = new Label();
+    l.getElement().setInnerHTML( "<span>&nbsp;</span>" ); //$NON-NLS-1$
+    return l;
   }
   
   public List<Integer> getSelectedIndexes()
@@ -146,11 +151,21 @@ public class TableListCtrl<RowDataType> extends ScrollPanel {
     addRow( widgets, null );
   }
   
+  /**
+   * NOTE: it is ok for elements of the widgets array to be null.
+   * 
+   * @param widgets
+   * @param data
+   */
   public void addRow( Widget[] widgets, RowDataType data ) {
     int newRowNum = table.getRowCount();
     table.setWidget( newRowNum, 0, new CheckBox() );
     for ( int ii=0; ii<widgets.length; ++ii ) {
-      setCellWidget( newRowNum-FIRST_ROW, ii+1, widgets[ii] );
+      Widget w = widgets[ii];
+      if ( null == w ) {
+        w = getEmptyWidget();
+      }
+      setCellWidget( newRowNum-FIRST_ROW, ii+1, w );
     }
     dataList.add( data );
     assert dataList.size() == (table.getRowCount()-FIRST_ROW) : "Number of items in data list does not equal the number of items in the list.";
@@ -178,6 +193,19 @@ public class TableListCtrl<RowDataType> extends ScrollPanel {
   }
   
   public int getNumColumns() {
-    return table.getCellCount(FIRST_ROW) - SELECT_COLUMN;
+    return table.getCellCount(HEADER_ROW);
+  }
+  
+  public void clearTempMessage() {
+    table.removeRow( FIRST_ROW );
+  }
+  
+  public void setTempMessage( String msg ) {
+    removeAll();
+    Label l = new Label();
+    l.setText( msg );
+
+    table.setWidget( FIRST_ROW, 0, l );
+    table.getFlexCellFormatter().setColSpan( FIRST_ROW, 0,  getNumColumns() );
   }
 }
