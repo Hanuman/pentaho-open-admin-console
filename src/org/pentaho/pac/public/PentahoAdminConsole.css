@@ -1453,3 +1453,8 @@ a:visited {
 .advanced-Calendar {
 	background-color: #AAAAFF;
 }
+
+/* style for error message associated with dialog controls with invalid data */
+.errorLabel {
+	background-color: #FFCCCC;
+	color: #FF0000;
