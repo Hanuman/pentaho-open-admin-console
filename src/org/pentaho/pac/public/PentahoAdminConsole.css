@@ -1440,6 +1440,13 @@ a:visited {
 }
 /* end recurrance dialog ----------------------------------------------------------*/
 
+/* begin schedule editor ------------------------------------------------------*/
+.recurrenceCombo {
+	padding-right: 5px;
+	margin-right: 5px;
+}
+/* end schedule editor ----------------------------------------------------------*/
+
 .datepicker {
 	background-color: #AAAAFF;
 }
