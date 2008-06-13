@@ -24,6 +24,7 @@ import org.pentaho.pac.client.common.EnumException;
 import org.pentaho.pac.client.common.ui.SimpleGroupBox;
 import org.pentaho.pac.client.common.ui.widget.ValidationLabel;
 import org.pentaho.pac.client.common.util.TimeUtil;
+import org.pentaho.pac.client.scheduler.RecurrenceEditor.TemporalValue;
 
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -34,13 +35,25 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * 
+ * @author Steven Barkdull
+ *
+ */
 public class ScheduleEditor extends FlexTable {
-  public enum RunType {
-    RUN_ONCE(0, "Run Once"), 
-    RECURRENCE(1, "Simple"), 
-    CRON(2, "Advanced");
 
-    RunType(int value, String name) {
+  enum ScheduleType {
+    RUN_ONCE(0, "Run Once"), 
+    SECONDS(1, "Seconds"), 
+    MINUTES(2, "Minutes"), 
+    HOURS(3, "Hours"), 
+    DAILY(4, "Daily"), 
+    WEEKLY(5, "Weekly"), 
+    MONTHLY(6, "Monthly"), 
+    YEARLY(7, "Yearly"),
+    CRON(8, "Cron");
+
+    private ScheduleType(int value, String name) {
       this.value = value;
       this.name = name;
     }
@@ -49,10 +62,16 @@ public class ScheduleEditor extends FlexTable {
 
     private final String name;
 
-    private static RunType[] runTypes = {
-      RUN_ONCE, 
-      RECURRENCE, 
-      CRON 
+    private static ScheduleType[] scheduleValue = {
+      RUN_ONCE,
+      SECONDS, 
+      MINUTES, 
+      HOURS,
+      DAILY, 
+      WEEKLY, 
+      MONTHLY, 
+      YEARLY,
+      CRON
     };
 
     public int value() {
@@ -63,34 +82,37 @@ public class ScheduleEditor extends FlexTable {
       return name;
     }
 
-    public static RunType get(int idx) {
-      return runTypes[idx];
+    public static ScheduleType get(int idx) {
+      return scheduleValue[idx];
     }
 
     public static int length() {
-      return runTypes.length;
+      return scheduleValue.length;
     }
     
-    public static RunType stringToRunType( String strRunType ) throws EnumException {
-      for (RunType v : EnumSet.range(RunType.RUN_ONCE, RunType.CRON)) {
-        if ( v.toString().equals( strRunType ) ) {
+    public static ScheduleType stringToScheduleType( String strSchedule ) throws EnumException {
+      for (ScheduleType v : EnumSet.range(ScheduleType.RUN_ONCE, ScheduleType.CRON)) {
+        if ( v.toString().equals( strSchedule ) ) {
           return v;
         }
       }
-      throw new EnumException( "Invalid String for run type value: " + strRunType );
+      throw new EnumException( "Invalid String for temporal value: " + scheduleValue );
     }
   } /* end enum */
 
   private RunOnceEditor runOnceEditor = null;
   private RecurrenceEditor recurrenceEditor = null;
   private CronEditor cronEditor = null;
-  private Map<RunType, Panel> runTypeEditorMap = new HashMap<RunType, Panel>();
+  // TODO sbarkdull, can this be static?
+  private Map<ScheduleType, Panel> scheduleTypeMap = new HashMap<ScheduleType, Panel>();
+  private static Map<TemporalValue, ScheduleType> temporalValueToScheduleTypeMap = createTemporalValueToScheduleTypeMap();
+  private static Map<ScheduleType, TemporalValue> scheduleTypeToTemporalValueMap = createScheduleTypeMapToTemporalValue();
   
   private TextBox nameTb = new TextBox();
   private TextBox groupNameTb = new TextBox();
   private TextBox descriptionTb = new TextBox();
-  private ListBox recurrenceCombo = null;
-  private SimpleGroupBox recurrenceGB = null;
+  private ListBox scheduleCombo = null;
+  private SimpleGroupBox scheduleGB = null;
   
   // validation labels
   private ValidationLabel nameLabel;
@@ -102,12 +124,7 @@ public class ScheduleEditor extends FlexTable {
   private static final String DEFAULT_NAME = ""; //$NON-NLS-1$
   private static final String DEFAULT_GROUP_NAME = ""; //$NON-NLS-1$
   private static final String DEFAULT_DESCRIPTION = ""; //$NON-NLS-1$
-  
- // TODO, do it, or remvoe comment 
-//  need to provide on on ok callback for recurrence dialog, set the callback in the scheduleeditor, 
-//  on ok, it should set schedule editors cronStr or repeatinSecs value. clients should no longer 
-//  reach around the scheudle editor to get the cron string from the recurernce dialog
-//  
+
   public ScheduleEditor() {
     super();
 
@@ -130,31 +147,37 @@ public class ScheduleEditor extends FlexTable {
     setWidget( rowNum, 1, descriptionTb );
 
     rowNum++;
-    recurrenceCombo = createRecurrenceCombo();
-    l = new Label( "Recurrence:" );
+    scheduleCombo = createScheduleCombo();
+    l = new Label( "Schedule Type:" );
     setWidget( rowNum, 0, l );
-    setWidget( rowNum, 1, recurrenceCombo );
+    setWidget( rowNum, 1, scheduleCombo );
 
     rowNum++;
-    recurrenceGB = new SimpleGroupBox( RunType.RUN_ONCE.toString() + " Editor" );
+    scheduleGB = new SimpleGroupBox( ScheduleType.RUN_ONCE.toString() + " Editor" );
     VerticalPanel vp = new VerticalPanel();
-    recurrenceGB.add( vp );
+    scheduleGB.add( vp );
     this.getFlexCellFormatter().setColSpan( 4, 0, 3 );
-    setWidget( rowNum, 0, recurrenceGB );
+    setWidget( rowNum, 0, scheduleGB );
 
     runOnceEditor = new RunOnceEditor();
     vp.add( runOnceEditor );
-    runTypeEditorMap.put( RunType.RUN_ONCE, runOnceEditor );
+    scheduleTypeMap.put( ScheduleType.RUN_ONCE, runOnceEditor );
     runOnceEditor.setVisible( true );
     
     recurrenceEditor = new RecurrenceEditor();
     vp.add( recurrenceEditor );
-    runTypeEditorMap.put( RunType.RECURRENCE, recurrenceEditor );
+    scheduleTypeMap.put( ScheduleType.SECONDS, recurrenceEditor );
+    scheduleTypeMap.put( ScheduleType.MINUTES, recurrenceEditor );
+    scheduleTypeMap.put( ScheduleType.HOURS, recurrenceEditor );
+    scheduleTypeMap.put( ScheduleType.DAILY, recurrenceEditor );
+    scheduleTypeMap.put( ScheduleType.WEEKLY, recurrenceEditor );
+    scheduleTypeMap.put( ScheduleType.MONTHLY, recurrenceEditor );
+    scheduleTypeMap.put( ScheduleType.YEARLY, recurrenceEditor );
     recurrenceEditor.setVisible( false );
     
     cronEditor = new CronEditor();
     vp.add( cronEditor );
-    runTypeEditorMap.put( RunType.CRON, cronEditor );
+    scheduleTypeMap.put( ScheduleType.CRON, cronEditor );
     cronEditor.setVisible( false );
   }
 
@@ -187,24 +210,25 @@ public class ScheduleEditor extends FlexTable {
   public void setDescription( String description ) {
     descriptionTb.setText( description );
   }
-  
-//  runOnceEditor
-//  recurrenceEditor
-//  cronEditor
-  
+
   public String getCronString() {
-    switch ( getRunType() ) {
+    switch ( getScheduleType() ) {
       case RUN_ONCE:
         return null;
-      case RECURRENCE:
+      case SECONDS: // fall through
+      case MINUTES: // fall through
+      case HOURS: // fall through
+      case DAILY: // fall through
+      case WEEKLY: // fall through
+      case MONTHLY: // fall through
+      case YEARLY:
         return recurrenceEditor.getCronString();
       case CRON:
         return cronEditor.getCronString();
       default:
-        throw new RuntimeException( "Invalid Run Type: " + getRunType().toString() );
+        throw new RuntimeException( "Invalid Run Type: " + getScheduleType().toString() );
     }
   }
-  
   /**
    * 
    * @param cronStr
@@ -218,10 +242,12 @@ public class ScheduleEditor extends FlexTable {
 
     if ( null != recurrenceStr ) {
       recurrenceEditor.inititalizeWithRecurrenceString( recurrenceStr );
-      setRunType( RunType.RECURRENCE );
+      TemporalValue tv = recurrenceEditor.getTemporalState();
+      ScheduleType rt = temporalValueToScheduleType( tv );
+      setScheduleType( rt );
     } else {
       // its a cron string that cannot be parsed into a recurrence string, switch to cron string editor.
-      setRunType( RunType.CRON );
+      setScheduleType( ScheduleType.CRON );
     }
     
     cronEditor.setCronString( cronStr );
@@ -241,36 +267,38 @@ public class ScheduleEditor extends FlexTable {
 
   public void setRepeatInSecs( Integer repeatInSecs ) {
     recurrenceEditor.inititalizeWithRepeatInSecs( repeatInSecs );
-    setRunType( RunType.RECURRENCE );
+    TemporalValue tv = recurrenceEditor.getTemporalState();
+    ScheduleType rt = temporalValueToScheduleType( tv );
+    setScheduleType( rt );
   }
   
-  private ListBox createRecurrenceCombo() {
+  private ListBox createScheduleCombo() {
     final ScheduleEditor localThis = this;
     ListBox lb = new ListBox();
     lb.setVisibleItemCount( 1 );
-    lb.setStyleName("recurrenceCombo"); //$NON-NLS-1$
+    lb.setStyleName("scheduleCombo"); //$NON-NLS-1$
     lb.addChangeListener( new ChangeListener() {
       public void onChange(Widget sender) {
-        localThis.handleRecurrenceChange();
+        localThis.handleScheduleChange();
       }
     });
-    
-    lb.addItem( RunType.RUN_ONCE.toString() );
+    // add all schedule types to the combobox
+    for (ScheduleType schedType : EnumSet.range(ScheduleType.RUN_ONCE, ScheduleType.CRON)) {
+      lb.addItem( schedType.toString() );
+    }
     lb.setItemSelected( 0, true );
-    lb.addItem( RunType.RECURRENCE.toString() );
-    lb.addItem( RunType.CRON.toString() );
 
     return lb;
   }
   
-  public RunType getRunType() {
-    String selectedValue = recurrenceCombo.getValue( recurrenceCombo.getSelectedIndex() );
-    return RunType.stringToRunType( selectedValue );
+  public ScheduleType getScheduleType() {
+    String selectedValue = scheduleCombo.getValue( scheduleCombo.getSelectedIndex() );
+    return ScheduleType.stringToScheduleType( selectedValue );
   }
   
-  public void setRunType( RunType runType ) {
-    recurrenceCombo.setSelectedIndex( runType.value() );
-    selectRunTypeEditor( runType );
+  public void setScheduleType( ScheduleType scheduleType ) {
+    scheduleCombo.setSelectedIndex( scheduleType.value() );
+    selectScheduleTypeEditor( scheduleType );
   }
   
   public void setStartTime( String startTime ) {
@@ -279,15 +307,21 @@ public class ScheduleEditor extends FlexTable {
   }
   
   public String getStartTime() {
-    switch ( getRunType() ) {
+    switch ( getScheduleType() ) {
       case RUN_ONCE:
         return runOnceEditor.getStartTime();
-      case RECURRENCE:
+      case SECONDS: // fall through
+      case MINUTES: // fall through
+      case HOURS: // fall through
+      case DAILY: // fall through
+      case WEEKLY: // fall through
+      case MONTHLY: // fall through
+      case YEARLY:
         return recurrenceEditor.getStartTime();
       case CRON:
         return cronEditor.getStartTime();
       default:
-        throw new RuntimeException( "Invalid Run Type: " + getRunType().toString() );
+        throw new RuntimeException( "Invalid Run Type: " + getScheduleType().toString() );
     }
   }
 
@@ -298,18 +332,24 @@ public class ScheduleEditor extends FlexTable {
   }
   
   public Date getStartDate() {
-    switch ( getRunType() ) {
+    switch ( getScheduleType() ) {
       case RUN_ONCE:
         Date startDate = runOnceEditor.getStartDate();
         String startTime  = runOnceEditor.getStartTime();
         Date startDateTime = TimeUtil.getDateTime( startTime, startDate );
         return startDateTime;
-      case RECURRENCE:
+      case SECONDS: // fall through
+      case MINUTES: // fall through
+      case HOURS: // fall through
+      case DAILY: // fall through
+      case WEEKLY: // fall through
+      case MONTHLY: // fall through
+      case YEARLY:
         return recurrenceEditor.getStartDate();
       case CRON:
         return cronEditor.getStartDate();
       default:
-        throw new RuntimeException( "Invalid Run Type: " + getRunType().toString() );
+        throw new RuntimeException( "Invalid Run Type: " + getScheduleType().toString() );
     }
   }
 
@@ -319,15 +359,21 @@ public class ScheduleEditor extends FlexTable {
   }
 
   public Date getEndDate() {
-    switch ( getRunType() ) {
+    switch ( getScheduleType() ) {
       case RUN_ONCE:
         return null;
-      case RECURRENCE:
+      case SECONDS: // fall through
+      case MINUTES: // fall through
+      case HOURS: // fall through
+      case DAILY: // fall through
+      case WEEKLY: // fall through
+      case MONTHLY: // fall through
+      case YEARLY:
         return recurrenceEditor.getEndDate();
       case CRON:
         return cronEditor.getEndDate();
       default:
-        throw new RuntimeException( "Invalid Run Type: " + getRunType().toString() );
+        throw new RuntimeException( "Invalid Run Type: " + getScheduleType().toString() );
     }
   }
 
@@ -341,18 +387,27 @@ public class ScheduleEditor extends FlexTable {
     cronEditor.setEndBy();
   }
 
-  private void handleRecurrenceChange() throws EnumException {
-    RunType rVal = getRunType();
-    selectRunTypeEditor( rVal );
+  private void handleScheduleChange() throws EnumException {
+    ScheduleType schedType = getScheduleType();
+    selectScheduleTypeEditor( schedType );
   }
 
 
-  private void selectRunTypeEditor(RunType selectedRunType) {
-    for ( Map.Entry<RunType, Panel> me : runTypeEditorMap.entrySet() ) {
-      boolean bShow = me.getKey().equals( selectedRunType );
-      me.getValue().setVisible( bShow );
+  private void selectScheduleTypeEditor( ScheduleType scheduleType ) {
+    // hide all panels
+    for ( Map.Entry<ScheduleType, Panel> me : scheduleTypeMap.entrySet() ) {
+      me.getValue().setVisible( false );
     }
-    recurrenceGB.setCaption( selectedRunType.toString() + " Editor"  );
+    // show the selected panel
+    Panel p = scheduleTypeMap.get( scheduleType );
+    p.setVisible( true );
+    TemporalValue tv = scheduleTypeToTemporalValue( scheduleType );
+    if ( null != tv ) {
+      // force the recurrence editor to display the appropriate ui
+      recurrenceEditor.setTemporalState( tv );
+    }
+    // set the caption in the group box
+    scheduleGB.setCaption( scheduleType.toString() + " Editor"  );
   }
   
   /**
@@ -365,5 +420,41 @@ public class ScheduleEditor extends FlexTable {
   
   public void setGroupNameError( String errorMsg ) {
     groupNameLabel.setErrorMsg( errorMsg );
+  }
+  
+  private static Map<TemporalValue, ScheduleType> createTemporalValueToScheduleTypeMap() {
+    Map<TemporalValue, ScheduleType> m = new HashMap<TemporalValue, ScheduleType>();
+
+    m.put( TemporalValue.SECONDS, ScheduleType.SECONDS );
+    m.put( TemporalValue.MINUTES, ScheduleType.MINUTES );
+    m.put( TemporalValue.HOURS, ScheduleType.HOURS );
+    m.put( TemporalValue.DAILY, ScheduleType.DAILY );
+    m.put( TemporalValue.WEEKLY, ScheduleType.WEEKLY );
+    m.put( TemporalValue.MONTHLY, ScheduleType.MONTHLY );
+    m.put( TemporalValue.YEARLY, ScheduleType.YEARLY );
+
+    return m;
+  }
+  
+  private static Map<ScheduleType, TemporalValue> createScheduleTypeMapToTemporalValue() {
+    Map<ScheduleType, TemporalValue> m = new HashMap<ScheduleType, TemporalValue>();
+
+    m.put( ScheduleType.SECONDS, TemporalValue.SECONDS );
+    m.put( ScheduleType.MINUTES, TemporalValue.MINUTES );
+    m.put( ScheduleType.HOURS, TemporalValue.HOURS );
+    m.put( ScheduleType.DAILY, TemporalValue.DAILY );
+    m.put( ScheduleType.WEEKLY, TemporalValue.WEEKLY );
+    m.put( ScheduleType.MONTHLY, TemporalValue.MONTHLY );
+    m.put( ScheduleType.YEARLY, TemporalValue.YEARLY );
+
+    return m;
+  }
+  
+  private static ScheduleType temporalValueToScheduleType( TemporalValue tv ) {
+    return temporalValueToScheduleTypeMap.get( tv );
+  }
+  
+  private static TemporalValue scheduleTypeToTemporalValue( ScheduleType st ) {
+    return scheduleTypeToTemporalValueMap.get( st );
   }
 }
