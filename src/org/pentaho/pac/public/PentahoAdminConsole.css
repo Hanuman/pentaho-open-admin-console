@@ -1422,26 +1422,30 @@ a:visited {
 
 .startLabel {
 	padding-right: 1ex;
+	white-space: nowrap;
 	/*border:1px dotted red;*/
 }
 .middleLabel {
 	padding-right: 1ex;
 	padding-left: 1ex;
+	white-space: nowrap;
 	/*border:1px dotted red;*/
 }
 .endLabel {
 	padding-left: 1ex;
+	white-space: nowrap;
 	/*border:1px dotted red;*/
 }
 
 .recurranceRadioButton label {
 	/*background-color: magenta;*/
 	padding-right: 1ex;
+	white-space: nowrap;
 }
 /* end recurrance dialog ----------------------------------------------------------*/
 
 /* begin schedule editor ------------------------------------------------------*/
-.recurrenceCombo {
+.scheduleCombo {
 	padding-right: 5px;
 	margin-right: 5px;
 }
