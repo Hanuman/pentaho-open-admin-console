@@ -25,12 +25,13 @@ import java.util.Set;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.ICallback;
+import org.pentaho.pac.client.common.ui.IResponseCallback;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.common.util.StringUtils;
 import org.pentaho.pac.client.common.util.TimeUtil;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
-import org.pentaho.pac.client.scheduler.ScheduleEditor.RunType;
+import org.pentaho.pac.client.scheduler.ScheduleEditor.ScheduleType;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.PushButton;
@@ -52,6 +53,17 @@ public class SchedulerController {
     
     this.schedulerPanel = schedulerPanel;
     this.scheduleCreatorDialog = new ScheduleCreatorDialog();
+    this.scheduleCreatorDialog.setOnCancelHandler( new ICallback<Object>() {
+      public void onHandle(Object o) {
+        clearScheduleEditorValidationMsgs();
+        scheduleCreatorDialog.hide();
+      }
+    });
+    this.scheduleCreatorDialog.setOnValidateHandler( new IResponseCallback<MessageDialog, Boolean>() {
+      public Boolean onHandle( MessageDialog schedDlg ) {
+        return isScheduleCreatorDialogValid();
+      }
+    });
   }
   
   public void init() {
@@ -233,7 +245,7 @@ public class SchedulerController {
     String cronStr = scheduleEditor.getCronString();
     Date startDate = scheduleEditor.getStartDate();
     Date endDate = scheduleEditor.getEndDate();
-    RunType rt = scheduleEditor.getRunType(); 
+    ScheduleType rt = scheduleEditor.getScheduleType(); 
     switch ( rt ) {
       case RUN_ONCE:
         PacServiceFactory.getSchedulerService().updateRepeatJob(
@@ -252,7 +264,13 @@ public class SchedulerController {
             responseCallback
           );
         break;
-      case RECURRENCE:
+      case SECONDS: // fall through
+      case MINUTES: // fall through
+      case HOURS: // fall through
+      case DAILY: // fall through
+      case WEEKLY: // fall through
+      case MONTHLY: // fall through
+      case YEARLY:
         if ( null == cronStr ) {
           String repeatTimeMillisecs = Integer.toString( TimeUtil.secsToMillisecs( 
                 scheduleEditor.getRepeatInSecs() ) );
@@ -323,7 +341,7 @@ public class SchedulerController {
     String cronStr = scheduleEditor.getCronString();
     Date startDate = scheduleEditor.getStartDate();
     Date endDate = scheduleEditor.getEndDate();
-    RunType rt = scheduleEditor.getRunType(); 
+    ScheduleType rt = scheduleEditor.getScheduleType(); 
     switch ( rt ) {
       case RUN_ONCE:
         PacServiceFactory.getSchedulerService().createRepeatJob(
@@ -340,7 +358,13 @@ public class SchedulerController {
             responseCallback
           );
         break;
-      case RECURRENCE:
+      case SECONDS: // fall through
+      case MINUTES: // fall through
+      case HOURS: // fall through
+      case DAILY: // fall through
+      case WEEKLY: // fall through
+      case MONTHLY: // fall through
+      case YEARLY:
         if ( null == cronStr ) {
           String repeatTimeMillisecs = Integer.toString( TimeUtil.secsToMillisecs( 
                 scheduleEditor.getRepeatInSecs() ) );
@@ -413,16 +437,9 @@ public class SchedulerController {
     
     scheduleCreatorDialog.getScheduleEditor().reset();
     scheduleCreatorDialog.getSolutionRepositoryItemPicker().reset();
-    scheduleCreatorDialog.setOnOkHandler( new ICallback<Object>() {
-      public void onHandle(Object o) {
-        if ( localThis.isScheduleEditorValid() ) {
-          localThis.createSchedule();
-        } else {
-          // TODO sbarkdull puke up dialog indicating errors
-          MessageDialog errorDialog = new MessageDialog( "Error",
-              "Editor contains errors" );
-          errorDialog.center();
-        }
+    scheduleCreatorDialog.setOnOkHandler( new ICallback<MessageDialog>() {
+      public void onHandle(MessageDialog d) {
+        localThis.createSchedule();
       }
     });
     scheduleCreatorDialog.center();
@@ -433,16 +450,9 @@ public class SchedulerController {
 
     SchedulesListCtrl schedulesListCtrl = schedulerPanel.getSchedulesListCtrl();
     final List<Schedule> scheduleList = schedulesListCtrl.getSelectedSchedules();
-    scheduleCreatorDialog.setOnOkHandler( new ICallback<Object>() {
-      public void onHandle(Object o) {
-        if ( localThis.isScheduleEditorValid() ) {
-          localThis.updateSchedule();
-        } else {
-          // TODO sbarkdull puke up dialog indicating errors
-          MessageDialog errorDialog = new MessageDialog( "Error",
-              "Editor contains errors" );
-          errorDialog.center();
-        }
+    scheduleCreatorDialog.setOnOkHandler( new ICallback<MessageDialog>() {
+      public void onHandle(MessageDialog d) {
+        localThis.updateSchedule();
       }
     });
     // the update button should be enabled/disabled to guarantee that one and only one schedule is selected
@@ -492,7 +502,7 @@ public class SchedulerController {
       int repeatTimeInSecs = TimeUtil.millsecondsToSecs( Integer.parseInt( repeatInMillisecs ) );
       if ( 0 == repeatTimeInSecs ) {
         // run once
-        scheduleEditor.setRunType( RunType.RUN_ONCE );
+        scheduleEditor.setScheduleType( ScheduleType.RUN_ONCE );
       } else {
         // run multiple
         scheduleEditor.setRepeatInSecs( repeatTimeInSecs );
@@ -521,8 +531,8 @@ public class SchedulerController {
     final SchedulerController localThis = this;
     final ConfirmDialog confirm = new ConfirmDialog( "Confirm Delete",
         "Are you sure you would like to delete all checked schedules?" );
-    confirm.setOnOkHandler( new ICallback<Object>() {
-      public void onHandle( Object o ) {
+    confirm.setOnOkHandler( new ICallback<MessageDialog>() {
+      public void onHandle( MessageDialog d ) {
         confirm.hide();
         localThis.deleteSelectedSchedules();
       }
@@ -565,8 +575,13 @@ public class SchedulerController {
     };
     PacServiceFactory.getSchedulerService().pauseJobs( scheduleList, callback );
   }
+
   
-  private boolean isScheduleEditorValid() {
+  /**
+   * NOTE: code in this method must stay in sync with isScheduleEditorValid(), i.e. all error msgs
+   * that may be cleared in clearScheduleEditorValidationMsgs(), must be set-able here.
+   */
+  private boolean isScheduleCreatorDialogValid() {
     boolean isValid = true;
     ScheduleEditor schedEd = scheduleCreatorDialog.getScheduleEditor();
     String errorMsg = null;
@@ -582,5 +597,19 @@ public class SchedulerController {
     schedEd.setGroupNameError( errorMsg );
     
     return isValid;
+  }
+  
+  /**
+   * NOTE: code in this method must stay in sync with isScheduleEditorValid(), i.e. all error msgs
+   * that may be set in isScheduleEditorValid(), must be cleared here.
+   */
+  private void clearScheduleEditorValidationMsgs() {
+    ScheduleEditor schedEd = scheduleCreatorDialog.getScheduleEditor();
+    
+    String name = schedEd.getName();
+    schedEd.setNameError( null );
+
+    String gName = schedEd.getGroupName();
+    schedEd.setGroupNameError( null );
   }
 }
