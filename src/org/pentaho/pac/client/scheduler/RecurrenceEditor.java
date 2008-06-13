@@ -31,8 +31,6 @@ import com.google.gwt.user.client.ui.Widget;
 public class RecurrenceEditor extends VerticalPanel {
 
   private TimePicker startTimePicker = null;
-  
-  private ListBox temporalCombo = null;
 
   private SecondlyRecurrencePanel secondlyPanel = null;
 
@@ -50,14 +48,15 @@ public class RecurrenceEditor extends VerticalPanel {
   
   private DateRangeEditor dateRangeEditor = null;
   
+  private TemporalValue temporalState = null;
+  
   private static final String SPACE = " "; //$NON-NLS-1$
   
   private static int VALUE_OF_SUNDAY = 1;
 
-  //private Panel customPanel = null;
   private Map<TemporalValue, Panel> temporalPanelMap = new HashMap<TemporalValue, Panel>();
 
-  enum TemporalValue {
+  public enum TemporalValue {
     SECONDS(0, "Seconds"), 
     MINUTES(1, "Minutes"), 
     HOURS(2, "Hours"), 
@@ -66,7 +65,7 @@ public class RecurrenceEditor extends VerticalPanel {
     MONTHLY(5, "Monthly"), 
     YEARLY(6, "Yearly");
 
-    TemporalValue(int value, String name) {
+    private TemporalValue(int value, String name) {
       this.value = value;
       this.name = name;
     }
@@ -144,6 +143,9 @@ public class RecurrenceEditor extends VerticalPanel {
     Date now = new Date();
     dateRangeEditor = new DateRangeEditor( now );
     add( dateRangeEditor );
+    
+    // TODO sbarkdull, is this necessary?
+    setTemporalState( TemporalValue.SECONDS );
   }
   
   public void reset() {
@@ -154,8 +156,6 @@ public class RecurrenceEditor extends VerticalPanel {
 
     Date now = new Date();
     dateRangeEditor.reset( now );
-    
-    temporalCombo.setSelectedIndex( TemporalValue.SECONDS.value() );
     
     secondlyPanel.reset();
     minutelyPanel.reset();
@@ -217,45 +217,45 @@ public class RecurrenceEditor extends VerticalPanel {
   }
   
   private void setEveryWeekdayRecurrence( String[] recurrenceTokens ) {
-    setTemporalComboValue( TemporalValue.DAILY );
+    setTemporalState( TemporalValue.DAILY );
   }
   
   private void setWeeklyOnRecurrence( String[] recurrenceTokens ) {
-    setTemporalComboValue( TemporalValue.WEEKLY );
+    setTemporalState( TemporalValue.WEEKLY );
     String days = recurrenceTokens[4];
     weeklyPanel.setCheckedDaysAsString( days, VALUE_OF_SUNDAY );
   }
   
   private void setDayNOfMonthRecurrence( String[] recurrenceTokens ) {
-    setTemporalComboValue( TemporalValue.MONTHLY );
+    setTemporalState( TemporalValue.MONTHLY );
     monthlyPanel.setDayNOfMonth();
     String dayNOfMonth = recurrenceTokens[4];
     monthlyPanel.setDayOfMonth( dayNOfMonth );
   }
   
   private void setNthDayNameOfMonthRecurrence( String[] recurrenceTokens ) {
-    setTemporalComboValue( TemporalValue.MONTHLY );
+    setTemporalState( TemporalValue.MONTHLY );
     monthlyPanel.setNthDayNameOfMonth();
     monthlyPanel.setWeekOfMonth( WeekOfMonth.get( Integer.parseInt( recurrenceTokens[5])-1 ) );
     monthlyPanel.setDayOfWeek( DayOfWeek.get( Integer.parseInt( recurrenceTokens[4])-1 ) );
   }
   
   private void setLastDayNameOfMonthRecurrence( String[] recurrenceTokens ) {
-    setTemporalComboValue( TemporalValue.MONTHLY );
+    setTemporalState( TemporalValue.MONTHLY );
     monthlyPanel.setNthDayNameOfMonth();
     monthlyPanel.setWeekOfMonth( WeekOfMonth.LAST );
     monthlyPanel.setDayOfWeek( DayOfWeek.get( Integer.parseInt( recurrenceTokens[4])-1 ) );
   }
   
   private void setEveryMonthNameNRecurrence( String[] recurrenceTokens ) {
-    setTemporalComboValue( TemporalValue.YEARLY );
+    setTemporalState( TemporalValue.YEARLY );
     yearlyPanel.setEveryMonthOnNthDay();
     yearlyPanel.setDayOfMonth( recurrenceTokens[4] );
     yearlyPanel.setMonthOfYear0( MonthOfYear.get( Integer.parseInt( recurrenceTokens[5] )-1 ) );
   }
   
   private void setNthDayNameOfMonthNameRecurrence( String[] recurrenceTokens ) {
-    setTemporalComboValue( TemporalValue.YEARLY );
+    setTemporalState( TemporalValue.YEARLY );
     yearlyPanel.setNthDayNameOfMonthName();
     yearlyPanel.setMonthOfYear1( MonthOfYear.get( Integer.parseInt( recurrenceTokens[6] )-1 ) );
     yearlyPanel.setWeekOfMonth( WeekOfMonth.get( Integer.parseInt( recurrenceTokens[5])-1 ) );
@@ -263,16 +263,11 @@ public class RecurrenceEditor extends VerticalPanel {
   }
   
   private void setLastDayNameOfMonthNameRecurrence( String[] recurrenceTokens ) {
-    setTemporalComboValue( TemporalValue.YEARLY );
+    setTemporalState( TemporalValue.YEARLY );
     yearlyPanel.setNthDayNameOfMonthName();
     yearlyPanel.setMonthOfYear1( MonthOfYear.get( Integer.parseInt( recurrenceTokens[5] )-1 ) );
     yearlyPanel.setWeekOfMonth( WeekOfMonth.LAST );
     yearlyPanel.setDayOfWeek( DayOfWeek.get( Integer.parseInt( recurrenceTokens[4])-1 ) );
-  }
-  
-  private void setTemporalComboValue( TemporalValue tv ) {
-    temporalCombo.setSelectedIndex( tv.value() );
-    handleTemporalChange();
   }
   
   /**
@@ -303,14 +298,13 @@ public class RecurrenceEditor extends VerticalPanel {
       p = (SimpleRecurrencePanel)temporalPanelMap.get(currentVal);
       p.setValue( Integer.toString( repeatTime ) );
     }
-    setTemporalComboValue( currentVal );
+    setTemporalState( currentVal );
   }
 
   
   private Panel createStartTimePanel() {
     SimpleGroupBox startTimeGB = new SimpleGroupBox("Start Time");
 
-    // add calendar control for start time
     startTimePicker = new TimePicker();
     startTimeGB.add(startTimePicker);
 
@@ -325,6 +319,7 @@ public class RecurrenceEditor extends VerticalPanel {
     recurrenceGB.add(p);
 
     secondlyPanel = new SecondlyRecurrencePanel();
+    secondlyPanel.setVisible(true);
     minutelyPanel = new MinutelyRecurrencePanel();
     hourlyPanel = new HourlyRecurrencePanel();
     dailyPanel = new DailyRecurrencePanel();
@@ -332,10 +327,7 @@ public class RecurrenceEditor extends VerticalPanel {
     monthlyPanel = new MonthlyRecurrencePanel();
     yearlyPanel = new YearlyRecurrencePanel();
 
-    // must come after creation of temporal panels
-    assert null != dailyPanel : "";
-    temporalCombo = createTemporalCombo();
-    p.add(temporalCombo);
+    createTemporalMap();
 
     p.add(secondlyPanel);
     p.add(minutelyPanel);
@@ -348,49 +340,17 @@ public class RecurrenceEditor extends VerticalPanel {
     return recurrenceGB;
   }
 
-  private void addTemporalListItem(ListBox lb, final TemporalValue temporalVal, Panel temporalPanel) {
-
-    String name = temporalVal.toString();
-    lb.addItem( name );
-    temporalPanelMap.put(temporalVal, temporalPanel);
-  }
-
-  private ListBox createTemporalCombo() {
+  private void createTemporalMap() {
+    // must come after creation of temporal panels
     assert dailyPanel != null : "Temporal panels must be initialized before calling createTemporalCombo.";
-    
-    final RecurrenceEditor localThis = this;
-    ListBox lb = new ListBox();
-    lb.setVisibleItemCount( 1 );
-    lb.setStyleName("temporalCombo"); //$NON-NLS-1$
-    lb.addChangeListener( new ChangeListener() {
-      public void onChange(Widget sender) {
-        localThis.handleTemporalChange();
-      }
-    });
-    
-    addTemporalListItem( lb, TemporalValue.SECONDS, secondlyPanel );
-    lb.setItemSelected( 0, true );
-    secondlyPanel.setVisible(true);
 
-    addTemporalListItem( lb, TemporalValue.MINUTES, minutelyPanel );
-    addTemporalListItem( lb, TemporalValue.HOURS, hourlyPanel );
-    addTemporalListItem( lb, TemporalValue.DAILY, dailyPanel );
-    addTemporalListItem( lb, TemporalValue.WEEKLY, weeklyPanel);
-    addTemporalListItem( lb, TemporalValue.MONTHLY, monthlyPanel);
-    addTemporalListItem( lb, TemporalValue.YEARLY, yearlyPanel);
-
-    return lb;
-  }
-
-  private void handleTemporalChange() {
-    String strTemporalVal = temporalCombo.getItemText( temporalCombo.getSelectedIndex() );
-    try {
-      TemporalValue t = TemporalValue.stringToTemporalValue( strTemporalVal );
-      selectTemporalPanel( t );
-    } catch (EnumException e) {
-      // TODO sbarkdull, popup dialog
-      e.printStackTrace();
-    }
+    temporalPanelMap.put( TemporalValue.SECONDS, secondlyPanel );
+    temporalPanelMap.put( TemporalValue.MINUTES, minutelyPanel );
+    temporalPanelMap.put( TemporalValue.HOURS, hourlyPanel );
+    temporalPanelMap.put( TemporalValue.DAILY, dailyPanel );
+    temporalPanelMap.put( TemporalValue.WEEKLY, weeklyPanel);
+    temporalPanelMap.put( TemporalValue.MONTHLY, monthlyPanel);
+    temporalPanelMap.put( TemporalValue.YEARLY, yearlyPanel);
   }
   
   private class SimpleRecurrencePanel extends HorizontalPanel {
@@ -818,10 +778,7 @@ public class RecurrenceEditor extends VerticalPanel {
    * condition occurs as a result of programmer error.
    */
   public Integer getRepeatInSecs() throws RuntimeException {
-    int selIdx = temporalCombo.getSelectedIndex();
-    TemporalValue tv = TemporalValue.get( selIdx );    
-    
-    switch ( tv ) {
+    switch ( temporalState ) {
       case WEEKLY:
         // fall through
       case MONTHLY:
@@ -837,14 +794,9 @@ public class RecurrenceEditor extends VerticalPanel {
       case DAILY:
         return TimeUtil.daysToSecs( Integer.parseInt( dailyPanel.getRepeatValue() ) );
       default:
-        throw new RuntimeException( "Invalid TemporalValue in getRepeatInSecs(): " + tv );
+        throw new RuntimeException( "Invalid TemporalValue in getRepeatInSecs(): " + temporalState );
     }
   }
-
-  // TODO sbarkdull
-//public void setRepeatInSecs(String repeatInSec) {
-//
-//}
 
   /**
    * 
@@ -854,8 +806,7 @@ public class RecurrenceEditor extends VerticalPanel {
    * condition occurs as a result of programmer error.
    */
   public String getCronString() throws RuntimeException {
-    TemporalValue tv = TemporalValue.get( temporalCombo.getSelectedIndex() );
-    switch ( tv ) {
+    switch ( temporalState ) {
       case SECONDS:
         // fall through
       case MINUTES:
@@ -871,7 +822,7 @@ public class RecurrenceEditor extends VerticalPanel {
       case YEARLY:
         return getYearlyCronString();
       default:
-        throw new RuntimeException( "Invalid TemporalValue in getCronString(): " + tv );
+        throw new RuntimeException( "Invalid TemporalValue in getCronString(): " + temporalState );
     }
   }
   
@@ -1027,5 +978,14 @@ public class RecurrenceEditor extends VerticalPanel {
   
   public void setEndBy() {
     dateRangeEditor.setEndBy();
+  }
+
+  public TemporalValue getTemporalState() {
+    return temporalState;
+  }
+
+  public void setTemporalState(TemporalValue temporalState) {
+    this.temporalState = temporalState;
+    selectTemporalPanel( temporalState );
   }
 }
