@@ -6,6 +6,11 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * 
+ * @author Steven Barkdull
+ *
+ */
 public class ConfirmDialog extends MessageDialog {
 
   protected Button cancelBtn = null;
@@ -38,5 +43,6 @@ public class ConfirmDialog extends MessageDialog {
   public void setOnCancelHandler( final ICallback handler )
   {
     cancelHandler = handler;
+    setOnCloseHandler( handler );
   }
 }
