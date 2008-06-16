@@ -139,6 +139,15 @@ public class XmlSerializer {
         currentSchedule.setStartDate( val );
         val = attributes.getValue( "end-date-time" ); //$NON-NLS-1$
         currentSchedule.setEndDate( val );
+        
+
+        val = attributes.getValue( "solution" ); //$NON-NLS-1$
+        currentSchedule.setSolution( val );
+        val = attributes.getValue( "path" ); //$NON-NLS-1$
+        currentSchedule.setPath( val );
+        val = attributes.getValue( "action" ); //$NON-NLS-1$
+        currentSchedule.setAction( val );
+        
         val = attributes.getValue( "cron-string" ); //$NON-NLS-1$
         if ( null != val ) {
           currentSchedule.setCronString( val );
