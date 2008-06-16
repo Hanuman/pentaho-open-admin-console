@@ -8,6 +8,7 @@ import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -23,6 +24,8 @@ public class TableListCtrl<RowDataType> extends ScrollPanel {
 
   private FlexTable table = null;
   private List<RowDataType> dataList = new LinkedList<RowDataType>();
+  private CheckBox selectAllCb = null;
+  private ICallback<TableListCtrl<RowDataType>> selectAllHandler = null;
   private static final int HEADER_ROW = 0;
   private static final int FIRST_ROW = HEADER_ROW+1;
   private static final int SELECT_COLUMN = 0;
@@ -75,9 +78,22 @@ public class TableListCtrl<RowDataType> extends ScrollPanel {
   
   private void addTableHeader( FlexTable tmpTable, Widget[] columnHeaderWidgets )
   {
-    Widget l = getEmptyWidget();
-    l.setTitle( "Check to select row" );
-    tmpTable.setWidget( HEADER_ROW, SELECT_COLUMN, l );
+    final TableListCtrl<RowDataType> localThis = this;
+    selectAllCb = new CheckBox();
+    selectAllCb.setTitle( "Check to select all rows" );
+    selectAllCb.addClickListener( new ClickListener() {
+      public void onClick(Widget sender) {
+        if ( localThis.selectAllCb.isChecked() ) {
+          selectAll();
+        } else {
+          unselectAll();
+        }
+        if ( null != selectAllHandler ) {
+          selectAllHandler.onHandle( localThis );
+        }
+      }
+    });
+    tmpTable.setWidget( HEADER_ROW, SELECT_COLUMN, selectAllCb );
     for ( int ii=0; ii<columnHeaderWidgets.length; ++ii ) {
       tmpTable.setWidget( HEADER_ROW, ii+FIRST_COLUMN, columnHeaderWidgets[ii] );
     }
@@ -207,5 +223,9 @@ public class TableListCtrl<RowDataType> extends ScrollPanel {
 
     table.setWidget( FIRST_ROW, 0, l );
     table.getFlexCellFormatter().setColSpan( FIRST_ROW, 0,  getNumColumns() );
+  }
+  
+  public void setOnSelectAllHandler( ICallback<TableListCtrl<RowDataType>> handler ) {
+    this.selectAllHandler = handler;
   }
 }
