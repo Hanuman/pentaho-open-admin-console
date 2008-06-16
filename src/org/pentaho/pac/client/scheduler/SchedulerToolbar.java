@@ -28,8 +28,6 @@ import com.google.gwt.user.client.ui.Widget;
 public class SchedulerToolbar extends HorizontalPanel {
 
   public final static String ALL_FILTER = "All";
-  private PushButton selectAllBtn = null;
-  private PushButton unselectAllBtn = null;
   private PushButton createBtn = null;
   private PushButton updateBtn = null;
   private PushButton deleteBtn = null;
@@ -39,8 +37,6 @@ public class SchedulerToolbar extends HorizontalPanel {
   private PushButton toggleResumePauseAllBtn = null;
   private ListBox filterList = null;
 
-  private ICallback onSelectAllListener = null;
-  private ICallback onUnselectAllListener = null;
   private ICallback onCreateListener = null;
   private ICallback onUpdateListener = null;
   private ICallback onDeleteListener = null;
@@ -58,24 +54,6 @@ public class SchedulerToolbar extends HorizontalPanel {
   private void createToolbar() {
     
     final SchedulerToolbar localThis = this;
-    
-    selectAllBtn = new PushButton( "SelAl", new ClickListener() {
-      public void onClick(Widget sender) {
-        if ( null != onSelectAllListener ) {
-          onSelectAllListener.onHandle( null );
-        }
-      }
-    });  
-    add( selectAllBtn );
-    
-    unselectAllBtn = new PushButton( "UnSelAl", new ClickListener() {
-      public void onClick(Widget sender) {
-        if ( null != onUnselectAllListener ) {
-          onUnselectAllListener.onHandle( null );
-        }
-      }
-    });  
-    add( unselectAllBtn );
     
     createBtn = new PushButton( "Cr", new ClickListener() {
       public void onClick(Widget sender) {
@@ -171,14 +149,6 @@ public class SchedulerToolbar extends HorizontalPanel {
   
   public String getFilterValue() {
     return filterList.getValue( filterList.getSelectedIndex() );
-  }
-  
-  public void setOnSelectAllListener( ICallback cb ) {
-    this.onSelectAllListener = cb;
-  }
-  
-  public void setOnUnselectAllListener( ICallback cb ) {
-    this.onUnselectAllListener = cb;
   }
   
   public void setOnCreateListener( ICallback cb ) {
