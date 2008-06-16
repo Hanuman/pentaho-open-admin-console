@@ -15,6 +15,8 @@
  */
 package org.pentaho.pac.client.scheduler;
 
+import java.util.Date;
+
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 
 import com.google.gwt.user.client.ui.TabPanel;
@@ -23,30 +25,32 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
 
   private ScheduleEditor scheduleEditor = new ScheduleEditor();
   private SolutionRepositoryItemPicker solRepItemPicker = new SolutionRepositoryItemPicker();
-  
-  private static final int SCHEDULE_TAB = 0;
-  private static final int SOLUTION_REPOSIOTORY_ITEM_PICKER_TAB = 1;
+  private TabPanel tabPanel = new TabPanel();
+  enum TabIndex {
+    SCHEDULE,
+    SCHEDULE_ACTION;
+  }; // end enum
   
   public ScheduleCreatorDialog() {
     super();
+
     setTitle( "Schedule Creator" );
     setClientSize( "430px", "300px" );
     
-    TabPanel tp = new TabPanel();
-    tp.add( scheduleEditor, "Schedule" );
-    tp.add( solRepItemPicker, "Scheduled Action" );
+    tabPanel.add( scheduleEditor, "Schedule" );
+    tabPanel.add( solRepItemPicker, "Scheduled Action" );
 
-    tp.setWidth( "100%" );
-    tp.setHeight( "100%" );
+    tabPanel.setWidth( "100%" );
+    tabPanel.setHeight( "100%" );
     
 //  scheduleEditor.setWidth( "100%" );
 //  scheduleEditor.setHeight( "100%" );
 //    solRepItemPicker.setWidth( "100%" );
 //    solRepItemPicker.setHeight( "100%" );
     
-    tp.selectTab( SCHEDULE_TAB );
+    tabPanel.selectTab( TabIndex.SCHEDULE.ordinal() );
     
-    addWidgetToClientArea( tp );
+    addWidgetToClientArea( tabPanel );
   }
 
   public ScheduleEditor getScheduleEditor() {
@@ -55,5 +59,12 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
 
   public SolutionRepositoryItemPicker getSolutionRepositoryItemPicker() {
     return solRepItemPicker;
+  }
+  
+  public void reset( Date d ) {
+    scheduleEditor.reset( d );
+    solRepItemPicker.reset();
+    
+    tabPanel.selectTab( TabIndex.SCHEDULE.ordinal() );
   }
 }
