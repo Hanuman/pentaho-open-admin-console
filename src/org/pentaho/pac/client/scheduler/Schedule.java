@@ -45,6 +45,9 @@ public class Schedule implements Serializable {
   private String repeatTimeInMillisecs = null;
   private String startDate = null;
   private String endDate = null;
+  private String solution = null;
+  private String path = null;
+  private String action = null;
   
   public String getStartDate() {
     return startDate;
@@ -118,6 +121,24 @@ public class Schedule implements Serializable {
   
   public void setRepeatTimeInMillisecs(String repeatTimeInMillisecs) {
     this.repeatTimeInMillisecs = repeatTimeInMillisecs;
+  }
+  public String getSolution() {
+    return solution;
+  }
+  public void setSolution(String solution) {
+    this.solution = solution;
+  }
+  public String getPath() {
+    return path;
+  }
+  public void setPath(String path) {
+    this.path = path;
+  }
+  public String getAction() {
+    return action;
+  }
+  public void setAction(String action) {
+    this.action = action;
   }
   
 }
