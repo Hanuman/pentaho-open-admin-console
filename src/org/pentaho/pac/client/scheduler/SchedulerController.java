@@ -75,18 +75,6 @@ public class SchedulerController {
       SchedulerToolbar schedulerToolbar = schedulerPanel.getSchedulerToolbar();
       final SchedulerController localThis = this;
       
-      schedulerToolbar.setOnSelectAllListener( new ICallback<Object>() { 
-        public void onHandle(Object o) {
-          localThis.handleSelectAllSchedules();
-        }
-      });
-      
-      schedulerToolbar.setOnUnselectAllListener( new ICallback<Object>() { 
-        public void onHandle(Object o) {
-          localThis.handleUnselectAllSchedules();
-        }
-      });
-      
       schedulerToolbar.setOnCreateListener( new ICallback<Object>() { 
         public void onHandle(Object o) {
           localThis.handleCreateSchedule();
@@ -423,20 +411,11 @@ public class SchedulerController {
     PacServiceFactory.getSchedulerService().deleteJobs( scheduleList, callback );
     
   }
-  
-  private void handleSelectAllSchedules() {
-    schedulerPanel.getSchedulesListCtrl().selectAll();
-  }
-  
-  private void handleUnselectAllSchedules() {
-    schedulerPanel.getSchedulesListCtrl().unselectAll();
-  }
 
   private void handleCreateSchedule() {
     final SchedulerController localThis = this;
     
-    scheduleCreatorDialog.getScheduleEditor().reset();
-    scheduleCreatorDialog.getSolutionRepositoryItemPicker().reset();
+    scheduleCreatorDialog.reset( new Date() );
     scheduleCreatorDialog.setOnOkHandler( new ICallback<MessageDialog>() {
       public void onHandle(MessageDialog d) {
         localThis.createSchedule();
@@ -459,9 +438,8 @@ public class SchedulerController {
     assert scheduleList.size() == 1 : "When clicking update, exactly one schedule should be selected.";
     
     Schedule s = scheduleList.get( 0 );
-    ScheduleEditor scheduleEditor = scheduleCreatorDialog.getScheduleEditor();
     try {
-      initScheduleEditor( scheduleEditor, s );
+      initScheduleCreatorDialog( s );
       scheduleCreatorDialog.center();
     } catch (CronParseException e) {
       final MessageDialog errorDialog = new MessageDialog( "Error",
@@ -472,7 +450,6 @@ public class SchedulerController {
       errorDialog.setOnOkHandler( new ICallback() {
         public void onHandle(Object o) {
           errorDialog.hide();
-          scheduleCreatorDialog.getScheduleEditor().reset();
           scheduleCreatorDialog.center();
         }
       });
@@ -488,13 +465,21 @@ public class SchedulerController {
    * @param sched
    * @throws CronParseException if sched has a non-empty CRON string, and the CRON string is not valid.
    */
-  private static void initScheduleEditor( ScheduleEditor scheduleEditor, Schedule sched ) throws CronParseException {
-    scheduleEditor.reset();
+  private void initScheduleCreatorDialog( Schedule sched ) throws CronParseException {
 
+    scheduleCreatorDialog.reset( new Date() );
+    ScheduleEditor scheduleEditor = scheduleCreatorDialog.getScheduleEditor();
+    
     scheduleEditor.setName( sched.getJobName() );
     scheduleEditor.setGroupName( sched.getJobGroup() );
     scheduleEditor.setDescription( sched.getDescription() );
     String cronStr = sched.getCronString();
+    
+    SolutionRepositoryItemPicker solRepPicker = scheduleCreatorDialog.getSolutionRepositoryItemPicker();
+    solRepPicker.setSolution( sched.getSolution() );
+    solRepPicker.setPath( sched.getPath() );
+    solRepPicker.setAction( sched.getAction() );
+    
     String repeatInMillisecs;
     if ( null != cronStr ) {
       scheduleEditor.setCronString( sched.getCronString() );  // throws CronParseException
