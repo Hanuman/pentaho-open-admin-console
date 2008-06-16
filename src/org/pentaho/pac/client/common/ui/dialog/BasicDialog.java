@@ -1,5 +1,6 @@
 package org.pentaho.pac.client.common.ui.dialog;
 
+import org.pentaho.pac.client.common.ui.ICallback;
 import org.pentaho.pac.client.utils.PacImageBundle;
 
 import com.google.gwt.user.client.ui.Button;
@@ -90,6 +91,12 @@ public class BasicDialog extends DialogBox {
     idCounter++;
     setHTML("<span class='basicDialog.titleBarContent' id='" + titleBarSpanId + "'/>");  //$NON-NLS-1$//$NON-NLS-2$
   }
+
+  private ICallback<BasicDialog> closeHandler = null;
+  public void setOnCloseHandler( final ICallback<BasicDialog> handler )
+  {
+    closeHandler = handler;
+  }
   
   public void show() {
     super.show();
@@ -101,7 +108,11 @@ public class BasicDialog extends DialogBox {
       img.setStyleName( "basicDialog.closeIcon" ); //$NON-NLS-1$
       img.addClickListener( new ClickListener() {
         public void onClick(Widget sender) {
-          localThis.hide();
+          if ( null != localThis.closeHandler ) {
+            localThis.closeHandler.onHandle( localThis );
+          } else {
+            localThis.hide();
+          }
         }
       });
       HorizontalPanel p = new HorizontalPanel();
