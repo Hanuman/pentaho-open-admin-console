@@ -32,9 +32,9 @@ public class SolutionRepositoryItemPicker extends FlexTable {
   
   public void reset() {    
     // TODO sbarkdull tmp
-    solutionTb.setText( "samples" );
-    pathTb.setText( "getting-started" );
-    actionTb.setText( "HelloWorld.xaction" );
+    solutionTb.setText( "" );
+    pathTb.setText( "" );
+    actionTb.setText( "" );
   }
   
   public String getSolution() {
