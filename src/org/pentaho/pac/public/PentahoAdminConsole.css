@@ -413,17 +413,6 @@ a:visited {
 }
 
 .gwt-TabBar .gwt-TabBarItem {
-  color: white;
-  padding: 3px 8px 3px 8px;
-  cursor: default;
-  background-color: #A0AF21;
-	border-color:#95A22C;
-	border-style:solid;
-	border-width: 1px 1px 0px 1px;
-  margin-right: 2px;
-}
-
-.gwt-TabBar .gwt-TabBarItem-selected {
   padding: 3px 8px 3px 8px;
   cursor: pointer;
   color: black;
@@ -436,14 +425,25 @@ a:visited {
   margin-right: 2px;
 }
 
+.gwt-TabBar .gwt-TabBarItem-selected {
+  color: white;
+  padding: 3px 8px 3px 8px;
+  cursor: default;
+  background-color: #A0AF21;
+	border-color:#95A22C;
+	border-style:solid;
+	border-width: 1px 1px 0px 1px;
+  margin-right: 2px;
+}
+
 .gwt-TabBar .gwt-TabBarItemLabel-selected {
+  color: white;
   font-size: 8pt;
-  font-color: black;
 }
 
 .gwt-TabBar .gwt-TabBarItemLabel {
-  color: white;
   font-size: 8pt;
+  font-color: black;
 }
 
 .gwt-TabBar .gwt-TabBarItemCloseIcon-selected {
