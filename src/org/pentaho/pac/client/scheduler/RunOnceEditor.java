@@ -5,6 +5,7 @@ import java.util.Date;
 import org.pentaho.pac.client.common.ui.DatePickerEx;
 import org.pentaho.pac.client.common.ui.TimePicker;
 import org.pentaho.pac.client.common.ui.widget.ValidationLabel;
+import org.pentaho.pac.client.common.util.TimeUtil;
 
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -15,6 +16,9 @@ public class RunOnceEditor extends VerticalPanel{
   private DatePickerEx startDatePicker = new DatePickerEx();
   private ValidationLabel startTimeLabel = null;
   private ValidationLabel startDateLabel = null;
+  private static final String DEFAULT_START_HOUR = "12"; //$NON-NLS-1$
+  private static final String DEFAULT_START_MINUTE = "00"; //$NON-NLS-1$
+  private static final TimeUtil.TimeOfDay DEFAULT_TIME_OF_DAY = TimeUtil.TimeOfDay.AM;
   
   public RunOnceEditor() {
     startTimeLabel = new ValidationLabel( "Start Time:" );
@@ -39,5 +43,13 @@ public class RunOnceEditor extends VerticalPanel{
   
   public void setStartTime( String strTime ) {
     startTimePicker.setTime( strTime );
+  }
+  
+  public void reset( Date d ) {
+    startTimePicker.setHour( DEFAULT_START_HOUR );
+    startTimePicker.setMinute( DEFAULT_START_MINUTE );
+    startTimePicker.setTimeOfDay( DEFAULT_TIME_OF_DAY );
+    startDatePicker.setSelectedDate( d );
+    startDatePicker.setYoungestDate( d );
   }
 }
