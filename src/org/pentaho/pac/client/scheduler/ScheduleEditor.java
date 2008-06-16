@@ -181,10 +181,16 @@ public class ScheduleEditor extends FlexTable {
     cronEditor.setVisible( false );
   }
 
-  public void reset() {
+  public void reset( Date now ) {
     setName( DEFAULT_NAME );
     setGroupName( DEFAULT_GROUP_NAME );
     setDescription( DEFAULT_DESCRIPTION );
+    
+    runOnceEditor.reset( now );
+    recurrenceEditor.reset( now );
+    cronEditor.reset( now );
+    
+    selectScheduleTypeEditor( ScheduleType.RUN_ONCE );
   }
   
   public String getName() {
