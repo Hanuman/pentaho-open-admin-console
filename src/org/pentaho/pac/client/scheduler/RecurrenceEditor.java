@@ -148,14 +148,13 @@ public class RecurrenceEditor extends VerticalPanel {
     setTemporalState( TemporalValue.SECONDS );
   }
   
-  public void reset() {
+  public void reset( Date d ) {
 
     startTimePicker.setHour( "12" );
     startTimePicker.setMinute( "00" );
     startTimePicker.setTimeOfDay( TimeUtil.TimeOfDay.AM );
 
-    Date now = new Date();
-    dateRangeEditor.reset( now );
+    dateRangeEditor.reset( d );
     
     secondlyPanel.reset();
     minutelyPanel.reset();
