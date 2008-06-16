@@ -22,9 +22,9 @@ public class CronEditor extends VerticalPanel {
     add( dateRangeEditor );
   }
   
-  public void reset() {
+  public void reset( Date d ) {
     cronTb.setText( "" );
-    dateRangeEditor.reset( new Date() );
+    dateRangeEditor.reset( d );
   }
 
   public String getCronString() {
