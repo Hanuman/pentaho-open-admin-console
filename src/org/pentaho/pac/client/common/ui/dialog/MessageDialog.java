@@ -2,6 +2,7 @@ package org.pentaho.pac.client.common.ui.dialog;
 
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.ICallback;
+import org.pentaho.pac.client.common.ui.IResponseCallback;
 import org.pentaho.pac.client.common.util.StringUtils;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
@@ -11,27 +12,39 @@ import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * 
+ * @author Steven Barkdull
+ *
+ */
 public class MessageDialog extends BasicDialog {
 
   protected static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   protected Label msgLabel = null;
   private Button okBtn = null;
-  ICallback okHandler = new ICallback() {
-    public void onHandle(Object o) {
+  private ICallback<MessageDialog> okHandler = new ICallback<MessageDialog>() {
+    public void onHandle(MessageDialog md) {
       hide();
     }
   };
+  private IResponseCallback<MessageDialog, Boolean> validateHandler = null;
   
   public MessageDialog( String title, String msg ) {
     super( title );
     
     msgLabel = new Label();
     setMessage( msg );
-
+    final MessageDialog localThis = this;
+    
     okBtn = new Button(MSGS.ok(), new ClickListener() {
       public void onClick(Widget sender) {
-        if (okHandler != null) {
-          okHandler.onHandle(sender);
+        boolean isValid = ( null != validateHandler )
+          ? validateHandler.onHandle( localThis )
+          : true;
+        if ( isValid ) {
+          if (okHandler != null) {
+            okHandler.onHandle(localThis);
+          }
         }
       }
     });
@@ -64,11 +77,25 @@ public class MessageDialog extends BasicDialog {
     }
   }
   
-  public void setOnOkHandler( final ICallback handler )
+  public void setOnOkHandler( final ICallback<MessageDialog> handler )
   {
     okHandler = handler;
   }
-
+  
+  /**
+   * Set the onValidate handler. If the onValidate handler's onHandle() method
+   * return false, the onOk handler will NOT be called. If it turns true, the
+   * onOk handler will be called.
+   * If the onValidate handler is null, this class will behave as if the
+   * onValidate handler always returns true (i.e. the onOk handler will
+   * always be called).
+   * 
+   * @param handler
+   */
+  public void setOnValidateHandler( final IResponseCallback<MessageDialog, Boolean> handler )
+  {
+    validateHandler = handler;
+  }
 
   /**
    * see: http://google-web-toolkit.googlecode.com/svn-history/r229/trunk/samples/mail/src/com/google/gwt/sample/mail/client/AboutDialog.java
