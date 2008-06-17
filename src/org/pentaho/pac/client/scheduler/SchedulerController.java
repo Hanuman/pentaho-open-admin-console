@@ -567,19 +567,17 @@ public class SchedulerController {
    * that may be cleared in clearScheduleEditorValidationMsgs(), must be set-able here.
    */
   private boolean isScheduleCreatorDialogValid() {
-    boolean isValid = true;
-    ScheduleEditor schedEd = scheduleCreatorDialog.getScheduleEditor();
-    String errorMsg = null;
-    
-    String name = schedEd.getName();
-    errorMsg = StringUtils.isEmpty( name ) ? "Name cannot be empty." : null;
-    isValid &= errorMsg == null;
-    schedEd.setNameError( errorMsg );
 
-    String gName = schedEd.getGroupName();
-    errorMsg = StringUtils.isEmpty( gName ) ? "Group cannot be empty." : null;
-    isValid &= errorMsg == null;
-    schedEd.setGroupNameError( errorMsg );
+    boolean isValid = true;
+
+    ScheduleEditor schedEd = scheduleCreatorDialog.getScheduleEditor();
+    SolutionRepositoryItemPicker solRepPicker = scheduleCreatorDialog.getSolutionRepositoryItemPicker();
+    
+    ScheduleEditorValidator schedEdValidator = new ScheduleEditorValidator( schedEd );
+    isValid &= schedEdValidator.isValid();
+    
+    SolutionRepositoryItemPickerValidator solRepValidator = new SolutionRepositoryItemPickerValidator( solRepPicker );
+    isValid &= solRepValidator.isValid();
     
     return isValid;
   }
