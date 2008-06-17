@@ -40,11 +40,7 @@ public class ValidationLabel extends VerticalPanel {
     }
   }
   
-  public void setText( String strLabel ) {
-    label.setText( strLabel );
-  }
-  
-  public String getText() {
-    return label.getText();
+  public Label getLabel() {
+    return label;
   }
 }
