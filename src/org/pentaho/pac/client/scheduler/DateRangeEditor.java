@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.pentaho.pac.client.common.ui.DatePickerEx;
 import org.pentaho.pac.client.common.ui.SimpleGroupBox;
+import org.pentaho.pac.client.common.ui.widget.ErrorLabel;
 
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -18,6 +19,8 @@ public class DateRangeEditor extends SimpleGroupBox {
 
   private DatePickerEx startDatePicker = null;
   private EndDatePanel endDatePanel = null;
+  
+  private ErrorLabel startLabel = null;
 
   public DateRangeEditor( Date date ) {
 
@@ -26,9 +29,9 @@ public class DateRangeEditor extends SimpleGroupBox {
     HorizontalPanel hp = new HorizontalPanel();
     add(hp);
 
-    Label l = new Label("Start:");
-    l.setStyleName("startLabel");
-    hp.add(l);
+    startLabel = new ErrorLabel( new Label( "Start:" ) );
+    startLabel.setStyleName("startLabel");
+    hp.add(startLabel);
     startDatePicker = new DatePickerEx();
     hp.add(startDatePicker);
 
@@ -81,12 +84,21 @@ public class DateRangeEditor extends SimpleGroupBox {
   public boolean isNoEndDate() {
     return endDatePanel.isNoEndDate();
   }
+  
+  public void setStartByError( String errorMsg ) {
+    startLabel.setErrorMsg( errorMsg );
+  }
+  
+  public void setEndByError( String errorMsg ) {
+    endDatePanel.setEndByError( errorMsg );
+  }
 
   private class EndDatePanel extends VerticalPanel {
 
     private DatePickerEx endDatePicker = null;
     private RadioButton noEndDateRb = null;
     private RadioButton endByRb = null;
+    private ErrorLabel endByLabel = null;
     
     public EndDatePanel( Date date ) {
       final EndDatePanel localThis = this;
@@ -100,7 +112,8 @@ public class DateRangeEditor extends SimpleGroupBox {
   
       endByRb = new RadioButton(END_DATE_RB_GROUP, "End by:");
       endByRb.setStyleName("recurrenceRadioButton");
-      hp.add(endByRb);
+      endByLabel = new ErrorLabel( endByRb );
+      hp.add(endByLabel);
       endDatePicker = new DatePickerEx();
       endDatePicker.setEnabled(false);
       hp.add(endDatePicker);
@@ -157,6 +170,10 @@ public class DateRangeEditor extends SimpleGroupBox {
     
     public void setDate( Date d ) {
       endDatePicker.setSelectedDate( d );
+    }
+    
+    public void setEndByError( String errorMsg ) {
+      endByLabel.setErrorMsg( errorMsg );
     }
   }
 }

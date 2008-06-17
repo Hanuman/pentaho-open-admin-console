@@ -22,7 +22,7 @@ import java.util.Map;
 
 import org.pentaho.pac.client.common.EnumException;
 import org.pentaho.pac.client.common.ui.SimpleGroupBox;
-import org.pentaho.pac.client.common.ui.widget.ValidationLabel;
+import org.pentaho.pac.client.common.ui.widget.ErrorLabel;
 import org.pentaho.pac.client.common.util.TimeUtil;
 import org.pentaho.pac.client.scheduler.RecurrenceEditor.TemporalValue;
 
@@ -115,8 +115,8 @@ public class ScheduleEditor extends FlexTable {
   private SimpleGroupBox scheduleGB = null;
   
   // validation labels
-  private ValidationLabel nameLabel;
-  private ValidationLabel groupNameLabel;
+  private ErrorLabel nameLabel;
+  private ErrorLabel groupNameLabel;
 
 //  private String cronStr = null;
 //  private String repeatInSecs = null;
@@ -132,12 +132,12 @@ public class ScheduleEditor extends FlexTable {
     setCellSpacing( 0 );
     
     int rowNum = 0;
-    nameLabel = new ValidationLabel( "Name:" );
+    nameLabel = new ErrorLabel( new Label( "Name:" ) );
     setWidget( rowNum , 0, nameLabel );
     setWidget( rowNum , 1, nameTb );
     
     rowNum++;
-    groupNameLabel = new ValidationLabel( "Group:" );
+    groupNameLabel = new ErrorLabel( new Label( "Group:" ) );
     setWidget( rowNum, 0, groupNameLabel );
     setWidget( rowNum, 1, groupNameTb );
 

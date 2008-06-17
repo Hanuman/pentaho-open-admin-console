@@ -8,6 +8,7 @@ import java.util.Map;
 import org.pentaho.pac.client.common.EnumException;
 import org.pentaho.pac.client.common.ui.SimpleGroupBox;
 import org.pentaho.pac.client.common.ui.TimePicker;
+import org.pentaho.pac.client.common.ui.widget.ErrorLabel;
 import org.pentaho.pac.client.common.util.StringUtils;
 import org.pentaho.pac.client.common.util.TimeUtil;
 import org.pentaho.pac.client.common.util.TimeUtil.DayOfWeek;
@@ -16,7 +17,6 @@ import org.pentaho.pac.client.common.util.TimeUtil.TimeOfDay;
 import org.pentaho.pac.client.common.util.TimeUtil.WeekOfMonth;
 import org.pentaho.pac.client.scheduler.CronParser.RecurrenceType;
 
-import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -26,17 +26,19 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 public class RecurrenceEditor extends VerticalPanel {
 
   private TimePicker startTimePicker = null;
 
   private SecondlyRecurrencePanel secondlyPanel = null;
+  private ErrorLabel secondlyLabel = null;
 
   private MinutelyRecurrencePanel minutelyPanel = null;
+  private ErrorLabel minutelyLabel = null;
 
   private HourlyRecurrencePanel hourlyPanel = null;
+  private ErrorLabel hourlyLabel = null;
 
   private DailyRecurrencePanel dailyPanel = null;
 
@@ -110,7 +112,6 @@ public class RecurrenceEditor extends VerticalPanel {
     }
   } /* end enum */
 
-  // TODO sbarkdull, move to TimeUtil
   private static Map<MonthOfYear, Integer> validNumDaysOfMonth = new HashMap<MonthOfYear, Integer>();
   static {
     validNumDaysOfMonth.put(MonthOfYear.JAN, 31);
@@ -126,7 +127,7 @@ public class RecurrenceEditor extends VerticalPanel {
     validNumDaysOfMonth.put(MonthOfYear.NOV, 30);
     validNumDaysOfMonth.put(MonthOfYear.DEC, 31);
   }
-
+  
   private static final String DAILY_RB_GROUP = "daily-group"; //$NON-NLS-1$
 
   private static final String MONTHLY_RB_GROUP = "monthly-group"; //$NON-NLS-1$
@@ -328,9 +329,13 @@ public class RecurrenceEditor extends VerticalPanel {
 
     createTemporalMap();
 
-    p.add(secondlyPanel);
-    p.add(minutelyPanel);
-    p.add(hourlyPanel);
+    secondlyLabel = new ErrorLabel( secondlyPanel );
+    p.add(secondlyLabel);
+    minutelyLabel = new ErrorLabel( minutelyPanel );
+    p.add(minutelyLabel);
+    hourlyLabel = new ErrorLabel( hourlyPanel );
+    p.add(hourlyLabel);
+    
     p.add(dailyPanel);
     p.add(weeklyPanel);
     p.add(monthlyPanel);
@@ -407,6 +412,7 @@ public class RecurrenceEditor extends VerticalPanel {
     private TextBox repeatValueTb = new TextBox();
     private RadioButton everyNDaysRb = new RadioButton(DAILY_RB_GROUP, "Every");
     private RadioButton everyWeekdayRb = new RadioButton(DAILY_RB_GROUP, "Every weekday");
+    private ErrorLabel repeatLabel = null;
     
     public DailyRecurrencePanel() {
       setVisible(false);
@@ -423,7 +429,8 @@ public class RecurrenceEditor extends VerticalPanel {
       Label l = new Label("day(s)");
       l.setStyleName("endLabel");
       hp.add(l);
-      add(hp);
+      repeatLabel = new ErrorLabel( hp );
+      add( repeatLabel );
 
       everyWeekdayRb.setStyleName("recurrenceRadioButton");
       add(everyWeekdayRb);
@@ -459,19 +466,25 @@ public class RecurrenceEditor extends VerticalPanel {
     public boolean isEveryWeekday() {
       return everyWeekdayRb.isChecked();
     }
+    
+    public void setRepeatError( String errorMsg ) {
+      repeatLabel.setErrorMsg( errorMsg );
+    }
   }
 
   private class WeeklyRecurrencePanel extends VerticalPanel {
 
     private Map<DayOfWeek, CheckBox> dayToCheckBox = new HashMap<DayOfWeek, CheckBox>();
+    private ErrorLabel everyWeekOnLabel = null;
     
     public WeeklyRecurrencePanel() {
       setStyleName("weeklyRecurrencePanel");
       setVisible(false);
 
-      Label l = new Label("Recur every week on:");
+      Label l = new Label( "Recur every week on:" );
+      everyWeekOnLabel = new ErrorLabel( l );
       l.setStyleName("startLabel");
-      add(l);
+      add( everyWeekOnLabel );
 
       FlexTable gp = new FlexTable();
       gp.setCellPadding(0);
@@ -534,6 +547,21 @@ public class RecurrenceEditor extends VerticalPanel {
         cb.setChecked( true );
       }
     }
+    
+    public int getNumCheckedDays() {
+      int numCheckedDays = 0;
+      //for ( DayOfWeek d : EnumSet.range( DayOfWeek.SUN, DayOfWeek.SAT) ) {
+      for ( Map.Entry<DayOfWeek, CheckBox> cbEntry : dayToCheckBox.entrySet() ) {
+        if ( cbEntry.getValue().isChecked() ) {
+          numCheckedDays++;
+        }
+      }
+      return numCheckedDays;
+    }
+    
+    public void setEveryDayOnError( String errorMsg ) {
+      everyWeekOnLabel.setErrorMsg( errorMsg );
+    }
   }
 
   private class MonthlyRecurrencePanel extends VerticalPanel {
@@ -543,6 +571,7 @@ public class RecurrenceEditor extends VerticalPanel {
     private TextBox dayOfMonthTb = new TextBox();
     private ListBox whichWeekLb = createWhichWeekListBox();
     private ListBox dayOfWeekLb = createDayOfWeekListBox();
+    private ErrorLabel dayNOfMonthLabel = null;
     
     public MonthlyRecurrencePanel() {
       setVisible(false);
@@ -556,7 +585,9 @@ public class RecurrenceEditor extends VerticalPanel {
       Label l = new Label("of every month");
       l.setStyleName("endLabel");
       hp.add(l);
-      add(hp);
+      
+      dayNOfMonthLabel = new ErrorLabel( hp );
+      add( dayNOfMonthLabel );
 
       hp = new HorizontalPanel();
       nthDayNameOfMonthRb.setStyleName("recurrenceRadioButton");
@@ -618,6 +649,10 @@ public class RecurrenceEditor extends VerticalPanel {
     public void setDayOfWeek( DayOfWeek day ) {
       dayOfWeekLb.setSelectedIndex( day.value() );
     }
+    
+    public void setDayNOfMonthError( String errorMsg ) {
+      dayNOfMonthLabel.setErrorMsg( errorMsg );
+    }
   }
 
   private class YearlyRecurrencePanel extends VerticalPanel {
@@ -629,6 +664,7 @@ public class RecurrenceEditor extends VerticalPanel {
     private ListBox monthOfYearLb1 = createMonthOfYearListBox();
     private ListBox whichWeekLb = createWhichWeekListBox();
     private ListBox dayOfWeekLb = createDayOfWeekListBox();
+    private ErrorLabel dayOfMonthLabel = null;
 
     private static final String YEARLY_RB_GROUP = "yearly-group"; //$NON-NLS-1$
 
@@ -642,7 +678,8 @@ public class RecurrenceEditor extends VerticalPanel {
       p.add( monthOfYearLb0 );
       dayOfMonthTb.setWidth("3em"); //$NON-NLS-1$
       p.add(dayOfMonthTb);
-      add(p);
+      dayOfMonthLabel = new ErrorLabel( p );
+      add(dayOfMonthLabel);
 
       p = new HorizontalPanel();
       nthDayNameOfMonthNameRb.setStyleName("recurrenceRadioButton"); //$NON-NLS-1$
@@ -722,6 +759,10 @@ public class RecurrenceEditor extends VerticalPanel {
     public void setMonthOfYear1( MonthOfYear month ) {
       monthOfYearLb1.setSelectedIndex( month.value() );
     }
+    
+    public void setDayOfMonthError( String errorMsg ) {
+      dayOfMonthLabel.setErrorMsg( errorMsg );
+    }
   }
   
   private ListBox createDayOfWeekListBox() {
@@ -758,14 +799,6 @@ public class RecurrenceEditor extends VerticalPanel {
     for ( Map.Entry<TemporalValue, Panel> me : temporalPanelMap.entrySet() ) {
       boolean bShow = me.getKey().equals( selectedTemporalValue );
       me.getValue().setVisible( bShow );
-    }
-  }
-
-  private boolean isValidNumOfDaysForMonth(int numDays, MonthOfYear month) {
-    if (numDays < 1) {
-      return false;
-    } else {
-      return validNumDaysOfMonth.get(month) <= numDays;
     }
   }
   
@@ -986,5 +1019,17 @@ public class RecurrenceEditor extends VerticalPanel {
   public void setTemporalState(TemporalValue temporalState) {
     this.temporalState = temporalState;
     selectTemporalPanel( temporalState );
+  }
+  
+  public void setSecondlyError( String errorMsg ) {
+    secondlyLabel.setErrorMsg( errorMsg );
+  }
+  
+  public void setMinutelyError( String errorMsg ) {
+    minutelyLabel.setErrorMsg( errorMsg );
+  }
+  
+  public void setHourlyError( String errorMsg ) {
+    hourlyLabel.setErrorMsg( errorMsg );
   }
 }
