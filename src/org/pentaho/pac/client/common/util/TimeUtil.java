@@ -366,6 +366,14 @@ public class TimeUtil {
       .append( ", " )
       .append( year ).toString();
   }
+
+  private boolean isValidNumOfDaysForMonth(int numDays, MonthOfYear month) {
+    if (numDays < 1) {
+      return false;
+    } else {
+      return validNumDaysOfMonth.get(month) <= numDays;
+    }
+  }
   
   public static void main( String[] args ) {
     assert daysToSecs( 13 ) == 1123200: ""; //$NON-NLS-1$
