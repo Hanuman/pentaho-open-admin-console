@@ -1460,5 +1460,27 @@ a:visited {
 
 /* style for error message associated with dialog controls with invalid data */
 .errorLabel {
-	background-color: #FFCCCC;
+	background-color: #FFDDDD;
 	color: #FF0000;
+}
+/* style for the tab labels in the Schedule Creator dialog's 2 tabs */
+.tabLabel {
+	white-space: nowrap;
+	width: 100%;
+	height: 100%;
+}
+
+.tabLabelError {
+	background-color: #FFDDDD;
+	color: red;
+	white-space: nowrap;
+	width: 100%;
+	height: 100%;
+}
+/* not used
+.tabLabelError-selected {
+	background-color: magenta;
+	white-space: nowrap;
+	width: 100%;
+	height: 100%;
+}*/
