@@ -1411,13 +1411,10 @@ a:visited {
 }
 /* end */
 
-/* begin recurrance dialog ------------------------------------------------------*/
+/* begin recurrence dialog ------------------------------------------------------*/
 .temporalCombo {
 	padding-right: 5px;
 	margin-right: 5px;
-}
-
-.weeklyRecurrancePanel {
 }
 
 .startLabel {
@@ -1437,12 +1434,11 @@ a:visited {
 	/*border:1px dotted red;*/
 }
 
-.recurranceRadioButton label {
-	/*background-color: magenta;*/
+.recurrenceRadioButton label {
 	padding-right: 1ex;
 	white-space: nowrap;
 }
-/* end recurrance dialog ----------------------------------------------------------*/
+/* end recurrence dialog ----------------------------------------------------------*/
 
 /* begin schedule editor ------------------------------------------------------*/
 .scheduleCombo {
