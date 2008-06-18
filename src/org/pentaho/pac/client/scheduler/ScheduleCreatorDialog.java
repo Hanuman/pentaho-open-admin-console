@@ -66,8 +66,9 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
     super();
 
     setTitle( "Schedule Creator" );
-    setClientSize( "475px", "400px" );
+    setClientSize( "475px", "450px" );
     
+    tabPanel.setStylePrimaryName( "schedulerTabPanel" );
     tabPanel.add( scheduleEditor, scheduleTabLabel );
     tabPanel.add( solRepItemPicker, scheduleActionTabLabel );
     scheduleTabLabel.setStyleName( "tabLabel" );
