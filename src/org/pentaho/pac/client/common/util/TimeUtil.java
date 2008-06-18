@@ -2,6 +2,8 @@ package org.pentaho.pac.client.common.util;
 
 import java.util.Date;
 import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.pentaho.pac.client.common.EnumException;
 
@@ -193,6 +195,22 @@ public class TimeUtil {
       throw new EnumException( "Invalid String for week of month: " + weekOfMonth );
     }
   } // end enum WeekOfMonth
+
+  private static Map<MonthOfYear, Integer> validNumDaysOfMonth = new HashMap<MonthOfYear, Integer>();
+  static {
+    validNumDaysOfMonth.put(MonthOfYear.JAN, 31);
+    validNumDaysOfMonth.put(MonthOfYear.FEB, 29);
+    validNumDaysOfMonth.put(MonthOfYear.MAR, 31);
+    validNumDaysOfMonth.put(MonthOfYear.APR, 30);
+    validNumDaysOfMonth.put(MonthOfYear.MAY, 31);
+    validNumDaysOfMonth.put(MonthOfYear.JUN, 30);
+    validNumDaysOfMonth.put(MonthOfYear.JUL, 31);
+    validNumDaysOfMonth.put(MonthOfYear.AUG, 31);
+    validNumDaysOfMonth.put(MonthOfYear.SEPT, 30);
+    validNumDaysOfMonth.put(MonthOfYear.OCT, 31);
+    validNumDaysOfMonth.put(MonthOfYear.NOV, 30);
+    validNumDaysOfMonth.put(MonthOfYear.DEC, 31);
+  }
   
   private TimeUtil() {
   } // cannot create instance, static class
@@ -367,13 +385,58 @@ public class TimeUtil {
       .append( year ).toString();
   }
 
-  private boolean isValidNumOfDaysForMonth(int numDays, MonthOfYear month) {
+  public static boolean isValidNumOfDaysForMonth(int numDays, MonthOfYear month) {
     if (numDays < 1) {
       return false;
     } else {
       return validNumDaysOfMonth.get(month) <= numDays;
     }
   }
+  
+  /**
+   * Is <param>num</param> between <param>low</param> and <param>high</param>, inclusive.
+   * @param low
+   * @param num
+   * @param high
+   * @return boolean true if <param>num</param> between <param>low</param> 
+   * and <param>high</param>, inclusive, else false. 
+   */
+  private static boolean isNumBetween( int low, int num, int high ) {
+    return num >= low && num <= high;
+  }
+  
+  public static boolean isDayOfMonth( int num ) {
+    return isNumBetween( 1, num, 31 );
+  }
+  
+  public static boolean isDayOfWeek( int num ) {
+    return isNumBetween( 1, num, 7 );
+  }
+  
+  public static boolean isWeekOfMonth( int num ) {
+    return isNumBetween( 1, num, 4 );
+  }
+  
+  public static boolean isMonthOfYear( int num ) {
+    return isNumBetween( 1, num, 12 );
+  }
+  
+  public static boolean isSecond( int num ) {
+    return isNumBetween( 0, num, 59 );
+  }
+  
+  public static boolean isMinute( int num ) {
+    return isNumBetween( 0, num, 59 );
+  }
+  
+  public static boolean isHour( int num ) {
+    return isNumBetween( 0, num, 23 );
+  }
+  
+//  private static final String MATCH_DATE_STRING_RE = "^[0-9]{1,2}$";
+//  public boolean isDateStr( String strInt ) {
+//    return MATCH_DATE_STRING_RE.matches( strInt );
+//  }
   
   public static void main( String[] args ) {
     assert daysToSecs( 13 ) == 1123200: ""; //$NON-NLS-1$
