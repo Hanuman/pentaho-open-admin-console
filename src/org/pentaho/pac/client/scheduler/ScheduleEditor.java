@@ -307,6 +307,40 @@ public class ScheduleEditor extends FlexTable {
     selectScheduleTypeEditor( scheduleType );
   }
   
+  /**
+   * NOTE: should only ever be used by validators. This is a backdoor
+   * into this class that shouldn't be here, do not use this method
+   * unless you are validating.
+   * 
+   * @return DateRangeEditor
+   */
+  public RecurrenceEditor getRecurrenceEditor() {
+    return recurrenceEditor;
+  }
+  
+  /**
+   * NOTE: should only ever be used by validators. This is a backdoor
+   * into this class that shouldn't be here, do not use this method
+   * unless you are validating.
+   * 
+   * @return DateRangeEditor
+   */
+  public CronEditor getCronEditor() {
+    return cronEditor;
+  }
+  
+  /**
+   * NOTE: should only ever be used by validators. This is a backdoor
+   * into this class that shouldn't be here, do not use this method
+   * unless you are validating.
+   * 
+   * @return DateRangeEditor
+   */
+  
+  public RunOnceEditor getRunOnceEditor() {
+    return runOnceEditor;
+  }
+  
   public void setStartTime( String startTime ) {
     runOnceEditor.setStartTime( startTime );
     recurrenceEditor.setStartTime( startTime );

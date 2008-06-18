@@ -16,29 +16,64 @@
 package org.pentaho.pac.client.scheduler;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TabPanel;
 
 public class ScheduleCreatorDialog extends ConfirmDialog {
 
+  public enum TabIndex {
+    SCHEDULE( 0, "Schedule" ),
+    SCHEDULE_ACTION( 1, "Scheduled Action" );
+    
+    private TabIndex( int value, String name ) {
+      this.value = value;
+      this.name = name;
+    }
+    private int value;
+    private String name;
+    
+    private static TabIndex[] tabIndexAr = {
+      SCHEDULE, 
+      SCHEDULE_ACTION 
+    };
+
+    public static TabIndex get(int idx) {
+      return tabIndexAr[idx];
+    }
+    
+    public int value() {
+      return value;
+    }
+
+    public String toString() {
+      return name;
+    }
+  }; // end enum
+  
   private ScheduleEditor scheduleEditor = new ScheduleEditor();
   private SolutionRepositoryItemPicker solRepItemPicker = new SolutionRepositoryItemPicker();
+  private Label scheduleTabLabel = new Label( TabIndex.SCHEDULE.toString() );
+  private Label scheduleActionTabLabel = new Label( TabIndex.SCHEDULE_ACTION.toString() );
+  private Map<TabIndex, Label> tabMap = new HashMap<TabIndex, Label>();
   private TabPanel tabPanel = new TabPanel();
-  enum TabIndex {
-    SCHEDULE,
-    SCHEDULE_ACTION;
-  }; // end enum
   
   public ScheduleCreatorDialog() {
     super();
 
     setTitle( "Schedule Creator" );
-    setClientSize( "430px", "300px" );
+    setClientSize( "475px", "300px" );
     
-    tabPanel.add( scheduleEditor, "Schedule" );
-    tabPanel.add( solRepItemPicker, "Scheduled Action" );
+    tabPanel.add( scheduleEditor, scheduleTabLabel );
+    tabPanel.add( solRepItemPicker, scheduleActionTabLabel );
+    scheduleTabLabel.setStyleName( "tabLabel" );
+    scheduleActionTabLabel.setStyleName( "tabLabel" );
+    tabMap.put( TabIndex.SCHEDULE, scheduleTabLabel );
+    tabMap.put( TabIndex.SCHEDULE_ACTION, scheduleActionTabLabel );
 
     tabPanel.setWidth( "100%" );
     tabPanel.setHeight( "100%" );
@@ -48,7 +83,7 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
 //    solRepItemPicker.setWidth( "100%" );
 //    solRepItemPicker.setHeight( "100%" );
     
-    tabPanel.selectTab( TabIndex.SCHEDULE.ordinal() );
+    tabPanel.selectTab( TabIndex.SCHEDULE.value() );
     
     addWidgetToClientArea( tabPanel );
   }
@@ -65,6 +100,24 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
     scheduleEditor.reset( d );
     solRepItemPicker.reset();
     
-    tabPanel.selectTab( TabIndex.SCHEDULE.ordinal() );
+    tabPanel.selectTab( TabIndex.SCHEDULE.value() );
+  }
+  
+  public void setSelectedTab( TabIndex tabKey ) {
+    tabPanel.selectTab( tabKey.value() );
+  }
+  
+  public TabIndex getSelectedTab() {
+    return TabIndex.get( tabPanel.getTabBar().getSelectedTab() );
+  }
+  
+  public void setTabError( TabIndex tabKey ) {
+    tabMap.get(tabKey).setStylePrimaryName( "tabLabelError" ); //$NON-NLS-1$
+  }
+  
+  public void clearTabError() {
+    for ( Map.Entry<TabIndex, Label> me : tabMap.entrySet() ) {
+      me.getValue().setStylePrimaryName( "tabLabel" ); //$NON-NLS-1$
+    }
   }
 }

@@ -18,6 +18,7 @@ public class DateRangeEditor extends SimpleGroupBox {
   private static final String END_DATE_RB_GROUP = "end-date-group"; //$NON-NLS-1$
 
   private DatePickerEx startDatePicker = null;
+  private ErrorLabel startByLabel = null;
   private EndDatePanel endDatePanel = null;
   
   private ErrorLabel startLabel = null;
@@ -26,25 +27,27 @@ public class DateRangeEditor extends SimpleGroupBox {
 
     super( "Range of recurrence" );
 
+    HorizontalPanel outerHP = new HorizontalPanel();
+    add( outerHP );
+    
     HorizontalPanel hp = new HorizontalPanel();
-    add(hp);
-
     startLabel = new ErrorLabel( new Label( "Start:" ) );
     startLabel.setStyleName("startLabel");
     hp.add(startLabel);
     startDatePicker = new DatePickerEx();
     hp.add(startDatePicker);
-
-    VerticalPanel vp = new VerticalPanel();
-    hp.add(vp);
-
-    // add end time radio buttons to vp
-    HorizontalPanel endByHP = new HorizontalPanel();
-    vp.add(endByHP);
+    
+    startByLabel = new ErrorLabel( hp );
+    outerHP.add(startByLabel);
 
     endDatePanel = new EndDatePanel( date );
-    vp.add(endDatePanel);
+    outerHP.add(endDatePanel);
+    
     reset( date );
+  }
+  
+  public void setStartDateError( String errorMsg ) {
+    startLabel.setErrorMsg( errorMsg );
   }
   
   public Date getStartDate() {
@@ -143,8 +146,8 @@ public class DateRangeEditor extends SimpleGroupBox {
     }
     
     public void setNoEndDate() {
-      noEndDateRb.setChecked( true );
       endByRb.setChecked( false );
+      noEndDateRb.setChecked( true );
       endDatePicker.setEnabled( false );
     }
     
@@ -153,8 +156,8 @@ public class DateRangeEditor extends SimpleGroupBox {
     }
     
     public void setEndBy() {
-      endByRb.setChecked( true );
       noEndDateRb.setChecked( false );
+      endByRb.setChecked( true );
       endDatePicker.setEnabled( true );
     }
     

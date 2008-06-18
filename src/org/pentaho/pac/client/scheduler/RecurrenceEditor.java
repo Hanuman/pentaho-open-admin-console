@@ -31,22 +31,19 @@ public class RecurrenceEditor extends VerticalPanel {
 
   private TimePicker startTimePicker = null;
 
-  private SecondlyRecurrencePanel secondlyPanel = null;
-  private ErrorLabel secondlyLabel = null;
+  private SecondlyRecurrenceEditor secondlyEditor = null;
 
-  private MinutelyRecurrencePanel minutelyPanel = null;
-  private ErrorLabel minutelyLabel = null;
+  private MinutelyRecurrenceEditor minutelyEditor = null;
 
-  private HourlyRecurrencePanel hourlyPanel = null;
-  private ErrorLabel hourlyLabel = null;
+  private HourlyRecurrenceEditor hourlyEditor = null;
 
-  private DailyRecurrencePanel dailyPanel = null;
+  private DailyRecurrenceEditor dailyEditor = null;
 
-  private WeeklyRecurrencePanel weeklyPanel = null;
+  private WeeklyRecurrenceEditor weeklyEditor = null;
 
-  private MonthlyRecurrencePanel monthlyPanel = null;
+  private MonthlyRecurrenceEditor monthlyEditor = null;
 
-  private YearlyRecurrencePanel yearlyPanel = null;
+  private YearlyRecurrenceEditor yearlyEditor = null;
   
   private DateRangeEditor dateRangeEditor = null;
   
@@ -111,22 +108,6 @@ public class RecurrenceEditor extends VerticalPanel {
       throw new EnumException( "Invalid String for temporal value: " + temporalValue );
     }
   } /* end enum */
-
-  private static Map<MonthOfYear, Integer> validNumDaysOfMonth = new HashMap<MonthOfYear, Integer>();
-  static {
-    validNumDaysOfMonth.put(MonthOfYear.JAN, 31);
-    validNumDaysOfMonth.put(MonthOfYear.FEB, 29);
-    validNumDaysOfMonth.put(MonthOfYear.MAR, 31);
-    validNumDaysOfMonth.put(MonthOfYear.APR, 30);
-    validNumDaysOfMonth.put(MonthOfYear.MAY, 31);
-    validNumDaysOfMonth.put(MonthOfYear.JUN, 30);
-    validNumDaysOfMonth.put(MonthOfYear.JUL, 31);
-    validNumDaysOfMonth.put(MonthOfYear.AUG, 31);
-    validNumDaysOfMonth.put(MonthOfYear.SEPT, 30);
-    validNumDaysOfMonth.put(MonthOfYear.OCT, 31);
-    validNumDaysOfMonth.put(MonthOfYear.NOV, 30);
-    validNumDaysOfMonth.put(MonthOfYear.DEC, 31);
-  }
   
   private static final String DAILY_RB_GROUP = "daily-group"; //$NON-NLS-1$
 
@@ -157,13 +138,13 @@ public class RecurrenceEditor extends VerticalPanel {
 
     dateRangeEditor.reset( d );
     
-    secondlyPanel.reset();
-    minutelyPanel.reset();
-    hourlyPanel.reset();
-    dailyPanel.reset();
-    weeklyPanel.reset();
-    monthlyPanel.reset();
-    yearlyPanel.reset();
+    secondlyEditor.reset();
+    minutelyEditor.reset();
+    hourlyEditor.reset();
+    dailyEditor.reset();
+    weeklyEditor.reset();
+    monthlyEditor.reset();
+    yearlyEditor.reset();
   }
   
   /**
@@ -223,51 +204,51 @@ public class RecurrenceEditor extends VerticalPanel {
   private void setWeeklyOnRecurrence( String[] recurrenceTokens ) {
     setTemporalState( TemporalValue.WEEKLY );
     String days = recurrenceTokens[4];
-    weeklyPanel.setCheckedDaysAsString( days, VALUE_OF_SUNDAY );
+    weeklyEditor.setCheckedDaysAsString( days, VALUE_OF_SUNDAY );
   }
   
   private void setDayNOfMonthRecurrence( String[] recurrenceTokens ) {
     setTemporalState( TemporalValue.MONTHLY );
-    monthlyPanel.setDayNOfMonth();
+    monthlyEditor.setDayNOfMonth();
     String dayNOfMonth = recurrenceTokens[4];
-    monthlyPanel.setDayOfMonth( dayNOfMonth );
+    monthlyEditor.setDayOfMonth( dayNOfMonth );
   }
   
   private void setNthDayNameOfMonthRecurrence( String[] recurrenceTokens ) {
     setTemporalState( TemporalValue.MONTHLY );
-    monthlyPanel.setNthDayNameOfMonth();
-    monthlyPanel.setWeekOfMonth( WeekOfMonth.get( Integer.parseInt( recurrenceTokens[5])-1 ) );
-    monthlyPanel.setDayOfWeek( DayOfWeek.get( Integer.parseInt( recurrenceTokens[4])-1 ) );
+    monthlyEditor.setNthDayNameOfMonth();
+    monthlyEditor.setWeekOfMonth( WeekOfMonth.get( Integer.parseInt( recurrenceTokens[5])-1 ) );
+    monthlyEditor.setDayOfWeek( DayOfWeek.get( Integer.parseInt( recurrenceTokens[4])-1 ) );
   }
   
   private void setLastDayNameOfMonthRecurrence( String[] recurrenceTokens ) {
     setTemporalState( TemporalValue.MONTHLY );
-    monthlyPanel.setNthDayNameOfMonth();
-    monthlyPanel.setWeekOfMonth( WeekOfMonth.LAST );
-    monthlyPanel.setDayOfWeek( DayOfWeek.get( Integer.parseInt( recurrenceTokens[4])-1 ) );
+    monthlyEditor.setNthDayNameOfMonth();
+    monthlyEditor.setWeekOfMonth( WeekOfMonth.LAST );
+    monthlyEditor.setDayOfWeek( DayOfWeek.get( Integer.parseInt( recurrenceTokens[4])-1 ) );
   }
   
   private void setEveryMonthNameNRecurrence( String[] recurrenceTokens ) {
     setTemporalState( TemporalValue.YEARLY );
-    yearlyPanel.setEveryMonthOnNthDay();
-    yearlyPanel.setDayOfMonth( recurrenceTokens[4] );
-    yearlyPanel.setMonthOfYear0( MonthOfYear.get( Integer.parseInt( recurrenceTokens[5] )-1 ) );
+    yearlyEditor.setEveryMonthOnNthDay();
+    yearlyEditor.setDayOfMonth( recurrenceTokens[4] );
+    yearlyEditor.setMonthOfYear0( MonthOfYear.get( Integer.parseInt( recurrenceTokens[5] )-1 ) );
   }
   
   private void setNthDayNameOfMonthNameRecurrence( String[] recurrenceTokens ) {
     setTemporalState( TemporalValue.YEARLY );
-    yearlyPanel.setNthDayNameOfMonthName();
-    yearlyPanel.setMonthOfYear1( MonthOfYear.get( Integer.parseInt( recurrenceTokens[6] )-1 ) );
-    yearlyPanel.setWeekOfMonth( WeekOfMonth.get( Integer.parseInt( recurrenceTokens[5])-1 ) );
-    yearlyPanel.setDayOfWeek( DayOfWeek.get( Integer.parseInt( recurrenceTokens[4])-1 ) );
+    yearlyEditor.setNthDayNameOfMonthName();
+    yearlyEditor.setMonthOfYear1( MonthOfYear.get( Integer.parseInt( recurrenceTokens[6] )-1 ) );
+    yearlyEditor.setWeekOfMonth( WeekOfMonth.get( Integer.parseInt( recurrenceTokens[5])-1 ) );
+    yearlyEditor.setDayOfWeek( DayOfWeek.get( Integer.parseInt( recurrenceTokens[4])-1 ) );
   }
   
   private void setLastDayNameOfMonthNameRecurrence( String[] recurrenceTokens ) {
     setTemporalState( TemporalValue.YEARLY );
-    yearlyPanel.setNthDayNameOfMonthName();
-    yearlyPanel.setMonthOfYear1( MonthOfYear.get( Integer.parseInt( recurrenceTokens[5] )-1 ) );
-    yearlyPanel.setWeekOfMonth( WeekOfMonth.LAST );
-    yearlyPanel.setDayOfWeek( DayOfWeek.get( Integer.parseInt( recurrenceTokens[4])-1 ) );
+    yearlyEditor.setNthDayNameOfMonthName();
+    yearlyEditor.setMonthOfYear1( MonthOfYear.get( Integer.parseInt( recurrenceTokens[5] )-1 ) );
+    yearlyEditor.setWeekOfMonth( WeekOfMonth.LAST );
+    yearlyEditor.setDayOfWeek( DayOfWeek.get( Integer.parseInt( recurrenceTokens[4])-1 ) );
   }
   
   /**
@@ -281,7 +262,7 @@ public class RecurrenceEditor extends VerticalPanel {
     if ( TimeUtil.isSecondsWholeDay( repeatInSecs ) ) {
       repeatTime = TimeUtil.secsToDays( repeatInSecs );
       currentVal = TemporalValue.DAILY;
-      dailyPanel.setRepeatValue( Integer.toString( repeatTime ) );
+      dailyEditor.setRepeatValue( Integer.toString( repeatTime ) );
     } else { 
       SimpleRecurrencePanel p = null;
       if ( TimeUtil.isSecondsWholeHour( repeatInSecs ) ) {
@@ -318,62 +299,64 @@ public class RecurrenceEditor extends VerticalPanel {
     VerticalPanel p = new VerticalPanel();
     recurrenceGB.add(p);
 
-    secondlyPanel = new SecondlyRecurrencePanel();
-    secondlyPanel.setVisible(true);
-    minutelyPanel = new MinutelyRecurrencePanel();
-    hourlyPanel = new HourlyRecurrencePanel();
-    dailyPanel = new DailyRecurrencePanel();
-    weeklyPanel = new WeeklyRecurrencePanel();
-    monthlyPanel = new MonthlyRecurrencePanel();
-    yearlyPanel = new YearlyRecurrencePanel();
+    secondlyEditor = new SecondlyRecurrenceEditor();
+    secondlyEditor.setVisible(true);
+    minutelyEditor = new MinutelyRecurrenceEditor();
+    hourlyEditor = new HourlyRecurrenceEditor();
+    dailyEditor = new DailyRecurrenceEditor();
+    weeklyEditor = new WeeklyRecurrenceEditor();
+    monthlyEditor = new MonthlyRecurrenceEditor();
+    yearlyEditor = new YearlyRecurrenceEditor();
 
     createTemporalMap();
 
-    secondlyLabel = new ErrorLabel( secondlyPanel );
-    p.add(secondlyLabel);
-    minutelyLabel = new ErrorLabel( minutelyPanel );
-    p.add(minutelyLabel);
-    hourlyLabel = new ErrorLabel( hourlyPanel );
-    p.add(hourlyLabel);
+    p.add(secondlyEditor);
+    p.add(minutelyEditor);
+    p.add(hourlyEditor);
     
-    p.add(dailyPanel);
-    p.add(weeklyPanel);
-    p.add(monthlyPanel);
-    p.add(yearlyPanel);
+    p.add(dailyEditor);
+    p.add(weeklyEditor);
+    p.add(monthlyEditor);
+    p.add(yearlyEditor);
 
     return recurrenceGB;
   }
 
   private void createTemporalMap() {
     // must come after creation of temporal panels
-    assert dailyPanel != null : "Temporal panels must be initialized before calling createTemporalCombo.";
+    assert dailyEditor != null : "Temporal panels must be initialized before calling createTemporalCombo.";
 
-    temporalPanelMap.put( TemporalValue.SECONDS, secondlyPanel );
-    temporalPanelMap.put( TemporalValue.MINUTES, minutelyPanel );
-    temporalPanelMap.put( TemporalValue.HOURS, hourlyPanel );
-    temporalPanelMap.put( TemporalValue.DAILY, dailyPanel );
-    temporalPanelMap.put( TemporalValue.WEEKLY, weeklyPanel);
-    temporalPanelMap.put( TemporalValue.MONTHLY, monthlyPanel);
-    temporalPanelMap.put( TemporalValue.YEARLY, yearlyPanel);
+    temporalPanelMap.put( TemporalValue.SECONDS, secondlyEditor );
+    temporalPanelMap.put( TemporalValue.MINUTES, minutelyEditor );
+    temporalPanelMap.put( TemporalValue.HOURS, hourlyEditor );
+    temporalPanelMap.put( TemporalValue.DAILY, dailyEditor );
+    temporalPanelMap.put( TemporalValue.WEEKLY, weeklyEditor);
+    temporalPanelMap.put( TemporalValue.MONTHLY, monthlyEditor);
+    temporalPanelMap.put( TemporalValue.YEARLY, yearlyEditor);
   }
   
-  private class SimpleRecurrencePanel extends HorizontalPanel {
+  private class SimpleRecurrencePanel extends VerticalPanel {
     private TextBox valueTb = new TextBox();
+    private ErrorLabel valueLabel = null;
     
     public SimpleRecurrencePanel( String strLabel ) {
       setVisible(false);
 
-      Label l = new Label( "Every");
+      HorizontalPanel hp = new HorizontalPanel();
+      Label l = new Label( "Every" );
       l.setStyleName("startLabel"); //$NON-NLS-1$
-      add(l);
+      hp.add(l);
 
-      valueTb.setWidth("3em"); //$NON-NLS-1$
-      valueTb.setTitle("Number of " + strLabel + " to repeat.");
-      add(valueTb);
+      valueTb.setWidth( "3em" ); //$NON-NLS-1$
+      valueTb.setTitle( "Number of " + strLabel + " to repeat." );
+      hp.add(valueTb);
 
       l = new Label( strLabel );
-      l.setStyleName("endLabel"); //$NON-NLS-1$
-      add(l);
+      l.setStyleName( "endLabel" ); //$NON-NLS-1$
+      hp.add(l);
+      
+      valueLabel = new ErrorLabel( hp );
+      add( valueLabel );
     }
     
     public String getValue() {
@@ -387,34 +370,38 @@ public class RecurrenceEditor extends VerticalPanel {
     public void reset() {
       setValue( "" ); //$NON-NLS-1$
     }
+    
+    public void setValueError( String errorMsg ) {
+      valueLabel.setErrorMsg( errorMsg );
+    }
   }
 
-  private class SecondlyRecurrencePanel extends SimpleRecurrencePanel {
-    public SecondlyRecurrencePanel() {
+  public class SecondlyRecurrenceEditor extends SimpleRecurrencePanel {
+    public SecondlyRecurrenceEditor() {
       super( "second(s)" );
     }
   }
 
-  private class MinutelyRecurrencePanel extends SimpleRecurrencePanel {
-    public MinutelyRecurrencePanel() {
+  public class MinutelyRecurrenceEditor extends SimpleRecurrencePanel {
+    public MinutelyRecurrenceEditor() {
       super( "minute(s)" );
     }
   }
 
-  private class HourlyRecurrencePanel extends SimpleRecurrencePanel {
-    public HourlyRecurrencePanel() {
+  public class HourlyRecurrenceEditor extends SimpleRecurrencePanel {
+    public HourlyRecurrenceEditor() {
       super( "hour(s)" );
     }
   }
 
-  private class DailyRecurrencePanel extends VerticalPanel {
+  public class DailyRecurrenceEditor extends VerticalPanel {
 
     private TextBox repeatValueTb = new TextBox();
     private RadioButton everyNDaysRb = new RadioButton(DAILY_RB_GROUP, "Every");
     private RadioButton everyWeekdayRb = new RadioButton(DAILY_RB_GROUP, "Every weekday");
     private ErrorLabel repeatLabel = null;
     
-    public DailyRecurrencePanel() {
+    public DailyRecurrenceEditor() {
       setVisible(false);
 
       HorizontalPanel hp = new HorizontalPanel();
@@ -472,12 +459,12 @@ public class RecurrenceEditor extends VerticalPanel {
     }
   }
 
-  private class WeeklyRecurrencePanel extends VerticalPanel {
+  public class WeeklyRecurrenceEditor extends VerticalPanel {
 
     private Map<DayOfWeek, CheckBox> dayToCheckBox = new HashMap<DayOfWeek, CheckBox>();
     private ErrorLabel everyWeekOnLabel = null;
     
-    public WeeklyRecurrencePanel() {
+    public WeeklyRecurrenceEditor() {
       setStyleName("weeklyRecurrencePanel");
       setVisible(false);
 
@@ -564,7 +551,7 @@ public class RecurrenceEditor extends VerticalPanel {
     }
   }
 
-  private class MonthlyRecurrencePanel extends VerticalPanel {
+  public class MonthlyRecurrenceEditor extends VerticalPanel {
     
     private RadioButton dayNOfMonthRb = new RadioButton(MONTHLY_RB_GROUP, "Day");
     private RadioButton nthDayNameOfMonthRb = new RadioButton(MONTHLY_RB_GROUP, "The");
@@ -573,7 +560,7 @@ public class RecurrenceEditor extends VerticalPanel {
     private ListBox dayOfWeekLb = createDayOfWeekListBox();
     private ErrorLabel dayNOfMonthLabel = null;
     
-    public MonthlyRecurrencePanel() {
+    public MonthlyRecurrenceEditor() {
       setVisible(false);
 
       HorizontalPanel hp = new HorizontalPanel();
@@ -655,7 +642,7 @@ public class RecurrenceEditor extends VerticalPanel {
     }
   }
 
-  private class YearlyRecurrencePanel extends VerticalPanel {
+  public class YearlyRecurrenceEditor extends VerticalPanel {
     
     private RadioButton everyMonthOnNthDayRb = new RadioButton(YEARLY_RB_GROUP, "Every");
     private RadioButton nthDayNameOfMonthNameRb = new RadioButton(YEARLY_RB_GROUP, "The");
@@ -668,7 +655,7 @@ public class RecurrenceEditor extends VerticalPanel {
 
     private static final String YEARLY_RB_GROUP = "yearly-group"; //$NON-NLS-1$
 
-    public YearlyRecurrencePanel() {
+    public YearlyRecurrenceEditor() {
       setVisible(false);
 
       HorizontalPanel p = new HorizontalPanel();
@@ -818,13 +805,13 @@ public class RecurrenceEditor extends VerticalPanel {
       case YEARLY:
         return null;
       case SECONDS:
-        return Integer.parseInt( secondlyPanel.getValue() );
+        return Integer.parseInt( secondlyEditor.getValue() );
       case MINUTES:
-        return TimeUtil.minutesToSecs( Integer.parseInt( minutelyPanel.getValue() ) );
+        return TimeUtil.minutesToSecs( Integer.parseInt( minutelyEditor.getValue() ) );
       case HOURS:
-        return TimeUtil.hoursToSecs( Integer.parseInt( hourlyPanel.getValue() ) );
+        return TimeUtil.hoursToSecs( Integer.parseInt( hourlyEditor.getValue() ) );
       case DAILY:
-        return TimeUtil.daysToSecs( Integer.parseInt( dailyPanel.getRepeatValue() ) );
+        return TimeUtil.daysToSecs( Integer.parseInt( dailyEditor.getRepeatValue() ) );
       default:
         throw new RuntimeException( "Invalid TemporalValue in getRepeatInSecs(): " + temporalState );
     }
@@ -866,7 +853,7 @@ public class RecurrenceEditor extends VerticalPanel {
   private String getDailyCronString() throws RuntimeException {
     String cronStr;
     StringBuilder recurrenceSb = new StringBuilder();
-    if ( dailyPanel.isEveryNDays() ) {
+    if ( dailyEditor.isEveryNDays() ) {
       return null;
     } else {
       // must be every weekday
@@ -887,7 +874,7 @@ public class RecurrenceEditor extends VerticalPanel {
     // WeeklyOn 0 33 6 1,3,5
     recurrenceSb.append( RecurrenceType.WeeklyOn ).append( SPACE )
       .append( getTimeOfRecurrence() ).append( SPACE )
-      .append( weeklyPanel.getCheckedDaysAsString( VALUE_OF_SUNDAY ) );
+      .append( weeklyEditor.getCheckedDaysAsString( VALUE_OF_SUNDAY ) );
     try {
       cronStr = CronParser.recurrenceStringToCronString( recurrenceSb.toString() );
     } catch (CronParseException e) {
@@ -900,20 +887,20 @@ public class RecurrenceEditor extends VerticalPanel {
   private String getMonthlyCronString() throws RuntimeException {
     String cronStr;
     StringBuilder recurrenceSb = new StringBuilder();
-    if ( monthlyPanel.isDayNOfMonth() ) {
+    if ( monthlyEditor.isDayNOfMonth() ) {
       recurrenceSb.append( RecurrenceType.DayNOfMonth ).append( SPACE )
         .append( getTimeOfRecurrence() ).append( SPACE )
-        .append( monthlyPanel.getDayOfMonth() );
-    } else if ( monthlyPanel.isNthDayNameOfMonth() ) {
-      if ( monthlyPanel.getWeekOfMonth() != WeekOfMonth.LAST ) {
-        String weekOfMonth = Integer.toString( monthlyPanel.getWeekOfMonth().value() + 1 );
-        String dayOfWeek = Integer.toString( monthlyPanel.getDayOfWeek().value() + 1 );
+        .append( monthlyEditor.getDayOfMonth() );
+    } else if ( monthlyEditor.isNthDayNameOfMonth() ) {
+      if ( monthlyEditor.getWeekOfMonth() != WeekOfMonth.LAST ) {
+        String weekOfMonth = Integer.toString( monthlyEditor.getWeekOfMonth().value() + 1 );
+        String dayOfWeek = Integer.toString( monthlyEditor.getDayOfWeek().value() + 1 );
         recurrenceSb.append( RecurrenceType.NthDayNameOfMonth ).append( SPACE )
           .append( getTimeOfRecurrence() ).append( SPACE )
           .append( dayOfWeek ).append( SPACE )
           .append( weekOfMonth );
       } else {
-        String dayOfWeek = Integer.toString( monthlyPanel.getDayOfWeek().value() + 1 );
+        String dayOfWeek = Integer.toString( monthlyEditor.getDayOfWeek().value() + 1 );
         recurrenceSb.append( RecurrenceType.LastDayNameOfMonth ).append( SPACE )
           .append( getTimeOfRecurrence() ).append( SPACE )
           .append( dayOfWeek );
@@ -932,25 +919,25 @@ public class RecurrenceEditor extends VerticalPanel {
   private String getYearlyCronString() throws RuntimeException {
     String cronStr;
     StringBuilder recurrenceSb = new StringBuilder();
-    if ( yearlyPanel.isEveryMonthOnNthDay() ) {
-      String monthOfYear = Integer.toString( yearlyPanel.getMonthOfYear0().value() + 1 );
+    if ( yearlyEditor.isEveryMonthOnNthDay() ) {
+      String monthOfYear = Integer.toString( yearlyEditor.getMonthOfYear0().value() + 1 );
       recurrenceSb.append( RecurrenceType.EveryMonthNameN ).append( SPACE )
       .append( getTimeOfRecurrence() ).append( SPACE )
-      .append( yearlyPanel.getDayOfMonth() ).append( SPACE )
+      .append( yearlyEditor.getDayOfMonth() ).append( SPACE )
       .append( monthOfYear );
-    } else if ( yearlyPanel.isNthDayNameOfMonthName() ) {
-      if ( yearlyPanel.getWeekOfMonth() != WeekOfMonth.LAST ) {
-        String monthOfYear = Integer.toString( yearlyPanel.getMonthOfYear1().value() + 1 );
-        String dayOfWeek = Integer.toString( yearlyPanel.getDayOfWeek().value() + 1 );
-        String weekOfMonth = Integer.toString( yearlyPanel.getWeekOfMonth().value() + 1 );
+    } else if ( yearlyEditor.isNthDayNameOfMonthName() ) {
+      if ( yearlyEditor.getWeekOfMonth() != WeekOfMonth.LAST ) {
+        String monthOfYear = Integer.toString( yearlyEditor.getMonthOfYear1().value() + 1 );
+        String dayOfWeek = Integer.toString( yearlyEditor.getDayOfWeek().value() + 1 );
+        String weekOfMonth = Integer.toString( yearlyEditor.getWeekOfMonth().value() + 1 );
         recurrenceSb.append( RecurrenceType.NthDayNameOfMonthName ).append( SPACE )
           .append( getTimeOfRecurrence() ).append( SPACE )
           .append( dayOfWeek ).append( SPACE )
           .append( weekOfMonth ).append( SPACE )
           .append( monthOfYear );
       } else {
-        String monthOfYear = Integer.toString( yearlyPanel.getMonthOfYear1().value() + 1 );
-        String dayOfWeek = Integer.toString( yearlyPanel.getDayOfWeek().value() + 1 );
+        String monthOfYear = Integer.toString( yearlyEditor.getMonthOfYear1().value() + 1 );
+        String dayOfWeek = Integer.toString( yearlyEditor.getDayOfWeek().value() + 1 );
         recurrenceSb.append( RecurrenceType.LastDayNameOfMonthName ).append( SPACE )
           .append( getTimeOfRecurrence() ).append( SPACE )
           .append( dayOfWeek ).append( SPACE )
@@ -1021,15 +1008,91 @@ public class RecurrenceEditor extends VerticalPanel {
     selectTemporalPanel( temporalState );
   }
   
-  public void setSecondlyError( String errorMsg ) {
-    secondlyLabel.setErrorMsg( errorMsg );
+  /**
+   * NOTE: should only ever be used by validators. This is a backdoor
+   * into this class that shouldn't be here, do not use this method
+   * unless you are validating.
+   * 
+   * @return DateRangeEditor
+   */
+  public DateRangeEditor getDateRangeEditor() {
+    return dateRangeEditor;
   }
   
-  public void setMinutelyError( String errorMsg ) {
-    minutelyLabel.setErrorMsg( errorMsg );
+  /**
+   * NOTE: should only ever be used by validators. This is a backdoor
+   * into this class that shouldn't be here, do not use this method
+   * unless you are validating.
+   * 
+   * @return SecondlyRecurrencePanel
+   */
+  public SecondlyRecurrenceEditor getSecondlyEditor() {
+    return secondlyEditor;
   }
   
-  public void setHourlyError( String errorMsg ) {
-    hourlyLabel.setErrorMsg( errorMsg );
+  /**
+   * NOTE: should only ever be used by validators. This is a backdoor
+   * into this class that shouldn't be here, do not use this method
+   * unless you are validating.
+   * 
+   * @return MinutelyRecurrencePanel
+   */
+  public MinutelyRecurrenceEditor getMinutelyEditor() {
+    return minutelyEditor;
+  }
+  
+  /**
+   * NOTE: should only ever be used by validators. This is a backdoor
+   * into this class that shouldn't be here, do not use this method
+   * unless you are validating.
+   * 
+   * @return HourlyRecurrencePanel
+   */
+  public HourlyRecurrenceEditor getHourlyEditor() {
+    return hourlyEditor;
+  }
+
+  /**
+   * NOTE: should only ever be used by validators. This is a backdoor
+   * into this class that shouldn't be here, do not use this method
+   * unless you are validating.
+   * 
+   * @return DailyRecurrencePanel
+   */
+  public DailyRecurrenceEditor getDailyEditor() {
+    return dailyEditor;
+  }
+  
+  /**
+   * NOTE: should only ever be used by validators. This is a backdoor
+   * into this class that shouldn't be here, do not use this method
+   * unless you are validating.
+   * 
+   * @return WeeklyRecurrencePanel
+   */
+  public WeeklyRecurrenceEditor getWeeklyEditor() {
+    return weeklyEditor;
+  }
+  
+  /**
+   * NOTE: should only ever be used by validators. This is a backdoor
+   * into this class that shouldn't be here, do not use this method
+   * unless you are validating.
+   * 
+   * @return MonthlyRecurrencePanel
+   */
+  public MonthlyRecurrenceEditor getMonthlyEditor() {
+    return monthlyEditor;
+  }
+  
+  /**
+   * NOTE: should only ever be used by validators. This is a backdoor
+   * into this class that shouldn't be here, do not use this method
+   * unless you are validating.
+   * 
+   * @return YearlyRecurrencePanel
+   */
+  public YearlyRecurrenceEditor getYearlyEditor() {
+    return yearlyEditor;
   }
 }
