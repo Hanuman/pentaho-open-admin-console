@@ -11,29 +11,32 @@ public class SolutionRepositoryItemPickerValidator implements IUiValidator {
   }
 
   public boolean isValid() {
-    String errorMsg = null;
     boolean isValid = true;
     
     String solution = solRepPicker.getSolution();
-    errorMsg = StringUtils.isEmpty( solution ) ? "Solution name cannot be empty." : null;
-    isValid &= errorMsg == null;
-    solRepPicker.setSolutionError( errorMsg );
+    if ( StringUtils.isEmpty( solution ) ) {
+      isValid = false;
+      solRepPicker.setActionError( "Solution name cannot be empty." );
+    }
     
     String path = solRepPicker.getPath();
-    errorMsg = StringUtils.isEmpty( path ) ? "Path cannot be empty." : null;
-    isValid &= errorMsg == null;
-    solRepPicker.setPathError( errorMsg );
+    if ( StringUtils.isEmpty( path ) ) {
+      isValid = false;
+      solRepPicker.setActionError( "Path cannot be empty." );
+    }
     
     String action = solRepPicker.getAction();
-    errorMsg = StringUtils.isEmpty( action ) ? "Action name cannot be empty." : null;
-    isValid &= errorMsg == null;
-    solRepPicker.setActionError( errorMsg );
+    if ( StringUtils.isEmpty( action ) ) {
+      isValid = false;
+      solRepPicker.setActionError( "Action name cannot be empty." );
+    }
     
     return isValid;
   }
 
   public void clear() {
-    // TODO Auto-generated method stub
-    
+    solRepPicker.setSolutionError( null );
+    solRepPicker.setPathError( null );
+    solRepPicker.setActionError( null );
   }
 }
