@@ -16,13 +16,13 @@ public class SolutionRepositoryItemPickerValidator implements IUiValidator {
     String solution = solRepPicker.getSolution();
     if ( StringUtils.isEmpty( solution ) ) {
       isValid = false;
-      solRepPicker.setActionError( "Solution name cannot be empty." );
+      solRepPicker.setSolutionError( "Solution name cannot be empty." );
     }
     
     String path = solRepPicker.getPath();
     if ( StringUtils.isEmpty( path ) ) {
       isValid = false;
-      solRepPicker.setActionError( "Path cannot be empty." );
+      solRepPicker.setPathError( "Path cannot be empty." );
     }
     
     String action = solRepPicker.getAction();
