@@ -1473,6 +1473,17 @@ a:visited {
 	width: 100%;
 	height: 100%;
 }
+
+.schedulerTabPanel {
+}
+
+.scheduleEditor {
+	margin: 10px;
+}
+.solRepItemPicker {
+	margin: 10px;
+}
+
 /* not used
 .tabLabelError-selected {
 	background-color: magenta;
