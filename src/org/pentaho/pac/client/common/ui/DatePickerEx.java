@@ -17,6 +17,7 @@ package org.pentaho.pac.client.common.ui;
 
 import java.util.Date;
 
+import org.pentaho.pac.client.common.util.StringUtils;
 import org.pentaho.pac.client.common.util.TimeUtil;
 
 // TODO sbarkdull, should not extend DatePicker, should aggregate it
@@ -35,13 +36,17 @@ public class DatePickerEx extends org.zenika.widget.client.datePicker.DatePicker
   }
   
   /**
-   * Get the selected date.
+   * Get the selected date. Return null if control's textbox is empty.
+   * 
    * NOTE: base class implementation sets the time to the current time, which is
    * not what we want. So, 0-out the time portion to midnight
+   * 
+   * @return Date the selected date.
    */
   public Date getSelectedDate() {
     Date d = super.getSelectedDate();
-    return ( d == null ) 
+    String txt = super.getText();
+    return ( d == null || StringUtils.isEmpty( txt ) ) 
       ? null
       : TimeUtil.zeroTimePart( d );
   }
