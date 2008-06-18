@@ -2,6 +2,7 @@ package org.pentaho.pac.client.scheduler;
 
 import java.util.Date;
 
+import org.pentaho.pac.client.common.ui.widget.ErrorLabel;
 import org.pentaho.pac.client.common.util.TimeUtil;
 
 import com.google.gwt.user.client.ui.Label;
@@ -12,10 +13,12 @@ public class CronEditor extends VerticalPanel {
   
   private TextBox cronTb = new TextBox();
   private DateRangeEditor dateRangeEditor = null;
+  private ErrorLabel cronLabel = null;
   
   public CronEditor() {
     Label l = new Label( "Cron String:" );
-    add( l );
+    cronLabel = new ErrorLabel( l );
+    add( cronLabel );
     add( cronTb );
     
     dateRangeEditor = new DateRangeEditor( new Date() );
@@ -69,5 +72,20 @@ public class CronEditor extends VerticalPanel {
   
   public String getStartTime() {
     return TimeUtil.get0thTime();
+  }
+  
+  /**
+   * NOTE: should only ever be used by validators. This is a backdoor
+   * into this class that shouldn't be here, do not use this method
+   * unless you are validating.
+   * 
+   * @return DateRangeEditor
+   */
+  public DateRangeEditor getDateRangeEditor() {
+    return dateRangeEditor;
+  }
+  
+  public void setCronError( String errorMsg ) {
+    cronLabel.setErrorMsg( errorMsg );
   }
 }
