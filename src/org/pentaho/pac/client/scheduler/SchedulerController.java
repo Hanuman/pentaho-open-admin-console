@@ -28,9 +28,9 @@ import org.pentaho.pac.client.common.ui.ICallback;
 import org.pentaho.pac.client.common.ui.IResponseCallback;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
-import org.pentaho.pac.client.common.util.StringUtils;
 import org.pentaho.pac.client.common.util.TimeUtil;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.scheduler.ScheduleCreatorDialog.TabIndex;
 import org.pentaho.pac.client.scheduler.ScheduleEditor.ScheduleType;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -574,10 +574,45 @@ public class SchedulerController {
     SolutionRepositoryItemPicker solRepPicker = scheduleCreatorDialog.getSolutionRepositoryItemPicker();
     
     ScheduleEditorValidator schedEdValidator = new ScheduleEditorValidator( schedEd );
-    isValid &= schedEdValidator.isValid();
-    
     SolutionRepositoryItemPickerValidator solRepValidator = new SolutionRepositoryItemPickerValidator( solRepPicker );
-    isValid &= solRepValidator.isValid();
+
+    scheduleCreatorDialog.clearTabError();
+    schedEdValidator.clear();
+    solRepValidator.clear();
+    
+    /*
+     * If a tab's controls have errors, change the tab's appearance so that
+     * the tab-label displays in an error-color (red). If the current tab 
+     * does not have an error, find the first tab that does have an error,
+     * and set it to the current tab.
+     */
+    TabIndex firstTabWithError = null;
+    boolean doesSelectedTabHaveError = false;
+    TabIndex selectedIdx = scheduleCreatorDialog.getSelectedTab();
+    
+    if ( !schedEdValidator.isValid() ) {
+      isValid = false ;
+      scheduleCreatorDialog.setTabError( TabIndex.SCHEDULE );
+      if ( null == firstTabWithError ) {
+        firstTabWithError = TabIndex.SCHEDULE;
+      }
+      if ( TabIndex.SCHEDULE == selectedIdx ) {
+        doesSelectedTabHaveError = true;
+      }
+    }    
+    if ( !solRepValidator.isValid() ) {
+      isValid = false ;
+      scheduleCreatorDialog.setTabError( TabIndex.SCHEDULE_ACTION );
+      if ( null == firstTabWithError ) {
+        firstTabWithError = TabIndex.SCHEDULE_ACTION;
+      }
+      if ( TabIndex.SCHEDULE_ACTION == selectedIdx ) {
+        doesSelectedTabHaveError = true;
+      }
+    }
+    if ( false == doesSelectedTabHaveError && firstTabWithError != null ) {
+      scheduleCreatorDialog.setSelectedTab( firstTabWithError );
+    }
     
     return isValid;
   }
@@ -587,12 +622,17 @@ public class SchedulerController {
    * that may be set in isScheduleEditorValid(), must be cleared here.
    */
   private void clearScheduleEditorValidationMsgs() {
-    ScheduleEditor schedEd = scheduleCreatorDialog.getScheduleEditor();
     
-    String name = schedEd.getName();
-    schedEd.setNameError( null );
-
-    String gName = schedEd.getGroupName();
-    schedEd.setGroupNameError( null );
+    scheduleCreatorDialog.clearTabError();
+    
+    ScheduleEditor schedEd = scheduleCreatorDialog.getScheduleEditor();
+    SolutionRepositoryItemPicker solRepPicker = scheduleCreatorDialog.getSolutionRepositoryItemPicker();
+    
+    ScheduleEditorValidator schedEdValidator = new ScheduleEditorValidator( schedEd );
+    schedEdValidator.clear();
+    
+    SolutionRepositoryItemPickerValidator solRepValidator = new SolutionRepositoryItemPickerValidator( solRepPicker );
+    solRepValidator.clear();
+    
   }
 }
