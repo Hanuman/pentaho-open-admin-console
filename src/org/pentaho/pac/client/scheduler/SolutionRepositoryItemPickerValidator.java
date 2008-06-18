@@ -2,8 +2,7 @@ package org.pentaho.pac.client.scheduler;
 
 import org.pentaho.pac.client.common.util.StringUtils;
 
-// TODO sbarkdull, should this implement a "Validator" interface?
-public class SolutionRepositoryItemPickerValidator {
+public class SolutionRepositoryItemPickerValidator implements IUiValidator {
 
   private SolutionRepositoryItemPicker solRepPicker = null;
 
@@ -31,5 +30,10 @@ public class SolutionRepositoryItemPickerValidator {
     solRepPicker.setActionError( errorMsg );
     
     return isValid;
+  }
+
+  public void clear() {
+    // TODO Auto-generated method stub
+    
   }
 }
