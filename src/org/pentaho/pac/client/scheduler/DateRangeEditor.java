@@ -18,7 +18,6 @@ public class DateRangeEditor extends SimpleGroupBox {
   private static final String END_DATE_RB_GROUP = "end-date-group"; //$NON-NLS-1$
 
   private DatePickerEx startDatePicker = null;
-  private ErrorLabel startByLabel = null;
   private EndDatePanel endDatePanel = null;
   
   private ErrorLabel startLabel = null;
@@ -31,14 +30,13 @@ public class DateRangeEditor extends SimpleGroupBox {
     add( outerHP );
     
     HorizontalPanel hp = new HorizontalPanel();
-    startLabel = new ErrorLabel( new Label( "Start:" ) );
-    startLabel.setStyleName("startLabel");
-    hp.add(startLabel);
+    Label l = new Label( "Start:" );
+    l.setStyleName("startLabel");
+    hp.add( l );
     startDatePicker = new DatePickerEx();
     hp.add(startDatePicker);
-    
-    startByLabel = new ErrorLabel( hp );
-    outerHP.add(startByLabel);
+    startLabel = new ErrorLabel( hp );
+    outerHP.add(startLabel);
 
     endDatePanel = new EndDatePanel( date );
     outerHP.add(endDatePanel);
@@ -88,10 +86,6 @@ public class DateRangeEditor extends SimpleGroupBox {
     return endDatePanel.isNoEndDate();
   }
   
-  public void setStartByError( String errorMsg ) {
-    startLabel.setErrorMsg( errorMsg );
-  }
-  
   public void setEndByError( String errorMsg ) {
     endDatePanel.setEndByError( errorMsg );
   }
@@ -113,13 +107,15 @@ public class DateRangeEditor extends SimpleGroupBox {
       HorizontalPanel hp = new HorizontalPanel();
       add(hp);
   
+      HorizontalPanel endByPanel = new HorizontalPanel();
       endByRb = new RadioButton(END_DATE_RB_GROUP, "End by:");
       endByRb.setStyleName("recurrenceRadioButton");
-      endByLabel = new ErrorLabel( endByRb );
-      hp.add(endByLabel);
+      endByPanel.add(endByRb);
       endDatePicker = new DatePickerEx();
       endDatePicker.setEnabled(false);
-      hp.add(endDatePicker);
+      endByPanel.add(endDatePicker);
+      endByLabel = new ErrorLabel( endByPanel );
+      hp.add( endByLabel );
   
       noEndDateRb.addClickListener(new ClickListener() {
         public void onClick(Widget sender) {
