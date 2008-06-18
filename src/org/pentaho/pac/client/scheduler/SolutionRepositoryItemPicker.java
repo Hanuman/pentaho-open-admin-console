@@ -18,6 +18,8 @@ public class SolutionRepositoryItemPicker extends VerticalPanel {
 
   public SolutionRepositoryItemPicker() {
     super();
+
+    setStylePrimaryName( "solRepItemPicker" );
     
     solutionLabel = new ErrorLabel( new Label( "Solution:" ) );
     add( solutionLabel );

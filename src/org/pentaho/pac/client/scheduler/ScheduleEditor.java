@@ -127,6 +127,7 @@ public class ScheduleEditor extends VerticalPanel {
   public ScheduleEditor() {
     super();
     
+    setStylePrimaryName( "scheduleEditor" );
     int rowNum = 0;
     nameLabel = new ErrorLabel( new Label( "Name:" ) );
     add( nameLabel );
