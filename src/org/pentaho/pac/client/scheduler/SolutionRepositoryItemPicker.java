@@ -2,11 +2,11 @@ package org.pentaho.pac.client.scheduler;
 
 import org.pentaho.pac.client.common.ui.widget.ErrorLabel;
 
-import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class SolutionRepositoryItemPicker extends FlexTable {
+public class SolutionRepositoryItemPicker extends VerticalPanel {
 
   private TextBox solutionTb = new TextBox();
   private TextBox pathTb = new TextBox();
@@ -18,21 +18,18 @@ public class SolutionRepositoryItemPicker extends FlexTable {
 
   public SolutionRepositoryItemPicker() {
     super();
-
-    setCellPadding( 0 );
-    setCellSpacing( 0 );
     
     solutionLabel = new ErrorLabel( new Label( "Solution:" ) );
-    setWidget( 0 , 0, solutionLabel );
-    setWidget( 0 , 1, solutionTb );
+    add( solutionLabel );
+    add( solutionTb );
 
     pathLabel = new ErrorLabel( new Label( "Path:" ) );
-    setWidget( 1 , 0, pathLabel );
-    setWidget( 1 , 1, pathTb );
+    add( pathLabel );
+    add( pathTb );
 
     actionLabel = new ErrorLabel( new Label( "Action:" ) );
-    setWidget( 2 , 0, actionLabel );
-    setWidget( 2 , 1, actionTb );
+    add( actionLabel );
+    add( actionTb );
   }
   
   public void reset() {    

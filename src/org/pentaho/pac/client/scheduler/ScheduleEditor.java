@@ -27,7 +27,6 @@ import org.pentaho.pac.client.common.util.TimeUtil;
 import org.pentaho.pac.client.scheduler.RecurrenceEditor.TemporalValue;
 
 import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Panel;
@@ -40,7 +39,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Steven Barkdull
  *
  */
-public class ScheduleEditor extends FlexTable {
+public class ScheduleEditor extends VerticalPanel {
 
   enum ScheduleType {
     RUN_ONCE(0, "Run Once"), 
@@ -127,37 +126,33 @@ public class ScheduleEditor extends FlexTable {
 
   public ScheduleEditor() {
     super();
-
-    setCellPadding( 0 );
-    setCellSpacing( 0 );
     
     int rowNum = 0;
     nameLabel = new ErrorLabel( new Label( "Name:" ) );
-    setWidget( rowNum , 0, nameLabel );
-    setWidget( rowNum , 1, nameTb );
+    add( nameLabel );
+    add( nameTb );
     
     rowNum++;
     groupNameLabel = new ErrorLabel( new Label( "Group:" ) );
-    setWidget( rowNum, 0, groupNameLabel );
-    setWidget( rowNum, 1, groupNameTb );
+    add( groupNameLabel );
+    add( groupNameTb );
 
     rowNum++;
     Label l = new Label( "Description:" );
-    setWidget( rowNum, 0, l );
-    setWidget( rowNum, 1, descriptionTb );
+    add( l );
+    add( descriptionTb );
 
     rowNum++;
     scheduleCombo = createScheduleCombo();
     l = new Label( "Schedule Type:" );
-    setWidget( rowNum, 0, l );
-    setWidget( rowNum, 1, scheduleCombo );
+    add( l );
+    add( scheduleCombo );
 
     rowNum++;
     scheduleGB = new SimpleGroupBox( ScheduleType.RUN_ONCE.toString() + " Editor" );
     VerticalPanel vp = new VerticalPanel();
     scheduleGB.add( vp );
-    this.getFlexCellFormatter().setColSpan( 4, 0, 3 );
-    setWidget( rowNum, 0, scheduleGB );
+    add( scheduleGB );
 
     runOnceEditor = new RunOnceEditor();
     vp.add( runOnceEditor );
