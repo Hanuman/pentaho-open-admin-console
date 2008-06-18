@@ -18,6 +18,7 @@ package org.pentaho.pac.client.scheduler;
 import java.util.EnumSet;
 
 import org.pentaho.pac.client.common.EnumException;
+import org.pentaho.pac.client.common.util.StringUtils;
 import org.pentaho.pac.client.common.util.TimeUtil;
 
 /**
@@ -92,19 +93,19 @@ public class CronParser {
 
   private static final String MATCH_DAY_OF_MONTH_FIELD_RE = "^(\\*|\\?|L|([0-9]{1,2}(W|(,[0-9]{1,2}){0,30}))|([0-9]{1,2}[/-][0-9]{1,2}))$";
   public static boolean isDayOfMonthField( String fld ) {
-    return MATCH_DAY_OF_MONTH_FIELD_RE.matches( fld );
+    return fld.matches( MATCH_DAY_OF_MONTH_FIELD_RE );
   }
   private static final String MATCH_MONTH_FIELD_RE = "^(\\*|([0-9]{1,2}(,[0-9]{1,2}){0,11})|([0-9]{1,2}[/-][0-9]{1,2}))$";
   public static boolean isMonthField( String fld ) {
-    return MATCH_MONTH_FIELD_RE.matches( fld );
+    return fld.matches( MATCH_MONTH_FIELD_RE );
   }
   private static final String MATCH_DAY_OF_WEEK_FIELD_RE = "^(\\*|\\?|L|([0-9]{1,2}(,[0-9]{1,2}){0,6})|([0-9]{1,2}[/#-][0-9]{1,2}))$";
   public static boolean isDayOfWeekField( String fld ) {
-    return MATCH_DAY_OF_WEEK_FIELD_RE.matches( fld );
+    return fld.matches( MATCH_DAY_OF_WEEK_FIELD_RE );
   }
-  private static final String MATCH_YEAR_FIELD_RE = "^([0-9]{1,4})+$";
+  private static final String MATCH_YEAR_FIELD_RE = "^[0-9]{1,4}$";
   public static boolean isYearField( String fld ) {
-    return MATCH_YEAR_FIELD_RE.matches( fld );
+    return fld.matches( MATCH_YEAR_FIELD_RE );
   }
 
   /**
@@ -120,22 +121,25 @@ public class CronParser {
     boolean isValid = true;
     String parts[] = strInt.split( "\\s" );
 
+    if ( parts.length < 6 ) {
+      return false;
+    }
+    if ( !StringUtils.isPositiveInteger( parts[0] )
+      || !StringUtils.isPositiveInteger( parts[1] )
+      || !StringUtils.isPositiveInteger( parts[2] ) ) {
+      return false;
+    }
     isValid &= TimeUtil.isSecond( Integer.parseInt( parts[0] ) );
     isValid &= TimeUtil.isMinute( Integer.parseInt( parts[1] ) );
     isValid &= TimeUtil.isHour( Integer.parseInt( parts[2] ) );
     isValid &= isDayOfMonthField( parts[3] );
     isValid &= isMonthField( parts[4] );
     isValid &= isDayOfWeekField( parts[5] );
-    isValid &= isYearField( parts[6] );
+    if ( parts.length >= 7 ) {
+      isValid &= isYearField( parts[6] );
+    }
     
     return isValid;
-  }
-
-  // NOTE: Integer.MAX_VALUE = 2147483647
-  private static final String IS_NUM_RE = "\\d{1,10}"; //$NON-NLS-1$
-  // NOTE: does not properly handle negative integers
-  private static boolean isInt( String sample ) {
-    return sample.matches( IS_NUM_RE );
   }
 
   private String getCronString() {
@@ -302,7 +306,7 @@ public class CronParser {
       throw new CronParseException( "Invalid number of tokens" );
     }
     
-    if ( isInt( tokens[CronField.SECONDS.value] ) ) {
+    if ( StringUtils.isPositiveInteger( tokens[CronField.SECONDS.value] ) ) {
       int num = Integer.parseInt( tokens[CronField.SECONDS.value] );
       if ( !TimeUtil.isSecond( num ) ) {
         throw new CronParseException( "Seconds token must be an integer between 0 and 59, but it is: " + tokens[0] );
@@ -311,7 +315,7 @@ public class CronParser {
       }
     }
     
-    if ( isInt( tokens[CronField.MINUTES.value] ) ) {
+    if ( StringUtils.isPositiveInteger( tokens[CronField.MINUTES.value] ) ) {
       int num = Integer.parseInt( tokens[CronField.MINUTES.value] );
       if ( !TimeUtil.isMinute( num ) ) {
         throw new CronParseException( "Minute token must be an integer between 0 and 59, but it is: " + tokens[0] );
@@ -320,7 +324,7 @@ public class CronParser {
       }
     }
     
-    if ( isInt( tokens[CronField.HOURS.value] ) ) {
+    if ( StringUtils.isPositiveInteger( tokens[CronField.HOURS.value] ) ) {
       int num = Integer.parseInt( tokens[CronField.HOURS.value] );
       if ( !TimeUtil.isHour( num ) ) {
         throw new CronParseException( "Hours token must be an integer between 0 and 23, but it is: " + tokens[0] );
@@ -561,7 +565,7 @@ public class CronParser {
   }
 
   private static void validateIsInt( String strInt ) throws CronParseException {
-    if ( !isInt( strInt ) ) {
+    if ( !StringUtils.isPositiveInteger( strInt ) ) {
       throw new CronParseException( "Invalid token, must be an integer: " + strInt );
     }
   }
@@ -718,16 +722,6 @@ public class CronParser {
         "0 59 12 ? 1 1L",         //LastDayNameOfMonthName //$NON-NLS-1$
         "" //$NON-NLS-1$
     };
-    
-    String strInt = "bart77"; //$NON-NLS-1$
-    assert !isInt( strInt ) : strInt + " is not an int."; //$NON-NLS-1$
-    strInt = "2147483647"; //$NON-NLS-1$
-    assert isInt( strInt ) : strInt + " is an int."; //$NON-NLS-1$
-    strInt = "21474836478"; //$NON-NLS-1$
-    assert !isInt( strInt ) : strInt + " is an integer, but is to large to be an int."; //$NON-NLS-1$
-    strInt = "1"; //$NON-NLS-1$
-    assert isInt( strInt ) : strInt + " is an int."; //$NON-NLS-1$
-    
     
     for ( int ii=0; ii<cronSamples.length; ++ii ) {
       String cronStr = cronSamples[ii];
