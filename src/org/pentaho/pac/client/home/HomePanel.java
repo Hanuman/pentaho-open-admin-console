@@ -34,7 +34,6 @@ public class HomePanel extends SimplePanel {
 
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   private static int sUid;
-  private String htmlContent = null;
   private GroupBox groupbox;
   
   /**
@@ -60,7 +59,7 @@ public class HomePanel extends SimplePanel {
     this.add(groupbox);
     
 	 PacServiceAsync pacService = PacServiceFactory.getPacService();
-	 pacService.getHomePage(url, new AsyncCallback() {
+	 pacService.getHomePageAsHtml(url, new AsyncCallback<String>() {
 		 public void onFailure(Throwable caught) {
 		   
        MessageDialog messageDialog = new MessageDialog(
@@ -68,8 +67,7 @@ public class HomePanel extends SimplePanel {
            MSGS.failedToLoadHome( caught.getMessage() ) );
        messageDialog.center();
 		 }
-		 public void onSuccess(Object result) {
-      htmlContent = (String) result;
+		 public void onSuccess(String htmlContent) {
       SimplePanel tempPanel = new SimplePanel();
       
       DOM.setInnerHTML(tempPanel.getElement(), htmlContent);
