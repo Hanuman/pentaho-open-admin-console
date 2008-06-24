@@ -70,7 +70,7 @@ public class AdministrationTabPanel extends TabPanel {
   }
   
   private void initializeSecurityInfo() {
-    AsyncCallback callback = new AsyncCallback() {
+    AsyncCallback<Object> callback = new AsyncCallback<Object>() {
       public void onSuccess(Object result) {
         usersAndRolesPanel.refresh();
         securityInfoInitialized = true;
