@@ -45,16 +45,24 @@ public class ThreadSafeHttpClient {
         new MultiThreadedHttpConnectionManager();
       CLIENT = new HttpClient( connectionManager );
     }
-    private String proxyUrl = null;
+    private String baseUrl = null;
     
     /**
      * Base Constructor
      */
-    public ThreadSafeHttpClient( String proxyUrl ) {
+    public ThreadSafeHttpClient() {
       super();
-      this.proxyUrl = proxyUrl;
+    }
+    
+    public ThreadSafeHttpClient( String baseUrl ) {
+      this();
+      setBaseUrl( baseUrl );
     }
 
+    public void setBaseUrl( String baseUrl ) {
+      this.baseUrl = baseUrl;
+    }
+    
     public String execRemoteMethod( String serviceName, Map<String, String> mapParams )
         throws PacServiceException {
       return execRemoteMethod( serviceName, mapParams, "text/xml" ); //$NON-NLS-1$
@@ -71,11 +79,13 @@ public class ThreadSafeHttpClient {
     public String execRemoteMethod( String serviceName, Map<String, String> mapParams, String contentType )
         throws PacServiceException {
       
+      assert null != baseUrl : "baseUrl cannot be null"; //$NON-NLS-1$
+      
       InputStream responseStrm = null;
       NameValuePair[] params = ( null != mapParams )
         ? mapToNameValuePair( mapParams )
         : null;
-      String serviceUrl = proxyUrl 
+      String serviceUrl = baseUrl 
         + ( ( StringUtils.isEmpty( serviceName ) ) ? "" : "/" + serviceName ); //$NON-NLS-1$ //$NON-NLS-2$
       GetMethod method = new GetMethod( serviceUrl );
 
