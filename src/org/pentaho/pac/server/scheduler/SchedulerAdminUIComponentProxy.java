@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.pentaho.pac.client.scheduler.Schedule;
 import org.pentaho.pac.common.PacServiceException;
+import org.pentaho.pac.server.common.AppConfigProperties;
 import org.pentaho.pac.server.common.BiServerTrustedProxy;
 
 public class SchedulerAdminUIComponentProxy {
@@ -41,8 +42,9 @@ public class SchedulerAdminUIComponentProxy {
     biServerProxy = BiServerTrustedProxy.getInstance();
   }
   
-  public SchedulerAdminUIComponentProxy( String userName ) {
+  public SchedulerAdminUIComponentProxy( String userName, String biServerBaseURL ) {
     this.userName = userName;
+    biServerProxy.setBaseUrl( biServerBaseURL );
   }
 
   /**
