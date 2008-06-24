@@ -17,25 +17,18 @@
 package org.pentaho.pac.server.common;
 
 import java.util.Map;
-import java.util.Properties;
 
 import org.pentaho.pac.common.PacServiceException;
 
 public class BiServerTrustedProxy extends ThreadSafeHttpClient {
 
   private static final String TRUSTED_USER_KEY = "_TRUST_USER_"; //$NON-NLS-1$
-  //private String userName = p.getProperty( "pentaho.platform.username" );
-  private static final String biServerBaseUrl;
-  static {
-    Properties p = AppConfigProperties.getProperties();
-    biServerBaseUrl = p.getProperty( "biServerBaseURL" ); //$NON-NLS-1$
-  }
   
   private static BiServerTrustedProxy instance = new BiServerTrustedProxy();
   
   private BiServerTrustedProxy()
   {
-    super( biServerBaseUrl );
+    super();
   }
   
   public static BiServerTrustedProxy getInstance() {
@@ -82,7 +75,7 @@ public class BiServerTrustedProxy extends ThreadSafeHttpClient {
    * @param serviceName name of service on server, for instance: SchedulerAdmin
    * @param params params to pass with request
    */
-  public String execRemoteMethod( String serviceName, String userName, Map params )
+  public String execRemoteMethod( String serviceName, String userName, Map<String,String> params )
     throws PacServiceException {
     
     params.put( TRUSTED_USER_KEY, userName );
