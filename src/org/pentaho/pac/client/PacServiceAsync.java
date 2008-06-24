@@ -39,9 +39,8 @@ public interface PacServiceAsync {
   public void refreshSystemSettings(AsyncCallback callback);
   public void executeGlobalActions(AsyncCallback callback);
   public void refreshReportingMetadata(AsyncCallback callback);
-  public void getHomePage(String url, AsyncCallback callback);
+  public void getHomePageAsHtml(String url, AsyncCallback<String> callback);
   
   public void isBiServerAlive( AsyncCallback callback );
   public void getBiServerStatusCheckPeriod( AsyncCallback callback );
-  public void getAppProperty( String propName, AsyncCallback callback );
 }

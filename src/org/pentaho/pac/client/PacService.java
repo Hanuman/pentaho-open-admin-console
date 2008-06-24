@@ -51,9 +51,8 @@ public interface PacService extends RemoteService {
   public String refreshSystemSettings() throws PacServiceException;
   public String executeGlobalActions() throws PacServiceException;
   public String refreshReportingMetadata() throws PacServiceException;
-  public String getHomePage(String url) throws PacServiceException;
+  public String getHomePageAsHtml(String url) throws PacServiceException;
   
   public void isBiServerAlive() throws PacServiceException;
   public int getBiServerStatusCheckPeriod();
-  public String getAppProperty( String propName );
 }
