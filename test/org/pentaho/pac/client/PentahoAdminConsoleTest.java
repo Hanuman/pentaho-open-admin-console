@@ -616,8 +616,8 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
     Timer timer = new Timer() {
       public void run() {
         String url = "http://www.pentaho.com/console_home"; //$NON-NLS-1$
-        AsyncCallback callback = new AsyncCallback() {
-          public void onSuccess(Object result) {
+        AsyncCallback<String> callback = new AsyncCallback<String>() {
+          public void onSuccess(String result) {
             assertTrue(true);
           }
 
@@ -625,7 +625,7 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
             fail();
           }
         };
-        PacServiceFactory.getPacService().getHomePage(url, callback);
+        PacServiceFactory.getPacService().getHomePageAsHtml(url, callback);
 
         // Finish this test. This will allow the test method to no longer be delayed in finishing.
         finishTest();
