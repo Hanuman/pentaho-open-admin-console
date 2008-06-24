@@ -2,7 +2,9 @@ package org.pentaho.pac.client.scheduler;
 
 import java.util.List;
 
+import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.util.StringUtils;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -60,17 +62,8 @@ public class SchedulesListController {
         schedulesListCtrl.addRow( widgets, schedule );
       }
     } else {
-      showNoScheduledSchedulesRow();
+      PacLocalizedMessages msgs = PentahoAdminConsole.getLocalizedMessages();
+      schedulesListCtrl.setTempMessage( msgs.noSchedules() );
     }
-  }
-  
-  private void showNoScheduledSchedulesRow()
-  {
-//    schedulesTable.setHTML( FIRST_ROW, 0, MSGS.noSchedules() );
-//    schedulesTable.setHTML( FIRST_ROW, 1, "&nbsp;" ); //$NON-NLS-1$
-//    schedulesTable.setHTML( FIRST_ROW, 2, "&nbsp;" ); //$NON-NLS-1$
-//    schedulesTable.setHTML( FIRST_ROW, 3, "&nbsp;" ); //$NON-NLS-1$
-//    schedulesTable.setHTML( FIRST_ROW, 4, "&nbsp;" ); //$NON-NLS-1$
-//    schedulesTable.setHTML( FIRST_ROW, 5, "&nbsp;" ); //$NON-NLS-1$
   }
 }
