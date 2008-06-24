@@ -25,6 +25,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.pentaho.pac.server.i18n.Messages;
 
+/**
+ * By default, this class will initialize itself from a file on the class path called pac.properties.
+ * A client of this module can override the default initialization by simply calling 
+ * setProperties() with a Properties object that provides an alternate initialization.
+ * To understand what the required parameters are, see pac.properties.
+ * 
+ * @author Steven Barkdull
+ *
+ */
 public class AppConfigProperties {
 
   private static final Log logger = LogFactory.getLog(AppConfigProperties.class);
@@ -49,8 +58,13 @@ public class AppConfigProperties {
     }
   }
 
-  public static Properties getProperties()
+  public static void setProperties( Properties p )
   {
-    return properties;
+    properties = p;
+  }
+
+  public static String getProperty( String key )
+  {
+    return (String)properties.get( key );
   }
 }
