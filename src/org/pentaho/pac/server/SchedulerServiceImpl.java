@@ -2,7 +2,9 @@ package org.pentaho.pac.server;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -18,32 +20,25 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class SchedulerServiceImpl extends RemoteServiceServlet implements SchedulerService  {
 
-  private static String userName = null;
   private static final Log logger = LogFactory.getLog(SchedulerServiceImpl.class);
 
   // TODO sbarkdull, damn it would be nice to inject this with Spring (and some of these other props)
   private static SchedulerAdminUIComponentProxy schedulerProxy = null;
   static {
-    initFromConfiguration();
-    schedulerProxy = new SchedulerAdminUIComponentProxy( getUserName() );
-  }
-  
-  private static BiServerTrustedProxy biServerProxy;
-  static {
-    biServerProxy = BiServerTrustedProxy.getInstance();
   }
   
   public SchedulerServiceImpl() {
+    super();
   }
-
-  private static void initFromConfiguration()
-  {
-    Properties p = AppConfigProperties.getProperties();
-    userName = StringUtils.defaultIfEmpty( p.getProperty("pentaho.platform.userName"), System.getProperty("pentaho.platform.userName") ); //$NON-NLS-1$ //$NON-NLS-2$
-  }
-
-  private static String getUserName() {
-    return userName;
+  
+  /**
+   * NOTE: this is where all initialization for the Scheduler Service should occur.
+   */
+  public void init(ServletConfig config) throws ServletException {
+    super.init( config );
+    String userName = StringUtils.defaultIfEmpty( AppConfigProperties.getProperty("pentaho.platform.userName"), System.getProperty("pentaho.platform.userName") ); //$NON-NLS-1$ //$NON-NLS-2$
+    String biServerBaseURL = AppConfigProperties.getProperty( "biServerBaseURL" );
+    schedulerProxy = new SchedulerAdminUIComponentProxy( userName, biServerBaseURL );
   }
   
   public void deleteJob(String jobName, String jobGroup) throws PacServiceException {
