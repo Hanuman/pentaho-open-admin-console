@@ -21,7 +21,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.pentaho.pac.client.PacService;
-import org.pentaho.pac.client.scheduler.Schedule;
 import org.pentaho.pac.common.PacServiceException;
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.UserRoleSecurityInfo;
@@ -44,25 +43,30 @@ import org.pentaho.pac.server.common.ThreadSafeHttpClient;
 import org.pentaho.pac.server.datasources.DataSourceMgmtService;
 import org.pentaho.pac.server.datasources.IDataSourceMgmtService;
 import org.pentaho.pac.server.i18n.Messages;
-import org.pentaho.pac.server.scheduler.SchedulerAdminUIComponentProxy;
 import org.pentaho.pac.server.scheduler.XmlSerializer;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class PacServiceImpl extends RemoteServiceServlet implements PacService {
 
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 420L;
+
   private IUserRoleMgmtService userRoleMgmtService = new UserRoleMgmtService();
 
   private IDataSourceMgmtService dataSourceMgmtService = new DataSourceMgmtService();
 
   private static final Log logger = LogFactory.getLog(PacServiceImpl.class);
+  private static final int DEFAULT_CHECK_PERIOD = 30000; // 30 seconds
 
   private static BiServerTrustedProxy biServerProxy;
   static {
     biServerProxy = BiServerTrustedProxy.getInstance();
   }
   
-  Properties appConfigProperties = null; 
+  private Properties appConfigProperties = null; 
   private String jmxHostName = null;
   private String jmxPortNumber = null;
   private String userName = null;
@@ -157,10 +161,10 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return result;
   }
 
-  public ProxyPentahoUser getUser(String userName) throws PacServiceException {
+  public ProxyPentahoUser getUser(String pUserName) throws PacServiceException {
     ProxyPentahoUser proxyPentahoUser = null;
     try {
-      IPentahoUser user = userRoleMgmtService.getUser(userName);
+      IPentahoUser user = userRoleMgmtService.getUser(pUserName);
       if (null != user) {
         proxyPentahoUser = new ProxyPentahoUser();
         proxyPentahoUser.setName(user.getName());
@@ -169,7 +173,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
         proxyPentahoUser.setPassword(user.getPassword());
       }
     } catch (DAOException e) {
-      throw new PacServiceException(Messages.getString("PacService.FAILED_TO_FIND_USER", userName), e); //$NON-NLS-1$
+      throw new PacServiceException(Messages.getString("PacService.FAILED_TO_FIND_USER", pUserName), e); //$NON-NLS-1$
     } finally {
       userRoleMgmtService.closeSession();
     }
@@ -219,7 +223,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     } finally {
       userRoleMgmtService.closeSession();
     }
-    return (ProxyPentahoUser[]) users.toArray(new ProxyPentahoUser[0]);
+    return users.toArray(new ProxyPentahoUser[0]);
   }
 
   public boolean updateUser(ProxyPentahoUser proxyUser) throws NonExistingUserException, PentahoSecurityException,
@@ -508,7 +512,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     } finally {
       dataSourceMgmtService.closeSession();
     }
-    return (IPentahoDataSource[]) dataSources.toArray(new PentahoDataSource[0]);
+    return dataSources.toArray(new PentahoDataSource[0]);
 
   }
 
@@ -667,18 +671,17 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   
   private void initFromConfiguration()
   {
-    Properties p = AppConfigProperties.getProperties();
-    appConfigProperties = p;
-    jmxHostName = StringUtils.defaultIfEmpty( p.getProperty("jmxHostName"), System.getProperty("jmxHostName") ); //$NON-NLS-1$ //$NON-NLS-2$
-    jmxPortNumber = StringUtils.defaultIfEmpty( p.getProperty("jmxPortNumber"), System.getProperty("jmxPortNumber") ); //$NON-NLS-1$ //$NON-NLS-2$
-    userName = StringUtils.defaultIfEmpty( p.getProperty("pentaho.platform.userName"), System.getProperty("pentaho.platform.userName") ); //$NON-NLS-1$ //$NON-NLS-2$
-    pciContextPath = StringUtils.defaultIfEmpty( p.getProperty("pciContextPath"), System.getProperty("pciContextPath") ); //$NON-NLS-1$ //$NON-NLS-2$
-    biServerBaseURL = StringUtils.defaultIfEmpty( p.getProperty("biServerBaseURL"), System.getProperty("biServerBaseURL") ); //$NON-NLS-1$ //$NON-NLS-2$biServerBaseURL = StringUtils.defaultIfEmpty( p.getProperty("biServerBaseURL"), System.getProperty("biServerBaseURL") );
-    String strBiServerStatusCheckPeriod = StringUtils.defaultIfEmpty( p.getProperty("consoleToolBar.biServerStatusCheckPeriod"), System.getProperty("consoleToolBar.biServerStatusCheckPeriod") ); //$NON-NLS-1$ //$NON-NLS-2$
+    jmxHostName = StringUtils.defaultIfEmpty( AppConfigProperties.getProperty("jmxHostName"), System.getProperty("jmxHostName") ); //$NON-NLS-1$ //$NON-NLS-2$
+    jmxPortNumber = StringUtils.defaultIfEmpty( AppConfigProperties.getProperty("jmxPortNumber"), System.getProperty("jmxPortNumber") ); //$NON-NLS-1$ //$NON-NLS-2$
+    userName = StringUtils.defaultIfEmpty( AppConfigProperties.getProperty("pentaho.platform.userName"), System.getProperty("pentaho.platform.userName") ); //$NON-NLS-1$ //$NON-NLS-2$
+    pciContextPath = StringUtils.defaultIfEmpty( AppConfigProperties.getProperty("pciContextPath"), System.getProperty("pciContextPath") ); //$NON-NLS-1$ //$NON-NLS-2$
+    biServerBaseURL = StringUtils.defaultIfEmpty( AppConfigProperties.getProperty("biServerBaseURL"), System.getProperty("biServerBaseURL") ); //$NON-NLS-1$ //$NON-NLS-2$biServerBaseURL = StringUtils.defaultIfEmpty( p.getProperty("biServerBaseURL"), System.getProperty("biServerBaseURL") );
+    String strBiServerStatusCheckPeriod = StringUtils.defaultIfEmpty( AppConfigProperties.getProperty("consoleToolBar.biServerStatusCheckPeriod"), System.getProperty("consoleToolBar.biServerStatusCheckPeriod") ); //$NON-NLS-1$ //$NON-NLS-2$
     try {
       biServerStatusCheckPeriod = Integer.parseInt( strBiServerStatusCheckPeriod );
     } catch( NumberFormatException e ) {
       logger.error( Messages.getString( "PacService.THREAD_SCHEDULING_FAILED" ), e ); //$NON-NLS-1$
+      biServerStatusCheckPeriod = DEFAULT_CHECK_PERIOD;
     }
   }
 
@@ -876,12 +879,12 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return result;
   }
   
-  public String getHomePage(String url) {
+  public String getHomePageAsHtml(String url) {
     
     ThreadSafeHttpClient client = new ThreadSafeHttpClient( url );
 
-    Map params = new HashMap();
-    String timeOut = getAppProperty( "getHomePageTimeout" );//$NON-NLS-1$
+    Map<String,String> params = new HashMap<String,String>();
+    String timeOut = AppConfigProperties.getProperty( "homePage.timeout" );//$NON-NLS-1$
     params.put( "http.socket.timeout", timeOut ); //$NON-NLS-1$
     
     String html = null;
@@ -920,9 +923,5 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   
   public int getBiServerStatusCheckPeriod() {
     return biServerStatusCheckPeriod;
-  }
-  
-  public String getAppProperty( String propName ) {
-    return (String)appConfigProperties.get( propName );
   }
 }
