@@ -18,7 +18,6 @@ package org.pentaho.pac.server.common;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.httpclient.HttpClient;

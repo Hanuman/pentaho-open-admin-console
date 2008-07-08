@@ -13,7 +13,6 @@ import org.pentaho.pac.client.SchedulerService;
 import org.pentaho.pac.client.scheduler.Schedule;
 import org.pentaho.pac.common.PacServiceException;
 import org.pentaho.pac.server.common.AppConfigProperties;
-import org.pentaho.pac.server.common.BiServerTrustedProxy;
 import org.pentaho.pac.server.scheduler.SchedulerAdminUIComponentProxy;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;

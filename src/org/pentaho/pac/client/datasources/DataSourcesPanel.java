@@ -19,7 +19,6 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -79,13 +78,6 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
     dataSourcesListPanel.setHeight("100%"); //$NON-NLS-1$
     dataSourceDetailsDockPanel.setWidth("100%"); //$NON-NLS-1$
     dataSourceDetailsDockPanel.setHeight("100%"); //$NON-NLS-1$
-    dataSourceGeneralPanel.setEnabled(false);
-    dataSourceGeneralPanel.setWidth("100%"); //$NON-NLS-1$
-    dataSourceGeneralPanel.setHeight("100%"); //$NON-NLS-1$
-    dataSourceAdvancePanel.setEnabled(false);
-    dataSourceAdvancePanel.setWidth("100%"); //$NON-NLS-1$
-    dataSourceAdvancePanel.setHeight("100%"); //$NON-NLS-1$
-    dataSourceAdvancePanel.setVisible(false);
     updateDataSourceBtn.setEnabled(false);
     testDataSourceBtn.setEnabled(false);
     newDataSourceDialogBox.addPopupListener(this);
@@ -114,7 +106,10 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 
     generalButton.setStylePrimaryName("generalToggleBtn"); //$NON-NLS-1$
     advanceButton.setStylePrimaryName("advanceToggleBtn"); //$NON-NLS-1$
-
+    dataSourceGeneralPanel.setWidth("100%"); //$NON-NLS-1$
+    dataSourceGeneralPanel.setHeight("100%"); //$NON-NLS-1$
+    dataSourceAdvancePanel.setWidth("100%"); //$NON-NLS-1$
+    dataSourceAdvancePanel.setHeight("100%"); //$NON-NLS-1$
     deckPanel.add(dataSourceGeneralPanel);
     deckPanel.add(dataSourceAdvancePanel);
     dockPanel.add(deckPanel, DockPanel.CENTER);
@@ -126,8 +121,8 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
     deckPanel.setHeight("100%"); //$NON-NLS-1$
     deckPanel.setStyleName("newDataSourceDialogBox.detailsPanel"); //$NON-NLS-1$
     deckPanel.showWidget(GENERAL_PANEL_ID);
-    generalButton.setDown(false);
-    advanceButton.setDown(true);
+    generalButton.setDown(true);
+    advanceButton.setDown(false);
     generalButton.addClickListener(this);
     advanceButton.addClickListener(this);
 
@@ -161,6 +156,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
     dataSourcesList.addChangeListener(this);
     addDataSourceBtn.addClickListener(this);
     deleteDataSourceBtn.addClickListener(this);
+    refresh();
     return dataSourceListPanel;
   }
 

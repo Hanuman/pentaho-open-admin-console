@@ -24,11 +24,11 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
   private static final int ADVANCE_PANEL_ID = 1;
 
   Button testButton;
-  DataSourceGeneralPanel dataSourceGeneralPanel = new DataSourceGeneralPanel();
-  DataSourceAdvancePanel dataSourceAdvancePanel = new DataSourceAdvancePanel();
+  DataSourceGeneralPanel dataSourceGeneralPanel;
+  DataSourceAdvancePanel dataSourceAdvancePanel;
   boolean dataSourceCreated = false;
   MessageDialog messageDialog = new MessageDialog( MSGS.error() );
-  DeckPanel deckPanel = new DeckPanel();
+  DeckPanel deckPanel;
   ToggleButton generalButton;
   ToggleButton advanceButton;
   public NewDataSourceDialogBox() {
@@ -39,9 +39,11 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
     advanceButton = new ToggleButton( MSGS.advance(), MSGS.advance() );
     
     setTitle( MSGS.addDataSource() );
-    setClientSize( "350px", "300px" ); //$NON-NLS-1$ //$NON-NLS-2$
+    setClientSize( "350px", "450px" ); //$NON-NLS-1$ //$NON-NLS-2$
     HorizontalPanel horizontalPanel = new HorizontalPanel();
+    dataSourceGeneralPanel = new DataSourceGeneralPanel();
     horizontalPanel.add(generalButton);
+    dataSourceAdvancePanel = new DataSourceAdvancePanel();
     horizontalPanel.add(advanceButton);
     dockPanel.add(horizontalPanel, DockPanel.NORTH);
     dockPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
@@ -51,20 +53,18 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
     
     generalButton.setStylePrimaryName( "generalToggleBtn" ); //$NON-NLS-1$
     advanceButton.setStylePrimaryName( "advanceToggleBtn" ); //$NON-NLS-1$
-
+    deckPanel = new DeckPanel();
     deckPanel.add(dataSourceGeneralPanel);
     deckPanel.add(dataSourceAdvancePanel);
     dockPanel.add(deckPanel, DockPanel.CENTER);
-    
     dockPanel.setCellWidth(deckPanel, "100%"); //$NON-NLS-1$
     dockPanel.setCellHeight(deckPanel, "100%"); //$NON-NLS-1$
-    
     deckPanel.setWidth("100%"); //$NON-NLS-1$
     deckPanel.setHeight("100%"); //$NON-NLS-1$
     deckPanel.setStyleName( "newDataSourceDialogBox.detailsPanel" ); //$NON-NLS-1$
     deckPanel.showWidget(GENERAL_PANEL_ID);
-    generalButton.setDown(false);
-    advanceButton.setDown(true);
+    generalButton.setDown(true);
+    advanceButton.setDown(false);
     generalButton.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
         if (!generalButton.isDown()) {

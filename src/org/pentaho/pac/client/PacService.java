@@ -2,9 +2,6 @@ package org.pentaho.pac.client;
 
 
 
-import java.util.List;
-
-import org.pentaho.pac.client.scheduler.Schedule;
 import org.pentaho.pac.common.PacServiceException;
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.UserRoleSecurityInfo;
