@@ -1,79 +1,76 @@
 package org.pentaho.pac.client.scheduler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.pentaho.pac.client.common.ui.widget.ErrorLabel;
 
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class SolutionRepositoryItemPicker extends VerticalPanel {
 
-  private TextBox solutionTb = new TextBox();
-  private TextBox pathTb = new TextBox();
-  private TextBox actionTb = new TextBox();
+  private TextArea actionsTA = new TextArea();
 
-  private ErrorLabel solutionLabel = null;
-  private ErrorLabel pathLabel = null;
-  private ErrorLabel actionLabel = null;
+  private ErrorLabel actionsLabel = null;
+  private boolean bIsSingleSelect = true;
 
   public SolutionRepositoryItemPicker() {
     super();
 
     setStylePrimaryName( "solRepItemPicker" );
-    
-    solutionLabel = new ErrorLabel( new Label( "Solution:" ) );
-    add( solutionLabel );
-    add( solutionTb );
-
-    pathLabel = new ErrorLabel( new Label( "Path:" ) );
-    add( pathLabel );
-    add( pathTb );
-
-    actionLabel = new ErrorLabel( new Label( "Action:" ) );
-    add( actionLabel );
-    add( actionTb );
+    actionsTA.setWidth( "100%" );
+    actionsTA.setHeight( "20ex" );
+    actionsLabel = new ErrorLabel( new Label( "Comma separated list of action sequence paths:" ) );
+    add( actionsLabel );
+    add( actionsTA );
   }
   
   public void reset() {    
-    solutionTb.setText( "" ); //$NON-NLS-1$
-    pathTb.setText( "" ); //$NON-NLS-1$
-    actionTb.setText( "" ); //$NON-NLS-1$
+    actionsTA.setText( "" ); //$NON-NLS-1$
   }
   
-  public String getSolution() {
-    return solutionTb.getText();
+  public String getActionsAsString() {
+    return actionsTA.getText();
   }
   
-  public void setSolution( String solution ) {
-    solutionTb.setText( solution );
+  public List<String> getActionsAsList() {
+    String[] actions = actionsTA.getText().split( "," ); //$NON-NLS-1$
+    List<String> l = new ArrayList<String>();
+    for ( String action : actions ) {
+      l.add( action.trim() );
+    }
+    return l;
   }
   
-  public String getPath() {
-    return pathTb.getText();
+  public void setActionsAsString( String actions ) {
+    actionsTA.setText( actions );
   }
   
-  public void setPath( String path ) {
-    pathTb.setText( path );
+  public void setActionsAsList( List<String> actions ) {
+    StringBuilder strBldr = new StringBuilder();
+    int numActions = actions.size();
+    for ( int ii=0; ii<numActions-1; ++ii ) {
+      String action = actions.get( ii );
+      strBldr.append( action ).append( "," );
+    }
+    if ( numActions > 0 ) {
+      String action = actions.get( numActions-1 );
+      strBldr.append( action );
+    }
+    actionsTA.setText( strBldr.toString() );
   }
   
-  public String getAction() {
-    return actionTb.getText();
+  public void setActionsError( String errorMsg ) {
+    actionsLabel.setErrorMsg( errorMsg );
   }
-  
-  public void setAction( String action ) {
-    actionTb.setText( action );
+
+  public boolean isSingleSelect() {
+    return bIsSingleSelect;
   }
-  
-  public void setSolutionError( String errorMsg ) {
-    solutionLabel.setErrorMsg( errorMsg );
+
+  public void setSingleSelect(boolean isSingleSelect) {
+    bIsSingleSelect = isSingleSelect;
   }
-  
-  public void setPathError( String errorMsg ) {
-    pathLabel.setErrorMsg( errorMsg );
-  }
-  
-  public void setActionError( String errorMsg ) {
-    actionLabel.setErrorMsg( errorMsg );
-  }
-  
 }

@@ -1,6 +1,6 @@
 package org.pentaho.pac.client.scheduler;
 
-import org.pentaho.pac.client.common.util.StringUtils;
+import java.util.List;
 
 public class SolutionRepositoryItemPickerValidator implements IUiValidator {
 
@@ -13,30 +13,19 @@ public class SolutionRepositoryItemPickerValidator implements IUiValidator {
   public boolean isValid() {
     boolean isValid = true;
     
-    String solution = solRepPicker.getSolution();
-    if ( StringUtils.isEmpty( solution ) ) {
+    List<String> actionList = solRepPicker.getActionsAsList();
+    if ( solRepPicker.isSingleSelect() && actionList.size() > 1 ) {
       isValid = false;
-      solRepPicker.setSolutionError( "Solution name cannot be empty." );
-    }
-    
-    String path = solRepPicker.getPath();
-    if ( StringUtils.isEmpty( path ) ) {
+      solRepPicker.setActionsError( "Only allowed to specify one action sequence." );
+    } else if ( actionList.size() <= 0 ) {
       isValid = false;
-      solRepPicker.setPathError( "Path cannot be empty." );
-    }
-    
-    String action = solRepPicker.getAction();
-    if ( StringUtils.isEmpty( action ) ) {
-      isValid = false;
-      solRepPicker.setActionError( "Action name cannot be empty." );
+      solRepPicker.setActionsError( "Action sequence list cannot be empty." );
     }
     
     return isValid;
   }
 
   public void clear() {
-    solRepPicker.setSolutionError( null );
-    solRepPicker.setPathError( null );
-    solRepPicker.setActionError( null );
+    solRepPicker.setActionsError( null );
   }
 }
