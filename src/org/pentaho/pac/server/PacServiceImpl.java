@@ -13,9 +13,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+
+import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -40,6 +43,7 @@ import org.pentaho.pac.server.common.AppConfigProperties;
 import org.pentaho.pac.server.common.BiServerTrustedProxy;
 import org.pentaho.pac.server.common.DAOException;
 import org.pentaho.pac.server.common.ThreadSafeHttpClient;
+import org.pentaho.pac.server.common.ThreadSafeHttpClient.HttpMethodType;
 import org.pentaho.pac.server.datasources.DataSourceMgmtService;
 import org.pentaho.pac.server.datasources.IDataSourceMgmtService;
 import org.pentaho.pac.server.i18n.Messages;
@@ -66,7 +70,6 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     biServerProxy = BiServerTrustedProxy.getInstance();
   }
   
-  private Properties appConfigProperties = null; 
   private String jmxHostName = null;
   private String jmxPortNumber = null;
   private String userName = null;
@@ -76,9 +79,13 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   
   public PacServiceImpl()
   {
-    initFromConfiguration();
   }
 
+  public void init(ServletConfig config) throws ServletException {
+    super.init( config );
+    initFromConfiguration();
+  }
+  
   public UserRoleSecurityInfo getUserRoleSecurityInfo() throws PacServiceException {
     UserRoleSecurityInfo userRoleSecurityInfo = new UserRoleSecurityInfo();
     try {
@@ -671,12 +678,13 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   
   private void initFromConfiguration()
   {
-    jmxHostName = StringUtils.defaultIfEmpty( AppConfigProperties.getProperty("jmxHostName"), System.getProperty("jmxHostName") ); //$NON-NLS-1$ //$NON-NLS-2$
-    jmxPortNumber = StringUtils.defaultIfEmpty( AppConfigProperties.getProperty("jmxPortNumber"), System.getProperty("jmxPortNumber") ); //$NON-NLS-1$ //$NON-NLS-2$
-    userName = StringUtils.defaultIfEmpty( AppConfigProperties.getProperty("pentaho.platform.userName"), System.getProperty("pentaho.platform.userName") ); //$NON-NLS-1$ //$NON-NLS-2$
-    pciContextPath = StringUtils.defaultIfEmpty( AppConfigProperties.getProperty("pciContextPath"), System.getProperty("pciContextPath") ); //$NON-NLS-1$ //$NON-NLS-2$
-    biServerBaseURL = StringUtils.defaultIfEmpty( AppConfigProperties.getProperty("biServerBaseURL"), System.getProperty("biServerBaseURL") ); //$NON-NLS-1$ //$NON-NLS-2$biServerBaseURL = StringUtils.defaultIfEmpty( p.getProperty("biServerBaseURL"), System.getProperty("biServerBaseURL") );
-    String strBiServerStatusCheckPeriod = StringUtils.defaultIfEmpty( AppConfigProperties.getProperty("consoleToolBar.biServerStatusCheckPeriod"), System.getProperty("consoleToolBar.biServerStatusCheckPeriod") ); //$NON-NLS-1$ //$NON-NLS-2$
+    AppConfigProperties appCfg = AppConfigProperties.getInstance();
+    jmxHostName = StringUtils.defaultIfEmpty( appCfg.getProperty("jmxHostName"), System.getProperty("jmxHostName") ); //$NON-NLS-1$ //$NON-NLS-2$
+    jmxPortNumber = StringUtils.defaultIfEmpty( appCfg.getProperty("jmxPortNumber"), System.getProperty("jmxPortNumber") ); //$NON-NLS-1$ //$NON-NLS-2$
+    userName = StringUtils.defaultIfEmpty( appCfg.getProperty("pentaho.platform.userName"), System.getProperty("pentaho.platform.userName") ); //$NON-NLS-1$ //$NON-NLS-2$
+    pciContextPath = StringUtils.defaultIfEmpty( appCfg.getProperty("pciContextPath"), System.getProperty("pciContextPath") ); //$NON-NLS-1$ //$NON-NLS-2$
+    biServerBaseURL = StringUtils.defaultIfEmpty( appCfg.getProperty("biServerBaseURL"), System.getProperty("biServerBaseURL") ); //$NON-NLS-1$ //$NON-NLS-2$biServerBaseURL = StringUtils.defaultIfEmpty( p.getProperty("biServerBaseURL"), System.getProperty("biServerBaseURL") );
+    String strBiServerStatusCheckPeriod = StringUtils.defaultIfEmpty( appCfg.getProperty("consoleToolBar.biServerStatusCheckPeriod"), System.getProperty("consoleToolBar.biServerStatusCheckPeriod") ); //$NON-NLS-1$ //$NON-NLS-2$
     try {
       biServerStatusCheckPeriod = Integer.parseInt( strBiServerStatusCheckPeriod );
     } catch( NumberFormatException e ) {
@@ -712,7 +720,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     params.put( "path", path ); //$NON-NLS-1$
     params.put( "action", xAction ); //$NON-NLS-1$
     
-    String strResponse = biServerProxy.execRemoteMethod( "ServiceAction", userName, params ); //$NON-NLS-1$
+    String strResponse = biServerProxy.execRemoteMethod( "ServiceAction", HttpMethodType.GET, userName, params ); //$NON-NLS-1$
     XmlSerializer s = new XmlSerializer();
     String errorMsg = s.getXActionResponseStatusFromXml( strResponse );
     if ( null != errorMsg ) {
@@ -729,7 +737,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     params.put( "style", "popup" ); //$NON-NLS-1$ //$NON-NLS-2$
     params.put( "class", publisherClassName ); //$NON-NLS-1$
     
-    String strResponse = biServerProxy.execRemoteMethod( "Publish", userName, params ); //$NON-NLS-1$
+    String strResponse = biServerProxy.execRemoteMethod( "Publish", HttpMethodType.GET, userName, params ); //$NON-NLS-1$
     XmlSerializer s = new XmlSerializer();
     String errorMsg = s.getPublishStatusFromXml( strResponse );
     if ( null != errorMsg ) {
@@ -741,7 +749,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   
   private String resetSolutionRepository(String userid ) throws PacServiceException {
 
-    String strResponse = biServerProxy.execRemoteMethod( "ResetRepository", userName, /*params*/null ); //$NON-NLS-1$
+    String strResponse = biServerProxy.execRemoteMethod( "ResetRepository", HttpMethodType.GET, userName, /*params*/null ); //$NON-NLS-1$
     return Messages.getString( "PacService.ACTION_COMPLETE" ); //$NON-NLS-1$
   }
 
@@ -883,13 +891,13 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     
     ThreadSafeHttpClient client = new ThreadSafeHttpClient( url );
 
-    Map<String,String> params = new HashMap<String,String>();
-    String timeOut = AppConfigProperties.getProperty( "homePage.timeout" );//$NON-NLS-1$
-    params.put( "http.socket.timeout", timeOut ); //$NON-NLS-1$
+    Map<String,Object> params = new HashMap<String,Object>();
+    String timeOut = AppConfigProperties.getInstance().getProperty( "homePage.timeout" );//$NON-NLS-1$
+    params.put( HttpMethodParams.SO_TIMEOUT, timeOut );
     
     String html = null;
     try {
-      html = client.execRemoteMethod( null, params, "text/html" );//$NON-NLS-1$
+      html = client.execRemoteMethod( null, HttpMethodType.GET, params, "text/html" );//$NON-NLS-1$
     } catch (PacServiceException e) {
       html = showStatic();
     }
@@ -918,7 +926,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   
   public void isBiServerAlive() throws PacServiceException {
     ThreadSafeHttpClient c = new ThreadSafeHttpClient( biServerBaseURL );
-    String response = c.execRemoteMethod( "ping/alive.gif", null ); //$NON-NLS-1$
+    String response = c.execRemoteMethod( "ping/alive.gif", HttpMethodType.GET, null ); //$NON-NLS-1$
   }
   
   public int getBiServerStatusCheckPeriod() {
