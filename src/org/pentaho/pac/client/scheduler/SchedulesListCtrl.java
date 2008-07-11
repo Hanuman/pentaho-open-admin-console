@@ -25,12 +25,20 @@ import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 public class SchedulesListCtrl extends TableListCtrl<Schedule> {
 
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
-  private static final String[] COLUMN_HEADER_TITLE = {
+  // requirement: Name, Group Name, Schedule State, Next Fire, Previous Fire, Subscriber Count 
+  public static final String[] COLUMN_HEADER_TITLE = {
     MSGS.scheduleGroupName(),
-    MSGS.description(),
+    MSGS.state(),
     MSGS.fireTimeLastNext(),
-    MSGS.state()
+    MSGS.subscriberCount(),
+    MSGS.description()
   };
+//  private static final String[] COLUMN_HEADER_TITLE = {
+//    MSGS.scheduleGroupName(),
+//    MSGS.description(),
+//    MSGS.fireTimeLastNext(),
+//    MSGS.state()
+//  };
   
   public SchedulesListCtrl()
   {

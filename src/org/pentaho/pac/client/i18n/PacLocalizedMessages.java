@@ -253,8 +253,16 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @return translated "State"
    * @gwt.key state
    */
-  String state();
-
+  String state();  
+  
+  /**
+   * Translated "# Subscribers".
+   * 
+   * @return translated "# Subscribers"
+   * @gwt.key subscriberCount
+   */
+  String subscriberCount();
+  
   /**
    * Translated "Trigger - Group / Name".
    * 

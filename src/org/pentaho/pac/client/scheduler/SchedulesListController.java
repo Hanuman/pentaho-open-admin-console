@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class SchedulesListController {
 
-  private static int NUM_COLUMNS = 4;
+  private static int NUM_COLUMNS = SchedulesListCtrl.COLUMN_HEADER_TITLE.length;
   private SchedulesListCtrl schedulesListCtrl = null;
   
   public SchedulesListController( SchedulesListCtrl schedulesListCtrl ) {
@@ -38,7 +38,7 @@ public class SchedulesListController {
 
         // column 1
         Label l = new Label();
-        String txt = StringUtils.defaultString( schedule.getDescription(),
+        String txt = StringUtils.defaultString( schedule.getTriggerState(),
             "<span>&nbsp;</span>" ); //$NON-NLS-1$
         l.getElement().setInnerHTML( txt );
         widgets[ 1 ] = l;
@@ -52,12 +52,19 @@ public class SchedulesListController {
         vp.add( new Label( schedule.getCronString()) );
         widgets[ 2 ] = vp;
 
-        // column 3 
+        // column 3
+        String labelTxt = schedule.isSubscriptionSchedule()
+          ? schedule.getSubscriberCount()
+          : "n/a";
+        l = new Label( labelTxt );
+        widgets[ 3 ] = l;
+        
+        // column 4
         l = new Label();
-        txt = StringUtils.defaultString( schedule.getTriggerState(),
+        txt = StringUtils.defaultString( schedule.getDescription(),
             "<span>&nbsp;</span>" ); //$NON-NLS-1$
         l.getElement().setInnerHTML( txt );
-        widgets[ 3 ] = l;
+        widgets[ 4 ] = l;
 
         schedulesListCtrl.addRow( widgets, schedule );
       }
