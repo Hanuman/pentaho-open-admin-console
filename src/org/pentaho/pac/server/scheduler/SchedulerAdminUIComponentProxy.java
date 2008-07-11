@@ -244,9 +244,9 @@ public class SchedulerAdminUIComponentProxy {
       params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
     }
     params.put( "cron-string", cronString ); //$NON-NLS-1$
-    params.put( "actionsList", actionsList ); //$NON-NLS-1$
+    params.put( "actionRefs", actionsList ); //$NON-NLS-1$
 
-    String responseStrXml=  biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.GET, userName, params );
+    String responseStrXml=  biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.POST, userName, params );
   }
   
   public void createRepeatSchedule( String jobName, String jobGroup, String description,
@@ -272,9 +272,9 @@ public class SchedulerAdminUIComponentProxy {
       params.put( "repeat-count", strRepeatCount ); //$NON-NLS-1$
     }
     params.put( "repeat-time-millisecs", repeatTimeMillisecs ); //$NON-NLS-1$
-    params.put( "actionsList", actionsList ); //$NON-NLS-1$
+    params.put( "actionRefs", actionsList ); //$NON-NLS-1$
 
-    String responseStrXml=  biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.GET, userName, params );
+    String responseStrXml=  biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.POST, userName, params );
   }
   
   public void updateCronSchedule( String oldJobName, String oldJobGroup, String schedId,
@@ -301,7 +301,7 @@ public class SchedulerAdminUIComponentProxy {
     params.put( "cron-string", cronString ); //$NON-NLS-1$
     params.put( "actionRefs", actionsList ); //$NON-NLS-1$
 
-    String responseStrXml=  biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.GET, userName, params );
+    String responseStrXml=  biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.POST, userName, params );
   }
   
   public void updateRepeatSchedule(  String oldJobName, String oldJobGroup, String schedId,
@@ -332,6 +332,6 @@ public class SchedulerAdminUIComponentProxy {
     params.put( "repeat-time-millisecs", repeatTimeMillisecs ); //$NON-NLS-1$
     params.put( "actionRefs", actionsList ); //$NON-NLS-1$
 
-    String responseStrXml=  biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.GET, userName, params );
+    String responseStrXml=  biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.POST, userName, params );
   }
 }

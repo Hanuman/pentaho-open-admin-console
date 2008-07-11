@@ -82,9 +82,9 @@ public class SubscriptionAdminUIComponentProxy {
     // TODO sbarkdull, what if solutionPath is empty? how do we get multiples in here?
     // TODO clean up String[] actionRefs = { solutionName + "/" + solutionPath + "/" + actionName };
     //params.put( "actionRefs", solutionName + "/" + solutionPath + "/" + actionName ); //$NON-NLS-1$
-    params.put( "actionsList", actionsList ); //$NON-NLS-1$
+    params.put( "actionRefs", actionsList ); //$NON-NLS-1$
 
-    String responseStrXml=  biServerProxy.execRemoteMethod( SUBSCRIPTION_SERVICE_NAME, HttpMethodType.GET, userName, params );
+    String responseStrXml=  biServerProxy.execRemoteMethod( SUBSCRIPTION_SERVICE_NAME, HttpMethodType.POST, userName, params );
     
     // TODO sbarkdull
     /*
@@ -123,13 +123,9 @@ public class SubscriptionAdminUIComponentProxy {
       params.put( "repeat-count", strRepeatCount ); //$NON-NLS-1$
     }
     params.put( "repeat-time-millisecs", repeatTimeMillisecs ); //$NON-NLS-1$
-//    params.put( "solution", solutionName ); //$NON-NLS-1$
-//    params.put( "path", solutionPath ); //$NON-NLS-1$
-//    params.put( "action", actionName ); //$NON-NLS-1$
-    // TODO clean up
-    params.put( "actionsList", actionsList ); //$NON-NLS-1$
+    params.put( "actionRefs", actionsList ); //$NON-NLS-1$
 
-    String responseStrXml=  biServerProxy.execRemoteMethod( SUBSCRIPTION_SERVICE_NAME, HttpMethodType.GET, userName, params );
+    String responseStrXml=  biServerProxy.execRemoteMethod( SUBSCRIPTION_SERVICE_NAME, HttpMethodType.POST, userName, params );
   }
   
   public void updateCronSchedule( String oldJobName, String oldJobGroup, String schedId,
