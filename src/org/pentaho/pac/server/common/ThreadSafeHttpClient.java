@@ -18,109 +18,146 @@ package org.pentaho.pac.server.common;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.pentaho.pac.common.PacServiceException;
 
-
 public class ThreadSafeHttpClient {
-    private static final Log logger = LogFactory.getLog(ThreadSafeHttpClient.class);
-    
-    /*
-     * see: http://hc.apache.org/httpclient-3.x/threading.html
-     */
-    private static final HttpClient CLIENT;
-    static {
-      MultiThreadedHttpConnectionManager connectionManager = 
-        new MultiThreadedHttpConnectionManager();
-      CLIENT = new HttpClient( connectionManager );
-    }
-    private String baseUrl = null;
-    
-    /**
-     * Base Constructor
-     */
-    public ThreadSafeHttpClient() {
-      super();
-    }
-    
-    public ThreadSafeHttpClient( String baseUrl ) {
-      this();
-      setBaseUrl( baseUrl );
-    }
+  private static final Log logger = LogFactory.getLog(ThreadSafeHttpClient.class);
 
-    public void setBaseUrl( String baseUrl ) {
-      this.baseUrl = baseUrl;
-    }
-    
-    public String execRemoteMethod( String serviceName, Map<String, String> mapParams )
-        throws PacServiceException {
-      return execRemoteMethod( serviceName, mapParams, "text/xml" ); //$NON-NLS-1$
-    }
+  private static final String REQUESTED_MIME_TYPE = "requestedMimeType"; //$NON-NLS-1$
 
-    /**
-     * 
-     * @param serviceName String can be null or empty string.
-     * @param mapParams
-     * @param contentType
-     * @return
-     * @throws PacServiceException
-     */
-    public String execRemoteMethod( String serviceName, Map<String, String> mapParams, String contentType )
-        throws PacServiceException {
-      
-      assert null != baseUrl : "baseUrl cannot be null"; //$NON-NLS-1$
-      
-      InputStream responseStrm = null;
-      NameValuePair[] params = ( null != mapParams )
-        ? mapToNameValuePair( mapParams )
-        : null;
-      String serviceUrl = baseUrl 
-        + ( ( StringUtils.isEmpty( serviceName ) ) ? "" : "/" + serviceName ); //$NON-NLS-1$ //$NON-NLS-2$
-      GetMethod method = new GetMethod( serviceUrl );
+  public enum HttpMethodType {
+    POST, GET
+  };
 
-      method.addRequestHeader( "Content-Type", contentType ); //$NON-NLS-1$
-      
-// TODO sbarkdull, do retries? if so, put number of retries in config file.
-      //method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(3, false));
-      
-      if ( null != params ) {
-        method.setQueryString(params);
-      }
-      try {
-        int httpStatus = CLIENT.executeMethod(method);
-        if ( httpStatus != HttpStatus.SC_OK) {
-          String status = method.getStatusLine().toString();
-          throw new PacServiceException(status);
-        }
-        // trim() is necessary because SchedulerAdmin.jsp puts \n\r at the beginning of
-        // the returned text, and the xml processor chokes on \n\r at the beginning.
-        responseStrm = method.getResponseBodyAsStream();
-        return IOUtils.toString( responseStrm ).trim();
-      } catch (IOException e) {
-        throw new PacServiceException(e);
-      } finally {
-        method.releaseConnection();
-      }
-    }
+  /*
+   * see: http://hc.apache.org/httpclient-3.x/threading.html
+   */
+  private static final HttpClient CLIENT;
+  static {
+    MultiThreadedHttpConnectionManager connectionManager = new MultiThreadedHttpConnectionManager();
+    CLIENT = new HttpClient(connectionManager);
+    CLIENT.getParams().setParameter("http.useragent", ThreadSafeHttpClient.class.getName() ); //$NON-NLS-1$
+  }
+
+  private String baseUrl = null;
+
+  /**
+   * Base Constructor
+   */
+  public ThreadSafeHttpClient() {
+    super();
+  }
+
+  public ThreadSafeHttpClient(String baseUrl) {
+    this();
+    setBaseUrl(baseUrl);
+  }
+
+  public void setBaseUrl(String baseUrl) {
+    this.baseUrl = baseUrl;
+  }
+
+  public String execRemoteMethod(String serviceName, HttpMethodType methodType, Map<String, Object> mapParams)
+      throws PacServiceException {
+    return execRemoteMethod(serviceName, methodType, mapParams, "text/xml"); //$NON-NLS-1$
+  }
+  
+  /**
+   * 
+   * @param serviceName String can be null or empty string.
+   * @param mapParams
+   * @param requestedMimeType
+   * @return
+   * @throws PacServiceException
+   */
+  public String execRemoteMethod(String serviceName, HttpMethodType methodType, Map<String, Object> mapParams,
+      String requestedMimeType) throws PacServiceException {
+
+    assert null != baseUrl : "baseUrl cannot be null"; //$NON-NLS-1$
     
-    private static NameValuePair[] mapToNameValuePair( Map<String, String> paramMap )
-    {
-      NameValuePair[] pairAr = new NameValuePair[ paramMap.size() ];
-      int idx = 0;
-      for ( Map.Entry<String,String> me : paramMap.entrySet() ) {
-        pairAr[ idx ] = new NameValuePair( me.getKey(), me.getValue() );
-        idx++;
+    String serviceUrl = baseUrl + ((StringUtils.isEmpty(serviceName)) ? "" : "/" + serviceName); //$NON-NLS-1$ //$NON-NLS-2$
+    if (null == mapParams) {
+      mapParams = new HashMap<String, Object>();
+    }
+    mapParams.put(REQUESTED_MIME_TYPE, requestedMimeType);
+    HttpMethodBase method = null;
+    switch (methodType) {
+      case POST:
+        method = new PostMethod(serviceUrl);
+        setPostMethodParams( (PostMethod)method, mapParams );
+        method.setFollowRedirects( false );
+        break;
+      case GET:
+        method = new GetMethod(serviceUrl);
+        setGetMethodParams( (GetMethod)method, mapParams );
+        method.setFollowRedirects( true );
+        break;
+      default:
+        throw new RuntimeException( "Invalid method type." );  // can never happen
+    }
+    return executeMethod( method );
+  }
+
+  private String executeMethod( HttpMethod method ) throws PacServiceException {
+    InputStream responseStrm = null;
+    try {
+      int httpStatus = CLIENT.executeMethod(method);
+      if (httpStatus != HttpStatus.SC_OK) {
+        String status = method.getStatusLine().toString();
+        throw new PacServiceException(status);  // TODO
       }
-      return pairAr;
+      responseStrm = method.getResponseBodyAsStream();
+      // trim() is necessary because some jsp's puts \n\r at the beginning of
+      // the returned text, and the xml processor chokes on \n\r at the beginning.
+      String tmp = IOUtils.toString(responseStrm).trim();
+      return tmp;
+    } catch (IOException e) {
+      throw new PacServiceException(e);
+    } finally {
+      method.releaseConnection();
     }
   }
+
+  private static void setGetMethodParams( GetMethod method, Map<String, Object> mapParams ) {
+    NameValuePair[] params = mapToNameValuePair( mapParams );
+    method.setQueryString( params );
+  }
+
+  private static void setPostMethodParams( PostMethod method, Map<String, Object> mapParams ) {
+    for ( Map.Entry<String,Object> entry : mapParams.entrySet() ) {
+      Object o = entry.getValue();
+      if ( o instanceof String[] ) {
+        for ( String s : (String[])o ) {
+          method.addParameter( entry.getKey(), s );
+        }
+      } else {
+        method.setParameter( entry.getKey(), (String)o );
+      }
+    }
+  }
+  
+  private static NameValuePair[] mapToNameValuePair(Map<String, Object> paramMap) {
+    NameValuePair[] pairAr = new NameValuePair[paramMap.size()];
+    int idx = 0;
+    for (Map.Entry<String, Object> me : paramMap.entrySet()) {
+      pairAr[idx] = new NameValuePair(me.getKey(), (String)me.getValue());
+      idx++;
+    }
+    return pairAr;
+  }
+}
