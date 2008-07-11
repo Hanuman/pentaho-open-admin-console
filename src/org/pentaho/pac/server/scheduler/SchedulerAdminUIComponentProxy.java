@@ -26,6 +26,7 @@ import java.util.Map;
 import org.pentaho.pac.client.scheduler.Schedule;
 import org.pentaho.pac.common.PacServiceException;
 import org.pentaho.pac.server.common.BiServerTrustedProxy;
+import org.pentaho.pac.server.common.ThreadSafeHttpClient.HttpMethodType;
 
 public class SchedulerAdminUIComponentProxy {
 
@@ -51,12 +52,12 @@ public class SchedulerAdminUIComponentProxy {
    * @throws PacServiceException 
    */
   public void deleteJob( String jobName, String jobGroup ) throws PacServiceException {
-    Map<String, String> params = new HashMap<String, String>();
+    Map<String, Object> params = new HashMap<String, Object>();
     params.put( "schedulerAction", "deleteJob" ); //$NON-NLS-1$  //$NON-NLS-2$
     params.put( "jobName", jobName ); //$NON-NLS-1$
     params.put( "jobGroup", jobGroup ); //$NON-NLS-1$
     
-    String responseStrXml= biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, userName, params );
+    String responseStrXml= biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.GET, userName, params );
   }
 
   // TODO sbarkdull, this implementation is very slow, needs to be replaced. Replacement
@@ -68,12 +69,12 @@ public class SchedulerAdminUIComponentProxy {
   public void deleteJobs( List<Schedule> scheduleList ) throws PacServiceException {
     
     for ( Schedule s : scheduleList ) {
-      Map<String, String> params = new HashMap<String, String>();
+      Map<String, Object> params = new HashMap<String, Object>();
       params.put( "schedulerAction", "deleteJob" ); //$NON-NLS-1$  //$NON-NLS-2$
       params.put( "jobName", s.getJobName() ); //$NON-NLS-1$
       params.put( "jobGroup", s.getJobGroup() ); //$NON-NLS-1$
       
-      String responseStrXml= biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, userName, params );
+      String responseStrXml= biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.GET, userName, params );
     }
   }
 
@@ -82,12 +83,12 @@ public class SchedulerAdminUIComponentProxy {
    * @throws PacServiceException 
    */
   public void executeJob( String jobName, String jobGroup ) throws PacServiceException {
-    Map<String, String> params = new HashMap<String, String>();
+    Map<String, Object> params = new HashMap<String, Object>();
     params.put( "schedulerAction", "executeJob" ); //$NON-NLS-1$  //$NON-NLS-2$
     params.put( "jobName", jobName ); //$NON-NLS-1$
     params.put( "jobGroup", jobGroup ); //$NON-NLS-1$
 
-    String responseStrXml= biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, userName, params );
+    String responseStrXml= biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.GET, userName, params );
   }
 
   /**
@@ -99,12 +100,12 @@ public class SchedulerAdminUIComponentProxy {
   public void executeJobs( List<Schedule> scheduleList ) throws PacServiceException {
     
     for ( Schedule s : scheduleList ) {
-      Map<String, String> params = new HashMap<String, String>();
+      Map<String, Object> params = new HashMap<String, Object>();
       params.put( "schedulerAction", "executeJob" ); //$NON-NLS-1$  //$NON-NLS-2$
       params.put( "jobName", s.getJobName() ); //$NON-NLS-1$
       params.put( "jobGroup", s.getJobGroup() ); //$NON-NLS-1$
       
-      String responseStrXml= biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, userName, params );
+      String responseStrXml= biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.GET, userName, params );
     }
   }
   
@@ -112,16 +113,16 @@ public class SchedulerAdminUIComponentProxy {
    * query string: schedulerAction=getJobNames
    * @throws PacServiceException 
    */
-  public List<Schedule> getAllScheduleProperties() throws PacServiceException {
-    Map<String, String> params = new HashMap<String, String>();
+  public Map<String,Schedule> getSchedules() throws PacServiceException {
+    Map<String, Object> params = new HashMap<String, Object>();
     params.put( "schedulerAction", "getJobNames" ); //$NON-NLS-1$  //$NON-NLS-2$
 
-    String responseStrXml = biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, userName, params );
+    String responseStrXml = biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.GET, userName, params );
 
     // TODO sbarkdull, should XmlSerializer be a static class?
     XmlSerializer s = new XmlSerializer();
-    List<Schedule> l = s.getAllSchedulePropertiesFromXml( responseStrXml );
-    return l;
+    Map<String,Schedule> m = s.getSchedulesFromXml( responseStrXml );
+    return m;
   }
   
   /**
@@ -129,10 +130,10 @@ public class SchedulerAdminUIComponentProxy {
    * @throws PacServiceException 
    */
   public boolean isSchedulerPaused() throws PacServiceException {
-    Map<String, String> params = new HashMap<String, String>();
+    Map<String, Object> params = new HashMap<String, Object>();
     params.put( "schedulerAction", "isSchedulerPaused" ); //$NON-NLS-1$  //$NON-NLS-2$
 
-    String responseStrXml= biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, userName, params );
+    String responseStrXml= biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.GET, userName, params );
     XmlSerializer s = new XmlSerializer();
     boolean isRunning = s.getSchedulerStatusFromXml( responseStrXml );
     
@@ -144,10 +145,10 @@ public class SchedulerAdminUIComponentProxy {
    * @throws PacServiceException 
    */
   public void pauseAll() throws PacServiceException {
-    Map<String, String> params = new HashMap<String, String>();
+    Map<String, Object> params = new HashMap<String, Object>();
     params.put( "schedulerAction", "suspendScheduler" ); //$NON-NLS-1$  //$NON-NLS-2$
 
-    String responseStrXml= biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, userName, params );
+    String responseStrXml= biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.GET, userName, params );
   }
 
   /**
@@ -155,12 +156,12 @@ public class SchedulerAdminUIComponentProxy {
    * @throws PacServiceException 
    */
   public void pauseJob( String jobName, String jobGroup ) throws PacServiceException {
-    Map<String, String> params = new HashMap<String, String>();
+    Map<String, Object> params = new HashMap<String, Object>();
     params.put( "schedulerAction", "pauseJob" ); //$NON-NLS-1$  //$NON-NLS-2$
     params.put( "jobName", jobName ); //$NON-NLS-1$
     params.put( "jobGroup", jobGroup ); //$NON-NLS-1$
 
-    String responseStrXml= biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, userName, params );
+    String responseStrXml= biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.GET, userName, params );
   }
 
   /**
@@ -172,12 +173,12 @@ public class SchedulerAdminUIComponentProxy {
   public void pauseJobs( List<Schedule> scheduleList ) throws PacServiceException {
     
     for ( Schedule s : scheduleList ) {
-      Map<String, String> params = new HashMap<String, String>();
+      Map<String, Object> params = new HashMap<String, Object>();
       params.put( "schedulerAction", "pauseJob" ); //$NON-NLS-1$  //$NON-NLS-2$
       params.put( "jobName", s.getJobName() ); //$NON-NLS-1$
       params.put( "jobGroup", s.getJobGroup() ); //$NON-NLS-1$
       
-      String responseStrXml= biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, userName, params );
+      String responseStrXml= biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.GET, userName, params );
     }
   }
 
@@ -186,10 +187,10 @@ public class SchedulerAdminUIComponentProxy {
    * @throws PacServiceException 
    */
   public void resumeAll() throws PacServiceException {
-    Map<String, String> params = new HashMap<String, String>();
+    Map<String, Object> params = new HashMap<String, Object>();
     params.put( "schedulerAction", "resumeScheduler" ); //$NON-NLS-1$  //$NON-NLS-2$
 
-    String responseStrXml= biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, userName, params );
+    String responseStrXml= biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.GET, userName, params );
   }
 
   /**
@@ -197,12 +198,12 @@ public class SchedulerAdminUIComponentProxy {
    * @throws PacServiceException 
    */
   public void resumeJob( String jobName, String jobGroup ) throws PacServiceException {
-    Map<String, String> params = new HashMap<String, String>();
+    Map<String, Object> params = new HashMap<String, Object>();
     params.put( "schedulerAction", "resumeJob" ); //$NON-NLS-1$  //$NON-NLS-2$
     params.put( "jobName", jobName ); //$NON-NLS-1$
     params.put( "jobGroup", jobGroup ); //$NON-NLS-1$
 
-    String responseStrXml=  biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, userName, params );
+    String responseStrXml=  biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.GET, userName, params );
   }
 
   /**
@@ -214,25 +215,25 @@ public class SchedulerAdminUIComponentProxy {
   public void resumeJobs( List<Schedule> scheduleList ) throws PacServiceException {
     
     for ( Schedule s : scheduleList ) {
-      Map<String, String> params = new HashMap<String, String>();
+      Map<String, Object> params = new HashMap<String, Object>();
       params.put( "schedulerAction", "resumeJob" ); //$NON-NLS-1$  //$NON-NLS-2$
       params.put( "jobName", s.getJobName() ); //$NON-NLS-1$
       params.put( "jobGroup", s.getJobGroup() ); //$NON-NLS-1$
       
-      String responseStrXml= biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, userName, params );
+      String responseStrXml= biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.GET, userName, params );
     }
   }
   
   public void createCronSchedule( String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
       String cronString,
-      String solutionName, String solutionPath, String actionName ) throws PacServiceException {
+      String actionsList ) throws PacServiceException {
     
     String strStartDate = dateTimeFormatter.format( startDate );
     String strEndDate = null != endDate
       ? dateTimeFormatter.format( endDate )
       : null;
-    Map<String, String> params = new HashMap<String, String>();
+    Map<String, Object> params = new HashMap<String, Object>();
     // TODO sbarkdull, some of these params may not be used, clean up
     params.put( "schedulerAction", "createJob" ); //$NON-NLS-1$  //$NON-NLS-2$
     params.put( "jobName", jobName ); //$NON-NLS-1$
@@ -243,27 +244,21 @@ public class SchedulerAdminUIComponentProxy {
       params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
     }
     params.put( "cron-string", cronString ); //$NON-NLS-1$
-    params.put( "solution", solutionName ); //$NON-NLS-1$
-    params.put( "path", solutionPath ); //$NON-NLS-1$
-    params.put( "action", actionName ); //$NON-NLS-1$
+    params.put( "actionsList", actionsList ); //$NON-NLS-1$
 
-    String responseStrXml=  biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, userName, params );
-    
-    int ii=0; // TODO clean up
-    // TODO sbarkdull, need to return a status
-    // TODO sbarkdull, get strings into static finals for all parameters
+    String responseStrXml=  biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.GET, userName, params );
   }
   
   public void createRepeatSchedule( String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
       String strRepeatCount, String repeatTimeMillisecs,
-      String solutionName, String solutionPath, String actionName ) throws PacServiceException {
+      String actionsList ) throws PacServiceException {
     
     String strStartDate = dateTimeFormatter.format( startDate );
     String strEndDate = null != endDate
       ? dateTimeFormatter.format( endDate )
       : null;
-    Map<String, String> params = new HashMap<String, String>();
+    Map<String, Object> params = new HashMap<String, Object>();
     // TODO sbarkdull, some of these params may not be used, clean up
     params.put( "schedulerAction", "createJob" ); //$NON-NLS-1$  //$NON-NLS-2$
     params.put( "jobName", jobName ); //$NON-NLS-1$
@@ -277,27 +272,21 @@ public class SchedulerAdminUIComponentProxy {
       params.put( "repeat-count", strRepeatCount ); //$NON-NLS-1$
     }
     params.put( "repeat-time-millisecs", repeatTimeMillisecs ); //$NON-NLS-1$
-    params.put( "solution", solutionName ); //$NON-NLS-1$
-    params.put( "path", solutionPath ); //$NON-NLS-1$
-    params.put( "action", actionName ); //$NON-NLS-1$
+    params.put( "actionsList", actionsList ); //$NON-NLS-1$
 
-    String responseStrXml=  biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, userName, params );
-    
-    int ii=0; // TODO clean up
-    // TODO sbarkdull, need to return a status
-    // TODO sbarkdull, get strings into static finals for all parameters
+    String responseStrXml=  biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.GET, userName, params );
   }
   
-  public void updateCronSchedule( String oldJobName, String oldJobGroup,
+  public void updateCronSchedule( String oldJobName, String oldJobGroup, String schedId,
       String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
-      String cronString, String solutionName, String solutionPath, String actionName ) throws PacServiceException {
+      String cronString, String actionsList ) throws PacServiceException {
     
     String strStartDate = dateTimeFormatter.format( startDate );
     String strEndDate = null != endDate
       ? dateTimeFormatter.format( endDate )
       : null;
-    Map<String, String> params = new HashMap<String, String>();
+    Map<String, Object> params = new HashMap<String, Object>();
     // TODO sbarkdull, some of these params may not be used, clean up
     params.put( "schedulerAction", "updateJob" ); //$NON-NLS-1$  //$NON-NLS-2$
     params.put( "oldJobName", oldJobName ); //$NON-NLS-1$
@@ -310,28 +299,22 @@ public class SchedulerAdminUIComponentProxy {
       params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
     }
     params.put( "cron-string", cronString ); //$NON-NLS-1$
-    params.put( "solution", solutionName ); //$NON-NLS-1$
-    params.put( "path", solutionPath ); //$NON-NLS-1$
-    params.put( "action", actionName ); //$NON-NLS-1$
+    params.put( "actionRefs", actionsList ); //$NON-NLS-1$
 
-    String responseStrXml=  biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, userName, params );
-    
-    int ii=0; // TODO clean up
-    // TODO sbarkdull, need to return a status
-    // TODO sbarkdull, get strings into static finals for all parameters
+    String responseStrXml=  biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.GET, userName, params );
   }
   
-  public void updateRepeatSchedule(  String oldJobName, String oldJobGroup,
+  public void updateRepeatSchedule(  String oldJobName, String oldJobGroup, String schedId,
       String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
       String strRepeatCount, String repeatTimeMillisecs,
-      String solutionName, String solutionPath, String actionName ) throws PacServiceException {
+      String actionsList ) throws PacServiceException {
 
     String strStartDate = dateTimeFormatter.format( startDate );
     String strEndDate = null != endDate
       ? dateTimeFormatter.format( endDate )
       : null;
-    Map<String, String> params = new HashMap<String, String>();
+    Map<String, Object> params = new HashMap<String, Object>();
     // TODO sbarkdull, some of these params may not be used, clean up
     params.put( "schedulerAction", "updateJob" ); //$NON-NLS-1$  //$NON-NLS-2$
     params.put( "oldJobName", oldJobName ); //$NON-NLS-1$
@@ -347,14 +330,8 @@ public class SchedulerAdminUIComponentProxy {
       params.put( "repeat-count", strRepeatCount ); //$NON-NLS-1$
     }
     params.put( "repeat-time-millisecs", repeatTimeMillisecs ); //$NON-NLS-1$
-    params.put( "solution", solutionName ); //$NON-NLS-1$
-    params.put( "path", solutionPath ); //$NON-NLS-1$
-    params.put( "action", actionName ); //$NON-NLS-1$
+    params.put( "actionRefs", actionsList ); //$NON-NLS-1$
 
-    String responseStrXml=  biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, userName, params );
-    
-    int ii=0; // TODO clean up
-    // TODO sbarkdull, need to return a status
-    // TODO sbarkdull, get strings into static finals for all parameters
+    String responseStrXml=  biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.GET, userName, params );
   }
 }
