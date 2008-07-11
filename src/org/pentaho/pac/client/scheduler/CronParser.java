@@ -124,14 +124,10 @@ public class CronParser {
     if ( parts.length < 6 ) {
       return false;
     }
-    if ( !StringUtils.isPositiveInteger( parts[0] )
-      || !StringUtils.isPositiveInteger( parts[1] )
-      || !StringUtils.isPositiveInteger( parts[2] ) ) {
-      return false;
-    }
-    isValid &= TimeUtil.isSecond( Integer.parseInt( parts[0] ) );
-    isValid &= TimeUtil.isMinute( Integer.parseInt( parts[1] ) );
-    isValid &= TimeUtil.isHour( Integer.parseInt( parts[2] ) );
+    isValid &= isValidSecondsField( parts[0] );
+    isValid &= isValidMinutesField( parts[1] );
+    isValid &= isValidHoursField( parts[2] );
+
     isValid &= isDayOfMonthField( parts[3] );
     isValid &= isMonthField( parts[4] );
     isValid &= isDayOfWeekField( parts[5] );
@@ -142,6 +138,38 @@ public class CronParser {
     return isValid;
   }
 
+  // match * or a 1 or 2 digit number followed by either - or / followed by any
+  // 1 or 2 digit number, or, an group of comma separated 1 or 2 digit numbers
+  private static String MATCH_SECONDS_RE = "^\\s*(\\*|\\d{1,2}[/-]\\d{1,2}|\\d{1,2}(,\\d{1,2})*)\\s*$"; //$NON-NLS-1$
+  /**
+   * NOTE: does not check to make sure that integers are in a valid range
+   * @param strSecs
+   * @return
+   */
+  private static boolean isValidSecondsField( String strSecs ) {
+    return strSecs.matches( MATCH_SECONDS_RE );
+  }
+
+  private static String MATCH_MINUTES_RE = MATCH_SECONDS_RE;
+  /**
+   * NOTE: does not check to make sure that integers are in a valid range
+   * @param strMins
+   * @return
+   */
+  private static boolean isValidMinutesField( String strMins ) {
+    return strMins.matches( MATCH_MINUTES_RE );
+  }
+
+  private static String MATCH_HOURS_RE = MATCH_SECONDS_RE;
+  /**
+   * NOTE: does not check to make sure that integers are in a valid range
+   * @param strHours
+   * @return
+   */
+  private static boolean isValidHoursField( String strHours ) {
+    return strHours.matches( MATCH_HOURS_RE );
+  }
+  
   private String getCronString() {
     return cronStr;
   }
