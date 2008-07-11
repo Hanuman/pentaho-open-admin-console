@@ -2,11 +2,10 @@
 
 	<!-- Inherit the core Web Toolkit stuff.                  -->
 	<inherits name='com.google.gwt.user.User'/>
+	<inherits name='org.pentaho.pac.PacServiceModule'/>
 	<inherits name='org.pentaho.pac.SchedulerServiceModule'/>
+	<inherits name='org.pentaho.pac.SubscriptionServiceModule'/>
 
-	<!-- Specify the app entry point class.                   -->
-    <servlet path='/pacsvc' class='org.pentaho.pac.server.PacServiceImpl'/>  
-    <stylesheet src='PentahoAdminConsole.css'/>
-    <source path="client"/>
-    <source path="common"/>
+	<source path="client"/>
+	<source path="common"/>
 </module>
