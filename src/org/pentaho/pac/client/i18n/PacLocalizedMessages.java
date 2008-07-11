@@ -592,14 +592,6 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String ok();
 
   /**
-   * Translated "Job - Group / Name".
-   * 
-   * @return translated "Job - Group / Name"
-   * @gwt.key jobGroupName
-   */
-  String jobGroupName();
-
-  /**
    * Translated "Restore Default File Permissions".
    * 
    * @return translated "Restore Default File Permissions"
