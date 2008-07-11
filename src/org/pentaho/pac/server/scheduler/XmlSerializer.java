@@ -57,7 +57,7 @@ public class XmlSerializer {
     STATE_STRINGS.put( "5", Messages.getString( "XmlSerializer.stateNone" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  public List<Schedule> getAllSchedulePropertiesFromXml( String strXml ) throws PacServiceException
+  public Map<String,Schedule> getSchedulesFromXml( String strXml ) throws PacServiceException
   {
     JobsParserHandler h = null;
     try {
@@ -72,7 +72,25 @@ public class XmlSerializer {
       logger.error( e.getMessage() );
       throw new PacServiceException( e.getMessage() );
     }
-    return h.scheduleList;
+    return h.schedules;
+  }
+
+  public Map<String,Schedule> getSubscriptionSchedulesFromXml( String strXml ) throws PacServiceException
+  {
+    SubscriptionScheduleParserHandler h = null;
+    try {
+      h = parseSubscriptionScheduleJobsXml( strXml );
+    } catch (SAXException e) {
+      logger.error( e.getMessage() );
+      throw new PacServiceException( e.getMessage() );
+    } catch (IOException e) {
+      logger.error( e.getMessage() );
+      throw new PacServiceException( e.getMessage() );
+    } catch (ParserConfigurationException e) {
+      logger.error( e.getMessage() );
+      throw new PacServiceException( e.getMessage() );
+    }
+    return h.schedules;
   }
   
   private JobsParserHandler parseJobNamesXml( String strXml ) throws SAXException, IOException, ParserConfigurationException
@@ -88,11 +106,11 @@ public class XmlSerializer {
       return h;
   }
 
-  class JobsParserHandler extends DefaultHandler {
+  private static class JobsParserHandler extends DefaultHandler {
 
     public String currentText = null;
     public boolean isGetJobNames = false;
-    public List<Schedule> scheduleList = new ArrayList<Schedule>();
+    public Map<String,Schedule> schedules = new HashMap<String,Schedule>();
     private Schedule currentSchedule = null;
     
     public JobsParserHandler()
@@ -120,7 +138,6 @@ public class XmlSerializer {
       } else if ( qName.equals( "job" ) ) { //$NON-NLS-1$
 
         currentSchedule = new Schedule();
-        scheduleList.add( currentSchedule );
         String val = attributes.getValue( "triggerName" ); //$NON-NLS-1$
         currentSchedule.setTriggerName( val );
         val = attributes.getValue( "triggerGroup" ); //$NON-NLS-1$
@@ -139,14 +156,11 @@ public class XmlSerializer {
         currentSchedule.setStartDate( val );
         val = attributes.getValue( "end-date-time" ); //$NON-NLS-1$
         currentSchedule.setEndDate( val );
-        
-
-        val = attributes.getValue( "solution" ); //$NON-NLS-1$
-        currentSchedule.setSolution( val );
-        val = attributes.getValue( "path" ); //$NON-NLS-1$
-        currentSchedule.setPath( val );
-        val = attributes.getValue( "action" ); //$NON-NLS-1$
-        currentSchedule.setAction( val );
+        // actionsList will only have ONE action
+        val = attributes.getValue( "actionsList" ); //$NON-NLS-1$
+        List<String> l = new ArrayList<String>();
+        l.add( val );
+        currentSchedule.setActionsList( l );
         
         val = attributes.getValue( "cron-string" ); //$NON-NLS-1$
         if ( null != val ) {
@@ -156,6 +170,8 @@ public class XmlSerializer {
         if ( null != val ) {
           currentSchedule.setRepeatTimeInMillisecs( val );
         }
+        assert currentSchedule.getJobName() != null : "Error, job name cannot be null."; //$NON-NLS-1$
+        schedules.put( currentSchedule.getJobName(), currentSchedule );
       } else if ( qName.equals( "description" ) ) { //$NON-NLS-1$
       } else {
       }
@@ -247,7 +263,7 @@ public class XmlSerializer {
    * @author Steven Barkdull
    *
    */
-  static class XActionResponseParserHandler extends DefaultHandler {
+  private static class XActionResponseParserHandler extends DefaultHandler {
 
     public String currentText = null;
     private boolean foundFaultStr = false;
@@ -306,5 +322,150 @@ public class XmlSerializer {
       errorMsg = strXml.substring( startIdx, endIdx-1 );
     }
     return errorMsg;
+  }
+  
+  private SubscriptionScheduleParserHandler parseSubscriptionScheduleJobsXml( String strXml ) throws SAXException, IOException, ParserConfigurationException
+  {
+      SAXParser parser = getSAXParserFactory().newSAXParser();
+      SubscriptionScheduleParserHandler h = new SubscriptionScheduleParserHandler();
+      // TODO sbarkdull, need to set encoding
+//      String encoding = CleanXmlHelper.getEncoding( strXml );
+//      InputStream is = new ByteArrayInputStream( strXml.getBytes( encoding ) );
+      InputStream is = new ByteArrayInputStream( strXml.getBytes( "UTF-8" ) ); //$NON-NLS-1$
+     
+      parser.parse( is, h );
+      return h;
+  }
+/*
+  <subscriptionAdmin>
+  <listSchedules>
+    <scheduledJobs>
+      <job subscriberCount="0" triggerState="0">
+        <schedId>eb7ef4b4-4867-11dd-8266-ff19a6feec31</schedId>
+        <schedRef>snb name 2</schedRef>
+        <title>snb title 2</title>
+        <desc>snb description 2</desc>
+        <group>snb group 2</group>
+        <cron>0 0 12 3 * ?</cron>
+        <content>
+          <action solution="samples" path="getting-started" action="HelloWorld.xaction" />
+        </content>
+        <nextFireTime>Thu Jul 03 12:00:00 EDT 2008</nextFireTime>
+        <prevFireTime>Never</prevFireTime>
+        <jobId>snb name 2</jobId>
+      </job>
+    </scheduledJobs>
+    <unScheduledJobs>
+      <job subscriberCount="0" triggerState="-1">
+        <schedId>da95463f-4867-11dd-8266-ff19a6feec31</schedId>
+        <schedRef>snb name</schedRef>
+        <title>snb title</title>
+        <desc>snb description</desc>
+        <group>snb group</group>
+        <cron>0 0 12 3 * *</cron>
+      </job>
+    </unScheduledJobs>
+    <message result="WARNING">There are subscriptions that are not scheduled to run.</message>
+  </listSchedules>
+  <message result="INFO">There is no subscription content defined.</message>
+  <schedulerStatus state="0" />
+  <returnURL>&amp;schedulerAction=listSchedules&amp;_TRUST_USER_=joe</returnURL>
+</subscriptionAdmin>
+*/
+  private static class SubscriptionScheduleParserHandler extends DefaultHandler {
+
+    public String currentText = null;
+    public Map<String,Schedule> schedules = new HashMap<String,Schedule>();
+    private Schedule currentSchedule = null;
+    private boolean isInSubscriptionAdmin = false;
+    private boolean isInListSchedules = false;
+    private boolean isInScheduledJobs = false;
+    private boolean isInContent = false;
+    private List<String> actionList = null;
+    
+    public SubscriptionScheduleParserHandler()
+    {
+    }
+  
+    public void characters( char[] ch, int startIdx, int length )
+    {
+      currentText = String.valueOf( ch, startIdx, length );
+    }
+    
+    public void endElement(String uri, String localName, String qName ) throws SAXException
+    {
+      if ( qName.equals( "subscriptionAdmin" ) ) { //$NON-NLS-1$
+        isInSubscriptionAdmin = false;
+      } else if ( qName.equals( "listSchedules" ) ) { //$NON-NLS-1$
+        isInListSchedules = false;
+      } else if ( qName.equals( "scheduledJobs" ) ) { //$NON-NLS-1$
+        isInScheduledJobs = false;
+      } else {
+        if ( isInSubscriptionAdmin && isInListSchedules && isInScheduledJobs ) {
+          if ( qName.equals( "job" ) ) { //$NON-NLS-1$
+            assert currentSchedule.getJobName() != null : "Error, job name cannot be null."; //$NON-NLS-1$
+            schedules.put( currentSchedule.getJobName(), currentSchedule );
+            currentSchedule = null;
+          } else if ( qName.equals( "schedId" ) ) { //$NON-NLS-1$
+            currentSchedule.setSchedId( currentText );
+          } else if ( qName.equals( "schedRef" ) ) { //$NON-NLS-1$
+            currentSchedule.setSchedRef( currentText );
+          } else if ( qName.equals( "title" ) ) { //$NON-NLS-1$
+            currentSchedule.setTitle( currentText );
+          } else if ( qName.equals( "desc" ) ) { //$NON-NLS-1$
+            currentSchedule.setDescription( currentText );
+          } else if ( qName.equals( "group" ) ) { //$NON-NLS-1$
+            currentSchedule.setJobGroup( currentText );
+          } else if ( qName.equals( "cron" ) ) { //$NON-NLS-1$
+            currentSchedule.setCronString( currentText );
+          } else if ( qName.equals( "nextFireTime" ) ) { //$NON-NLS-1$
+            currentSchedule.setNextFireTime( currentText );
+          } else if ( qName.equals( "prevFireTime" ) ) { //$NON-NLS-1$
+            currentSchedule.setPrevFireTime( currentText );
+          } else if ( qName.equals( "jobId" ) ) { //$NON-NLS-1$
+            currentSchedule.setJobName( currentText );
+          } else if ( qName.equals( "content" ) ) { //$NON-NLS-1$
+            isInContent = false;
+            currentSchedule.setActionsList( actionList );
+            actionList = null;
+          }
+        }
+      }
+    }
+
+    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException
+    {
+      if ( qName.equals( "subscriptionAdmin" ) ) { //$NON-NLS-1$
+        isInSubscriptionAdmin = true;
+      } else if ( qName.equals( "listSchedules" ) ) { //$NON-NLS-1$
+        isInListSchedules = true;
+      } else if ( qName.equals( "scheduledJobs" ) ) { //$NON-NLS-1$
+        isInScheduledJobs = true;
+      } else {
+        if ( isInSubscriptionAdmin && isInListSchedules && isInScheduledJobs ) {
+          if ( qName.equals( "job" ) ) { //$NON-NLS-1$
+            currentSchedule = new Schedule();
+
+            String val = attributes.getValue( "subscriberCount" ); //$NON-NLS-1$
+            currentSchedule.setSubscriberCount( val );
+            val = attributes.getValue( "triggerState" ); //$NON-NLS-1$
+            currentSchedule.setTriggerState( triggerInt2Name( val ) );
+          } else if ( qName.equals( "content" ) ) { //$NON-NLS-1$
+            isInContent = true;
+            actionList = new ArrayList<String>();
+          } else if ( qName.equals( "action" ) ) { //$NON-NLS-1$
+            if ( isInContent ) {
+              String solution = attributes.getValue( "solution" ); //$NON-NLS-1$
+              String path = attributes.getValue( "path" ); //$NON-NLS-1$
+              String action = attributes.getValue( "action" ); //$NON-NLS-1$
+              actionList.add( makePath( solution, path, action ));
+            }
+          }
+        }
+      }
+    }
+    private static String makePath( String solution, String path, String action ) {
+      return solution + "/" + path + "/" + action;  //$NON-NLS-1$//$NON-NLS-2$
+    }
   }
 }
