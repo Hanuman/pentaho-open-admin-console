@@ -26,7 +26,7 @@ public class SchedulesListCtrl extends TableListCtrl<Schedule> {
 
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   private static final String[] COLUMN_HEADER_TITLE = {
-    MSGS.triggerGroupName(),
+    MSGS.scheduleGroupName(),
     MSGS.description(),
     MSGS.fireTimeLastNext(),
     MSGS.state()
