@@ -2,6 +2,7 @@ package org.pentaho.pac.server;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -17,13 +18,16 @@ import org.pentaho.pac.server.scheduler.SchedulerAdminUIComponentProxy;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-public class SchedulerServiceImpl extends RemoteServiceServlet implements SchedulerService  {
+public class SchedulerServiceImpl extends RemoteServiceServlet implements SchedulerService {
 
   private static final Log logger = LogFactory.getLog(SchedulerServiceImpl.class);
-
+  
   // TODO sbarkdull, damn it would be nice to inject this with Spring (and some of these other props)
   private static SchedulerAdminUIComponentProxy schedulerProxy = null;
   static {
+    String userName = StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getProperty("pentaho.platform.userName"), System.getProperty("pentaho.platform.userName") ); //$NON-NLS-1$ //$NON-NLS-2$
+    String biServerBaseURL = AppConfigProperties.getInstance().getProperty( "biServerBaseURL" );
+    schedulerProxy = new SchedulerAdminUIComponentProxy( userName, biServerBaseURL );
   }
   
   public SchedulerServiceImpl() {
@@ -35,9 +39,6 @@ public class SchedulerServiceImpl extends RemoteServiceServlet implements Schedu
    */
   public void init(ServletConfig config) throws ServletException {
     super.init( config );
-    String userName = StringUtils.defaultIfEmpty( AppConfigProperties.getProperty("pentaho.platform.userName"), System.getProperty("pentaho.platform.userName") ); //$NON-NLS-1$ //$NON-NLS-2$
-    String biServerBaseURL = AppConfigProperties.getProperty( "biServerBaseURL" );
-    schedulerProxy = new SchedulerAdminUIComponentProxy( userName, biServerBaseURL );
   }
   
   public void deleteJob(String jobName, String jobGroup) throws PacServiceException {
@@ -64,11 +65,11 @@ public class SchedulerServiceImpl extends RemoteServiceServlet implements Schedu
    * query string: schedulerAction=getJobNames
    * @throws PacServiceException 
    */
-  public List<Schedule> getJobNames() throws PacServiceException {
-    List<Schedule> l = schedulerProxy.getAllScheduleProperties();
-    return l;
+  public Map<String,Schedule> getJobNames() throws PacServiceException {
+    Map<String,Schedule> schedulerMap = schedulerProxy.getSchedules();
+    return schedulerMap;
   }
-
+  
   /**
    * query string: schedulerAction=isSchedulerPaused
    * @throws PacServiceException 
@@ -121,39 +122,39 @@ public class SchedulerServiceImpl extends RemoteServiceServlet implements Schedu
    * query string: schedulerAction=createJob&jobName=PentahoSystemVersionCheck&jobGroup=DEFAULT
    * @throws PacServiceException 
    */
-  public void createCronJob( String jobName, String jobGroup, String description,
+  public void createCronSchedule( String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
       String cronString,
-      String solutionName, String solutionPath, String actionName) throws PacServiceException {
+      String actionsList) throws PacServiceException {
     schedulerProxy.createCronSchedule( jobName, jobGroup, description,
-        startDate, endDate, cronString, solutionName, solutionPath, actionName );
+        startDate, endDate, cronString, actionsList );
   }
 
-  public void createRepeatJob( String jobName, String jobGroup, String description,
+  public void createRepeatSchedule( String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
       String strRepeatCount, String repeatTimeMillisecs, 
-      String solutionName, String solutionPath, String actionName ) throws PacServiceException {
+      String actionsList ) throws PacServiceException {
     schedulerProxy.createRepeatSchedule( jobName, jobGroup, description,
-        startDate, endDate, strRepeatCount, repeatTimeMillisecs, solutionName, solutionPath, actionName );
+        startDate, endDate, strRepeatCount, repeatTimeMillisecs, actionsList );
   
   }
 
-  public void updateCronJob( String oldJobName, String oldJobGroup,
+  public void updateCronSchedule( String oldJobName, String oldJobGroup, String schedId,
       String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
       String cronString,
-      String solutionName, String solutionPath, String actionName ) throws PacServiceException {
-    schedulerProxy.updateCronSchedule( oldJobName, oldJobGroup, jobName, jobGroup, description,
-        startDate, endDate, cronString, solutionName, solutionPath, actionName );
+      String actionsList ) throws PacServiceException {
+    schedulerProxy.updateCronSchedule( oldJobName, oldJobGroup, schedId, jobName, jobGroup, description,
+        startDate, endDate, cronString, actionsList );
     
   }
   
-  public void updateRepeatJob( String oldJobName, String oldJobGroup,
+  public void updateRepeatSchedule( String oldJobName, String oldJobGroup, String schedId,
       String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
       String strRepeatCount, String repeatTimeMillisecs, 
-      String solutionName, String solutionPath, String actionName ) throws PacServiceException {
-    schedulerProxy.updateRepeatSchedule( oldJobName, oldJobGroup, jobName, jobGroup, description,
-        startDate, endDate, strRepeatCount, repeatTimeMillisecs, solutionName, solutionPath, actionName );
+      String actionsList ) throws PacServiceException {
+    schedulerProxy.updateRepeatSchedule( oldJobName, oldJobGroup, schedId, jobName, jobGroup, description,
+        startDate, endDate, strRepeatCount, repeatTimeMillisecs, actionsList );
   }
 }
