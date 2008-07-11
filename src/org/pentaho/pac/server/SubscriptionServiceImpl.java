@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.pentaho.pac.client.SubscriptionService;
-import org.pentaho.pac.client.scheduler.Schedule;
+import org.pentaho.pac.client.scheduler.model.Schedule;
 import org.pentaho.pac.common.PacServiceException;
 import org.pentaho.pac.server.common.AppConfigProperties;
 import org.pentaho.pac.server.scheduler.SubscriptionAdminUIComponentProxy;

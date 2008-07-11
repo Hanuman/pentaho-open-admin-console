@@ -2,8 +2,8 @@ package org.pentaho.pac.client;
 
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.datasources.DataSourcesPanel;
-import org.pentaho.pac.client.scheduler.SchedulerController;
-import org.pentaho.pac.client.scheduler.SchedulerPanel;
+import org.pentaho.pac.client.scheduler.ctlr.SchedulerController;
+import org.pentaho.pac.client.scheduler.view.SchedulerPanel;
 import org.pentaho.pac.client.services.AdminServicesPanel;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;

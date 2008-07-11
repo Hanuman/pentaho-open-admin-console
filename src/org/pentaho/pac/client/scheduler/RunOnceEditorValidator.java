@@ -1,5 +1,7 @@
 package org.pentaho.pac.client.scheduler;
 
+import org.pentaho.pac.client.scheduler.view.RunOnceEditor;
+
 
 public class RunOnceEditorValidator implements IUiValidator {
 

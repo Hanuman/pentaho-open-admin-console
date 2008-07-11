@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import org.pentaho.pac.client.scheduler.Schedule;
+import org.pentaho.pac.client.scheduler.model.Schedule;
 import org.pentaho.pac.common.PacServiceException;
 import org.pentaho.pac.server.common.BiServerTrustedProxy;
 import org.pentaho.pac.server.common.ThreadSafeHttpClient.HttpMethodType;

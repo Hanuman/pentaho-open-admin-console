@@ -2,13 +2,14 @@ package org.pentaho.pac.client.scheduler;
 
 import org.pentaho.pac.client.common.util.StringUtils;
 import org.pentaho.pac.client.common.util.TimeUtil;
-import org.pentaho.pac.client.scheduler.RecurrenceEditor.DailyRecurrenceEditor;
-import org.pentaho.pac.client.scheduler.RecurrenceEditor.HourlyRecurrenceEditor;
-import org.pentaho.pac.client.scheduler.RecurrenceEditor.MinutelyRecurrenceEditor;
-import org.pentaho.pac.client.scheduler.RecurrenceEditor.MonthlyRecurrenceEditor;
-import org.pentaho.pac.client.scheduler.RecurrenceEditor.SecondlyRecurrenceEditor;
-import org.pentaho.pac.client.scheduler.RecurrenceEditor.WeeklyRecurrenceEditor;
-import org.pentaho.pac.client.scheduler.RecurrenceEditor.YearlyRecurrenceEditor;
+import org.pentaho.pac.client.scheduler.view.RecurrenceEditor;
+import org.pentaho.pac.client.scheduler.view.RecurrenceEditor.DailyRecurrenceEditor;
+import org.pentaho.pac.client.scheduler.view.RecurrenceEditor.HourlyRecurrenceEditor;
+import org.pentaho.pac.client.scheduler.view.RecurrenceEditor.MinutelyRecurrenceEditor;
+import org.pentaho.pac.client.scheduler.view.RecurrenceEditor.MonthlyRecurrenceEditor;
+import org.pentaho.pac.client.scheduler.view.RecurrenceEditor.SecondlyRecurrenceEditor;
+import org.pentaho.pac.client.scheduler.view.RecurrenceEditor.WeeklyRecurrenceEditor;
+import org.pentaho.pac.client.scheduler.view.RecurrenceEditor.YearlyRecurrenceEditor;
 
 /**
  * 

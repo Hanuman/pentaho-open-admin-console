@@ -1,5 +1,7 @@
 package org.pentaho.pac.client.scheduler;
 
+import org.pentaho.pac.client.scheduler.view.DateRangeEditor;
+
 public class DateRangeEditorValidator implements IUiValidator {
 
   private DateRangeEditor dateRangeEditor = null;

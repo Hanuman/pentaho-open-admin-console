@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.pentaho.pac.client.scheduler.Schedule;
+import org.pentaho.pac.client.scheduler.model.Schedule;
 import org.pentaho.pac.common.PacServiceException;
 
 import com.google.gwt.user.client.rpc.RemoteService;
