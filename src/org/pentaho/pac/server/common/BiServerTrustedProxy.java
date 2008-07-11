@@ -19,6 +19,7 @@ package org.pentaho.pac.server.common;
 import java.util.Map;
 
 import org.pentaho.pac.common.PacServiceException;
+import org.pentaho.pac.server.common.ThreadSafeHttpClient.HttpMethodType;
 
 public class BiServerTrustedProxy extends ThreadSafeHttpClient {
 
@@ -75,11 +76,11 @@ public class BiServerTrustedProxy extends ThreadSafeHttpClient {
    * @param serviceName name of service on server, for instance: SchedulerAdmin
    * @param params params to pass with request
    */
-  public String execRemoteMethod( String serviceName, String userName, Map<String,String> params )
+  public String execRemoteMethod( String serviceName, HttpMethodType methodType, String userName, Map<String,Object> params )
     throws PacServiceException {
     
     params.put( TRUSTED_USER_KEY, userName );
-    return super.execRemoteMethod( serviceName, params );
+    return super.execRemoteMethod( serviceName, methodType, params );
   }
 }
 
