@@ -32,8 +32,8 @@ public class SchedulesListController {
         // column 0 
         VerticalPanel vp = new VerticalPanel();
         vp.setStyleName( "schedulesTableCellTable" ); //$NON-NLS-1$
-        vp.add( new Label( schedule.getTriggerName()) );
-        vp.add( new Label( schedule.getTriggerGroup() ) );
+        vp.add( new Label( schedule.getJobName()) );
+        vp.add( new Label( schedule.getJobGroup() ) );
         widgets[ 0 ] = vp;
 
         // column 1
