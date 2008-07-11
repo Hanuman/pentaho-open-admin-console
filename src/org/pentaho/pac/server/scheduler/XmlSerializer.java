@@ -157,7 +157,7 @@ public class XmlSerializer {
         val = attributes.getValue( "end-date-time" ); //$NON-NLS-1$
         currentSchedule.setEndDate( val );
         // actionsList will only have ONE action
-        val = attributes.getValue( "actionsList" ); //$NON-NLS-1$
+        val = attributes.getValue( "actionRefs" ); //$NON-NLS-1$
         List<String> l = new ArrayList<String>();
         l.add( val );
         currentSchedule.setActionsList( l );
