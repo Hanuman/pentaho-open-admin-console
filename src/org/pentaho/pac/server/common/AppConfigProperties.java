@@ -36,34 +36,47 @@ import org.pentaho.pac.server.i18n.Messages;
  */
 public class AppConfigProperties {
 
+  public static final String DEFAULT_PROPERTIES_FILE_NAME = "pac.properties"; //$NON-NLS-1$
   private static final Log logger = LogFactory.getLog(AppConfigProperties.class);
-  private static final String PROPERTIES_FILE_NAME = "pac.properties"; //$NON-NLS-1$
-  private static Properties properties = null;
+  private Properties properties = null;
+  private static AppConfigProperties instance = new AppConfigProperties();
 
-  static {
+  protected AppConfigProperties() {
+    init( DEFAULT_PROPERTIES_FILE_NAME );
+  }
+  
+  public static AppConfigProperties getInstance() {
+    return instance;
+  }
+  
+  public void init( String pathToConfigResource ) {
     InputStream s = null;
     try {
-      URL url = ClassLoader.getSystemResource("pac.properties"); //$NON-NLS-1$
+      URL url = ClassLoader.getSystemResource( pathToConfigResource );
       s = url.openStream();
     } catch (IOException e1) {
-      logger.error( Messages.getString( "PacService.OPEN_PROPS_FAILED", PROPERTIES_FILE_NAME ) ); //$NON-NLS-1$
+      logger.error( Messages.getString( "PacService.OPEN_PROPS_FAILED", pathToConfigResource ) ); //$NON-NLS-1$
     }
     if ( null != s ) {
       properties = new Properties();
       try {
         properties.load( s );
       } catch (IOException e) {
-        logger.error( Messages.getString( "PacService.LOAD_PROPS_FAILED", PROPERTIES_FILE_NAME ) ); //$NON-NLS-1$
+        logger.error( Messages.getString( "PacService.LOAD_PROPS_FAILED", pathToConfigResource ) ); //$NON-NLS-1$
       }
     }
   }
-
-  public static void setProperties( Properties p )
+  
+  public void init( Properties p ) {
+    properties = p;
+  }
+  
+  public void setProperties( Properties p )
   {
     properties = p;
   }
 
-  public static String getProperty( String key )
+  public String getProperty( String key )
   {
     return (String)properties.get( key );
   }
