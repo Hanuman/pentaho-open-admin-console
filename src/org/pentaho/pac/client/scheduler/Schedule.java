@@ -16,6 +16,7 @@
 package org.pentaho.pac.client.scheduler;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * NOTE: I wanted this class to be a simple POJO, no getters/setters, just
@@ -45,9 +46,13 @@ public class Schedule implements Serializable {
   private String repeatTimeInMillisecs = null;
   private String startDate = null;
   private String endDate = null;
-  private String solution = null;
-  private String path = null;
-  private String action = null;
+  private List<String> actionsList = null;
+  
+  // these properties are in subscription schedule only
+  private String subscriberCount = null;
+  private String schedId = null;
+  private String schedRef = null;
+  private String title = null;
   
   public String getStartDate() {
     return startDate;
@@ -122,23 +127,48 @@ public class Schedule implements Serializable {
   public void setRepeatTimeInMillisecs(String repeatTimeInMillisecs) {
     this.repeatTimeInMillisecs = repeatTimeInMillisecs;
   }
-  public String getSolution() {
-    return solution;
-  }
-  public void setSolution(String solution) {
-    this.solution = solution;
-  }
-  public String getPath() {
-    return path;
-  }
-  public void setPath(String path) {
-    this.path = path;
-  }
-  public String getAction() {
-    return action;
-  }
-  public void setAction(String action) {
-    this.action = action;
+  
+  public List<String> getActionsList() {
+    return actionsList;
   }
   
+  public void setActionsList(List<String> actionsList) {
+    this.actionsList = actionsList;
+  }
+
+  public String getSubscriberCount() {
+    return subscriberCount;
+  }
+
+  public void setSubscriberCount(String subscriberCount) {
+    this.subscriberCount = subscriberCount;
+  }
+
+  public String getSchedId() {
+    return schedId;
+  }
+
+  public void setSchedId(String schedId) {
+    this.schedId = schedId;
+  }
+
+  public String getSchedRef() {
+    return schedRef;
+  }
+
+  public void setSchedRef(String schedRef) {
+    this.schedRef = schedRef;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
+  
+  public boolean isSubscriptionSchedule() {
+    return schedId != null;
+  }
 }
