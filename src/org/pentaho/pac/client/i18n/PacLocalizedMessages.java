@@ -259,9 +259,9 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * Translated "Trigger - Group / Name".
    * 
    * @return translated "Trigger - Group / Name"
-   * @gwt.key triggerGroupName
+   * @gwt.key scheduleGroupName
    */
-  String triggerGroupName();
+  String scheduleGroupName();
 
   /**
    * Translated "Update User".
