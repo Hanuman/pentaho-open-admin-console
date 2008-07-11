@@ -17,11 +17,14 @@ package org.pentaho.pac.client.scheduler;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.pentaho.pac.client.ISchedulerServiceAsync;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.ICallback;
@@ -179,32 +182,85 @@ public class SchedulerController {
   
   private void loadJobsTable()
   {
+    // TODO sbarkdull does this belong in SchedulesListCtrller?
     SchedulesListCtrl schedListCtrl = schedulerPanel.getSchedulesListCtrl();
     schedListCtrl.setStateToLoading();
     final int currScrollPos = schedListCtrl.getScrollPosition();
+    final Map<String,Schedule> schedulesMap = new HashMap<String,Schedule>();
     
-    PacServiceFactory.getSchedulerService().getJobNames(
-        new AsyncCallback<List<Schedule>>() {
-          public void onSuccess( List<Schedule> pSchedulesList ) {
-            schedulesModel = new SchedulesModel();
-            schedulesModel.add( pSchedulesList );
-            initFilterList();
-            schedulerPanel.getSchedulesListCtrl().clearStateLoading();
-            updateSchedulesTable();
-            if ( INVALID_SCROLL_POS != currScrollPos ) { 
-              schedulerPanel.getSchedulesListCtrl().setScrollPosition( currScrollPos );
-            }
-          }
+    AsyncCallback<Map<String,Schedule>> schedulerServiceCallback = new AsyncCallback<Map<String,Schedule>>() {
+      public void onSuccess( Map<String,Schedule> pSchedulesMap ) {
+        schedulesMap.putAll( pSchedulesMap );
+      }
+
+      public void onFailure(Throwable caught) {
+        SchedulesListCtrl schedulesListCtrl = schedulerPanel.getSchedulesListCtrl();
+        schedulesListCtrl.clearStateLoading();
+        schedulesListCtrl.setTempMessage( MSGS.noSchedules() );
+        MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
+            caught.getMessage() );
+        messageDialog.center();
+      }
+    }; // end schedulerServiceCallback
     
-          public void onFailure(Throwable caught) {
-            MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
-                caught.getMessage() );
-            messageDialog.center();
-          }
+    AsyncCallback<Map<String,Schedule>> subscriptionServiceCallback = new AsyncCallback<Map<String,Schedule>>() {
+      public void onSuccess( Map<String,Schedule> subscriptionSchedulesMap ) {
+        List<Schedule> schedulesList = mergeSchedules( schedulesMap, subscriptionSchedulesMap );
+        schedulesModel = new SchedulesModel();
+        schedulesModel.add( schedulesList );
+        initFilterList();
+        schedulerPanel.getSchedulesListCtrl().clearStateLoading();
+        updateSchedulesTable();
+        if ( INVALID_SCROLL_POS != currScrollPos ) { 
+          schedulerPanel.getSchedulesListCtrl().setScrollPosition( currScrollPos );
         }
-      );
+      }
+
+      public void onFailure(Throwable caught) {
+        SchedulesListCtrl schedulesListCtrl = schedulerPanel.getSchedulesListCtrl();
+        schedulesListCtrl.clearStateLoading();
+        schedulesListCtrl.setTempMessage( MSGS.noSchedules() );
+        MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
+            caught.getMessage() );
+        messageDialog.center();
+      }
+    }; // end subscriptionServiceCallback
+      
+      
+    PacServiceFactory.getSchedulerService().getJobNames( schedulerServiceCallback );
+    PacServiceFactory.getSubscriptionService().getJobNames( subscriptionServiceCallback );
+  }
+
+  /**
+   * Merge the two maps into one map. Add all key-values in the schedulerMap to
+   * the mergedMap, unless the key is in both the schedulerMap and subscriptionMap.
+   * If it is in both maps, add the one from the subscriptionMap.
+   * NOTE: all elements in subscriptionMap should be in the schedulerMap, but not the
+   * inverse.
+   * 
+   * @param schedulerMap
+   * @param subscriptionMap
+   * @return
+   */
+  private static List<Schedule> mergeSchedules( Map<String,Schedule> schedulerMap, 
+      Map<String,Schedule> subscriptionMap ) {
+    
+    List<Schedule> mergedList = new ArrayList<Schedule>();
+    for ( Map.Entry<String,Schedule> me : schedulerMap.entrySet() ) {
+      
+      Schedule subscriptionSchedule = subscriptionMap.get( me.getKey() );
+      mergedList.add( 
+          ( null != subscriptionSchedule )
+          ? subscriptionSchedule
+          : me.getValue() );
+    }
+    return mergedList;
   }
   
+  /**
+   * 
+   */
+  @SuppressWarnings("fallthrough")
   private void updateSchedule() {
 
     SchedulesListCtrl schedulesListCtrl = schedulerPanel.getSchedulesListCtrl();
@@ -230,15 +286,20 @@ public class SchedulerController {
     // TODO sbarkdull scheduleCreatorDialog -> scheduleEditorDialog
     ScheduleEditor scheduleEditor = scheduleCreatorDialog.getScheduleEditor();
 
+    ISchedulerServiceAsync schedSvc = oldSchedule.isSubscriptionSchedule()  
+      ? PacServiceFactory.getSubscriptionService()
+      : PacServiceFactory.getSchedulerService();
+    
     String cronStr = scheduleEditor.getCronString();
     Date startDate = scheduleEditor.getStartDate();
     Date endDate = scheduleEditor.getEndDate();
     ScheduleType rt = scheduleEditor.getScheduleType(); 
     switch ( rt ) {
       case RUN_ONCE:
-        PacServiceFactory.getSchedulerService().updateRepeatJob(
+        schedSvc.updateRepeatSchedule(
             oldSchedule.getJobName(),
             oldSchedule.getJobGroup(),
+            oldSchedule.getSchedId(),
             scheduleEditor.getName().trim(), 
             scheduleEditor.getGroupName().trim(), 
             scheduleEditor.getDescription().trim(), 
@@ -246,9 +307,7 @@ public class SchedulerController {
             endDate,
             "0" /*repeat count*/,
             "0" /*repeat time*/, 
-            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getSolution().trim(),
-            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getPath().trim(),
-            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getAction().trim(),
+            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getActionsAsString().trim(),
             responseCallback
           );
         break;
@@ -262,9 +321,10 @@ public class SchedulerController {
         if ( null == cronStr ) {
           String repeatTimeMillisecs = Integer.toString( TimeUtil.secsToMillisecs( 
                 scheduleEditor.getRepeatInSecs() ) );
-          PacServiceFactory.getSchedulerService().updateRepeatJob(
+          schedSvc.updateRepeatSchedule(
               oldSchedule.getJobName(),
               oldSchedule.getJobGroup(),
+              oldSchedule.getSchedId(),
               scheduleEditor.getName().trim(), 
               scheduleEditor.getGroupName().trim(), 
               scheduleEditor.getDescription().trim(), 
@@ -272,9 +332,7 @@ public class SchedulerController {
               endDate,
               null /*repeat count*/,
               repeatTimeMillisecs.trim(), 
-              scheduleCreatorDialog.getSolutionRepositoryItemPicker().getSolution().trim(),
-              scheduleCreatorDialog.getSolutionRepositoryItemPicker().getPath().trim(),
-              scheduleCreatorDialog.getSolutionRepositoryItemPicker().getAction().trim(),
+              scheduleCreatorDialog.getSolutionRepositoryItemPicker().getActionsAsString().trim(),
               responseCallback
             );
           break;
@@ -282,18 +340,17 @@ public class SchedulerController {
           // fall through to case CRON
         }
       case CRON:
-        PacServiceFactory.getSchedulerService().updateCronJob(
+        schedSvc.updateCronSchedule(
             oldSchedule.getJobName(),
             oldSchedule.getJobGroup(),
+            oldSchedule.getSchedId(),
             scheduleEditor.getName().trim(), 
             scheduleEditor.getGroupName().trim(), 
             scheduleEditor.getDescription().trim(), 
             startDate,
             endDate,
             cronStr.trim(), 
-            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getSolution().trim(),
-            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getPath().trim(),
-            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getAction().trim(),
+            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getActionsAsString().trim(),
             responseCallback
           );
         break;
@@ -306,6 +363,7 @@ public class SchedulerController {
    * NOTE: this method is extremely similar to updateSchedule, when modifying this method,
    * consider modifying updateSchedule in a similar way.
    */
+  @SuppressWarnings("fallthrough")
   private void createSchedule() {
     // TODO, List<Schedule> is probably not what we will get back
     AsyncCallback<List<Schedule>> responseCallback = new AsyncCallback<List<Schedule>>() {
@@ -329,20 +387,26 @@ public class SchedulerController {
     String cronStr = scheduleEditor.getCronString();
     Date startDate = scheduleEditor.getStartDate();
     Date endDate = scheduleEditor.getEndDate();
-    ScheduleType rt = scheduleEditor.getScheduleType(); 
+    ScheduleType rt = scheduleEditor.getScheduleType();
+
+    // TODO sbarkdull, if we want to support creation of scheduler schedules, we need to supply
+ // a UI mechanism like a checkbox to allow user to identify scheduler vs subscription, 
+ // and then test the value of the check box instead of the following "true".
+    ISchedulerServiceAsync schedSvc = true  
+      ? PacServiceFactory.getSubscriptionService()
+      : PacServiceFactory.getSchedulerService();
+    
     switch ( rt ) {
       case RUN_ONCE:
-        PacServiceFactory.getSchedulerService().createRepeatJob(
+        schedSvc.createRepeatSchedule(
             scheduleEditor.getName().trim(), 
             scheduleEditor.getGroupName().trim(), 
             scheduleEditor.getDescription().trim(), 
             startDate,
             endDate,
-            "0" /*repeat count*/,
-            "0" /*repeat time*/, 
-            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getSolution().trim(),
-            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getPath().trim(),
-            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getAction().trim(),
+            "0" /*repeat count*/, //$NON-NLS-1$
+            "0" /*repeat time*/,  //$NON-NLS-1$
+            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getActionsAsString().trim(),
             responseCallback
           );
         break;
@@ -356,7 +420,7 @@ public class SchedulerController {
         if ( null == cronStr ) {
           String repeatTimeMillisecs = Integer.toString( TimeUtil.secsToMillisecs( 
                 scheduleEditor.getRepeatInSecs() ) );
-          PacServiceFactory.getSchedulerService().createRepeatJob(
+          schedSvc.createRepeatSchedule(
               scheduleEditor.getName().trim(), 
               scheduleEditor.getGroupName().trim(), 
               scheduleEditor.getDescription().trim(), 
@@ -364,9 +428,7 @@ public class SchedulerController {
               endDate,
               null /*repeat count*/,
               repeatTimeMillisecs.trim(), 
-              scheduleCreatorDialog.getSolutionRepositoryItemPicker().getSolution().trim(),
-              scheduleCreatorDialog.getSolutionRepositoryItemPicker().getPath().trim(),
-              scheduleCreatorDialog.getSolutionRepositoryItemPicker().getAction().trim(),
+              scheduleCreatorDialog.getSolutionRepositoryItemPicker().getActionsAsString().trim(),
               responseCallback
             );
           break;
@@ -374,16 +436,14 @@ public class SchedulerController {
           // fall through to case CRON
         }
       case CRON:
-        PacServiceFactory.getSchedulerService().createCronJob(
+        schedSvc.createCronSchedule(
             scheduleEditor.getName().trim(), 
             scheduleEditor.getGroupName().trim(), 
             scheduleEditor.getDescription().trim(), 
             startDate,
             endDate,
             cronStr.trim(), 
-            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getSolution().trim(),
-            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getPath().trim(),
-            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getAction().trim(),
+            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getActionsAsString().trim(),
             responseCallback
           );
         break;
@@ -415,18 +475,22 @@ public class SchedulerController {
   private void handleCreateSchedule() {
     final SchedulerController localThis = this;
     
+    scheduleCreatorDialog.setTitle( "Schedule Creator" );
     scheduleCreatorDialog.reset( new Date() );
     scheduleCreatorDialog.setOnOkHandler( new ICallback<MessageDialog>() {
       public void onHandle(MessageDialog d) {
         localThis.createSchedule();
       }
     });
+    // TODO sbarkdull, if we decide to create regular schedules, we'll need to do something different here
+    scheduleCreatorDialog.getSolutionRepositoryItemPicker().setSingleSelect( false );
     scheduleCreatorDialog.center();
   }
   
   private void handleUpdateSchedule() {
     final SchedulerController localThis = this;
 
+    scheduleCreatorDialog.setTitle( "Schedule Editor" );
     SchedulesListCtrl schedulesListCtrl = schedulerPanel.getSchedulesListCtrl();
     final List<Schedule> scheduleList = schedulesListCtrl.getSelectedSchedules();
     scheduleCreatorDialog.setOnOkHandler( new ICallback<MessageDialog>() {
@@ -437,14 +501,15 @@ public class SchedulerController {
     // the update button should be enabled/disabled to guarantee that one and only one schedule is selected
     assert scheduleList.size() == 1 : "When clicking update, exactly one schedule should be selected.";
     
-    Schedule s = scheduleList.get( 0 );
+    Schedule sched = scheduleList.get( 0 );
+    scheduleCreatorDialog.getSolutionRepositoryItemPicker().setSingleSelect( !sched.isSubscriptionSchedule() );
     try {
-      initScheduleCreatorDialog( s );
+      initScheduleCreatorDialog( sched );
       scheduleCreatorDialog.center();
     } catch (CronParseException e) {
       final MessageDialog errorDialog = new MessageDialog( "Error",
           "Attempt to initialize the Recurrence Dialog with an invalid CRON string: "
-          + s.getCronString()
+          + sched.getCronString()
           + " Error details: "
           + e.getMessage() );
       errorDialog.setOnOkHandler( new ICallback() {
@@ -476,9 +541,7 @@ public class SchedulerController {
     String cronStr = sched.getCronString();
     
     SolutionRepositoryItemPicker solRepPicker = scheduleCreatorDialog.getSolutionRepositoryItemPicker();
-    solRepPicker.setSolution( sched.getSolution() );
-    solRepPicker.setPath( sched.getPath() );
-    solRepPicker.setAction( sched.getAction() );
+    scheduleCreatorDialog.getSolutionRepositoryItemPicker().setActionsAsList( sched.getActionsList() );
     
     String repeatInMillisecs;
     if ( null != cronStr ) {
