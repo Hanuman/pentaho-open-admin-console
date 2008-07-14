@@ -113,6 +113,7 @@ public class SubscriptionAdminUIComponentProxy {
     if ( null != strRepeatCount ) {
       params.put( "repeat-count", strRepeatCount ); //$NON-NLS-1$
     }
+    assert Integer.parseInt( repeatInterval ) >= 0 : "Invalid repeat interval";
     params.put( "repeat-time-millisecs", repeatInterval ); //$NON-NLS-1$
     params.put( "group", jobGroup ); //$NON-NLS-1$
     params.put( "actionRefs", actionsList ); //$NON-NLS-1$
@@ -172,6 +173,7 @@ public class SubscriptionAdminUIComponentProxy {
     if ( null != strRepeatCount ) {
       params.put( "repeat-count", strRepeatCount ); //$NON-NLS-1$
     }
+    assert Integer.parseInt( repeatInterval ) >= 0 : "Invalid repeat interval";
     params.put( "repeat-time-millisecs", repeatInterval ); //$NON-NLS-1$
     String[] actionsAr = actionsList.split( "," );
     params.put( "actionRefs", actionsAr ); //$NON-NLS-1$
