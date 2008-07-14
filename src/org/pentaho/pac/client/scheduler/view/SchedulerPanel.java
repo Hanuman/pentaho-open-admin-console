@@ -16,23 +16,15 @@
 
 package org.pentaho.pac.client.scheduler.view;
 
-import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
-
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class SchedulerPanel extends VerticalPanel {
 
   private SchedulerToolbar schedulerToolbar = null;
   private SchedulesListCtrl schedulesListCtrl = null;
-  private Label userInstructionLabel = null;
   private boolean isInitialized = false;
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
-  
-  private static final String USER_INSTRUCTION = MSGS.schedulerUserInstruction();
+  //private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
 
-  
   public SchedulerPanel()
   {
     this.setStyleName( "schedulerPanel" ); //$NON-NLS-1$
@@ -47,10 +39,6 @@ public class SchedulerPanel extends VerticalPanel {
   
   private void createUI()
   {
-    userInstructionLabel = new Label( USER_INSTRUCTION );
-    userInstructionLabel.setStyleName( "schedulerInstructionLabel" ); //$NON-NLS-1$
-    add( userInstructionLabel );
-    
     schedulerToolbar = new SchedulerToolbar();
     add( schedulerToolbar );
     
