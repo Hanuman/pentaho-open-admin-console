@@ -330,7 +330,7 @@ public class SchedulerController {
       case MONTHLY: // fall through
       case YEARLY:
         if ( null == cronStr ) {
-          String repeatTimeMillisecs = Integer.toString( TimeUtil.secsToMillisecs( 
+          String repeatInterval = Integer.toString( TimeUtil.secsToMillisecs( 
                 scheduleEditor.getRepeatInSecs() ) );
           schedSvc.updateRepeatSchedule(
               oldSchedule.getJobName(),
@@ -342,7 +342,7 @@ public class SchedulerController {
               startDate,
               endDate,
               null /*repeat count*/,
-              repeatTimeMillisecs.trim(), 
+              repeatInterval.trim(), 
               scheduleCreatorDialog.getSolutionRepositoryItemPicker().getActionsAsString().trim(),
               responseCallback
             );
@@ -429,7 +429,7 @@ public class SchedulerController {
       case MONTHLY: // fall through
       case YEARLY:
         if ( null == cronStr ) {
-          String repeatTimeMillisecs = Integer.toString( TimeUtil.secsToMillisecs( 
+          String repeatInterval = Integer.toString( TimeUtil.secsToMillisecs( 
                 scheduleEditor.getRepeatInSecs() ) );
           schedSvc.createRepeatSchedule(
               scheduleEditor.getName().trim(), 
@@ -438,7 +438,7 @@ public class SchedulerController {
               startDate,
               endDate,
               null /*repeat count*/,
-              repeatTimeMillisecs.trim(), 
+              repeatInterval.trim(), 
               scheduleCreatorDialog.getSolutionRepositoryItemPicker().getActionsAsString().trim(),
               responseCallback
             );
@@ -557,14 +557,14 @@ public class SchedulerController {
     String repeatInMillisecs;
     if ( null != cronStr ) {
       scheduleEditor.setCronString( sched.getCronString() );  // throws CronParseException
-    } else if ( null != ( repeatInMillisecs = sched.getRepeatTimeInMillisecs() ) ) {
-      int repeatTimeInSecs = TimeUtil.millsecondsToSecs( Integer.parseInt( repeatInMillisecs ) );
-      if ( 0 == repeatTimeInSecs ) {
+    } else if ( null != ( repeatInMillisecs = sched.getRepeatInterval() ) ) {
+      int repeatIntervalInSecs = TimeUtil.millsecondsToSecs( Integer.parseInt( repeatInMillisecs ) );
+      if ( 0 == repeatIntervalInSecs ) {
         // run once
         scheduleEditor.setScheduleType( ScheduleType.RUN_ONCE );
       } else {
         // run multiple
-        scheduleEditor.setRepeatInSecs( repeatTimeInSecs );
+        scheduleEditor.setRepeatInSecs( repeatIntervalInSecs );
       }
     } else {
       throw new RuntimeException( "Illegal state, must have either a cron string or a repeat time." );
