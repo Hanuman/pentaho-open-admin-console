@@ -168,7 +168,7 @@ public class XmlSerializer {
         }
         val = attributes.getValue( "repeat-time-millisecs" ); //$NON-NLS-1$
         if ( null != val ) {
-          currentSchedule.setRepeatTimeInMillisecs( val );
+          currentSchedule.setRepeatInterval( val );
         }
         assert currentSchedule.getJobName() != null : "Error, job name cannot be null."; //$NON-NLS-1$
         schedules.put( currentSchedule.getJobName(), currentSchedule );
@@ -418,12 +418,20 @@ public class XmlSerializer {
             currentSchedule.setJobGroup( currentText );
           } else if ( qName.equals( "cron" ) ) { //$NON-NLS-1$
             currentSchedule.setCronString( currentText );
+          } else if ( qName.equals( "repeat-count" ) ) { //$NON-NLS-1$
+            currentSchedule.setRepeatCount( currentText );
+          } else if ( qName.equals( "repeat-time-millisecs" ) ) { //$NON-NLS-1$
+            currentSchedule.setRepeatInterval( currentText );
           } else if ( qName.equals( "nextFireTime" ) ) { //$NON-NLS-1$
             currentSchedule.setNextFireTime( currentText );
           } else if ( qName.equals( "prevFireTime" ) ) { //$NON-NLS-1$
             currentSchedule.setPrevFireTime( currentText );
           } else if ( qName.equals( "jobId" ) ) { //$NON-NLS-1$
             currentSchedule.setJobName( currentText );
+          } else if ( qName.equals( "start-date" ) ) { //$NON-NLS-1$
+            currentSchedule.setStartDate( currentText );
+          } else if ( qName.equals( "end-date" ) ) { //$NON-NLS-1$
+            currentSchedule.setEndDate( currentText );  
           } else if ( qName.equals( "content" ) ) { //$NON-NLS-1$
             isInContent = false;
             currentSchedule.setActionsList( actionList );
