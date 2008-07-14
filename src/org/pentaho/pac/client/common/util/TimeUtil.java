@@ -21,8 +21,12 @@ public class TimeUtil {
 
   public static final int MIN_HOUR = 0;
   public static final int MAX_HOUR = HOURS_IN_DAY/2;
-  
+
   public static final int MAX_MINUTE = 60;
+  
+  public static final int MAX_SECOND_BY_MILLISEC = Integer.MAX_VALUE / MILLISECS_IN_SECONDS;
+  public static final int MAX_MINUTE_BY_MILLISEC = MAX_SECOND_BY_MILLISEC / SECONDS_IN_MINUTE;
+  public static final int MAX_HOUR_BY_MILLISEC = MAX_MINUTE_BY_MILLISEC / MINUTES_IN_HOUR;
 
   public enum TimeOfDay {
     AM(0, "AM"),
