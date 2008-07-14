@@ -36,7 +36,12 @@ public class RecurrenceEditorValidator implements IUiValidator {
         if ( !StringUtils.isPositiveInteger( seconds ) 
             || ( Integer.parseInt( seconds ) <= 0 ) ) {
           isValid = false;
-          sEd.setValueError( "Seconds " + MUST_BE_A_NUMBER );
+        }
+        if ( Integer.parseInt( seconds ) > TimeUtil.MAX_SECOND_BY_MILLISEC ) {
+          isValid = false;
+        }
+        if ( !isValid ) {
+          sEd.setValueError( "Seconds must be a number <= " + TimeUtil.MAX_SECOND_BY_MILLISEC );
         }
         break;
       case MINUTES:
@@ -45,7 +50,12 @@ public class RecurrenceEditorValidator implements IUiValidator {
         if ( !StringUtils.isPositiveInteger( minutes ) 
             || ( Integer.parseInt( minutes ) <= 0 ) ) {
           isValid = false;
-          mEd.setValueError( "Minutes " + MUST_BE_A_NUMBER );
+        }
+        if ( Integer.parseInt( minutes ) > TimeUtil.MAX_MINUTE_BY_MILLISEC ) {
+          isValid = false;
+        }
+        if ( !isValid ) {
+          mEd.setValueError( "Minues must be a number <= " + TimeUtil.MAX_MINUTE_BY_MILLISEC );
         }
         break;
       case HOURS:
@@ -54,7 +64,12 @@ public class RecurrenceEditorValidator implements IUiValidator {
         if ( !StringUtils.isPositiveInteger( hours ) 
             || ( Integer.parseInt( hours ) <= 0 ) ) {
           isValid = false;
-          hEd.setValueError( "Hours " + MUST_BE_A_NUMBER );
+        }
+        if ( Integer.parseInt( hours ) > TimeUtil.MAX_HOUR_BY_MILLISEC ) {
+          isValid = false;
+        }
+        if ( !isValid ) {
+          hEd.setValueError( "Hours must be a number <= " + TimeUtil.MAX_HOUR_BY_MILLISEC );
         }
         break;
       case DAILY:
