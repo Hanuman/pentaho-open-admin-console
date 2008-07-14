@@ -988,10 +988,6 @@ a:visited {
 	padding: 10px;
 }
 
-.schedulerInstructionLabel {
-	margin-bottom: 20px;
-}
-
 .schedulerPanel a {
 	cursor: hand;
 	cursor: pointer;
