@@ -43,7 +43,8 @@ public class Schedule implements Serializable {
   private String jobGroup = null;
   private String description = null;
   private String cronString = null;
-  private String repeatTimeInMillisecs = null;
+  private String repeatCount = null;
+  private String repeatInterval = null;
   private String startDate = null;
   private String endDate = null;
   private List<String> actionsList = null;
@@ -120,12 +121,12 @@ public class Schedule implements Serializable {
   public void setDescription(String description) {
     this.description = description;
   }
-  public String getRepeatTimeInMillisecs() {
-    return repeatTimeInMillisecs;
+  public String getRepeatInterval() {
+    return repeatInterval;
   }
   
-  public void setRepeatTimeInMillisecs(String repeatTimeInMillisecs) {
-    this.repeatTimeInMillisecs = repeatTimeInMillisecs;
+  public void setRepeatInterval(String repeatInterval) {
+    this.repeatInterval = repeatInterval;
   }
   
   public List<String> getActionsList() {
@@ -170,5 +171,11 @@ public class Schedule implements Serializable {
   
   public boolean isSubscriptionSchedule() {
     return schedId != null;
+  }
+  public String getRepeatCount() {
+    return repeatCount;
+  }
+  public void setRepeatCount(String repeatCount) {
+    this.repeatCount = repeatCount;
   }
 }
