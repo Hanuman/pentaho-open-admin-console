@@ -664,14 +664,6 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String security();
 
   /**
-   * Translated "Resume and suspend all jobs. Resume, suspend, delete, and run individual jobs.".
-   * 
-   * @return translated "Resume and suspend all jobs. Resume, suspend, delete, and run individual jobs."
-   * @gwt.key schedulerUserInstruction
-   */
-  String schedulerUserInstruction();
-
-  /**
    * Translated "Working...".
    * 
    * @return translated "Working..."
