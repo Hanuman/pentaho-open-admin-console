@@ -52,7 +52,6 @@ public class Schedule implements Serializable {
   // these properties are in subscription schedule only
   private String subscriberCount = null;
   private String schedId = null;
-  private String schedRef = null;
   private String title = null;
   
   public String getStartDate() {
@@ -151,14 +150,6 @@ public class Schedule implements Serializable {
 
   public void setSchedId(String schedId) {
     this.schedId = schedId;
-  }
-
-  public String getSchedRef() {
-    return schedRef;
-  }
-
-  public void setSchedRef(String schedRef) {
-    this.schedRef = schedRef;
   }
 
   public String getTitle() {
