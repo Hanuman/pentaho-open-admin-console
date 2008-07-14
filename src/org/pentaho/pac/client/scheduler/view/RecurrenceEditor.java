@@ -201,6 +201,7 @@ public class RecurrenceEditor extends VerticalPanel {
   
   private void setEveryWeekdayRecurrence( String[] recurrenceTokens ) {
     setTemporalState( TemporalValue.DAILY );
+    dailyEditor.setEveryWeekday();
   }
   
   private void setWeeklyOnRecurrence( String[] recurrenceTokens ) {
