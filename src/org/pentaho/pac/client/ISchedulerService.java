@@ -16,7 +16,7 @@ public interface ISchedulerService {
       String actionsList ) throws PacServiceException;
   public void createRepeatSchedule( String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
-      String strRepeatCount, String repeatTimeMillisecs, 
+      String strRepeatCount, String repeatInterval, 
       String actionsList ) throws PacServiceException;
   
   public void updateCronSchedule( String oldJobName, String oldJobGroup, String schedId,
@@ -27,6 +27,6 @@ public interface ISchedulerService {
   public void updateRepeatSchedule( String oldJobName, String oldJobGroup, String schedId,
       String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
-      String strRepeatCount, String repeatTimeMillisecs,
+      String strRepeatCount, String repeatInterval,
       String actionsList ) throws PacServiceException;
 }

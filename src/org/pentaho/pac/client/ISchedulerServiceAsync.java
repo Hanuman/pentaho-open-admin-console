@@ -15,7 +15,7 @@ public interface ISchedulerServiceAsync {
       String cronString, String actionsList, AsyncCallback callback );
   public void createRepeatSchedule( String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
-      String strRepeatCount, String repeatTimeMillisecs,
+      String strRepeatCount, String repeatInterval,
       String actionsList, AsyncCallback callback );
 
   public void updateCronSchedule( String oldJobName, String oldJobGroup, String schedId,
@@ -26,6 +26,6 @@ public interface ISchedulerServiceAsync {
   public void updateRepeatSchedule( String oldJobName, String oldJobGroup, String schedId,
       String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
-      String strRepeatCount,String repeatTimeMillisecs,
+      String strRepeatCount,String repeatInterval,
       String actionsList, AsyncCallback callback );
 }
