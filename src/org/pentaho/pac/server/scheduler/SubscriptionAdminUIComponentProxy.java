@@ -74,35 +74,26 @@ public class SubscriptionAdminUIComponentProxy {
     Map<String, Object> params = new HashMap<String, Object>();
     params.put( "schedulerAction", "doAddScheduleAndContent" ); //$NON-NLS-1$  //$NON-NLS-2$
     // TODO sbarkdull, this ain't right
-    params.put( "title", "I don't know where to get the title" ); //$NON-NLS-1$
+    params.put( "title", "someday a title will go here" ); //$NON-NLS-1$
     params.put( "schedRef", jobName ); //$NON-NLS-1$
     params.put( "desc", description ); //$NON-NLS-1$
-    params.put( "cron", cronString ); //$NON-NLS-1$
-    params.put( "group", jobGroup ); //$NON-NLS-1$
-    // TODO sbarkdull, what if solutionPath is empty? how do we get multiples in here?
-    // TODO clean up String[] actionRefs = { solutionName + "/" + solutionPath + "/" + actionName };
-    //params.put( "actionRefs", solutionName + "/" + solutionPath + "/" + actionName ); //$NON-NLS-1$
-    params.put( "actionRefs", actionsList ); //$NON-NLS-1$
-
-    String responseStrXml=  biServerProxy.execRemoteMethod( SUBSCRIPTION_SERVICE_NAME, HttpMethodType.POST, userName, params );
-    
-    // TODO sbarkdull
-    /*
     params.put( "start-date-time", strStartDate ); //$NON-NLS-1$
     if ( null != strEndDate ) {
       params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
     }
-    params.put( "cron-string", cronString ); //$NON-NLS-1$
-    
-    params.put( "solution", solutionName ); //$NON-NLS-1$
-    params.put( "path", solutionPath ); //$NON-NLS-1$
-    params.put( "action", actionName ); //$NON-NLS-1$
-    */
+    params.put( "cron", cronString ); //$NON-NLS-1$
+    params.put( "group", jobGroup ); //$NON-NLS-1$
+    // TODO sbarkdull, what if solutionPath is empty? 
+    params.put( "actionRefs", actionsList ); //$NON-NLS-1$
+
+    String responseStrXml=  biServerProxy.execRemoteMethod( SUBSCRIPTION_SERVICE_NAME, HttpMethodType.POST, userName, params );
+    // TODO sbarkdull
+
   }
   
   public void createRepeatSchedule( String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
-      String strRepeatCount, String repeatTimeMillisecs,
+      String strRepeatCount, String repeatInterval,
       String actionsList ) throws PacServiceException {
 
     String strStartDate = dateTimeFormatter.format( startDate );
@@ -110,11 +101,11 @@ public class SubscriptionAdminUIComponentProxy {
       ? dateTimeFormatter.format( endDate )
       : null;
     Map<String, Object> params = new HashMap<String, Object>();
-    // TODO sbarkdull, some of these params may not be used, clean up
-    params.put( "schedulerAction", "createJob" ); //$NON-NLS-1$  //$NON-NLS-2$
-    params.put( "jobName", jobName ); //$NON-NLS-1$
-    params.put( "jobGroup", jobGroup ); //$NON-NLS-1$
-    params.put( "description", description ); //$NON-NLS-1$
+    params.put( "schedulerAction", "doAddScheduleAndContent" ); //$NON-NLS-1$  //$NON-NLS-2$
+    // TODO sbarkdull, this ain't right
+    params.put( "title", "someday a title will go here" ); //$NON-NLS-1$
+    params.put( "schedRef", jobName ); //$NON-NLS-1$
+    params.put( "desc", description ); //$NON-NLS-1$
     params.put( "start-date-time", strStartDate ); //$NON-NLS-1$
     if ( null != strEndDate ) {
       params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
@@ -122,7 +113,8 @@ public class SubscriptionAdminUIComponentProxy {
     if ( null != strRepeatCount ) {
       params.put( "repeat-count", strRepeatCount ); //$NON-NLS-1$
     }
-    params.put( "repeat-time-millisecs", repeatTimeMillisecs ); //$NON-NLS-1$
+    params.put( "repeat-time-millisecs", repeatInterval ); //$NON-NLS-1$
+    params.put( "group", jobGroup ); //$NON-NLS-1$
     params.put( "actionRefs", actionsList ); //$NON-NLS-1$
 
     String responseStrXml=  biServerProxy.execRemoteMethod( SUBSCRIPTION_SERVICE_NAME, HttpMethodType.POST, userName, params );
@@ -138,15 +130,12 @@ public class SubscriptionAdminUIComponentProxy {
       ? dateTimeFormatter.format( endDate )
       : null;
     Map<String, Object> params = new HashMap<String, Object>();
-    // TODO sbarkdull, some of these params may not be used, clean up
     params.put( "schedulerAction", "doEditScheduleAndContent" ); //$NON-NLS-1$  //$NON-NLS-2$
-    params.put( "oldJobName", oldJobName ); //$NON-NLS-1$
-    params.put( "oldJobGroup", oldJobGroup ); //$NON-NLS-1$
     params.put( "schedId", schedId ); //$NON-NLS-1$
     params.put( "schedRef", jobName ); //$NON-NLS-1$
     params.put( "group", jobGroup ); //$NON-NLS-1$
     params.put( "desc", description ); //$NON-NLS-1$
-    params.put( "title", "unknown title"); //$NON-NLS-1$
+    params.put( "title", "someday a title will go here"); //$NON-NLS-1$
     params.put( "start-date-time", strStartDate ); //$NON-NLS-1$
     if ( null != strEndDate ) {
       params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
@@ -161,22 +150,21 @@ public class SubscriptionAdminUIComponentProxy {
   public void updateRepeatSchedule(  String oldJobName, String oldJobGroup, String schedId,
       String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
-      String strRepeatCount, String repeatTimeMillisecs,
+      String strRepeatCount, String repeatInterval,
       String actionsList ) throws PacServiceException {
 
     String strStartDate = dateTimeFormatter.format( startDate );
-    String strEndDate = null != endDate
+    String strEndDate = null != endDate 
       ? dateTimeFormatter.format( endDate )
       : null;
     Map<String, Object> params = new HashMap<String, Object>();
     // TODO sbarkdull, some of these params may not be used, clean up
     params.put( "schedulerAction", "doEditScheduleAndContent" ); //$NON-NLS-1$  //$NON-NLS-2$
-    params.put( "oldJobName", oldJobName ); //$NON-NLS-1$
-    params.put( "oldJobGroup", oldJobGroup ); //$NON-NLS-1$
     params.put( "schedId", schedId ); //$NON-NLS-1$
-    params.put( "jobName", jobName ); //$NON-NLS-1$
-    params.put( "jobGroup", jobGroup ); //$NON-NLS-1$
-    params.put( "description", description ); //$NON-NLS-1$
+    params.put( "schedRef", jobName ); //$NON-NLS-1$
+    params.put( "group", jobGroup ); //$NON-NLS-1$
+    params.put( "desc", description ); //$NON-NLS-1$
+    params.put( "title", "someday a title will go here"); //$NON-NLS-1$
     params.put( "start-date-time", strStartDate ); //$NON-NLS-1$
     if ( null != strEndDate ) {
       params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
@@ -184,7 +172,7 @@ public class SubscriptionAdminUIComponentProxy {
     if ( null != strRepeatCount ) {
       params.put( "repeat-count", strRepeatCount ); //$NON-NLS-1$
     }
-    params.put( "repeat-time-millisecs", repeatTimeMillisecs ); //$NON-NLS-1$
+    params.put( "repeat-time-millisecs", repeatInterval ); //$NON-NLS-1$
     String[] actionsAr = actionsList.split( "," );
     params.put( "actionRefs", actionsAr ); //$NON-NLS-1$
 

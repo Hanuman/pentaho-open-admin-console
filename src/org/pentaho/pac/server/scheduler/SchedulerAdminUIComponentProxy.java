@@ -251,7 +251,7 @@ public class SchedulerAdminUIComponentProxy {
   
   public void createRepeatSchedule( String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
-      String strRepeatCount, String repeatTimeMillisecs,
+      String strRepeatCount, String repeatInterval,
       String actionsList ) throws PacServiceException {
     
     String strStartDate = dateTimeFormatter.format( startDate );
@@ -271,7 +271,7 @@ public class SchedulerAdminUIComponentProxy {
     if ( null != strRepeatCount ) {
       params.put( "repeat-count", strRepeatCount ); //$NON-NLS-1$
     }
-    params.put( "repeat-time-millisecs", repeatTimeMillisecs ); //$NON-NLS-1$
+    params.put( "repeat-time-millisecs", repeatInterval ); //$NON-NLS-1$
     params.put( "actionRefs", actionsList ); //$NON-NLS-1$
 
     String responseStrXml=  biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.POST, userName, params );
@@ -307,7 +307,7 @@ public class SchedulerAdminUIComponentProxy {
   public void updateRepeatSchedule(  String oldJobName, String oldJobGroup, String schedId,
       String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
-      String strRepeatCount, String repeatTimeMillisecs,
+      String strRepeatCount, String repeatInterval,
       String actionsList ) throws PacServiceException {
 
     String strStartDate = dateTimeFormatter.format( startDate );
@@ -329,7 +329,7 @@ public class SchedulerAdminUIComponentProxy {
     if ( null != strRepeatCount ) {
       params.put( "repeat-count", strRepeatCount ); //$NON-NLS-1$
     }
-    params.put( "repeat-time-millisecs", repeatTimeMillisecs ); //$NON-NLS-1$
+    params.put( "repeat-time-millisecs", repeatInterval ); //$NON-NLS-1$
     params.put( "actionRefs", actionsList ); //$NON-NLS-1$
 
     String responseStrXml=  biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.POST, userName, params );
