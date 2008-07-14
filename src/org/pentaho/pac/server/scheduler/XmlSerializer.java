@@ -409,7 +409,8 @@ public class XmlSerializer {
           } else if ( qName.equals( "schedId" ) ) { //$NON-NLS-1$
             currentSchedule.setSchedId( currentText );
           } else if ( qName.equals( "schedRef" ) ) { //$NON-NLS-1$
-            currentSchedule.setSchedRef( currentText );
+            currentSchedule.setJobName( currentText );
+            currentSchedule.setTriggerName( currentText );
           } else if ( qName.equals( "title" ) ) { //$NON-NLS-1$
             currentSchedule.setTitle( currentText );
           } else if ( qName.equals( "desc" ) ) { //$NON-NLS-1$
