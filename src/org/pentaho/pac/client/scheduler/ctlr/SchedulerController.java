@@ -16,6 +16,8 @@
 package org.pentaho.pac.client.scheduler.ctlr;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -169,26 +171,39 @@ public class SchedulerController {
     }
   }
   
-  private List<Schedule> getFilteredSchedulesList() {
+  // TODO sbarkdull, probably needs to be moved to SchedulesListController
+  private List<Schedule> getFilteredSchedulesList( List<Schedule> scheduleList ) {
     List<Schedule> filteredList = null;
     String filterVal = schedulerPanel.getSchedulerToolbar().getFilterValue();
-    if ( SchedulerToolbar.ALL_FILTER.equals( filterVal ) ) {
-      filteredList = schedulesModel.getScheduleList();
-    } else {
+    if ( !SchedulerToolbar.ALL_FILTER.equals( filterVal ) ) {
       filteredList = new ArrayList<Schedule>();
-      List<Schedule> scheduleList = schedulesModel.getScheduleList();
       for ( int ii=0; ii<scheduleList.size(); ++ii ) {
         Schedule s = scheduleList.get( ii );
         if ( filterVal.equals( s.getJobGroup() ) ) {
           filteredList.add( s );
         }
       }
+    } else {
+      filteredList = scheduleList;
     }
     return filteredList;
   }
   
+  private List<Schedule> getSortedSchedulesList( List<Schedule> scheduleList ) {
+
+    assert null != scheduleList : "getSortedSchedulesList(): Schedule list cannot be null.";
+    Collections.sort( scheduleList, new Comparator<Schedule>() {
+      public int compare(Schedule s1, Schedule s2) {
+        return s1.getJobName().compareToIgnoreCase( s2.getJobName() );
+      }
+    });
+    return scheduleList;
+  }
+  
   private void updateSchedulesTable() {
-    schedulesListController.updateSchedulesTable( getFilteredSchedulesList() );
+    List<Schedule> scheduleList = schedulesModel.getScheduleList();
+    schedulesListController.updateSchedulesTable( 
+        getSortedSchedulesList( getFilteredSchedulesList( scheduleList ) ) );
   }
   
   private void loadJobsTable()
@@ -202,6 +217,31 @@ public class SchedulerController {
     AsyncCallback<Map<String,Schedule>> schedulerServiceCallback = new AsyncCallback<Map<String,Schedule>>() {
       public void onSuccess( Map<String,Schedule> pSchedulesMap ) {
         schedulesMap.putAll( pSchedulesMap );
+        
+        AsyncCallback<Map<String,Schedule>> subscriptionServiceCallback = new AsyncCallback<Map<String,Schedule>>() {
+          public void onSuccess( Map<String,Schedule> subscriptionSchedulesMap ) {
+            List<Schedule> schedulesList = mergeSchedules( schedulesMap, subscriptionSchedulesMap );
+            schedulesModel = new SchedulesModel();
+            schedulesModel.add( schedulesList );
+            initFilterList();
+            schedulerPanel.getSchedulesListCtrl().clearStateLoading();
+            updateSchedulesTable();
+            if ( INVALID_SCROLL_POS != currScrollPos ) { 
+              schedulerPanel.getSchedulesListCtrl().setScrollPosition( currScrollPos );
+            }
+          }
+
+          public void onFailure(Throwable caught) {
+            SchedulesListCtrl schedulesListCtrl = schedulerPanel.getSchedulesListCtrl();
+            schedulesListCtrl.clearStateLoading();
+            schedulesListCtrl.setTempMessage( MSGS.noSchedules() );
+            MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
+                caught.getMessage() );
+            messageDialog.center();
+          }
+        }; // end subscriptionServiceCallback
+        
+        PacServiceFactory.getSubscriptionService().getJobNames( subscriptionServiceCallback );
       }
 
       public void onFailure(Throwable caught) {
@@ -213,33 +253,8 @@ public class SchedulerController {
         messageDialog.center();
       }
     }; // end schedulerServiceCallback
-    
-    AsyncCallback<Map<String,Schedule>> subscriptionServiceCallback = new AsyncCallback<Map<String,Schedule>>() {
-      public void onSuccess( Map<String,Schedule> subscriptionSchedulesMap ) {
-        List<Schedule> schedulesList = mergeSchedules( schedulesMap, subscriptionSchedulesMap );
-        schedulesModel = new SchedulesModel();
-        schedulesModel.add( schedulesList );
-        initFilterList();
-        schedulerPanel.getSchedulesListCtrl().clearStateLoading();
-        updateSchedulesTable();
-        if ( INVALID_SCROLL_POS != currScrollPos ) { 
-          schedulerPanel.getSchedulesListCtrl().setScrollPosition( currScrollPos );
-        }
-      }
-
-      public void onFailure(Throwable caught) {
-        SchedulesListCtrl schedulesListCtrl = schedulerPanel.getSchedulesListCtrl();
-        schedulesListCtrl.clearStateLoading();
-        schedulesListCtrl.setTempMessage( MSGS.noSchedules() );
-        MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
-            caught.getMessage() );
-        messageDialog.center();
-      }
-    }; // end subscriptionServiceCallback
-      
       
     PacServiceFactory.getSchedulerService().getJobNames( schedulerServiceCallback );
-    PacServiceFactory.getSubscriptionService().getJobNames( subscriptionServiceCallback );
   }
 
   /**
@@ -256,14 +271,17 @@ public class SchedulerController {
   private static List<Schedule> mergeSchedules( Map<String,Schedule> schedulerMap, 
       Map<String,Schedule> subscriptionMap ) {
     
+    Schedule currentSched = null;
     List<Schedule> mergedList = new ArrayList<Schedule>();
     for ( Map.Entry<String,Schedule> me : schedulerMap.entrySet() ) {
       
       Schedule subscriptionSchedule = subscriptionMap.get( me.getKey() );
-      mergedList.add( 
-          ( null != subscriptionSchedule )
-          ? subscriptionSchedule
-          : me.getValue() );
+      if ( null != subscriptionSchedule ) {
+        currentSched = subscriptionSchedule;
+      } else {
+        currentSched = me.getValue();
+      }
+      mergedList.add( currentSched );
     }
     return mergedList;
   }
