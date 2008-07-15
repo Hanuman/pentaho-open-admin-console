@@ -282,6 +282,17 @@ public class TimeUtil {
       : int0To23hour - MAX_HOUR;
     return int0To11;
   }
+  /**
+   * @param time String it will look like: '17:17:00 PM' for 5:17 PM
+   */
+  public static String to12HourClock( String time ) {
+    String[] parts = time.split( ":" ); //$NON-NLS-1$
+    int hour = Integer.parseInt( parts[0] );
+    if ( hour > MAX_HOUR ) {
+      hour -= MAX_HOUR;
+    }
+    return Integer.toString( hour ) + ":" + parts[1] + ":" + parts[2];  //$NON-NLS-1$//$NON-NLS-2$
+  }
   
   /**
    * map 0..11 to 12,1..11
@@ -345,7 +356,17 @@ public class TimeUtil {
     //TODO sbarkdull, use StringBuilder
     return parts[3] + " " + parts[4];
   }
-  
+
+  /**
+   * Get the time part of a date string.
+   * 
+   * @param dateTime Date
+   * @return String HH:mm:ss a
+   */
+  public static String getTimePart( Date dateTime ) {
+    String strDateTime = dateTimeFormatter.format( dateTime );
+    return to12HourClock( getTimePart( strDateTime ) );
+  }
   /**
    * Get the time part of a date string.
    * 
