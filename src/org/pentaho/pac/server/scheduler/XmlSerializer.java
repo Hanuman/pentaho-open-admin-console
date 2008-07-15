@@ -37,6 +37,13 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+// TODO need to break into two classes, one handles serialization of scheduler responses,
+// the other handles serialization of subscription responses
+/**
+ * 
+ * @author Steven Barkdull
+ *
+ */
 public class XmlSerializer {
 
   private static final Log logger = LogFactory.getLog(XmlSerializer.class);
@@ -79,10 +86,7 @@ public class XmlSerializer {
   {
     SubscriptionScheduleParserHandler subscriptionSchedHandler = null;
     try {
-      ExceptionParserHandler exceptionHandler = parseExceptionXml( strXml );
-      if ( null != exceptionHandler.exceptionMessage ) {
-        throw new SchedulerServiceException( "Failed to get the list of schedules. Reason: " + exceptionHandler.exceptionMessage );
-      }
+      detectExceptionInXml( strXml );
       subscriptionSchedHandler = parseSubscriptionScheduleJobsXml( strXml );
     } catch (SAXException e) {
       logger.error( e.getMessage() );
@@ -95,6 +99,26 @@ public class XmlSerializer {
       throw new XmlSerializerException( e.getMessage() );
     }
     return subscriptionSchedHandler.schedules;
+  }
+  
+  public void detectExceptionInXml( String strXml ) throws SchedulerServiceException {
+
+    ExceptionParserHandler exceptionHandler;
+    try {
+      exceptionHandler = parseExceptionXml( strXml );
+    } catch (SAXException e) {
+      logger.error( e.getMessage() );
+      throw new SchedulerServiceException( e.getMessage() );
+    } catch (IOException e) {
+      logger.error( e.getMessage() );
+      throw new SchedulerServiceException( e.getMessage() );
+    } catch (ParserConfigurationException e) {
+      logger.error( e.getMessage() );
+      throw new SchedulerServiceException( e.getMessage() );
+    }
+    if ( null != exceptionHandler.exceptionMessage ) {
+      throw new SchedulerServiceException( exceptionHandler.exceptionMessage );
+    }
   }
   
   private JobsParserHandler parseJobNamesXml( String strXml ) throws SAXException, IOException, ParserConfigurationException
@@ -496,14 +520,11 @@ public class XmlSerializer {
   }
 
   /**
-   * <subscriptionAdmin>
-   *    <exception>
-   *      <message>Building the admin page</message>
-   *      <exceptionMessage>
-   *        Failed to parse Solution Repository action sequence path: a1
-   *      </exceptionMessage>
-   *    </exception>
-   *  </subscriptionAdmin>
+   * <exception>
+   *   <message result="ERROR">
+   *     Error, these parameters are missing: actionRefs
+   *   </message>
+   * </exception>
    *  
    * @author Steven Barkdull
    *
@@ -512,8 +533,8 @@ public class XmlSerializer {
 
     private String currentText = null;
     public String exceptionMessage = null;
-    private boolean isSubscriptionAdmin = false;
     private boolean isException = false;
+    private boolean isMessage = false;
     
     public ExceptionParserHandler()
     {
@@ -526,22 +547,22 @@ public class XmlSerializer {
     
     public void endElement(String uri, String localName, String qName ) throws SAXException
     {
-      if ( qName.equals( "subscriptionAdmin" ) ) { //$NON-NLS-1$
-        isSubscriptionAdmin = false;
-      } else if ( qName.equals( "exceptionMessage" ) ) { //$NON-NLS-1$
-        if ( isSubscriptionAdmin && isException ) {
+      if ( qName.equals( "exception" ) ) { //$NON-NLS-1$
+        isException = false;
+      } else if ( qName.equals( "message" ) ) { //$NON-NLS-1$
+        if ( isException && isMessage ) {
           exceptionMessage = currentText;
         }
-        isException = false;
+        isMessage = false;
       }
     }
 
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException
     {
-      if ( qName.equals( "subscriptionAdmin" ) ) { //$NON-NLS-1$
-        isSubscriptionAdmin = true;
-      } else if ( qName.equals( "exceptionMessage" ) ) { //$NON-NLS-1$
+      if ( qName.equals( "exception" ) ) { //$NON-NLS-1$
         isException = true;
+      } else if ( qName.equals( "message" ) ) { //$NON-NLS-1$
+        isMessage = true;
       }
     }
   }

@@ -341,6 +341,8 @@ public class SchedulerAdminUIComponentProxy {
     String responseStrXml = executePostMethod( params );
   }
   
+  // TODO sbarkdull, need to look at xml response from server, and throw exceptions if necessary,
+  // see how the SubscriptionAdminUIComponentProxy does it.
   private String executeGetMethod( Map<String, Object> params ) throws SchedulerServiceException {
     try {
       return biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.GET, userName, params );

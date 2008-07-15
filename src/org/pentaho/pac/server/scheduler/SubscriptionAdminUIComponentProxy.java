@@ -200,18 +200,26 @@ public class SubscriptionAdminUIComponentProxy {
   }
   
   private String executeGetMethod( Map<String, Object> params ) throws SchedulerServiceException {
+    String strXmlResponse;
     try {
-      return biServerProxy.execRemoteMethod( SUBSCRIPTION_SERVICE_NAME, HttpMethodType.GET, userName, params );
+      strXmlResponse = biServerProxy.execRemoteMethod( SUBSCRIPTION_SERVICE_NAME, HttpMethodType.GET, userName, params );
     } catch (ProxyException e) {
       throw new SchedulerServiceException( e.getMessage(), e );
     }
+    XmlSerializer s = new XmlSerializer();
+    s.detectExceptionInXml( strXmlResponse );
+    return strXmlResponse;
   }
   
   private String executePostMethod(Map<String, Object> params ) throws SchedulerServiceException {
+    String strXmlResponse;
     try {
-      return biServerProxy.execRemoteMethod( SUBSCRIPTION_SERVICE_NAME, HttpMethodType.POST, userName, params );
+      strXmlResponse = biServerProxy.execRemoteMethod( SUBSCRIPTION_SERVICE_NAME, HttpMethodType.POST, userName, params );
     } catch (ProxyException e) {
       throw new SchedulerServiceException( e.getMessage(), e );
     }
+    XmlSerializer s = new XmlSerializer();
+    s.detectExceptionInXml( strXmlResponse );
+    return strXmlResponse;
   }
 }
