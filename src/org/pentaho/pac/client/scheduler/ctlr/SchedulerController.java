@@ -31,6 +31,7 @@ import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.ICallback;
 import org.pentaho.pac.client.common.ui.IResponseCallback;
+import org.pentaho.pac.client.common.ui.TableListCtrl;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.common.util.TimeUtil;
@@ -57,6 +58,7 @@ public class SchedulerController {
   private SchedulesModel schedulesModel = null;   // this is the model
 
   private SchedulesListController schedulesListController = null;
+  private SchedulerToolbarController schedulerToolbarController = null;
   private ScheduleCreatorDialog scheduleCreatorDialog = null;
   
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
@@ -79,9 +81,19 @@ public class SchedulerController {
     
     if ( !isInitialized() ) {
       schedulerPanel.init();
-      schedulesListController = new SchedulesListController(this.schedulerPanel.getSchedulesListCtrl() );
-      loadJobsTable();
       SchedulerToolbar schedulerToolbar = schedulerPanel.getSchedulerToolbar();
+      SchedulesListCtrl listCtrl = schedulerPanel.getSchedulesListCtrl();
+      schedulesListController = new SchedulesListController( listCtrl );
+      schedulerToolbarController = new SchedulerToolbarController( schedulerToolbar, listCtrl );
+      
+      listCtrl.setOnSelectHandler( new ICallback<TableListCtrl<Schedule>>() {
+        public void onHandle(TableListCtrl<Schedule> listCtrl) {
+          schedulerToolbarController.enableTools();
+        }
+      });
+      
+      schedulerToolbarController.enableTools();
+      loadJobsTable();
       final SchedulerController localThis = this;
       
       schedulerToolbar.setOnCreateListener( new ICallback<Object>() { 
@@ -210,6 +222,7 @@ public class SchedulerController {
     AsyncCallback<Map<String,Schedule>> schedulerServiceCallback = new AsyncCallback<Map<String,Schedule>>() {
       public void onSuccess( Map<String,Schedule> pSchedulesMap ) {
         schedulesMap.putAll( pSchedulesMap );
+        schedulerToolbarController.enableTools();
         
         AsyncCallback<Map<String,Schedule>> subscriptionServiceCallback = new AsyncCallback<Map<String,Schedule>>() {
           public void onSuccess( Map<String,Schedule> subscriptionSchedulesMap ) {
@@ -222,7 +235,8 @@ public class SchedulerController {
             if ( INVALID_SCROLL_POS != currScrollPos ) { 
               schedulerPanel.getSchedulesListCtrl().setScrollPosition( currScrollPos );
             }
-          }
+            schedulerToolbarController.enableTools();
+          } // end inner onSuccess
 
           public void onFailure(Throwable caught) {
             SchedulesListCtrl schedulesListCtrl = schedulerPanel.getSchedulesListCtrl();
@@ -231,11 +245,12 @@ public class SchedulerController {
             MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
                 caught.getMessage() );
             messageDialog.center();
-          }
+            schedulerToolbarController.enableTools();
+          } // end inner onFailure
         }; // end subscriptionServiceCallback
         
         PacServiceFactory.getSubscriptionService().getJobNames( subscriptionServiceCallback );
-      }
+      } // end outer onSuccess
 
       public void onFailure(Throwable caught) {
         SchedulesListCtrl schedulesListCtrl = schedulerPanel.getSchedulesListCtrl();
@@ -244,7 +259,8 @@ public class SchedulerController {
         MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
             caught.getMessage() );
         messageDialog.center();
-      }
+        schedulerToolbarController.enableTools();
+      } // end outer onFailure
     }; // end schedulerServiceCallback
       
     PacServiceFactory.getSchedulerService().getJobNames( schedulerServiceCallback );
