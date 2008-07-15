@@ -31,7 +31,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.pentaho.pac.client.scheduler.model.Schedule;
-import org.pentaho.pac.common.PacServiceException;
+import org.pentaho.pac.common.SchedulerServiceException;
 import org.pentaho.pac.server.i18n.Messages;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -57,40 +57,44 @@ public class XmlSerializer {
     STATE_STRINGS.put( "5", Messages.getString( "XmlSerializer.stateNone" ) ); //$NON-NLS-1$ //$NON-NLS-2$
   }
 
-  public Map<String,Schedule> getSchedulesFromXml( String strXml ) throws PacServiceException
+  public Map<String,Schedule> getSchedulesFromXml( String strXml ) throws XmlSerializerException
   {
     JobsParserHandler h = null;
     try {
       h = parseJobNamesXml( strXml );
     } catch (SAXException e) {
       logger.error( e.getMessage() );
-      throw new PacServiceException( e.getMessage() );
+      throw new XmlSerializerException( e.getMessage() );
     } catch (IOException e) {
       logger.error( e.getMessage() );
-      throw new PacServiceException( e.getMessage() );
+      throw new XmlSerializerException( e.getMessage() );
     } catch (ParserConfigurationException e) {
       logger.error( e.getMessage() );
-      throw new PacServiceException( e.getMessage() );
+      throw new XmlSerializerException( e.getMessage() );
     }
     return h.schedules;
   }
 
-  public Map<String,Schedule> getSubscriptionSchedulesFromXml( String strXml ) throws PacServiceException
+  public Map<String,Schedule> getSubscriptionSchedulesFromXml( String strXml ) throws XmlSerializerException, SchedulerServiceException
   {
-    SubscriptionScheduleParserHandler h = null;
+    SubscriptionScheduleParserHandler subscriptionSchedHandler = null;
     try {
-      h = parseSubscriptionScheduleJobsXml( strXml );
+      ExceptionParserHandler exceptionHandler = parseExceptionXml( strXml );
+      if ( null != exceptionHandler.exceptionMessage ) {
+        throw new SchedulerServiceException( "Failed to get the list of schedules. Reason: " + exceptionHandler.exceptionMessage );
+      }
+      subscriptionSchedHandler = parseSubscriptionScheduleJobsXml( strXml );
     } catch (SAXException e) {
       logger.error( e.getMessage() );
-      throw new PacServiceException( e.getMessage() );
+      throw new XmlSerializerException( e.getMessage() );
     } catch (IOException e) {
       logger.error( e.getMessage() );
-      throw new PacServiceException( e.getMessage() );
+      throw new XmlSerializerException( e.getMessage() );
     } catch (ParserConfigurationException e) {
       logger.error( e.getMessage() );
-      throw new PacServiceException( e.getMessage() );
+      throw new XmlSerializerException( e.getMessage() );
     }
-    return h.schedules;
+    return subscriptionSchedHandler.schedules;
   }
   
   private JobsParserHandler parseJobNamesXml( String strXml ) throws SAXException, IOException, ParserConfigurationException
@@ -206,19 +210,19 @@ public class XmlSerializer {
     return strXml.contains( "Running" ); //$NON-NLS-1$
   }
   
-  public String getXActionResponseStatusFromXml( String strXml ) throws PacServiceException {
+  public String getXActionResponseStatusFromXml( String strXml ) throws XmlSerializerException {
     XActionResponseParserHandler h = null;
     try {
       h = parseXActionResponseXml( strXml );
     } catch (SAXException e) {
       logger.error( e.getMessage() );
-      throw new PacServiceException( e.getMessage() );
+      throw new XmlSerializerException( e.getMessage() );
     } catch (IOException e) {
       logger.error( e.getMessage() );
-      throw new PacServiceException( e.getMessage() );
+      throw new XmlSerializerException( e.getMessage() );
     } catch (ParserConfigurationException e) {
       logger.error( e.getMessage() );
-      throw new PacServiceException( e.getMessage() );
+      throw new XmlSerializerException( e.getMessage() );
     }
     return h.getErrorMsg();
   }
@@ -475,6 +479,70 @@ public class XmlSerializer {
     }
     private static String makePath( String solution, String path, String action ) {
       return solution + "/" + path + "/" + action;  //$NON-NLS-1$//$NON-NLS-2$
+    }
+  }
+  
+  private ExceptionParserHandler parseExceptionXml( String strXml ) throws SAXException, IOException, ParserConfigurationException
+  {
+      SAXParser parser = getSAXParserFactory().newSAXParser();
+      ExceptionParserHandler h = new ExceptionParserHandler();
+      // TODO sbarkdull, need to set encoding
+//      String encoding = CleanXmlHelper.getEncoding( strXml );
+//      InputStream is = new ByteArrayInputStream( strXml.getBytes( encoding ) );
+      InputStream is = new ByteArrayInputStream( strXml.getBytes( "UTF-8" ) ); //$NON-NLS-1$
+     
+      parser.parse( is, h );
+      return h;
+  }
+
+  /**
+   * <subscriptionAdmin>
+   *    <exception>
+   *      <message>Building the admin page</message>
+   *      <exceptionMessage>
+   *        Failed to parse Solution Repository action sequence path: a1
+   *      </exceptionMessage>
+   *    </exception>
+   *  </subscriptionAdmin>
+   *  
+   * @author Steven Barkdull
+   *
+   */
+  private static class ExceptionParserHandler extends DefaultHandler {
+
+    private String currentText = null;
+    public String exceptionMessage = null;
+    private boolean isSubscriptionAdmin = false;
+    private boolean isException = false;
+    
+    public ExceptionParserHandler()
+    {
+    }
+  
+    public void characters( char[] ch, int startIdx, int length )
+    {
+      currentText = String.valueOf( ch, startIdx, length );
+    }
+    
+    public void endElement(String uri, String localName, String qName ) throws SAXException
+    {
+      if ( qName.equals( "subscriptionAdmin" ) ) { //$NON-NLS-1$
+        isSubscriptionAdmin = false;
+      } else if ( qName.equals( "exceptionMessage" ) ) { //$NON-NLS-1$
+        if ( isSubscriptionAdmin && isException ) {
+          exceptionMessage = currentText;
+        }
+        isException = false;
+      }
+    }
+
+    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException
+    {
+      if ( qName.equals( "subscriptionAdmin" ) ) { //$NON-NLS-1$
+        isSubscriptionAdmin = true;
+      } else if ( qName.equals( "exceptionMessage" ) ) { //$NON-NLS-1$
+        isException = true;
+      }
     }
   }
 }
