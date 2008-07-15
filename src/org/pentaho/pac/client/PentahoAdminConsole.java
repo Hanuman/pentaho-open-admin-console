@@ -1,6 +1,7 @@
 package org.pentaho.pac.client;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.pentaho.pac.client.home.HomePanel;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
@@ -25,10 +26,20 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class PentahoAdminConsole extends DockPanel implements ClickListener {
   
-  final public static PacLocalizedMessages pacLocalizedMessages = (PacLocalizedMessages)GWT.create(PacLocalizedMessages.class);
+  protected class PageInfo {
+    ToggleButton activationButton;
+    Widget  page;
+    
+    protected PageInfo(ToggleButton activationButton, Widget page) {
+      this.activationButton = activationButton;
+      this.page = page;
+    }
+  }
+  
+  public static PacLocalizedMessages pacLocalizedMessages = (PacLocalizedMessages)GWT.create(PacLocalizedMessages.class);
   public static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   
-  protected ArrayList<ToggleButton> componentActivationToggleButtons = new ArrayList<ToggleButton>();
+  protected Map<Integer, PageInfo> pageMap = new HashMap<Integer, PageInfo>();
   
   protected VerticalPanel leftVerticalPanel = new VerticalPanel();
   protected ConsoleToolbar toolbar = new ConsoleToolbar();
@@ -37,36 +48,38 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
   protected DeckPanel deckPanel = new DeckPanel();
   protected AdministrationTabPanel adminTabPanel = new AdministrationTabPanel();
   protected HorizontalPanel horizontalPanel;
-  protected Widget widget; 
+  protected Widget body; 
   
   protected HomePanel homePanel;
-  protected CommonTasks commonTasks;
-  protected Widget defaultWidget;
+  protected SimplePanel commonTasks;
+  
+  public enum AdminConsolePageId {
+    HOME_PAGE, ADMIN_PAGE
+  };
   
   public PentahoAdminConsole() {
     horizontalPanel = buildTopPanel() ;
     horizontalPanel.setWidth("100%");    //$NON-NLS-1$
-    widget = buildBody();
-    widget.setWidth("100%");//$NON-NLS-1$
-    widget.setHeight("100%");   //$NON-NLS-1$
+    body = buildBody();
+    body.setWidth("100%");//$NON-NLS-1$
+    body.setHeight("100%");   //$NON-NLS-1$
     add(horizontalPanel, DockPanel.NORTH);
     setCellWidth(horizontalPanel, "100%"); //$NON-NLS-1$
-    add(widget, DockPanel.CENTER);
+    add(body, DockPanel.CENTER);
     setStyleName("main-panel"); //$NON-NLS-1$
-    setCellWidth(widget, "100%"); //$NON-NLS-1$
-    setCellHeight(widget, "100%"); //$NON-NLS-1$    
+    setCellWidth(body, "100%"); //$NON-NLS-1$
+    setCellHeight(body, "100%"); //$NON-NLS-1$    
     
-    activateWidgetOnAdminDeck(getDefaultActiveAdminDeckWidget());
+    showPage(AdminConsolePageId.HOME_PAGE);
   }
   
   public Widget buildBody() {
     DockPanel centerPanel = new DockPanel();
-    commonTasks = new CommonTasks();
+    commonTasks = createCommonTasks();
     VerticalPanel leftPanel = new VerticalPanel();
     SimplePanel tempPanel = new SimplePanel();
     tempPanel.setStyleName("leftTabPanel_top"); //$NON-NLS-1$
     leftPanel.add(tempPanel);
-    
     Label spacer = new Label();
     leftVerticalPanel.add(spacer);
     leftVerticalPanel.setCellHeight(spacer, "20px"); //$NON-NLS-1$
@@ -111,18 +124,31 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
     return this.toolbar;
   }
 
-  public ToggleButton addWidgetToAdminDeck(String toggleButtonLabel, Widget widget) {
+  protected void addPageToDeck(AdminConsolePageId pageId, String activationButtonLabel, Widget page) {
+    addPageToDeck(pageId.ordinal(), activationButtonLabel, page);
+  }
+  
+  protected ToggleButton getPageActivationButton(AdminConsolePageId pageId) {
+    PageInfo pageInfo = pageMap.get(pageId.ordinal());
+    return pageInfo != null ? pageInfo.activationButton : null;
+  }
+  
+  protected Widget getPage(AdminConsolePageId pageId) {
+    PageInfo pageInfo = pageMap.get(pageId.ordinal());
+    return pageInfo != null ? pageInfo.page : null;
+  }
+  
+  protected void addPageToDeck(int pageId, String toggleButtonLabel, Widget widget) {
 
     ToggleButton toggleButton = new ToggleButton(toggleButtonLabel);
     toggleButton.setStylePrimaryName("leftToggleButtons"); //$NON-NLS-1$
     toggleButton.addClickListener(this);
-    componentActivationToggleButtons.add(toggleButton);
+    
+    pageMap.put(pageId, new PageInfo(toggleButton, widget));
     leftVerticalPanel.add(toggleButton);
     widget.setWidth("100%"); //$NON-NLS-1$
     widget.setHeight("100%"); //$NON-NLS-1$
     deckPanel.add(widget);
-    
-    return toggleButton;
   }
   
   public HorizontalPanel buildTopPanel() {
@@ -135,6 +161,7 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
     topPanel.setCellWidth(toolbar, "100%"); //$NON-NLS-1$
     return topPanel;
   }
+  
   protected void initTopPanel() {
     SimplePanel logo = new SimplePanel();
     logo.setStyleName("logo"); //$NON-NLS-1$
@@ -145,50 +172,39 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
   }
   
   public void onClick(Widget sender) {
-    if (componentActivationToggleButtons.contains(sender)) {
-      ToggleButton toggleButton = (ToggleButton)sender;
-      if (!toggleButton.isDown()) {
-        toggleButton.setDown(true);
-      } else {
-        for (int i = 0; i < componentActivationToggleButtons.size(); i++) {
-          ToggleButton tmpToggleButton = (ToggleButton)componentActivationToggleButtons.get(i);
-          tmpToggleButton.setDown(tmpToggleButton == sender);
+    for (Map.Entry<Integer, PageInfo> entry : pageMap.entrySet()) {
+      if (entry.getValue().activationButton == sender) {
+        if (!entry.getValue().activationButton.isDown()) {
+          entry.getValue().activationButton.setDown(true);
+        } else {
+          showPage(entry.getKey().intValue());
         }
-        
-        int index = componentActivationToggleButtons.indexOf(sender);
-        Widget component = deckPanel.getWidget(index);
-        activateWidgetOnAdminDeck(component);
       }
     }
   }
-  
-  protected Widget getDefaultActiveAdminDeckWidget() {
-    return defaultWidget;
-  }
-
-  protected void setDefaultActiveAdminDeckWidget(Widget w) {
-    defaultWidget = w;
-  }
-  protected void activateWidgetOnAdminDeck(Widget widget) {
-    if (widget == adminTabPanel) {
-      int selectedTab = adminTabPanel.getTabBar().getSelectedTab();
-      if (selectedTab <= 0) {
-        adminTabPanel.selectTab(AdministrationTabPanel.ADMIN_USERS_ROLES_TAB_INDEX);
-      }
-    }
-    int componentIndex = deckPanel.getWidgetIndex(widget);
-    if (componentIndex >= 0) {
-      deckPanel.showWidget(componentIndex);
-    }
-  }
-  
+    
   protected void initializeAdminDeck() {
     homePanel = new HomePanel("http://www.pentaho.com/console_home"); //$NON-NLS-1$
-    setDefaultActiveAdminDeckWidget(homePanel);
-    ToggleButton tb = addWidgetToAdminDeck(PentahoAdminConsole.MSGS.home(), homePanel);
-    addWidgetToAdminDeck(PentahoAdminConsole.MSGS.administration(), adminTabPanel);
-    tb.setDown( true );
+    addPageToDeck(AdminConsolePageId.HOME_PAGE, PentahoAdminConsole.MSGS.home(), homePanel);
+    addPageToDeck(AdminConsolePageId.ADMIN_PAGE, PentahoAdminConsole.MSGS.administration(), adminTabPanel);
+    showPage(AdminConsolePageId.HOME_PAGE);
   }
+  
+  protected void showPage(int pageId) {
+    PageInfo pageInfo = pageMap.get(pageId);
+    if (pageInfo != null) {
+      for (Integer tmpPageId : pageMap.keySet()) {
+        pageMap.get(tmpPageId).activationButton.setDown(tmpPageId.intValue() == pageId);
+      }
+      deckPanel.showWidget(deckPanel.getWidgetIndex(pageInfo.page));
+    }
+  }
+  
+  public void showPage(AdminConsolePageId pageId)
+  {
+    showPage(pageId.ordinal());
+  }
+  
   //TOP Toolbar
   public class ConsoleToolbar extends HorizontalPanel{
     
@@ -305,30 +321,31 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
     }
   }
   
-  private class CommonTasks extends SimplePanel{
-    public CommonTasks(){
-      super();
-      VerticalPanel vertPanel = new VerticalPanel();
-      
-      SimplePanel headerPanel = new SimplePanel();
-      headerPanel.setStyleName("CommonTasksHeader"); //$NON-NLS-1$
-      
-      Label header = new Label("Common Tasks");
-      header.setStyleName("commonTasksHeaderText"); //$NON-NLS-1$
-      headerPanel.add(header);
-      vertPanel.add(headerPanel);
-      
-      VerticalPanel list = new VerticalPanel();
-      list.add(new Hyperlink("Link 1 text","Link1")); //$NON-NLS-1$ //$NON-NLS-2$
-      list.add(new Hyperlink("Link 2 text","Link2")); //$NON-NLS-1$ //$NON-NLS-2$
-      list.add(new Hyperlink("Link 3 text","Link3")); //$NON-NLS-1$ //$NON-NLS-2$
-      
-      list.setStyleName("CommonTasksLinks"); //$NON-NLS-1$
-      vertPanel.add(list);
-      
-      setStyleName("CommonTasks"); //$NON-NLS-1$
-      this.add(vertPanel);
-    }
+  
+  protected SimplePanel createCommonTasks() {
+    SimplePanel commonTasks = new SimplePanel();
+    VerticalPanel vertPanel = new VerticalPanel();
+    
+    SimplePanel headerPanel = new SimplePanel();
+    headerPanel.setStyleName("CommonTasksHeader"); //$NON-NLS-1$
+    
+    Label header = new Label("Common Tasks");
+    header.setStyleName("commonTasksHeaderText"); //$NON-NLS-1$
+    headerPanel.add(header);
+    vertPanel.add(headerPanel);
+    
+    VerticalPanel list = new VerticalPanel();
+    list.add(new Hyperlink("Link 1 text","Link1")); //$NON-NLS-1$ //$NON-NLS-2$
+    list.add(new Hyperlink("Link 2 text","Link2")); //$NON-NLS-1$ //$NON-NLS-2$
+    list.add(new Hyperlink("Link 3 text","Link3")); //$NON-NLS-1$ //$NON-NLS-2$
+    
+    list.setStyleName("CommonTasksLinks"); //$NON-NLS-1$
+    vertPanel.add(list);
+    
+    commonTasks.setStyleName("CommonTasks"); //$NON-NLS-1$
+    commonTasks.add(vertPanel);
+    
+    return commonTasks;
   }
   
   private class DeckPanelWrapper extends DockPanel{
