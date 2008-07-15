@@ -26,6 +26,7 @@ public class TableListCtrl<RowDataType> extends ScrollPanel {
   private List<RowDataType> dataList = new LinkedList<RowDataType>();
   private CheckBox selectAllCb = null;
   private ICallback<TableListCtrl<RowDataType>> selectAllHandler = null;
+  private ICallback<TableListCtrl<RowDataType>> selectHandler = null;
   private static final int HEADER_ROW = 0;
   private static final int FIRST_ROW = HEADER_ROW+1;
   private static final int SELECT_COLUMN = 0;
@@ -108,8 +109,12 @@ public class TableListCtrl<RowDataType> extends ScrollPanel {
   public List<Integer> getSelectedIndexes()
   {
     List<Integer> idxs = new ArrayList<Integer>();
-
-    for ( int rowNum=FIRST_ROW; rowNum<table.getRowCount(); ++rowNum ) {
+    
+    int rowCount = table.getRowCount();
+    if ( rowCount <= FIRST_ROW || !(table.getWidget( FIRST_ROW, SELECT_COLUMN ) instanceof CheckBox ) ) {
+      return idxs; // must be displaying a label (Loading... or Empty List), so nothing can be selected
+    }
+    for ( int rowNum=FIRST_ROW; rowNum<rowCount; ++rowNum ) {
       CheckBox cb = (CheckBox)table.getWidget( rowNum, SELECT_COLUMN );
       if ( cb.isChecked() ) {
         idxs.add( new Integer( rowNum-FIRST_ROW ) );
@@ -117,6 +122,11 @@ public class TableListCtrl<RowDataType> extends ScrollPanel {
     }
     
     return idxs;
+  }
+  
+  public int getNumSelections()
+  {
+    return getSelectedIndexes().size();
   }
   
   /**
@@ -175,7 +185,18 @@ public class TableListCtrl<RowDataType> extends ScrollPanel {
    */
   public void addRow( Widget[] widgets, RowDataType data ) {
     int newRowNum = table.getRowCount();
-    table.setWidget( newRowNum, 0, new CheckBox() );
+    CheckBox checkbox = new CheckBox();
+    
+    final TableListCtrl<RowDataType> localThis = this;
+    checkbox.addClickListener( new ClickListener() {
+      public void onClick(Widget sender) {
+        if ( null != selectHandler ) {
+          selectHandler.onHandle( localThis );
+        }
+      }
+    });
+    
+    table.setWidget( newRowNum, 0, checkbox );
     for ( int ii=0; ii<widgets.length; ++ii ) {
       Widget w = widgets[ii];
       if ( null == w ) {
@@ -227,5 +248,9 @@ public class TableListCtrl<RowDataType> extends ScrollPanel {
   
   public void setOnSelectAllHandler( ICallback<TableListCtrl<RowDataType>> handler ) {
     this.selectAllHandler = handler;
+  }
+  
+  public void setOnSelectHandler( ICallback<TableListCtrl<RowDataType>> handler ) {
+    this.selectHandler = handler;
   }
 }
