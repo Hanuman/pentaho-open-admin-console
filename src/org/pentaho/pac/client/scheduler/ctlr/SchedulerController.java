@@ -73,11 +73,6 @@ public class SchedulerController {
         scheduleCreatorDialog.hide();
       }
     });
-    this.scheduleCreatorDialog.setOnValidateHandler( new IResponseCallback<MessageDialog, Boolean>() {
-      public Boolean onHandle( MessageDialog schedDlg ) {
-        return isScheduleCreatorDialogValid();
-      }
-    });
   }
   
   public void init() {
@@ -533,9 +528,16 @@ public class SchedulerController {
     
     scheduleCreatorDialog.setTitle( "Schedule Creator" );
     scheduleCreatorDialog.reset( new Date() );
+    
     scheduleCreatorDialog.setOnOkHandler( new ICallback<MessageDialog>() {
       public void onHandle(MessageDialog d) {
         localThis.createSchedule();
+      }
+    });
+
+    this.scheduleCreatorDialog.setOnValidateHandler( new IResponseCallback<MessageDialog, Boolean>() {
+      public Boolean onHandle( MessageDialog schedDlg ) {
+        return isNewScheduleCreatorDialogValid();
       }
     });
     // TODO sbarkdull, if we decide to create regular schedules, we'll need to do something different here
@@ -549,9 +551,15 @@ public class SchedulerController {
     scheduleCreatorDialog.setTitle( "Schedule Editor" );
     SchedulesListCtrl schedulesListCtrl = schedulerPanel.getSchedulesListCtrl();
     final List<Schedule> scheduleList = schedulesListCtrl.getSelectedSchedules();
+    
     scheduleCreatorDialog.setOnOkHandler( new ICallback<MessageDialog>() {
       public void onHandle(MessageDialog d) {
         localThis.updateSchedule();
+      }
+    });
+    this.scheduleCreatorDialog.setOnValidateHandler( new IResponseCallback<MessageDialog, Boolean>() {
+      public Boolean onHandle( MessageDialog schedDlg ) {
+        return isUpdateScheduleCreatorDialogValid();
       }
     });
     // the update button should be enabled/disabled to guarantee that one and only one schedule is selected
@@ -689,19 +697,28 @@ public class SchedulerController {
     PacServiceFactory.getSchedulerService().pauseJobs( scheduleList, callback );
   }
 
+  private boolean isNewScheduleCreatorDialogValid() {
+    ScheduleEditor schedEd = scheduleCreatorDialog.getScheduleEditor();
+    ScheduleEditorValidator schedEdValidator = new NewScheduleEditorValidator( schedEd, schedulesModel );
+    return isScheduleCreatorDialogValid( schedEdValidator );
+  }
+
+  private boolean isUpdateScheduleCreatorDialogValid() {
+    ScheduleEditor schedEd = scheduleCreatorDialog.getScheduleEditor();
+    ScheduleEditorValidator schedEdValidator = new ScheduleEditorValidator( schedEd, schedulesModel );
+    return isScheduleCreatorDialogValid( schedEdValidator );
+  }
   
   /**
+   * NOTE: This method should not be called directly except by isNewScheduleCreatorDialogValid and isUpdateScheduleCreatorDialogValid
    * NOTE: code in this method must stay in sync with isScheduleEditorValid(), i.e. all error msgs
    * that may be cleared in clearScheduleEditorValidationMsgs(), must be set-able here.
    */
-  private boolean isScheduleCreatorDialogValid() {
+  private boolean isScheduleCreatorDialogValid( ScheduleEditorValidator schedEdValidator ) {
 
     boolean isValid = true;
 
-    ScheduleEditor schedEd = scheduleCreatorDialog.getScheduleEditor();
     SolutionRepositoryItemPicker solRepPicker = scheduleCreatorDialog.getSolutionRepositoryItemPicker();
-    
-    ScheduleEditorValidator schedEdValidator = new ScheduleEditorValidator( schedEd );
     SolutionRepositoryItemPickerValidator solRepValidator = new SolutionRepositoryItemPickerValidator( solRepPicker );
 
     scheduleCreatorDialog.clearTabError();
@@ -756,7 +773,7 @@ public class SchedulerController {
     ScheduleEditor schedEd = scheduleCreatorDialog.getScheduleEditor();
     SolutionRepositoryItemPicker solRepPicker = scheduleCreatorDialog.getSolutionRepositoryItemPicker();
     
-    ScheduleEditorValidator schedEdValidator = new ScheduleEditorValidator( schedEd );
+    ScheduleEditorValidator schedEdValidator = new ScheduleEditorValidator( schedEd, schedulesModel );
     schedEdValidator.clear();
     
     SolutionRepositoryItemPickerValidator solRepValidator = new SolutionRepositoryItemPickerValidator( solRepPicker );

@@ -1,17 +1,21 @@
 package org.pentaho.pac.client.scheduler.ctlr;
 
 import org.pentaho.pac.client.common.util.StringUtils;
+import org.pentaho.pac.client.scheduler.model.Schedule;
+import org.pentaho.pac.client.scheduler.model.SchedulesModel;
 import org.pentaho.pac.client.scheduler.view.ScheduleEditor;
 
 public class ScheduleEditorValidator implements IUiValidator {
 
-  private ScheduleEditor schedEd = null;
-  private RecurrenceEditorValidator recurrenceEditorValidator = null;
-  private RunOnceEditorValidator runOnceEditorValidator = null;
-  private CronEditorValidator cronEditorValidator = null;
+  protected ScheduleEditor schedEd;
+  protected SchedulesModel schedulesModel;
+  protected RecurrenceEditorValidator recurrenceEditorValidator;
+  protected RunOnceEditorValidator runOnceEditorValidator;
+  protected CronEditorValidator cronEditorValidator;
   
-  public ScheduleEditorValidator( ScheduleEditor schedEd ) {
+  public ScheduleEditorValidator( ScheduleEditor schedEd, SchedulesModel schedulesModel ) {
     this.schedEd = schedEd;
+    this.schedulesModel = schedulesModel;
     this.recurrenceEditorValidator = new RecurrenceEditorValidator( this.schedEd.getRecurrenceEditor() );
     this.runOnceEditorValidator = new RunOnceEditorValidator( this.schedEd.getRunOnceEditor() );
     this.cronEditorValidator = new CronEditorValidator( this.schedEd.getCronEditor() );
@@ -24,7 +28,6 @@ public class ScheduleEditorValidator implements IUiValidator {
       isValid = false;
       schedEd.setNameError( "Specify a name." );
     }
-    
     if ( StringUtils.isEmpty( schedEd.getGroupName() ) ) {
       isValid = false;
       schedEd.setGroupNameError( "Specify a group name." );
