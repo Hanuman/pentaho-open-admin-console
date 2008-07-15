@@ -192,8 +192,8 @@ public class SubscriptionAdminUIComponentProxy {
     
     for ( Schedule s : scheduleList ) {
       Map<String, Object> params = new HashMap<String, Object>();
-      params.put( "schedulerAction", "doDeleteJob" ); //$NON-NLS-1$  //$NON-NLS-2$
-      params.put( "jobName", s.getTriggerName() ); //$NON-NLS-1$
+      params.put( "schedulerAction", "doDeleteSchedule" ); //$NON-NLS-1$  //$NON-NLS-2$
+      params.put( "schedId", s.getSchedId() ); //$NON-NLS-1$
 
       String responseStrXml = executeGetMethod( params );
     }
