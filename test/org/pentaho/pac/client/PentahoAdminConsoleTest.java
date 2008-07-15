@@ -112,7 +112,7 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
         long wait = 1000;
         dataSource.setDriverClass(driverClass);
         dataSource.setIdleConn(idleConn);
-        dataSource.setJndiName(jndiName);
+        dataSource.setName(jndiName);
         dataSource.setMaxActConn(maxActConn);
         dataSource.setPassword(password);
         dataSource.setQuery(query);
@@ -166,7 +166,7 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
         long wait = 1000;
         dataSource.setDriverClass(driverClass);
         dataSource.setIdleConn(idleConn);
-        dataSource.setJndiName(jndiName);
+        dataSource.setName(jndiName);
         dataSource.setMaxActConn(maxActConn);
         dataSource.setPassword(password);
         dataSource.setQuery(query);
@@ -219,7 +219,7 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
         long wait = 1000;
         dataSource.setDriverClass(driverClass);
         dataSource.setIdleConn(idleConn);
-        dataSource.setJndiName(jndiName);
+        dataSource.setName(jndiName);
         dataSource.setMaxActConn(maxActConn);
         dataSource.setPassword(password);
         dataSource.setQuery(query);
@@ -271,7 +271,7 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
         long wait = 1000;
         dataSource.setDriverClass(driverClass);
         dataSource.setIdleConn(idleConn);
-        dataSource.setJndiName(jndiName);
+        dataSource.setName(jndiName);
         dataSource.setMaxActConn(maxActConn);
         dataSource.setPassword(password);
         dataSource.setQuery(query);
@@ -663,7 +663,7 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
         long wait = 1000;
         dataSource.setDriverClass(driverClass);
         dataSource.setIdleConn(idleConn);
-        dataSource.setJndiName(jndiName);
+        dataSource.setName(jndiName);
         dataSource.setMaxActConn(maxActConn);
         dataSource.setPassword(password);
         dataSource.setQuery(query);

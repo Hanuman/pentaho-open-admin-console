@@ -10,7 +10,8 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class DataSourceGeneralPanel extends VerticalPanel {
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();  
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
+  public static final int PASSWORD_MAX_LENGTH = 50;
   TextBox userNameTextBox = new TextBox();
   PasswordTextBox passwordTextBox = new PasswordTextBox();
   TextBox jndiNameTextBox = new TextBox();
@@ -26,6 +27,7 @@ public class DataSourceGeneralPanel extends VerticalPanel {
     add(userNameTextBox);
     add(new Label(MSGS.dbPassword()));
     add(passwordTextBox);
+    passwordTextBox.setMaxLength(PASSWORD_MAX_LENGTH);
     add(new Label(MSGS.dbUrl()));
     add(urlTextBox);
     jndiNameTextBox.setWidth("100%"); //$NON-NLS-1$
@@ -105,7 +107,7 @@ public class DataSourceGeneralPanel extends VerticalPanel {
     } else {
       setUserName(dataSource.getUserName());
       setPassword(dataSource.getPassword());
-      setJndiName(dataSource.getJndiName());
+      setJndiName(dataSource.getName());
       setDriverClass(dataSource.getDriverClass());
       setUrl(dataSource.getUrl());
     }
@@ -115,7 +117,7 @@ public class DataSourceGeneralPanel extends VerticalPanel {
     PentahoDataSource dataSource = new PentahoDataSource();
     dataSource.setUserName(getUserName());
     dataSource.setPassword(getPassword());
-    dataSource.setJndiName(getJndiName());
+    dataSource.setName(getJndiName());
     dataSource.setDriverClass(getDriverClass());
     dataSource.setUrl(getUrl());
     return dataSource;

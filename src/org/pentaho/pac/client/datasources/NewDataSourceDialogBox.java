@@ -240,7 +240,7 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
     PentahoDataSource dataSource = new PentahoDataSource();
     dataSource.setDriverClass(normalDataSource.getDriverClass());
     dataSource.setPassword(normalDataSource.getPassword());
-    dataSource.setJndiName(normalDataSource.getJndiName());
+    dataSource.setName(normalDataSource.getName());
     dataSource.setUrl(normalDataSource.getUrl());
     dataSource.setUserName(normalDataSource.getUserName());
     int idleConn = advanceDataSource.getIdleConn();

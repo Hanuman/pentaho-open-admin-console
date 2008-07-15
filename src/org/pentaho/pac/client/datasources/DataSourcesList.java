@@ -28,20 +28,20 @@ public class DataSourcesList extends ListBox {
     return (PentahoDataSource[])dataSources.toArray(new PentahoDataSource[0]);
   }
 
-  public void setDataSources(IPentahoDataSource[] dataSources) {
+  public void setDataSources(PentahoDataSource[] dataSources) {
     
     this.dataSources.clear();
     this.dataSources.addAll(Arrays.asList(dataSources));
     clear();
     for (int i = 0; i < dataSources.length; i++) {
-      addItem(dataSources[i].getJndiName());
+      addItem(dataSources[i].getName());
     }
     isInitialized = true;
   }
   
   public void setDataSource(int index, PentahoDataSource dataSource) {
     dataSources.set(index, dataSource);
-    setItemText(index, dataSource.getJndiName());
+    setItemText(index, dataSource.getName());
   }
   
   public PentahoDataSource[] getSelectedDataSources() {
@@ -62,7 +62,7 @@ public class DataSourcesList extends ListBox {
   public void setSelectedDataSources(PentahoDataSource[] dataSources) {
     List dataSourceNames = new ArrayList();
     for (int i = 0; i < dataSources.length; i++) {
-      dataSourceNames.add(dataSources[i].getJndiName());
+      dataSourceNames.add(dataSources[i].getName());
     }
     int itemCount = getItemCount();
     for (int i = 0; i < itemCount; i++) {
@@ -123,7 +123,7 @@ public class DataSourcesList extends ListBox {
     isInitialized = false;
     AsyncCallback callback = new AsyncCallback() {
       public void onSuccess(Object result) {
-        setDataSources((IPentahoDataSource[])result);
+        setDataSources((PentahoDataSource[])result);
         isInitialized = true;
       }
 
@@ -143,11 +143,11 @@ public class DataSourcesList extends ListBox {
     boolean dataSourceNameExists = false;
     for (Iterator iter = dataSources.iterator(); iter.hasNext() && !dataSourceNameExists;) {
       PentahoDataSource tmpDataSource = (PentahoDataSource)iter.next();
-      dataSourceNameExists = tmpDataSource.getJndiName().equals(dataSource.getJndiName());      
+      dataSourceNameExists = tmpDataSource.getName().equals(dataSource.getName());      
     }
     if (!dataSourceNameExists) {
       dataSources.add(dataSource);
-      addItem(dataSource.getJndiName());
+      addItem(dataSource.getName());
       result = true;
     }
     return result;

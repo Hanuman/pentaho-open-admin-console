@@ -6,6 +6,7 @@ import org.pentaho.pac.common.PacServiceException;
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.UserRoleSecurityInfo;
 import org.pentaho.pac.common.datasources.IPentahoDataSource;
+import org.pentaho.pac.common.datasources.PentahoDataSource;
 import org.pentaho.pac.common.roles.DuplicateRoleException;
 import org.pentaho.pac.common.roles.NonExistingRoleException;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
@@ -32,12 +33,12 @@ public interface PacService extends RemoteService {
   public ProxyPentahoUser[] getUsers(ProxyPentahoRole role) throws NonExistingRoleException, PacServiceException;
   public void setUsers(ProxyPentahoRole role, ProxyPentahoUser[] assignedUsers) throws NonExistingRoleException, NonExistingUserException, PentahoSecurityException, PacServiceException;
   
-  public boolean createDataSource(IPentahoDataSource dataSource) throws PacServiceException;
-  public boolean deleteDataSources(IPentahoDataSource[] dataSources) throws PacServiceException;
-  public boolean updateDataSource(IPentahoDataSource dataSource) throws PacServiceException;
-  public IPentahoDataSource[] getDataSources() throws PacServiceException;
-  public boolean testDataSourceConnection(IPentahoDataSource dataSource) throws PacServiceException;
-  public boolean testDataSourceValidationQuery(IPentahoDataSource dataSource) throws PacServiceException;
+  public boolean createDataSource(PentahoDataSource dataSource) throws PacServiceException;
+  public boolean deleteDataSources(PentahoDataSource[] dataSources) throws PacServiceException;
+  public boolean updateDataSource(PentahoDataSource dataSource) throws PacServiceException;
+  public PentahoDataSource[] getDataSources() throws PacServiceException;
+  public boolean testDataSourceConnection(PentahoDataSource dataSource) throws PacServiceException;
+  public boolean testDataSourceValidationQuery(PentahoDataSource dataSource) throws PacServiceException;
   
   public String refreshSolutionRepository() throws PacServiceException;
   public String cleanRepository() throws PacServiceException;

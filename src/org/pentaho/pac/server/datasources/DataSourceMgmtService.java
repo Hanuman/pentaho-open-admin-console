@@ -6,6 +6,7 @@ import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.datasources.DuplicateDataSourceException;
 import org.pentaho.pac.common.datasources.IPentahoDataSource;
 import org.pentaho.pac.common.datasources.NonExistingDataSourceException;
+import org.pentaho.pac.common.datasources.PentahoDataSource;
 import org.pentaho.pac.server.common.DAOException;
 import org.pentaho.pac.server.common.DAOFactory;
 
@@ -16,7 +17,7 @@ public class DataSourceMgmtService implements IDataSourceMgmtService {
     dataSourceDAO = DAOFactory.getDataSourceDAO();
   }
 
-  public void createDataSource(IPentahoDataSource newDataSource) throws DuplicateDataSourceException, DAOException, PentahoSecurityException {
+  public void createDataSource(PentahoDataSource newDataSource) throws DuplicateDataSourceException, DAOException, PentahoSecurityException {
     if (hasCreateDataSourcePerm(newDataSource)) {
       dataSourceDAO.createDataSource(newDataSource);
     } else {
@@ -25,7 +26,7 @@ public class DataSourceMgmtService implements IDataSourceMgmtService {
   }
 
   public void deleteDataSource(String jndiName) throws NonExistingDataSourceException, DAOException, PentahoSecurityException {
-    IPentahoDataSource dataSource = dataSourceDAO.getDataSource(jndiName);
+    PentahoDataSource dataSource = dataSourceDAO.getDataSource(jndiName);
     if (dataSource != null) {
       deleteDataSource(dataSource);
     } else {
@@ -33,7 +34,7 @@ public class DataSourceMgmtService implements IDataSourceMgmtService {
     }
   }
 
-  public void deleteDataSource(IPentahoDataSource dataSource) throws NonExistingDataSourceException, DAOException, PentahoSecurityException {
+  public void deleteDataSource(PentahoDataSource dataSource) throws NonExistingDataSourceException, DAOException, PentahoSecurityException {
     if (hasDeleteDataSourcePerm(dataSource)) {
       dataSourceDAO.deleteDataSource(dataSource);
     } else {
@@ -41,15 +42,15 @@ public class DataSourceMgmtService implements IDataSourceMgmtService {
     }
   }
 
-  public IPentahoDataSource getDataSource(String jndiName) throws DAOException {
+  public PentahoDataSource getDataSource(String jndiName) throws DAOException {
     return dataSourceDAO.getDataSource(jndiName);
   }
 
-  public List<IPentahoDataSource> getDataSources() throws DAOException {
+  public List<PentahoDataSource> getDataSources() throws DAOException {
     return dataSourceDAO.getDataSources();
   }
 
-  public void updateDataSource(IPentahoDataSource dataSource) throws DAOException, PentahoSecurityException, NonExistingDataSourceException {
+  public void updateDataSource(PentahoDataSource dataSource) throws DAOException, PentahoSecurityException, NonExistingDataSourceException {
     if (hasUpdateDataSourcePerm(dataSource)) {
       dataSourceDAO.updateDataSource(dataSource);
     } else {
@@ -72,14 +73,14 @@ public class DataSourceMgmtService implements IDataSourceMgmtService {
     dataSourceDAO.closeSession();
   }
 
-  protected boolean hasCreateDataSourcePerm(IPentahoDataSource dataSource) {
+  protected boolean hasCreateDataSourcePerm(PentahoDataSource dataSource) {
     return true;
   }
 
-  protected boolean hasUpdateDataSourcePerm(IPentahoDataSource dataSource) {
+  protected boolean hasUpdateDataSourcePerm(PentahoDataSource dataSource) {
     return true;
   }
-  protected boolean hasDeleteDataSourcePerm(IPentahoDataSource dataSource) {
+  protected boolean hasDeleteDataSourcePerm(PentahoDataSource dataSource) {
     return true;
   }
 }

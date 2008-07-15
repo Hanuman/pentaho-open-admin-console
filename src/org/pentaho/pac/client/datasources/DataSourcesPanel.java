@@ -341,7 +341,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
     PentahoDataSource dataSource = new PentahoDataSource();
     dataSource.setDriverClass(normalDataSource.getDriverClass());
     dataSource.setPassword(normalDataSource.getPassword());
-    dataSource.setJndiName(normalDataSource.getJndiName());
+    dataSource.setName(normalDataSource.getName());
     dataSource.setUrl(normalDataSource.getUrl());
     dataSource.setUserName(normalDataSource.getUserName());
     dataSource.setIdleConn(advanceDataSource.getIdleConn());

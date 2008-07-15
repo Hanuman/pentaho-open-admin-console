@@ -404,7 +404,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     }
   }
 
-  public boolean createDataSource(IPentahoDataSource dataSource) throws PacServiceException {
+  public boolean createDataSource(PentahoDataSource dataSource) throws PacServiceException {
     boolean result = false;
     try {
       dataSourceMgmtService.beginTransaction();
@@ -412,17 +412,17 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       dataSourceMgmtService.commitTransaction();
       result = true;
     } catch (DuplicateDataSourceException dde) {
-      String msg = Messages.getString("PacService.ERROR_0009_DATASOURCE_ALREADY_EXIST", dataSource.getJndiName()) //$NON-NLS-1$
+      String msg = Messages.getString("PacService.ERROR_0009_DATASOURCE_ALREADY_EXIST", dataSource.getName()) //$NON-NLS-1$
           + " " + dde.getMessage(); //$NON-NLS-1$
       throw new PacServiceException(msg, dde);
 
     } catch (DAOException e) {
-      String msg = Messages.getString("PacService.ERROR_0007_DATASOURCE_CREATION_FAILED", dataSource.getJndiName()) //$NON-NLS-1$
+      String msg = Messages.getString("PacService.ERROR_0007_DATASOURCE_CREATION_FAILED", dataSource.getName()) //$NON-NLS-1$
           + " " + e.getMessage(); //$NON-NLS-1$
       throw new PacServiceException(msg, e);
     } catch (PentahoSecurityException pse) {
       String msg = Messages.getString(
-          "PacService.ERROR_0008_NO_CREATE_DATASOURCE_PERMISSION", dataSource.getJndiName()) //$NON-NLS-1$
+          "PacService.ERROR_0008_NO_CREATE_DATASOURCE_PERMISSION", dataSource.getName()) //$NON-NLS-1$
           + " " + pse.getMessage(); //$NON-NLS-1$
       throw new PacServiceException(msg, pse);
 
@@ -436,28 +436,28 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
 
   }
 
-  public boolean deleteDataSources(IPentahoDataSource[] dataSources) throws PacServiceException {
+  public boolean deleteDataSources(PentahoDataSource[] dataSources) throws PacServiceException {
     boolean result = false;
-    IPentahoDataSource persistedDataSources = null;
+    PentahoDataSource persistedDataSources = null;
     try {
       dataSourceMgmtService.beginTransaction();
       for (int i = 0; i < dataSources.length; i++) {
-        persistedDataSources = dataSourceMgmtService.getDataSource(dataSources[i].getJndiName());
+        persistedDataSources = dataSourceMgmtService.getDataSource(dataSources[i].getName());
         dataSourceMgmtService.deleteDataSource(persistedDataSources);
       }
       result = true;
       dataSourceMgmtService.commitTransaction();
     } catch (NonExistingDataSourceException neds) {
       String msg = Messages.getString(
-          "PacService.DATASOURCE_DELETION_FAILED_NO_DATASOURCE", persistedDataSources.getJndiName()) //$NON-NLS-1$
+          "PacService.DATASOURCE_DELETION_FAILED_NO_DATASOURCE", persistedDataSources.getName()) //$NON-NLS-1$
           + " " + neds.getMessage(); //$NON-NLS-1$
       throw new PacServiceException(msg, neds);
     } catch (DAOException e) {
-      String msg = Messages.getString("PacService.DATASOURCE_DELETION_FAILED", persistedDataSources.getJndiName()) //$NON-NLS-1$
+      String msg = Messages.getString("PacService.DATASOURCE_DELETION_FAILED", persistedDataSources.getName()) //$NON-NLS-1$
           + " " + e.getMessage(); //$NON-NLS-1$
       throw new PacServiceException(msg, e);
     } catch (PentahoSecurityException pse) {
-      String msg = Messages.getString("PacService.DATASOURCE_DELETION_FAILED_NO_PERMISSION", persistedDataSources.getJndiName()) //$NON-NLS-1$
+      String msg = Messages.getString("PacService.DATASOURCE_DELETION_FAILED_NO_PERMISSION", persistedDataSources.getName()) //$NON-NLS-1$
           + " " + pse.getMessage(); //$NON-NLS-1$
       throw new PacServiceException(msg, pse);
     } finally {
@@ -469,12 +469,12 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return result;
   }
 
-  public boolean updateDataSource(IPentahoDataSource dataSource) throws PacServiceException {
+  public boolean updateDataSource(PentahoDataSource dataSource) throws PacServiceException {
     boolean result = false;
     try {
-      IPentahoDataSource ds = dataSourceMgmtService.getDataSource(dataSource.getJndiName());
+      PentahoDataSource ds = dataSourceMgmtService.getDataSource(dataSource.getName());
       if (null == ds) {
-        throw new NonExistingDataSourceException(dataSource.getJndiName());
+        throw new NonExistingDataSourceException(dataSource.getName());
       }
       ds.setDriverClass(dataSource.getDriverClass());
       ds.setIdleConn(dataSource.getIdleConn());
@@ -489,16 +489,16 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       dataSourceMgmtService.commitTransaction();
       result = true;
     } catch (NonExistingDataSourceException neds) {
-      String msg = Messages.getString("PacService.DATASOURCE_UPDATE_FAILED_DOES_NOT_EXIST", dataSource.getJndiName()) //$NON-NLS-1$
+      String msg = Messages.getString("PacService.DATASOURCE_UPDATE_FAILED_DOES_NOT_EXIST", dataSource.getName()) //$NON-NLS-1$
           + " " + neds.getMessage(); //$NON-NLS-1$
       throw new PacServiceException(msg, neds);
 
     } catch (DAOException e) {
-      String msg = Messages.getString("PacService.DATASOURCE_UPDATE_FAILED", dataSource.getJndiName()) //$NON-NLS-1$
+      String msg = Messages.getString("PacService.DATASOURCE_UPDATE_FAILED", dataSource.getName()) //$NON-NLS-1$
           + " " + e.getMessage(); //$NON-NLS-1$
       throw new PacServiceException(msg, e);
     } catch (PentahoSecurityException pse) {
-      String msg = Messages.getString("PacService.DATASOURCE_UPDATE_FAILED_NO_PERMISSION", dataSource.getJndiName()) //$NON-NLS-1$
+      String msg = Messages.getString("PacService.DATASOURCE_UPDATE_FAILED_NO_PERMISSION", dataSource.getName()) //$NON-NLS-1$
           + " " + pse.getMessage(); //$NON-NLS-1$
       throw new PacServiceException(msg, pse);
 
@@ -511,8 +511,8 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return result;
   }
 
-  public IPentahoDataSource[] getDataSources() throws PacServiceException {
-    List<IPentahoDataSource> dataSources;
+  public PentahoDataSource[] getDataSources() throws PacServiceException {
+    List<PentahoDataSource> dataSources;
     try {
       dataSources = dataSourceMgmtService.getDataSources();
     } catch (DAOException e) {
@@ -532,7 +532,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
    * @return
    * @throws DataSourceManagementException
    */
-  private static Connection getDataSourceConnection(IPentahoDataSource ds) throws DataSourceManagementException {
+  private static Connection getDataSourceConnection(PentahoDataSource ds) throws DataSourceManagementException {
     Connection conn = null;
 
     String driverClass = ds.getDriverClass();
@@ -573,7 +573,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     }
   }
 
-  public boolean testDataSourceConnection(IPentahoDataSource ds) throws PacServiceException {
+  public boolean testDataSourceConnection(PentahoDataSource ds) throws PacServiceException {
     Connection conn = null;
     try {
       conn = getDataSourceConnection(ds);
@@ -591,7 +591,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return true;
   }
 
-  public boolean testDataSourceValidationQuery(IPentahoDataSource ds) throws PacServiceException {
+  public boolean testDataSourceValidationQuery(PentahoDataSource ds) throws PacServiceException {
     Connection conn = null;
     Statement stmt = null;
     ResultSet rs = null;

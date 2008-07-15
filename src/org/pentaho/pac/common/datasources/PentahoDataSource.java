@@ -3,13 +3,13 @@ package org.pentaho.pac.common.datasources;
 import java.io.Serializable;
 
 
-public class PentahoDataSource implements Serializable, IPentahoDataSource {
+public class PentahoDataSource implements Serializable{
 
   /**
    * 
    */
   private static final long serialVersionUID = 1L;
-  private String jndiName;
+  private String name;
   private int maxActConn;
   private String driverClass;
   private int idleConn;
@@ -23,16 +23,16 @@ public class PentahoDataSource implements Serializable, IPentahoDataSource {
 
   }
 
-  public PentahoDataSource(String jndiName) {
-    this.jndiName = jndiName;
+  public PentahoDataSource(String name) {
+    this.name = name;
   }
 
-  public String getJndiName() {
-    return this.jndiName;
+  public String getName() {
+    return this.name;
   }
 
-  public void setJndiName(String jndiName) {
-    this.jndiName = jndiName;
+  public void setName(String name) {
+    this.name = name;
   }
 
   public String getUserName() {
@@ -85,11 +85,11 @@ public class PentahoDataSource implements Serializable, IPentahoDataSource {
   }
 
   public boolean equals(Object o) {
-    return ((o instanceof PentahoDataSource) ? this.jndiName.equals(((PentahoDataSource) o).getJndiName()) : false);
+    return ((o instanceof PentahoDataSource) ? this.name.equals(((PentahoDataSource) o).getName()) : false);
   }
 
   public int hashCode() {
-    return jndiName.hashCode();
+    return name.hashCode();
   }
 
   public int getIdleConn() {

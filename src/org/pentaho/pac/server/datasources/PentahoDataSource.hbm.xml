@@ -3,8 +3,8 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
     <class name="org.pentaho.pac.common.datasources.PentahoDataSource" table="DATASOURCE" schema="PUBLIC">
-      <id name="jndiName" type="java.lang.String">
-            <column name="JNDINAME"  length="50"/>
+      <id name="name" type="java.lang.String">
+            <column name="NAME"  length="50"/>
             <generator class="assigned" />
       </id>
       <property name="maxActConn" type="int" not-null="true">
@@ -20,7 +20,7 @@
         <column name="USERNAME" length="50" not-null="true" />
       </property>
       <property name="password" type="string" not-null="true">
-        <column name="PASSWORD" length="50" not-null="true" />
+        <column name="PASSWORD" length="150" not-null="true" />
       </property>
       <property name="url" type="string" not-null="true">
         <column name="URL" length="100" not-null="true" />
