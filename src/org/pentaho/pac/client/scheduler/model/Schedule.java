@@ -169,4 +169,12 @@ public class Schedule implements Serializable {
   public void setRepeatCount(String repeatCount) {
     this.repeatCount = repeatCount;
   }
+  
+  public boolean isRepeatSchedule() {
+    return null != repeatInterval;
+  }
+  
+  public boolean isCronSchedule() {
+    return null != cronString;
+  }
 }
