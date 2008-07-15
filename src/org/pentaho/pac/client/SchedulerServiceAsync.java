@@ -11,7 +11,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public interface SchedulerServiceAsync extends ISchedulerServiceAsync {
   
   public void deleteJob( String jobName, String jobGroup, AsyncCallback callback );
-  public void deleteJobs( List<Schedule> scheduleList, AsyncCallback callback );
   public void executeJob( String jobName, String jobGroup, AsyncCallback callback );
   public void executeJobs( List<Schedule> scheduleList, AsyncCallback callback );
   public void isSchedulerPaused( AsyncCallback callback );
