@@ -322,6 +322,13 @@ public class SchedulerController {
     String cronStr = scheduleEditor.getCronString();
     Date startDate = scheduleEditor.getStartDate();
     Date endDate = scheduleEditor.getEndDate();
+    
+    if ( null == cronStr ) {  // must be a repeating schedule
+      String startTime = scheduleEditor.getStartTime(); // format of string should be: HH:MM:SS AM/PM, e.g. 7:12:28 PM
+      startDate = TimeUtil.getDateTime( startTime, startDate );
+      endDate = (null != endDate) ? TimeUtil.getDateTime( startTime, endDate ) : null;
+    }
+    
     ScheduleType rt = scheduleEditor.getScheduleType(); 
     switch ( rt ) {
       case RUN_ONCE:
@@ -334,8 +341,8 @@ public class SchedulerController {
             scheduleEditor.getDescription().trim(), 
             startDate,
             endDate,
-            "0" /*repeat count*/,
-            "0" /*repeat time*/, 
+            "0" /*repeat count*/, //$NON-NLS-1$
+            "0" /*repeat time*/,  //$NON-NLS-1$
             scheduleCreatorDialog.getSolutionRepositoryItemPicker().getActionsAsString().trim(),
             responseCallback
           );
@@ -350,9 +357,6 @@ public class SchedulerController {
         if ( null == cronStr ) {
           String repeatInterval = Integer.toString( TimeUtil.secsToMillisecs( 
                 scheduleEditor.getRepeatInSecs() ) );
-          String startTime = scheduleEditor.getRecurrenceEditor().getStartTime(); // format of string should be: HH:MM:SS AM/PM, e.g. 7:12:28 PM
-          Date startDateTime = TimeUtil.getDateTime( startTime, startDate );
-          Date endDateTime = (null != endDate) ? TimeUtil.getDateTime( startTime, endDate ) : null;
           schedSvc.updateRepeatSchedule(
               oldSchedule.getJobName(),
               oldSchedule.getJobGroup(),
@@ -360,8 +364,8 @@ public class SchedulerController {
               scheduleEditor.getName().trim(), 
               scheduleEditor.getGroupName().trim(), 
               scheduleEditor.getDescription().trim(), 
-              startDateTime,
-              endDateTime,
+              startDate,
+              endDate,
               null /*repeat count*/,
               repeatInterval.trim(), 
               scheduleCreatorDialog.getSolutionRepositoryItemPicker().getActionsAsString().trim(),
@@ -419,6 +423,13 @@ public class SchedulerController {
     String cronStr = scheduleEditor.getCronString();
     Date startDate = scheduleEditor.getStartDate();
     Date endDate = scheduleEditor.getEndDate();
+    
+    if ( null == cronStr ) {  // must be a repeating schedule
+      String startTime = scheduleEditor.getStartTime(); // format of string should be: HH:MM:SS AM/PM, e.g. 7:12:28 PM
+      startDate = TimeUtil.getDateTime( startTime, startDate );
+      endDate = (null != endDate) ? TimeUtil.getDateTime( startTime, endDate ) : null;
+    }
+    
     ScheduleType rt = scheduleEditor.getScheduleType();
 
     // TODO sbarkdull, if we want to support creation of scheduler schedules, we need to supply
@@ -452,15 +463,12 @@ public class SchedulerController {
         if ( null == cronStr ) {
           String repeatInterval = Integer.toString( TimeUtil.secsToMillisecs( 
                 scheduleEditor.getRepeatInSecs() ) );
-          String startTime = scheduleEditor.getRecurrenceEditor().getStartTime(); // format of string should be: HH:MM:SS AM/PM, e.g. 7:12:28 PM
-          Date startDateTime = TimeUtil.getDateTime( startTime, startDate );
-          Date endDateTime = TimeUtil.getDateTime( startTime, endDate );
           schedSvc.createRepeatSchedule(
               scheduleEditor.getName().trim(), 
               scheduleEditor.getGroupName().trim(), 
               scheduleEditor.getDescription().trim(), 
-              startDateTime,
-              endDateTime,
+              startDate,
+              endDate,
               null /*repeat count*/,
               repeatInterval.trim(), 
               scheduleCreatorDialog.getSolutionRepositoryItemPicker().getActionsAsString().trim(),
@@ -588,16 +596,14 @@ public class SchedulerController {
     scheduleEditor.setName( sched.getJobName() );
     scheduleEditor.setGroupName( sched.getJobGroup() );
     scheduleEditor.setDescription( sched.getDescription() );
-    String cronStr = sched.getCronString();
     
-    SolutionRepositoryItemPicker solRepPicker = scheduleCreatorDialog.getSolutionRepositoryItemPicker();
     scheduleCreatorDialog.getSolutionRepositoryItemPicker().setActionsAsList( sched.getActionsList() );
     
-    String repeatInMillisecs = sched.getRepeatInterval();
-    if ( null != cronStr ) {
+    String repeatIntervalInMillisecs = sched.getRepeatInterval();
+    if ( sched.isCronSchedule() ) {
       scheduleEditor.setCronString( sched.getCronString() );  // throws CronParseException
-    } else if ( null != repeatInMillisecs ) {
-      int repeatIntervalInSecs = TimeUtil.millsecondsToSecs( Integer.parseInt( repeatInMillisecs ) );
+    } else if ( sched.isRepeatSchedule() ) {
+      int repeatIntervalInSecs = TimeUtil.millsecondsToSecs( Integer.parseInt( repeatIntervalInMillisecs ) );
       if ( 0 == repeatIntervalInSecs ) {
         // run once
         scheduleEditor.setScheduleType( ScheduleType.RUN_ONCE );
@@ -609,22 +615,25 @@ public class SchedulerController {
       throw new RuntimeException( "Illegal state, must have either a cron string or a repeat time." );
     }
 
+    String timePart = null;
     String strDate = sched.getStartDate();
     if ( null != strDate ) {
       Date startDate = TimeUtil.getDate( strDate );
-      if ( null != repeatInMillisecs ) {
-        String timePart = TimeUtil.getTimePart( startDate );
-        scheduleEditor.getRecurrenceEditor().setStartTime( timePart );
+      if ( sched.isRepeatSchedule() ) {
+        timePart = TimeUtil.getTimePart( startDate );
+        scheduleEditor.setStartTime( timePart );
         startDate = TimeUtil.zeroTimePart( startDate );
       }
       scheduleEditor.setStartDate( startDate );
     }
+//    scheduleEditor.getRunOnceEditor().setStartTime(strTime)
+//    scheduleEditor.getRunOnceEditor().setStartDate(strTime)
     
     strDate = sched.getEndDate();
     if ( null != strDate ) {
       scheduleEditor.setEndBy();
       Date endDate = TimeUtil.getDate( strDate );
-      if ( null != repeatInMillisecs ) {
+      if ( sched.isRepeatSchedule() ) {
         endDate = TimeUtil.zeroTimePart( endDate );
       }
       scheduleEditor.setEndDate(endDate);
