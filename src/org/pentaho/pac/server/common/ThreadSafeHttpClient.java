@@ -73,10 +73,10 @@ public class ThreadSafeHttpClient {
   }
 
   public String execRemoteMethod(String serviceName, HttpMethodType methodType, Map<String, Object> mapParams)
-      throws PacServiceException {
+      throws ProxyException {
     return execRemoteMethod(serviceName, methodType, mapParams, "text/xml"); //$NON-NLS-1$
   }
-  
+
   /**
    * 
    * @param serviceName String can be null or empty string.
@@ -86,7 +86,7 @@ public class ThreadSafeHttpClient {
    * @throws PacServiceException
    */
   public String execRemoteMethod(String serviceName, HttpMethodType methodType, Map<String, Object> mapParams,
-      String requestedMimeType) throws PacServiceException {
+      String requestedMimeType) throws ProxyException {
 
     assert null != baseUrl : "baseUrl cannot be null"; //$NON-NLS-1$
     
@@ -95,6 +95,7 @@ public class ThreadSafeHttpClient {
       mapParams = new HashMap<String, Object>();
     }
     mapParams.put(REQUESTED_MIME_TYPE, requestedMimeType);
+    
     HttpMethodBase method = null;
     switch (methodType) {
       case POST:
@@ -113,13 +114,13 @@ public class ThreadSafeHttpClient {
     return executeMethod( method );
   }
 
-  private String executeMethod( HttpMethod method ) throws PacServiceException {
+  private String executeMethod( HttpMethod method ) throws ProxyException {
     InputStream responseStrm = null;
     try {
       int httpStatus = CLIENT.executeMethod(method);
       if (httpStatus != HttpStatus.SC_OK) {
         String status = method.getStatusLine().toString();
-        throw new PacServiceException(status);  // TODO
+        throw new ProxyException(status);  // TODO
       }
       responseStrm = method.getResponseBodyAsStream();
       // trim() is necessary because some jsp's puts \n\r at the beginning of
@@ -127,7 +128,7 @@ public class ThreadSafeHttpClient {
       String tmp = IOUtils.toString(responseStrm).trim();
       return tmp;
     } catch (IOException e) {
-      throw new PacServiceException(e);
+      throw new ProxyException(e);
     } finally {
       method.releaseConnection();
     }
