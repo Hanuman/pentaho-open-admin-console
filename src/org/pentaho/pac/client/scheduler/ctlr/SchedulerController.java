@@ -350,6 +350,9 @@ public class SchedulerController {
         if ( null == cronStr ) {
           String repeatInterval = Integer.toString( TimeUtil.secsToMillisecs( 
                 scheduleEditor.getRepeatInSecs() ) );
+          String startTime = scheduleEditor.getRecurrenceEditor().getStartTime(); // format of string should be: HH:MM:SS AM/PM, e.g. 7:12:28 PM
+          Date startDateTime = TimeUtil.getDateTime( startTime, startDate );
+          Date endDateTime = (null != endDate) ? TimeUtil.getDateTime( startTime, endDate ) : null;
           schedSvc.updateRepeatSchedule(
               oldSchedule.getJobName(),
               oldSchedule.getJobGroup(),
@@ -357,8 +360,8 @@ public class SchedulerController {
               scheduleEditor.getName().trim(), 
               scheduleEditor.getGroupName().trim(), 
               scheduleEditor.getDescription().trim(), 
-              startDate,
-              endDate,
+              startDateTime,
+              endDateTime,
               null /*repeat count*/,
               repeatInterval.trim(), 
               scheduleCreatorDialog.getSolutionRepositoryItemPicker().getActionsAsString().trim(),
@@ -449,12 +452,15 @@ public class SchedulerController {
         if ( null == cronStr ) {
           String repeatInterval = Integer.toString( TimeUtil.secsToMillisecs( 
                 scheduleEditor.getRepeatInSecs() ) );
+          String startTime = scheduleEditor.getRecurrenceEditor().getStartTime(); // format of string should be: HH:MM:SS AM/PM, e.g. 7:12:28 PM
+          Date startDateTime = TimeUtil.getDateTime( startTime, startDate );
+          Date endDateTime = TimeUtil.getDateTime( startTime, endDate );
           schedSvc.createRepeatSchedule(
               scheduleEditor.getName().trim(), 
               scheduleEditor.getGroupName().trim(), 
               scheduleEditor.getDescription().trim(), 
-              startDate,
-              endDate,
+              startDateTime,
+              endDateTime,
               null /*repeat count*/,
               repeatInterval.trim(), 
               scheduleCreatorDialog.getSolutionRepositoryItemPicker().getActionsAsString().trim(),
@@ -482,22 +488,37 @@ public class SchedulerController {
   }
   
   private void deleteSelectedSchedules() {
-   
     SchedulesListCtrl schedulesListCtrl = schedulerPanel.getSchedulesListCtrl();
     final List<Schedule> scheduleList = schedulesListCtrl.getSelectedSchedules();
     
-    AsyncCallback<Object> callback = new AsyncCallback<Object>() {
+    AsyncCallback<Object> outerCallback = new AsyncCallback<Object>() {
+      
       public void onSuccess(Object result) {
-        loadJobsTable();
-      }
+        AsyncCallback<Object> innerCallback = new AsyncCallback<Object>() {
+          public void onSuccess(Object result) {
+            loadJobsTable();
+          }
+          public void onFailure(Throwable caught) {
+            // TODO sbarkdull
+            MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
+                caught.getMessage() );
+            messageDialog.center();
+          }
+        }; // end inner callback
+        final List<Schedule> subscriptionSchedList = getSubscriptionSchedules( scheduleList );
+        PacServiceFactory.getSubscriptionService().deleteJobs( subscriptionSchedList, innerCallback );
+      } // end onSuccess
+      
       public void onFailure(Throwable caught) {
         // TODO sbarkdull
         MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
             caught.getMessage() );
         messageDialog.center();
       }
-    };
-    PacServiceFactory.getSchedulerService().deleteJobs( scheduleList, callback );
+    }; // end outer callback -----------
+
+    List<Schedule> nonSubscriptionSchedList = getSchedules( scheduleList );
+    PacServiceFactory.getSchedulerService().deleteJobs( nonSubscriptionSchedList, outerCallback );
     
   }
 
@@ -572,10 +593,10 @@ public class SchedulerController {
     SolutionRepositoryItemPicker solRepPicker = scheduleCreatorDialog.getSolutionRepositoryItemPicker();
     scheduleCreatorDialog.getSolutionRepositoryItemPicker().setActionsAsList( sched.getActionsList() );
     
-    String repeatInMillisecs;
+    String repeatInMillisecs = sched.getRepeatInterval();
     if ( null != cronStr ) {
       scheduleEditor.setCronString( sched.getCronString() );  // throws CronParseException
-    } else if ( null != ( repeatInMillisecs = sched.getRepeatInterval() ) ) {
+    } else if ( null != repeatInMillisecs ) {
       int repeatIntervalInSecs = TimeUtil.millsecondsToSecs( Integer.parseInt( repeatInMillisecs ) );
       if ( 0 == repeatIntervalInSecs ) {
         // run once
@@ -591,6 +612,11 @@ public class SchedulerController {
     String strDate = sched.getStartDate();
     if ( null != strDate ) {
       Date startDate = TimeUtil.getDate( strDate );
+      if ( null != repeatInMillisecs ) {
+        String timePart = TimeUtil.getTimePart( startDate );
+        scheduleEditor.getRecurrenceEditor().setStartTime( timePart );
+        startDate = TimeUtil.zeroTimePart( startDate );
+      }
       scheduleEditor.setStartDate( startDate );
     }
     
@@ -598,6 +624,9 @@ public class SchedulerController {
     if ( null != strDate ) {
       scheduleEditor.setEndBy();
       Date endDate = TimeUtil.getDate( strDate );
+      if ( null != repeatInMillisecs ) {
+        endDate = TimeUtil.zeroTimePart( endDate );
+      }
       scheduleEditor.setEndDate(endDate);
     } else {
       scheduleEditor.setNoEndDate();
@@ -607,7 +636,7 @@ public class SchedulerController {
   private void handleDeleteSchedules() {
     final SchedulerController localThis = this;
     final ConfirmDialog confirm = new ConfirmDialog( "Confirm Delete",
-        "Are you sure you would like to delete all checked schedules?" );
+        "Are you sure you want to delete all checked schedules?" );
     confirm.setOnOkHandler( new ICallback<MessageDialog>() {
       public void onHandle( MessageDialog d ) {
         confirm.hide();
@@ -725,6 +754,27 @@ public class SchedulerController {
     
     SolutionRepositoryItemPickerValidator solRepValidator = new SolutionRepositoryItemPickerValidator( solRepPicker );
     solRepValidator.clear();
+    
+  }
+  
+  private static List<Schedule> getSchedules( List<Schedule> schedList ) {
+    List<Schedule> list = new ArrayList<Schedule>();
+    for ( Schedule sched : schedList ) {
+      if ( !sched.isSubscriptionSchedule() ) {
+        list.add( sched);
+      }
+    }
+    return list;
+  }
+  
+  private static List<Schedule> getSubscriptionSchedules( List<Schedule> schedList ) {
+    List<Schedule> list = new ArrayList<Schedule>();
+    for ( Schedule sched : schedList ) {
+      if ( sched.isSubscriptionSchedule() ) {
+        list.add( sched);
+      }
+    }
+    return list;
     
   }
 }
