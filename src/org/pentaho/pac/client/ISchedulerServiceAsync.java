@@ -1,9 +1,11 @@
 package org.pentaho.pac.client;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.pentaho.pac.client.scheduler.model.Schedule;
+import org.pentaho.pac.common.PacServiceException;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -28,4 +30,6 @@ public interface ISchedulerServiceAsync {
       Date startDate, Date endDate,
       String strRepeatCount,String repeatInterval,
       String actionsList, AsyncCallback callback );
+  
+  public void deleteJobs( List<Schedule> scheduleList, AsyncCallback callback );
 }
