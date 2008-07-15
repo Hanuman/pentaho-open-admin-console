@@ -1,12 +1,13 @@
 package org.pentaho.pac.server;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.pentaho.pac.client.SubscriptionService;
 import org.pentaho.pac.client.scheduler.model.Schedule;
-import org.pentaho.pac.common.PacServiceException;
+import org.pentaho.pac.common.SchedulerServiceException;
 import org.pentaho.pac.server.common.AppConfigProperties;
 import org.pentaho.pac.server.scheduler.SubscriptionAdminUIComponentProxy;
 
@@ -27,9 +28,9 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
   
   /**
    *
-   * @throws PacServiceException 
+   * @throws SchedulerServiceException 
    */
-  public Map<String,Schedule> getJobNames() throws PacServiceException {
+  public Map<String,Schedule> getJobNames() throws SchedulerServiceException {
     Map<String,Schedule> subscriptionMap = subscriptionProxy.getSubscriptionSchedules();
     
     return subscriptionMap;
@@ -37,12 +38,12 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
 
   /**
    * query string: schedulerAction=createJob&jobName=PentahoSystemVersionCheck&jobGroup=DEFAULT
-   * @throws PacServiceException 
+   * @throws SchedulerServiceException 
    */
   public void createCronSchedule( String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
       String cronString,
-      String actionsList ) throws PacServiceException {
+      String actionsList ) throws SchedulerServiceException {
     subscriptionProxy.createCronSchedule( jobName, jobGroup, description,
         startDate, endDate, cronString, actionsList );
   }
@@ -50,7 +51,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
   public void createRepeatSchedule( String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
       String strRepeatCount, String repeatInterval, 
-      String actionsList ) throws PacServiceException {
+      String actionsList ) throws SchedulerServiceException {
     subscriptionProxy.createRepeatSchedule( jobName, jobGroup, description,
         startDate, endDate, strRepeatCount, repeatInterval, actionsList );
   
@@ -60,7 +61,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
       String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
       String cronString,
-      String actionsList ) throws PacServiceException {
+      String actionsList ) throws SchedulerServiceException {
     subscriptionProxy.updateCronSchedule( oldJobName, oldJobGroup, schedId, jobName, jobGroup, description,
         startDate, endDate, cronString, actionsList );
     
@@ -70,8 +71,12 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
       String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
       String strRepeatCount, String repeatInterval, 
-      String actionsList ) throws PacServiceException {
+      String actionsList ) throws SchedulerServiceException {
     subscriptionProxy.updateRepeatSchedule( oldJobName, oldJobGroup, schedId, jobName, jobGroup, description,
         startDate, endDate, strRepeatCount, repeatInterval, actionsList );
+  }
+  
+  public void deleteJobs( List<Schedule> scheduleList ) throws SchedulerServiceException {
+    subscriptionProxy.deleteJobs( scheduleList );
   }
 }
