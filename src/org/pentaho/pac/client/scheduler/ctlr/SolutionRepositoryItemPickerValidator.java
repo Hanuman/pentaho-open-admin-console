@@ -22,6 +22,9 @@ public class SolutionRepositoryItemPickerValidator implements IUiValidator {
     } else if ( actionList.size() <= 0 ) {
       isValid = false;
       solRepPicker.setActionsError( "Action sequence list cannot be empty." );
+//    } else if () {
+//      TODO sbarkdull
+//      validate that each action sequence string has 2 "/" and ends in ".xaction"
     }
     
     return isValid;
