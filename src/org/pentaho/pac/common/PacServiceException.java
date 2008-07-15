@@ -1,8 +1,10 @@
 package org.pentaho.pac.common;
 
+import java.io.Serializable;
 
 
-public class PacServiceException extends CheckedException {
+
+public class PacServiceException extends CheckedException implements Serializable {
   
   /**
    * 
