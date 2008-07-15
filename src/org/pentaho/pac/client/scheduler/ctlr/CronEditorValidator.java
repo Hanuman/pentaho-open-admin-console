@@ -1,8 +1,6 @@
 package org.pentaho.pac.client.scheduler.ctlr;
 
 import org.pentaho.pac.client.scheduler.CronParser;
-import org.pentaho.pac.client.scheduler.DateRangeEditorValidator;
-import org.pentaho.pac.client.scheduler.IUiValidator;
 import org.pentaho.pac.client.scheduler.view.CronEditor;
 
 public class CronEditorValidator implements IUiValidator {

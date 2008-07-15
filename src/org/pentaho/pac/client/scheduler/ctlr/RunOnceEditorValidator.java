@@ -1,4 +1,4 @@
-package org.pentaho.pac.client.scheduler;
+package org.pentaho.pac.client.scheduler.ctlr;
 
 import org.pentaho.pac.client.scheduler.view.RunOnceEditor;
 

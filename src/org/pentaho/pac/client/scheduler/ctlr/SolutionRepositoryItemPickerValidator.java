@@ -1,8 +1,8 @@
-package org.pentaho.pac.client.scheduler.view;
+package org.pentaho.pac.client.scheduler.ctlr;
 
 import java.util.List;
 
-import org.pentaho.pac.client.scheduler.IUiValidator;
+import org.pentaho.pac.client.scheduler.view.SolutionRepositoryItemPicker;
 
 public class SolutionRepositoryItemPickerValidator implements IUiValidator {
 

@@ -36,7 +36,6 @@ import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.common.util.TimeUtil;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.scheduler.CronParseException;
-import org.pentaho.pac.client.scheduler.ScheduleEditorValidator;
 import org.pentaho.pac.client.scheduler.model.Schedule;
 import org.pentaho.pac.client.scheduler.model.SchedulesModel;
 import org.pentaho.pac.client.scheduler.view.ScheduleCreatorDialog;
@@ -45,7 +44,6 @@ import org.pentaho.pac.client.scheduler.view.SchedulerPanel;
 import org.pentaho.pac.client.scheduler.view.SchedulerToolbar;
 import org.pentaho.pac.client.scheduler.view.SchedulesListCtrl;
 import org.pentaho.pac.client.scheduler.view.SolutionRepositoryItemPicker;
-import org.pentaho.pac.client.scheduler.view.SolutionRepositoryItemPickerValidator;
 import org.pentaho.pac.client.scheduler.view.ScheduleCreatorDialog.TabIndex;
 import org.pentaho.pac.client.scheduler.view.ScheduleEditor.ScheduleType;
 
