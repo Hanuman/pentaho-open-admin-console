@@ -48,14 +48,7 @@ public class TimePicker extends HorizontalPanel {
     setHour( parts[0] );
     setMinute( parts[1] );
     //setSeconds( lastParts[0] );
-    TimeOfDay td;
-    try {
-      td = TimeOfDay.stringToTimeOfDay( lastParts[1] );
-    } catch (EnumException e) {
-      // TODO sbarkdull, bad fix this, rethrow something different?
-      e.printStackTrace();
-      return;
-    }
+    TimeOfDay td = TimeOfDay.stringToTimeOfDay( lastParts[1] );
     setTimeOfDay( td );
   }
   
