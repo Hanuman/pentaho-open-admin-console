@@ -42,12 +42,14 @@ import org.pentaho.pac.common.users.ProxyPentahoUser;
 import org.pentaho.pac.server.common.AppConfigProperties;
 import org.pentaho.pac.server.common.BiServerTrustedProxy;
 import org.pentaho.pac.server.common.DAOException;
+import org.pentaho.pac.server.common.ProxyException;
 import org.pentaho.pac.server.common.ThreadSafeHttpClient;
 import org.pentaho.pac.server.common.ThreadSafeHttpClient.HttpMethodType;
 import org.pentaho.pac.server.datasources.DataSourceMgmtService;
 import org.pentaho.pac.server.datasources.IDataSourceMgmtService;
 import org.pentaho.pac.server.i18n.Messages;
 import org.pentaho.pac.server.scheduler.XmlSerializer;
+import org.pentaho.pac.server.scheduler.XmlSerializerException;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -720,9 +722,19 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     params.put( "path", path ); //$NON-NLS-1$
     params.put( "action", xAction ); //$NON-NLS-1$
     
-    String strResponse = biServerProxy.execRemoteMethod( "ServiceAction", HttpMethodType.GET, userName, params ); //$NON-NLS-1$
+    String strResponse;
+    try {
+      strResponse = biServerProxy.execRemoteMethod( "ServiceAction", HttpMethodType.GET, userName, params );//$NON-NLS-1$
+    } catch (ProxyException e) {
+      throw new PacServiceException( e.getMessage(), e );
+    } 
     XmlSerializer s = new XmlSerializer();
-    String errorMsg = s.getXActionResponseStatusFromXml( strResponse );
+    String errorMsg;
+    try {
+      errorMsg = s.getXActionResponseStatusFromXml( strResponse );
+    } catch (XmlSerializerException e) {
+      throw new PacServiceException( e.getMessage(), e );
+    }
     if ( null != errorMsg ) {
       throw new PacServiceException( errorMsg );
     }
@@ -737,7 +749,12 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     params.put( "style", "popup" ); //$NON-NLS-1$ //$NON-NLS-2$
     params.put( "class", publisherClassName ); //$NON-NLS-1$
     
-    String strResponse = biServerProxy.execRemoteMethod( "Publish", HttpMethodType.GET, userName, params ); //$NON-NLS-1$
+    String strResponse;
+    try {
+      strResponse = biServerProxy.execRemoteMethod( "Publish", HttpMethodType.GET, userName, params );//$NON-NLS-1$
+    } catch (ProxyException e) {
+      throw new PacServiceException( e.getMessage(), e );
+    } 
     XmlSerializer s = new XmlSerializer();
     String errorMsg = s.getPublishStatusFromXml( strResponse );
     if ( null != errorMsg ) {
@@ -749,7 +766,11 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   
   private String resetSolutionRepository(String userid ) throws PacServiceException {
 
-    String strResponse = biServerProxy.execRemoteMethod( "ResetRepository", HttpMethodType.GET, userName, /*params*/null ); //$NON-NLS-1$
+    try {
+      String strResponse = biServerProxy.execRemoteMethod( "ResetRepository", HttpMethodType.GET, userName, /*params*/null );//$NON-NLS-1$
+    } catch (ProxyException e) {
+      throw new PacServiceException( e.getMessage(), e );
+    } 
     return Messages.getString( "PacService.ACTION_COMPLETE" ); //$NON-NLS-1$
   }
 
@@ -898,7 +919,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     String html = null;
     try {
       html = client.execRemoteMethod( null, HttpMethodType.GET, params, "text/html" );//$NON-NLS-1$
-    } catch (PacServiceException e) {
+    } catch (ProxyException e) {
       html = showStatic();
     }
     final String BODY_TAG = "<body>"; //$NON-NLS-1$
@@ -926,7 +947,11 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   
   public void isBiServerAlive() throws PacServiceException {
     ThreadSafeHttpClient c = new ThreadSafeHttpClient( biServerBaseURL );
-    String response = c.execRemoteMethod( "ping/alive.gif", HttpMethodType.GET, null ); //$NON-NLS-1$
+    try {
+      String response = c.execRemoteMethod( "ping/alive.gif", HttpMethodType.GET, null );//$NON-NLS-1$
+    } catch (ProxyException e) {
+      throw new PacServiceException( e.getMessage(), e );
+    } 
   }
   
   public int getBiServerStatusCheckPeriod() {
