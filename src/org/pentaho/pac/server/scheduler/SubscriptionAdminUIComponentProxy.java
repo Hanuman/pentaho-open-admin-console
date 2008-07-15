@@ -3,12 +3,14 @@ package org.pentaho.pac.server.scheduler;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import org.pentaho.pac.client.scheduler.model.Schedule;
-import org.pentaho.pac.common.PacServiceException;
+import org.pentaho.pac.common.SchedulerServiceException;
 import org.pentaho.pac.server.common.BiServerTrustedProxy;
+import org.pentaho.pac.server.common.ProxyException;
 import org.pentaho.pac.server.common.ThreadSafeHttpClient.HttpMethodType;
 
 public class SubscriptionAdminUIComponentProxy {
@@ -31,15 +33,20 @@ public class SubscriptionAdminUIComponentProxy {
   }
 
   /**
-   * @throws PacServiceException 
+   * @throws SchedulerServiceException 
    */
-  public Map<String,Schedule> getSubscriptionSchedules() throws PacServiceException {
+  public Map<String,Schedule> getSubscriptionSchedules() throws SchedulerServiceException {
     Map<String, Object> params = new HashMap<String, Object>();
     params.put( "schedulerAction", "listSchedules" ); //$NON-NLS-1$  //$NON-NLS-2$
-    
-    String responseStrXml= biServerProxy.execRemoteMethod( SUBSCRIPTION_SERVICE_NAME, HttpMethodType.GET, userName, params );
+
+    String responseStrXml = executeGetMethod( params );
     XmlSerializer s = new XmlSerializer();
-    Map<String,Schedule> m = s.getSubscriptionSchedulesFromXml( responseStrXml );
+    Map<String, Schedule> m;
+    try {
+      m = s.getSubscriptionSchedulesFromXml( responseStrXml );
+    } catch (XmlSerializerException e) {
+      throw new SchedulerServiceException( e.getMessage(), e );
+    }
     return m;
   }
   
@@ -60,12 +67,12 @@ public class SubscriptionAdminUIComponentProxy {
    * @param solutionName
    * @param solutionPath
    * @param actionName
-   * @throws PacServiceException
+   * @throws SchedulerServiceException
    */
   public void createCronSchedule( String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
       String cronString,
-      String actionsList ) throws PacServiceException {
+      String actionsList ) throws SchedulerServiceException {
   
     String strStartDate = dateTimeFormatter.format( startDate );
     String strEndDate = null != endDate
@@ -86,7 +93,7 @@ public class SubscriptionAdminUIComponentProxy {
     // TODO sbarkdull, what if solutionPath is empty? 
     params.put( "actionRefs", actionsList ); //$NON-NLS-1$
 
-    String responseStrXml=  biServerProxy.execRemoteMethod( SUBSCRIPTION_SERVICE_NAME, HttpMethodType.POST, userName, params );
+    String responseStrXml = executePostMethod( params );
     // TODO sbarkdull
 
   }
@@ -94,7 +101,7 @@ public class SubscriptionAdminUIComponentProxy {
   public void createRepeatSchedule( String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
       String strRepeatCount, String repeatInterval,
-      String actionsList ) throws PacServiceException {
+      String actionsList ) throws SchedulerServiceException {
 
     String strStartDate = dateTimeFormatter.format( startDate );
     String strEndDate = null != endDate
@@ -118,13 +125,13 @@ public class SubscriptionAdminUIComponentProxy {
     params.put( "group", jobGroup ); //$NON-NLS-1$
     params.put( "actionRefs", actionsList ); //$NON-NLS-1$
 
-    String responseStrXml=  biServerProxy.execRemoteMethod( SUBSCRIPTION_SERVICE_NAME, HttpMethodType.POST, userName, params );
+    String responseStrXml = executePostMethod( params );
   }
   
   public void updateCronSchedule( String oldJobName, String oldJobGroup, String schedId,
       String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
-      String cronString, String actionsList ) throws PacServiceException {
+      String cronString, String actionsList ) throws SchedulerServiceException {
 
     String strStartDate = dateTimeFormatter.format( startDate );
     String strEndDate = null != endDate
@@ -145,14 +152,14 @@ public class SubscriptionAdminUIComponentProxy {
     String[] actionsAr = actionsList.split( "," );
     params.put( "actionRefs", actionsAr ); //$NON-NLS-1$
 
-    String responseStrXml=  biServerProxy.execRemoteMethod( SUBSCRIPTION_SERVICE_NAME, HttpMethodType.POST, userName, params );
+    String responseStrXml = executePostMethod( params );
   }
   
   public void updateRepeatSchedule(  String oldJobName, String oldJobGroup, String schedId,
       String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
       String strRepeatCount, String repeatInterval,
-      String actionsList ) throws PacServiceException {
+      String actionsList ) throws SchedulerServiceException {
 
     String strStartDate = dateTimeFormatter.format( startDate );
     String strEndDate = null != endDate 
@@ -178,6 +185,33 @@ public class SubscriptionAdminUIComponentProxy {
     String[] actionsAr = actionsList.split( "," );
     params.put( "actionRefs", actionsAr ); //$NON-NLS-1$
 
-    String responseStrXml=  biServerProxy.execRemoteMethod( SUBSCRIPTION_SERVICE_NAME, HttpMethodType.POST, userName, params );
+    String responseStrXml = executePostMethod( params );
+  }
+  
+  public void deleteJobs( List<Schedule> scheduleList ) throws SchedulerServiceException {
+    
+    for ( Schedule s : scheduleList ) {
+      Map<String, Object> params = new HashMap<String, Object>();
+      params.put( "schedulerAction", "doDeleteJob" ); //$NON-NLS-1$  //$NON-NLS-2$
+      params.put( "jobName", s.getTriggerName() ); //$NON-NLS-1$
+
+      String responseStrXml = executeGetMethod( params );
+    }
+  }
+  
+  private String executeGetMethod( Map<String, Object> params ) throws SchedulerServiceException {
+    try {
+      return biServerProxy.execRemoteMethod( SUBSCRIPTION_SERVICE_NAME, HttpMethodType.GET, userName, params );
+    } catch (ProxyException e) {
+      throw new SchedulerServiceException( e.getMessage(), e );
+    }
+  }
+  
+  private String executePostMethod(Map<String, Object> params ) throws SchedulerServiceException {
+    try {
+      return biServerProxy.execRemoteMethod( SUBSCRIPTION_SERVICE_NAME, HttpMethodType.POST, userName, params );
+    } catch (ProxyException e) {
+      throw new SchedulerServiceException( e.getMessage(), e );
+    }
   }
 }
