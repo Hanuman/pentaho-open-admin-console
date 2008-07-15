@@ -1,7 +1,9 @@
 package org.pentaho.pac.common.datasources;
 
+import java.io.Serializable;
 
-public class PentahoDataSource implements IPentahoDataSource {
+
+public class PentahoDataSource implements Serializable, IPentahoDataSource {
 
   /**
    * 
