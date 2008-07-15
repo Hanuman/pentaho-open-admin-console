@@ -37,14 +37,14 @@ public class SchedulerToolbar extends HorizontalPanel {
   private PushButton toggleResumePauseAllBtn = null;
   private ListBox filterList = null;
 
-  private ICallback onCreateListener = null;
-  private ICallback onUpdateListener = null;
-  private ICallback onDeleteListener = null;
-  private ICallback onResumeListener = null;
-  private ICallback onPauseListener = null;
-  private ICallback onRefreshListener = null;
-  private ICallback onToggleResumePauseAllListener = null;
-  private ICallback onFilterListChangeListener = null;
+  private ICallback<Widget> onCreateListener = null;
+  private ICallback<Widget> onUpdateListener = null;
+  private ICallback<Widget> onDeleteListener = null;
+  private ICallback<Widget> onResumeListener = null;
+  private ICallback<Widget> onPauseListener = null;
+  private ICallback<Widget> onRefreshListener = null;
+  private ICallback<Widget> onToggleResumePauseAllListener = null;
+  private ICallback<String> onFilterListChangeListener = null;
   
   public SchedulerToolbar() {
     super();
@@ -181,5 +181,33 @@ public class SchedulerToolbar extends HorizontalPanel {
 
   public void setOnToggleResumePauseAllListener(ICallback cb) {
     this.onToggleResumePauseAllListener = cb;
+  }
+
+  public PushButton getCreateBtn() {
+    return createBtn;
+  }
+
+  public PushButton getUpdateBtn() {
+    return updateBtn;
+  }
+
+  public PushButton getDeleteBtn() {
+    return deleteBtn;
+  }
+
+  public PushButton getResumeBtn() {
+    return resumeBtn;
+  }
+
+  public PushButton getSuspendBtn() {
+    return suspendBtn;
+  }
+
+  public PushButton getRefreshBtn() {
+    return refreshBtn;
+  }
+
+  public PushButton getToggleResumePauseAllBtn() {
+    return toggleResumePauseAllBtn;
   }
 }
