@@ -77,7 +77,7 @@ public class BiServerTrustedProxy extends ThreadSafeHttpClient {
    * @param params params to pass with request
    */
   public String execRemoteMethod( String serviceName, HttpMethodType methodType, String userName, Map<String,Object> params )
-    throws PacServiceException {
+    throws ProxyException {
     
     params.put( TRUSTED_USER_KEY, userName );
     return super.execRemoteMethod( serviceName, methodType, params );
