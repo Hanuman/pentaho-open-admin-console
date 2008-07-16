@@ -31,6 +31,5 @@
 	<classpathentry kind="lib" path="lib/gwt/gwt-datepicker-r17.jar"/>
 	<classpathentry kind="lib" path="lib/pentaho/pentaho-bi-platform-util-2.0.jar" sourcepath="/bi-platform-util"/>
 	<classpathentry kind="lib" path="lib/pentaho/pentaho-bi-platform-api-2.0.jar"/>
-	<classpathentry kind="lib" path="lib/pentaho/pentaho-bi-platform-repository-2.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
