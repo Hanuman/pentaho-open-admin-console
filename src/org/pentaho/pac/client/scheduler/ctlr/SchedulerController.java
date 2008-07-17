@@ -49,7 +49,7 @@ import org.pentaho.pac.client.scheduler.view.ScheduleCreatorDialog.TabIndex;
 import org.pentaho.pac.client.scheduler.view.ScheduleEditor.ScheduleType;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.PushButton;
+import com.google.gwt.user.client.ui.Widget;
 
 
 public class SchedulerController {
@@ -92,59 +92,60 @@ public class SchedulerController {
         }
       });
       
+      listCtrl.setOnSelectAllHandler( new ICallback<TableListCtrl<Schedule>>() {
+        public void onHandle(TableListCtrl<Schedule> listCtrl) {
+          schedulerToolbarController.enableTools();
+        }
+      });
+      
       schedulerToolbarController.enableTools();
       loadJobsTable();
       final SchedulerController localThis = this;
       
-      schedulerToolbar.setOnCreateListener( new ICallback<Object>() { 
-        public void onHandle(Object o) {
+      schedulerToolbar.setOnCreateListener( new ICallback<Widget>() { 
+        public void onHandle(Widget w) {
           localThis.handleCreateSchedule();
         }
       });
       
-      schedulerToolbar.setOnUpdateListener( new ICallback<Object>() { 
-        public void onHandle(Object o) {
+      schedulerToolbar.setOnUpdateListener( new ICallback<Widget>() { 
+        public void onHandle(Widget w) {
           localThis.handleUpdateSchedule();
         }
       });
 
-      schedulerToolbar.setOnDeleteListener( new ICallback<Object>() {
-        public void onHandle(Object o) {
+      schedulerToolbar.setOnDeleteListener( new ICallback<Widget>() {
+        public void onHandle(Widget w) {
           localThis.handleDeleteSchedules();
         }
       });
       
-      schedulerToolbar.setOnResumeListener( new ICallback<Object>() { 
-        public void onHandle(Object o) {
+      schedulerToolbar.setOnResumeListener( new ICallback<Widget>() { 
+        public void onHandle(Widget w) {
           localThis.handleResumeSchedules();
         }
       });
       
-      schedulerToolbar.setOnPauseListener( new ICallback<Object>() { 
-        public void onHandle(Object o) {
+      schedulerToolbar.setOnSuspendListener( new ICallback<Widget>() { 
+        public void onHandle(Widget w) {
           localThis.handlePauseSchedules();
         }
       });
       
-      schedulerToolbar.setOnRefreshListener( new ICallback<Object>() { 
-        public void onHandle(Object o) {
+      schedulerToolbar.setOnRunNowListener( new ICallback<Widget>() { 
+        public void onHandle(Widget w) {
+          localThis.handleRunNowSchedules();
+        }
+      });
+      
+      schedulerToolbar.setOnRefreshListener( new ICallback<Widget>() { 
+        public void onHandle(Widget w) {
           loadJobsTable();
         }
       });
       
-      // TODO sbarkdull, uh, ya, this needs some work
-      schedulerToolbar.setOnToggleResumePauseAllListener( new ICallback<Object>() { 
-        public void onHandle(Object o) {
-          PushButton b = (PushButton)o;
-          // TODO sbarkdull
-          b.setText( "toggled" );
-          
-          b.setTitle( "yep" );
-        }
-      });
-      
-      schedulerToolbar.setOnFilterListChangeListener( new ICallback<Object>() { 
-        public void onHandle(Object o) {
+      schedulerToolbar.setOnFilterListChangeListener( new ICallback<String>() { 
+        public void onHandle(String s) {
           updateSchedulesTable();
         }
       });
@@ -712,7 +713,26 @@ public class SchedulerController {
     };
     PacServiceFactory.getSchedulerService().pauseJobs( scheduleList, callback );
   }
-
+  
+  private void handleRunNowSchedules() {
+    assert false : "handleRunNowSchedules not yet implemented";
+//    SchedulesListCtrl schedulesListCtrl = schedulerPanel.getSchedulesListCtrl();
+//    final List<Schedule> scheduleList = schedulesListCtrl.getSelectedSchedules();
+//    
+//    AsyncCallback<Object> callback = new AsyncCallback<Object>() {
+//      public void onSuccess(Object result) {
+//        loadJobsTable();
+//      }
+//      public void onFailure(Throwable caught) {
+//        // TODO sbarkdull
+//        MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
+//            caught.getMessage() );
+//        messageDialog.center();
+//      }
+//    };
+//    PacServiceFactory.getSchedulerService().pauseJobs( scheduleList, callback );
+  }
+  
   private boolean isNewScheduleCreatorDialogValid() {
     ScheduleEditor schedEd = scheduleCreatorDialog.getScheduleEditor();
     ScheduleEditorValidator schedEdValidator = new NewScheduleEditorValidator( schedEd, schedulesModel );
