@@ -32,6 +32,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String refreshSystemSettings();
 
   /**
+   * Translated "Filter By:".
+   * 
+   * @return translated "Filter By:"
+   * @gwt.key filterBy
+   */
+  String filterBy();
+
+  /**
    * Translated "Are your sure you want to delete the selected roles?".
    * 
    * @return translated "Are your sure you want to delete the selected roles?"
@@ -152,9 +160,9 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String cancel();
 
   /**
-   * Translated "Click to add advance.".
+   * Translated "Click to add advanced.".
    * 
-   * @return translated "Click to add advance."
+   * @return translated "Click to add advanced."
    * @gwt.key clickAddAdvance
    */
   String clickAddAdvance();
@@ -166,6 +174,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key no
    */
   String no();
+
+  /**
+   * Translated "Next Fire Time".
+   * 
+   * @return translated "Next Fire Time"
+   * @gwt.key nextFireTime
+   */
+  String nextFireTime();
 
   /**
    * Translated "Actions".
@@ -253,23 +269,7 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @return translated "State"
    * @gwt.key state
    */
-  String state();  
-  
-  /**
-   * Translated "# Subscribers".
-   * 
-   * @return translated "# Subscribers"
-   * @gwt.key subscriberCount
-   */
-  String subscriberCount();
-  
-  /**
-   * Translated "Trigger - Group / Name".
-   * 
-   * @return translated "Trigger - Group / Name"
-   * @gwt.key scheduleGroupName
-   */
-  String scheduleGroupName();
+  String state();
 
   /**
    * Translated "Update User".
@@ -328,14 +328,6 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String allJobsSuspended();
 
   /**
-   * Translated "Fire Time - Last / Next".
-   * 
-   * @return translated "Fire Time - Last / Next"
-   * @gwt.key fireTimeLastNext
-   */
-  String fireTimeLastNext();
-
-  /**
    * Translated "Delete Job".
    * 
    * @return translated "Delete Job"
@@ -360,12 +352,20 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String refreshReportingMetadata();
 
   /**
-   * Translated "Advance".
+   * Translated "Advanced".
    * 
-   * @return translated "Advance"
+   * @return translated "Advanced"
    * @gwt.key advance
    */
   String advance();
+
+  /**
+   * Translated "# Subscribers".
+   * 
+   * @return translated "# Subscribers"
+   * @gwt.key subscriberCount
+   */
+  String subscriberCount();
 
   /**
    * Translated "Invalid user name.".
@@ -382,6 +382,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key dbPassword
    */
   String dbPassword();
+
+  /**
+   * Translated "Group".
+   * 
+   * @return translated "Group"
+   * @gwt.key scheduleGroupName
+   */
+  String scheduleGroupName();
 
   /**
    * Translated "Delete Roles".
@@ -430,6 +438,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key updateDataSource
    */
   String updateDataSource();
+
+  /**
+   * Translated "Name".
+   * 
+   * @return translated "Name"
+   * @gwt.key scheduleName
+   */
+  String scheduleName();
 
   /**
    * Translated "Invalid role name.;".
@@ -576,6 +592,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String removeRoles();
 
   /**
+   * Translated "Last Fire Time".
+   * 
+   * @return translated "Last Fire Time"
+   * @gwt.key lastFireTime
+   */
+  String lastFireTime();
+
+  /**
    * Translated "Delete Data Sources".
    * 
    * @return translated "Delete Data Sources"
@@ -672,20 +696,20 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String working();
 
   /**
-   * Translated "User Name".
-   * 
-   * @return translated "User Name"
-   * @gwt.key userName
-   */
-  String userName();
-
-  /**
    * Translated "Password does not match password confirmation.".
    * 
    * @return translated "Password does not match password confirmation."
    * @gwt.key passwordConfirmationFailed
    */
   String passwordConfirmationFailed();
+
+  /**
+   * Translated "User Name".
+   * 
+   * @return translated "User Name"
+   * @gwt.key userName
+   */
+  String userName();
 
   /**
    * Translated "Missing user name.".
@@ -840,9 +864,9 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String failedToLoadHome(String arg0);
 
   /**
-   * Translated "Click to edit advance.".
+   * Translated "Click to edit advanced.".
    * 
-   * @return translated "Click to edit advance."
+   * @return translated "Click to edit advanced."
    * @gwt.key clickEditAdvance
    */
   String clickEditAdvance();
