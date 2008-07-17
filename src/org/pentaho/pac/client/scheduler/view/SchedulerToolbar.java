@@ -102,7 +102,7 @@ public class SchedulerToolbar extends HorizontalPanel {
     Image img = new Image( "style/images/toolbarDivider.png", 0, 0, 2, 16 );
     leftPanel.add( img );
 
-    suspendBtn = createPushButton( "Suspend schedule(s)", "toolbarSuspendBtn", new ClickListener() {
+    suspendBtn = createPushButton( "Suspend selected schedule(s)", "toolbarSuspendBtn", new ClickListener() {
       public void onClick(Widget sender) {
         if ( null != onSuspendListener ) {
           onSuspendListener.onHandle( null );
@@ -111,7 +111,7 @@ public class SchedulerToolbar extends HorizontalPanel {
     });
     leftPanel.add( suspendBtn );
 
-    resumeBtn = createPushButton( "Resume schedule(s)", "toolbarResumeBtn", new ClickListener() {
+    resumeBtn = createPushButton( "Resume selected schedule(s)", "toolbarResumeBtn", new ClickListener() {
       public void onClick(Widget sender) {
         if ( null != onResumeListener ) {
           onResumeListener.onHandle( null );
@@ -120,7 +120,7 @@ public class SchedulerToolbar extends HorizontalPanel {
     });
     leftPanel.add( resumeBtn );
 
-    runNowBtn = createPushButton( "Run schedule(s) now", "toolbarRunNowBtn", new ClickListener() {
+    runNowBtn = createPushButton( "Run selected schedule(s) now", "toolbarRunNowBtn", new ClickListener() {
       public void onClick(Widget sender) {
         if ( null != onRunNowListener ) {
           onRunNowListener.onHandle( null );
