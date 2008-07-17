@@ -22,6 +22,9 @@ import java.util.Map;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.SourcesTabEvents;
+import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.TabPanel;
 
 public class ScheduleCreatorDialog extends ConfirmDialog {
@@ -65,29 +68,45 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
   public ScheduleCreatorDialog() {
     super();
 
+    this.setNoBorderOnClientPanel();
     setTitle( "Schedule Creator" );
     setClientSize( "475px", "450px" );
 
     solRepItemPicker.setWidth( "100%" );
     solRepItemPicker.setHeight( "100%" );
     
-    tabPanel.setStylePrimaryName( "schedulerTabPanel" );
-    tabPanel.add( scheduleEditor, scheduleTabLabel );
-    tabPanel.add( solRepItemPicker, scheduleActionTabLabel );
-    scheduleTabLabel.setStyleName( "tabLabel" );
-    scheduleActionTabLabel.setStyleName( "tabLabel" );
+    tabPanel.setStylePrimaryName( "schedulerTabPanel" ); //$NON-NLS-1$
+    
+    SimplePanel p = new SimplePanel();  // Simple panel required to accomodate an IE7 defect in margin styles
+    p.setStyleName( "paddingPanel" );
+    p.add(scheduleEditor);
+    tabPanel.add( p, scheduleTabLabel );
+    
+    p = new SimplePanel();  // Simple panel required to accomodate an IE7 defect in margin styles
+    p.setStyleName( "paddingPanel" );
+    p.add(solRepItemPicker);
+    tabPanel.add( p, scheduleActionTabLabel );
+    
+    scheduleTabLabel.setStylePrimaryName( "tabLabel" ); //$NON-NLS-1$
+    scheduleActionTabLabel.setStylePrimaryName( "tabLabel" ); //$NON-NLS-1$
     tabMap.put( TabIndex.SCHEDULE, scheduleTabLabel );
     tabMap.put( TabIndex.SCHEDULE_ACTION, scheduleActionTabLabel );
-
-    tabPanel.setWidth( "100%" );
-    tabPanel.setHeight( "100%" );
-    
-//  scheduleEditor.setWidth( "100%" );
-//  scheduleEditor.setHeight( "100%" );
-//    solRepItemPicker.setWidth( "100%" );
-//    solRepItemPicker.setHeight( "100%" );
     
     tabPanel.selectTab( TabIndex.SCHEDULE.value() );
+    
+    tabPanel.addTabListener( new TabListener() {
+      public boolean onBeforeTabSelected(SourcesTabEvents sender, int tabIndex) {
+        return true;
+      }
+      public void onTabSelected(SourcesTabEvents sender, int tabIndex) {
+        for ( Map.Entry<TabIndex,Label> me : tabMap.entrySet() ) {
+          Label l = me.getValue();
+          l.removeStyleDependentName( "selected" );
+        }
+        Label l = tabMap.get( TabIndex.get(  tabIndex ) );
+        l.addStyleDependentName( "selected" );
+      }
+    });
     
     addWidgetToClientArea( tabPanel );
   }
