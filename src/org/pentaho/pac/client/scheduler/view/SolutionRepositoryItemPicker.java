@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.pentaho.pac.client.common.ui.widget.ErrorLabel;
+import org.pentaho.pac.client.common.util.StringUtils;
 
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
@@ -38,8 +39,10 @@ public class SolutionRepositoryItemPicker extends VerticalPanel {
   public List<String> getActionsAsList() {
     String[] actions = actionsTA.getText().split( "," ); //$NON-NLS-1$
     List<String> l = new ArrayList<String>();
-    for ( String action : actions ) {
-      l.add( action.trim() );
+    if ( actions.length > 1 || ( 1 == actions.length && !StringUtils.isEmpty( actions[0]) ) ) {
+      for ( String action : actions ) {
+        l.add( action.trim() );
+      }
     }
     return l;
   }
