@@ -15,11 +15,15 @@
  */
 package org.pentaho.pac.client.scheduler.view;
 
+import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.ICallback;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PushButton;
@@ -27,100 +31,144 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class SchedulerToolbar extends HorizontalPanel {
 
+  protected static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   public final static String ALL_FILTER = "All";
   private PushButton createBtn = null;
   private PushButton updateBtn = null;
   private PushButton deleteBtn = null;
-  private PushButton resumeBtn = null;
   private PushButton suspendBtn = null;
+  private PushButton resumeBtn = null;
+  private PushButton runNowBtn = null;
+  private PushButton suspendSchedulerBtn = null;
+  private PushButton resumeSchedulerBtn = null;
   private PushButton refreshBtn = null;
-  private PushButton toggleResumePauseAllBtn = null;
   private ListBox filterList = null;
 
   private ICallback<Widget> onCreateListener = null;
   private ICallback<Widget> onUpdateListener = null;
   private ICallback<Widget> onDeleteListener = null;
+  private ICallback<Widget> onSuspendListener = null;
   private ICallback<Widget> onResumeListener = null;
-  private ICallback<Widget> onPauseListener = null;
+  private ICallback<Widget> onRunNowListener = null;
+  private ICallback<Widget> onSuspendSchedulerListener = null;
+  private ICallback<Widget> onResumeSchedulerListener = null;
   private ICallback<Widget> onRefreshListener = null;
-  private ICallback<Widget> onToggleResumePauseAllListener = null;
   private ICallback<String> onFilterListChangeListener = null;
   
   public SchedulerToolbar() {
     super();
+    setStyleName( "schedToolbar" );
     createToolbar();
   }
   
   private void createToolbar() {
+
+    HorizontalPanel leftPanel = new HorizontalPanel();
+    leftPanel.setStyleName( "schedToolbar.leftPanel" );
+    add( leftPanel );
     
-    final SchedulerToolbar localThis = this;
+    HorizontalPanel rightPanel = new HorizontalPanel();
+    rightPanel.setStyleName( "schedToolbar.rightPanel" );
+    add( rightPanel );
     
-    createBtn = new PushButton( "Cr", new ClickListener() {
+    createBtn = createPushButton( "Create schedule", "toolbarCreateBtn", new ClickListener() {
       public void onClick(Widget sender) {
         if ( null != onCreateListener ) {
           onCreateListener.onHandle( null );
         }
       }
-    });  
-    add( createBtn );
+    });
+    leftPanel.add( createBtn );
     
-    updateBtn = new PushButton( "UpD", new ClickListener() {
+    updateBtn = createPushButton( "Edit schedule", "toolbarUpdateBtn", new ClickListener() {
       public void onClick(Widget sender) {
         if ( null != onUpdateListener ) {
           onUpdateListener.onHandle( null );
         }
       }
-    });  
-    add( updateBtn );
-    
-    deleteBtn = new PushButton( "Del", new ClickListener() {
+    });
+    leftPanel.add( updateBtn );
+
+    deleteBtn = createPushButton( "Delete schedule(s)", "toolbarDeleteBtn", new ClickListener() {
       public void onClick(Widget sender) {
         if ( null != onDeleteListener ) {
           onDeleteListener.onHandle( null );
         }
       }
-    });  
-    add( deleteBtn );
+    });
+    leftPanel.add( deleteBtn );
     
-    resumeBtn = new PushButton( "Res", new ClickListener() {
+    //toolbarDivider
+    Image img = new Image( "style/images/toolbarDivider.png", 0, 0, 2, 16 );
+    leftPanel.add( img );
+
+    suspendBtn = createPushButton( "Suspend schedule(s)", "toolbarSuspendBtn", new ClickListener() {
+      public void onClick(Widget sender) {
+        if ( null != onSuspendListener ) {
+          onSuspendListener.onHandle( null );
+        }
+      }
+    });
+    leftPanel.add( suspendBtn );
+
+    resumeBtn = createPushButton( "Resume schedule(s)", "toolbarResumeBtn", new ClickListener() {
       public void onClick(Widget sender) {
         if ( null != onResumeListener ) {
           onResumeListener.onHandle( null );
         }
       }
-    });  
-    add( resumeBtn );
-    
-    suspendBtn = new PushButton( "Susp", new ClickListener() {
+    });
+    leftPanel.add( resumeBtn );
+
+    runNowBtn = createPushButton( "Run schedule(s) now", "toolbarRunNowBtn", new ClickListener() {
       public void onClick(Widget sender) {
-        if ( null != onPauseListener ) {
-          onPauseListener.onHandle( null );
+        if ( null != onRunNowListener ) {
+          onRunNowListener.onHandle( null );
         }
       }
-    });  
-    add( suspendBtn );
+    });
+    leftPanel.add( runNowBtn );
     
-    refreshBtn = new PushButton( "Refresh", new ClickListener() {
+    //toolbarDivider
+    img = new Image( "style/images/toolbarDivider.png", 0, 0, 2, 16 );
+    leftPanel.add( img );
+    
+    suspendSchedulerBtn = createPushButton( "Suspend scheduler", "toolbarSuspendSchedulerBtn", new ClickListener() {
+      public void onClick(Widget sender) {
+        assert false : "note implemented";
+        if ( null != onSuspendSchedulerListener ) {
+          onSuspendSchedulerListener.onHandle( null );
+        }
+      }
+    });
+    leftPanel.add( suspendSchedulerBtn );
+
+    resumeSchedulerBtn = createPushButton( "Resume scheduler", "toolbarResumeSchedulerBtn", new ClickListener() {
+      public void onClick(Widget sender) {
+        assert false : "note implemented";
+        if ( null != onResumeSchedulerListener ) {
+          onResumeSchedulerListener.onHandle( null );
+        }
+      }
+    });
+    leftPanel.add( resumeSchedulerBtn );
+    
+    //toolbarDivider
+    img = new Image( "style/images/toolbarDivider.png", 0, 0, 2, 16 );
+    leftPanel.add( img );
+    
+    refreshBtn = createPushButton( "Refresh schedule list", "toolbarRefreshBtn", new ClickListener() {
       public void onClick(Widget sender) {
         if ( null != onRefreshListener ) {
           onRefreshListener.onHandle( null );
         }
       }
-    });  
-    add( refreshBtn );
-    
-    toggleResumePauseAllBtn = new PushButton( "RSAll", new ClickListener() {
-      public void onClick(Widget sender) {
-        if ( null != onToggleResumePauseAllListener ) {
-          onToggleResumePauseAllListener.onHandle( sender );
-        }
-      }
-    });  
-    add( toggleResumePauseAllBtn );
+    });
+    leftPanel.add( refreshBtn );
     
     HorizontalPanel filterPanel = new HorizontalPanel();
     filterPanel.setStyleName( "filterPanel" );
-    Label l = new Label( "Filter:" );
+    Label l = new Label( MSGS.filterBy() );
     filterPanel.add( l );
     
     filterList = new ListBox();
@@ -136,7 +184,21 @@ public class SchedulerToolbar extends HorizontalPanel {
       }
     });
     filterPanel.add( filterList );
-    add( filterPanel );
+    rightPanel.add( filterPanel );
+
+    this.setCellHorizontalAlignment( leftPanel, HasHorizontalAlignment.ALIGN_LEFT );
+    this.setCellHorizontalAlignment( rightPanel, HasHorizontalAlignment.ALIGN_RIGHT );
+  }
+  
+  private static PushButton createPushButton( String hoverText, String styleName, ClickListener clickListener ) {
+    PushButton btn = new PushButton();
+    btn.addClickListener( clickListener ); 
+    
+    btn.setStylePrimaryName( styleName );
+    btn.addStyleName( "toolbarBtn" );
+    btn.setTitle( hoverText );
+    
+    return btn;
   }
   
   public void clearFilters() {
@@ -151,36 +213,48 @@ public class SchedulerToolbar extends HorizontalPanel {
     return filterList.getValue( filterList.getSelectedIndex() );
   }
   
-  public void setOnCreateListener( ICallback cb ) {
+  public void setOnCreateListener( ICallback<Widget> cb ) {
     this.onCreateListener = cb;
   }
   
-  public void setOnUpdateListener( ICallback cb ) {
+  public void setOnUpdateListener( ICallback<Widget> cb ) {
     this.onUpdateListener = cb;
   }
   
-  public void setOnDeleteListener( ICallback cb ) {
+  public void setOnDeleteListener( ICallback<Widget> cb ) {
     this.onDeleteListener = cb;
   }
   
-  public void setOnResumeListener( ICallback cb ) {
+  public void setOnResumeListener( ICallback<Widget> cb ) {
     this.onResumeListener = cb;
   }
   
-  public void setOnPauseListener( ICallback cb ) {
-    this.onPauseListener = cb;
+  public void setOnSuspendListener( ICallback<Widget> cb ) {
+    this.onSuspendListener = cb;
   }
   
-  public void setOnRefreshListener( ICallback cb ) {
+  public void setOnRunNowListener( ICallback<Widget> cb ) {
+    this.onRunNowListener = cb;
+  }
+  
+  public void setOnResumeSchedulerListener( ICallback<Widget> cb ) {
+    this.onResumeSchedulerListener = cb;
+  }
+  
+  public void setOnSuspendSchedulerListener( ICallback<Widget> cb ) {
+    this.onSuspendSchedulerListener = cb;
+  }
+  
+  public void setOnRefreshListener( ICallback<Widget> cb ) {
     this.onRefreshListener = cb;
   }
   
-  public void setOnFilterListChangeListener( ICallback cb ) {
+  public void setOnFilterListChangeListener( ICallback<String> cb ) {
     this.onFilterListChangeListener = cb;
   }
 
-  public void setOnToggleResumePauseAllListener(ICallback cb) {
-    this.onToggleResumePauseAllListener = cb;
+  public PushButton getRunNowBtn() {
+    return runNowBtn;
   }
 
   public PushButton getCreateBtn() {
@@ -203,11 +277,15 @@ public class SchedulerToolbar extends HorizontalPanel {
     return suspendBtn;
   }
 
-  public PushButton getRefreshBtn() {
-    return refreshBtn;
+  public PushButton getResumeSchedulerBtn() {
+    return resumeSchedulerBtn;
   }
 
-  public PushButton getToggleResumePauseAllBtn() {
-    return toggleResumePauseAllBtn;
+  public PushButton getSuspendSchedulerBtn() {
+    return suspendSchedulerBtn;
+  }
+
+  public PushButton getRefreshBtn() {
+    return refreshBtn;
   }
 }
