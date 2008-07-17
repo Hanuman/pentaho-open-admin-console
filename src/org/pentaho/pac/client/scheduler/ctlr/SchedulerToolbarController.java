@@ -18,6 +18,8 @@ package org.pentaho.pac.client.scheduler.ctlr;
 import org.pentaho.pac.client.scheduler.view.SchedulerToolbar;
 import org.pentaho.pac.client.scheduler.view.SchedulesListCtrl;
 
+import com.google.gwt.user.client.ui.ButtonBase;
+
 public class SchedulerToolbarController {
   
   private SchedulerToolbar schedulerToolbar;
@@ -30,13 +32,24 @@ public class SchedulerToolbarController {
   
   public void enableTools() {
     int numSelectedItems = schedulesListCtrl.getNumSelections();
-    
-    schedulerToolbar.getCreateBtn().setEnabled( true );
-    schedulerToolbar.getDeleteBtn().setEnabled( numSelectedItems > 0 );
-    schedulerToolbar.getRefreshBtn().setEnabled( true );
-    schedulerToolbar.getResumeBtn().setEnabled( numSelectedItems > 0 );
-    schedulerToolbar.getSuspendBtn().setEnabled( numSelectedItems > 0);
-    schedulerToolbar.getUpdateBtn().setEnabled( 1 == numSelectedItems );
-    schedulerToolbar.getToggleResumePauseAllBtn().setEnabled( true );
+
+    enableWidget( schedulerToolbar.getCreateBtn(), true );
+    enableWidget( schedulerToolbar.getUpdateBtn(), 1 == numSelectedItems );
+    enableWidget( schedulerToolbar.getDeleteBtn(), numSelectedItems > 0 );
+    enableWidget( schedulerToolbar.getSuspendBtn(),  numSelectedItems > 0 );
+    enableWidget( schedulerToolbar.getResumeBtn(), numSelectedItems > 0 );
+    enableWidget( schedulerToolbar.getRunNowBtn(), numSelectedItems > 0 );
+    enableWidget( schedulerToolbar.getSuspendSchedulerBtn(), false );
+    enableWidget( schedulerToolbar.getResumeSchedulerBtn(), false );
+    enableWidget( schedulerToolbar.getRefreshBtn(), true );
+  }
+  
+  private static void enableWidget( ButtonBase btn, boolean isEnabled ) {
+    btn.setEnabled( isEnabled );
+    if ( isEnabled ) {
+      btn.removeStyleDependentName( "disabled" );
+    } else {
+      btn.addStyleDependentName( "disabled" );
+    }
   }
 }
