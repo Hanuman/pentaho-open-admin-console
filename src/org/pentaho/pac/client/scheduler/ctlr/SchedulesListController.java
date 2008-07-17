@@ -46,42 +46,35 @@ public class SchedulesListController {
   
         Widget[] widgets = new Widget[ NUM_COLUMNS ];
 
-        // column 0 
-        VerticalPanel vp = new VerticalPanel();
-        vp.setStyleName( "schedulesTableCellTable" ); //$NON-NLS-1$
-        vp.add( new Label( schedule.getJobName()) );
-        vp.add( new Label( schedule.getJobGroup() ) );
-        widgets[ 0 ] = vp;
-
+        // column 0
+        Label l = new Label( schedule.getJobName());
+        widgets[ 0 ] = l;
+        
         // column 1
-        Label l = new Label();
+        l = new Label( schedule.getJobGroup() );
+        widgets[ 1 ] = l;
+
+        // column 2
+        l = new Label();
         String txt = StringUtils.defaultString( schedule.getTriggerState(),
             "<span>&nbsp;</span>" ); //$NON-NLS-1$
         l.getElement().setInnerHTML( txt );
-        widgets[ 1 ] = l;
+        widgets[ 2 ] = l;
 
-        // column 2 
-        vp = new VerticalPanel();
-        vp.setStyleName( "schedulesTableCellTable" ); //$NON-NLS-1$
-        vp.add( new Label( schedule.getPrevFireTime() ) );
-        vp.add( new Label( schedule.getNextFireTime() ) );
-        // TODO remove next line, only for debug
-        vp.add( new Label( schedule.getCronString()) );
-        widgets[ 2 ] = vp;
+        // column 3 
+        l = new Label( schedule.getPrevFireTime() );
+        widgets[ 3 ] = l;
+        
+        // column 4
+        l = new Label( schedule.getNextFireTime() );
+        widgets[ 4 ] = l;
 
-        // column 3
+        // column 5
         String labelTxt = schedule.isSubscriptionSchedule()
           ? schedule.getSubscriberCount()
           : "n/a";
         l = new Label( labelTxt );
-        widgets[ 3 ] = l;
-        
-        // column 4
-        l = new Label();
-        txt = StringUtils.defaultString( schedule.getDescription(),
-            "<span>&nbsp;</span>" ); //$NON-NLS-1$
-        l.getElement().setInnerHTML( txt );
-        widgets[ 4 ] = l;
+        widgets[ 5 ] = l;
 
         schedulesListCtrl.addRow( widgets, schedule );
       }
