@@ -708,7 +708,6 @@ a:visited {
 	text-decoration: none;
 }
 
-
 .toolbar{
 	margin: 0px 0px 0px 2px;
 	padding: 0 0px 0 0;
@@ -1099,12 +1098,14 @@ a:visited {
 }
 
 /* some cells in the schedule table contain tables to support multiple rows in the cell */
+/* sbarkdull, this may no longer be used*/
 .schedulesTableCellTable {
 	border: 0px;
 	padding: 0px;
 	margin: 0px;
 }
 
+/* sbarkdull, this may no longer be used*/
 .schedulesTableCellTable td {
 	border: 0px;
 	padding: 0px;
@@ -1141,18 +1142,21 @@ a:visited {
 
 /* begin styles for BasicDialog, also see: ".gwt-DialogBox" and ".gwt-DialogBox .Caption" */
 .basicDialog\.rootPanel {
-	/*background-color: red;*/
 	margin: 20px 20px 10px 20px;	/* top right bottom left*/
 	background-color: #EDEDED;
 	padding: 0px;
 }
 
 .basicDialog\.clientPanel {
-	/*background-color: red;*/
 	border: 1px solid #95A22C;
 	margin-bottom: 10px;
 	vertical-align: top;
 	padding: 10px;
+}
+
+.basicDialog\.clientPanelNoBorder {
+	margin-bottom: 10px;
+	vertical-align: top;
 }
 
 .basicDialog\.buttonPanel {
@@ -1164,6 +1168,10 @@ a:visited {
 	/*background-color: red;*/
 	padding: 0px;
 	margin: 0px 0px 0px 10px;	/* top right bottom left*/
+}
+
+.titleBarLabel {
+	color: #FFFFFF;
 }
 
 .basicDialog\.titleBarContent {
@@ -1455,11 +1463,17 @@ a:visited {
 	background-color: #FFDDDD;
 	color: #FF0000;
 }
-/* style for the tab labels in the Schedule Creator dialog's 2 tabs */
+
+/* begin style for the tab labels in the Schedule Creator dialog's 2 tabs */
 .tabLabel {
 	white-space: nowrap;
 	width: 100%;
 	height: 100%;
+	color: #000000;
+}
+
+.tabLabel-selected {
+	color: #FFFFFF;
 }
 
 .tabLabelError {
@@ -1469,16 +1483,115 @@ a:visited {
 	width: 100%;
 	height: 100%;
 }
+/* end style for the tab labels in the Schedule Creator dialog's 2 tabs */
 
 .schedulerTabPanel {
+	width: 100%;
+	height: 475px;
+}
+
+/* modest kludge to force some space around the enclosed panel 
+   kludge required because IE7 doesn't handle margins worth a duck */
+.paddingPanel {
+	padding: 10px;
 }
 
 .scheduleEditor {
-	margin: 10px;
+	/* can't add a margin here, IE7 can't handle it */
+	/*margin: 10px;*/
 }
+
 .solRepItemPicker {
-	margin: 10px;
+	/* can't add a margin here, IE7 can't handle it */
+/*	margin: 10px;*/
 }
+
+/* begin scheduler toolbar */
+.schedToolbar {
+	border: 1px dotted #999999;
+	width:100%;
+	background-color: #DDDDDD;
+}
+
+.schedToolbar\.leftPanel {
+	/*background-color: cyan;*/
+}
+
+.schedToolbar\.leftPanel td {
+	padding: 4px;
+}
+
+.schedToolbar\.rightPanel {
+}
+
+.toolbarBtn {
+	width: 16px;
+	height: 16px;
+	/*border: 1px dotted red;*/
+	/* sbarkdull: setting the padding here doesn't work properly on IE7*/
+}
+.toolbarCreateBtn {
+	background: url(style/images/create.png) no-repeat center center;
+	padding-left: 0px;
+}
+.toolbarCreateBtn-disabled {
+	background: url(style/images/create_disabled.png) no-repeat center center;
+	padding-left: 0px;
+}
+.toolbarUpdateBtn {
+	background: url(style/images/update.png) no-repeat center center;
+}
+.toolbarUpdateBtn-disabled {
+	background: url(style/images/update_disabled.png) no-repeat center center;
+}
+.toolbarDeleteBtn {
+	background: url(style/images/delete.png) no-repeat center center;
+}
+.toolbarDeleteBtn-disabled {
+	background: url(style/images/delete_disabled.png) no-repeat center center;
+}
+.toolbarResumeBtn {
+	background: url(style/images/resume.png) no-repeat center center;
+}
+.toolbarResumeBtn-disabled {
+	background: url(style/images/resume_disabled.png) no-repeat center center;
+}
+.toolbarSuspendBtn {
+	background: url(style/images/suspend.png) no-repeat center center;
+}
+.toolbarSuspendBtn-disabled {
+	background: url(style/images/suspend_disabled.png) no-repeat center center;
+}
+.toolbarRunNowBtn {
+	background: url(style/images/run.png) no-repeat center center;
+}
+.toolbarRunNowBtn-disabled {
+	background: url(style/images/run_disabled.png) no-repeat center center;
+}
+.toolbarSuspendSchedulerBtn {
+	background: url(style/images/suspend.png) no-repeat center center;
+}
+.toolbarSuspendSchedulerBtn-disabled {
+	background: url(style/images/suspend_disabled.png) no-repeat center center;
+}
+.toolbarResumeSchedulerBtn {
+	background: url(style/images/resume.png) no-repeat center center;
+}
+.toolbarResumeSchedulerBtn-disabled {
+	background: url(style/images/resume_disabled.png) no-repeat center center;
+}
+.toolbarRefreshBtn {
+	background: url(style/images/refresh_small.png) no-repeat center center;
+}
+.toolbarRefreshBtn-disabled {
+	background: url(style/images/refresh_small_disabled.png) no-repeat center center;
+}
+.toolbarDivider {
+	background: url(style/images/toolbarDivider.png) no-repeat center center;
+	width: 2px;
+	height: 16px;
+}
+/* end scheduler toolbar */
 
 /* not used
 .tabLabelError-selected {
