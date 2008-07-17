@@ -40,7 +40,6 @@ public class BasicDialog extends DialogBox {
     clientPanel = new VerticalPanel();
     setClientSize( "250px", "140px" ); //$NON-NLS-1$ //$NON-NLS-2$
     clientPanel.setStyleName("basicDialog.clientPanel"); //$NON-NLS-1$
-
     rootPanel.add( clientPanel );
     
     btnPanel = new HorizontalPanel();
@@ -53,6 +52,10 @@ public class BasicDialog extends DialogBox {
     initTitleBar();
     
     setWidget(rootPanel);
+  }
+  
+  protected void setNoBorderOnClientPanel() {
+    clientPanel.setStyleName("basicDialog.clientPanelNoBorder"); //$NON-NLS-1$
   }
   
   protected void setClientSize( String width, String height ) {
@@ -86,6 +89,7 @@ public class BasicDialog extends DialogBox {
   }
   
   private void initTitleBar() {
+    titleBarLabel.setStyleName( "titleBarLabel" );
     // add a span tag to the title bar to store the title and X icon later
     titleBarSpanId = "basicDialogTitle" + Integer.toString( idCounter ); //$NON-NLS-1$
     idCounter++;
