@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class ConfirmDialog extends MessageDialog {
 
   protected Button cancelBtn = null;
-  private ICallback cancelHandler = new ICallback() {
+  private ICallback<Object> cancelHandler = new ICallback<Object>() {
     public void onHandle(Object o) {
       hide();
     }
