@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.pentaho.pac.client.common.EnumException;
-import org.pentaho.pac.client.common.ui.SimpleGroupBox;
 import org.pentaho.pac.client.common.ui.widget.ErrorLabel;
 import org.pentaho.pac.client.common.util.TimeUtil;
 import org.pentaho.pac.client.scheduler.CronParseException;
@@ -113,7 +112,6 @@ public class ScheduleEditor extends VerticalPanel {
   private TextBox groupNameTb = new TextBox();
   private TextBox descriptionTb = new TextBox();
   private ListBox scheduleCombo = null;
-  private SimpleGroupBox scheduleGB = null;
   
   // validation labels
   private ErrorLabel nameLabel;
@@ -147,15 +145,13 @@ public class ScheduleEditor extends VerticalPanel {
 
     rowNum++;
     scheduleCombo = createScheduleCombo();
-    l = new Label( "Schedule Type:" );
+    l = new Label( "Recurrence:" );
     add( l );
     add( scheduleCombo );
 
     rowNum++;
-    scheduleGB = new SimpleGroupBox( ScheduleType.RUN_ONCE.toString() + " Editor" );
     VerticalPanel vp = new VerticalPanel();
-    scheduleGB.add( vp );
-    add( scheduleGB );
+    add( vp );
 
     runOnceEditor = new RunOnceEditor();
     vp.add( runOnceEditor );
@@ -439,13 +435,12 @@ public class ScheduleEditor extends VerticalPanel {
     // show the selected panel
     Panel p = scheduleTypeMap.get( scheduleType );
     p.setVisible( true );
+    
     TemporalValue tv = scheduleTypeToTemporalValue( scheduleType );
     if ( null != tv ) {
       // force the recurrence editor to display the appropriate ui
       recurrenceEditor.setTemporalState( tv );
     }
-    // set the caption in the group box
-    scheduleGB.setCaption( scheduleType.toString() + " Editor"  );
   }
   
   /**
