@@ -1,5 +1,7 @@
 package org.pentaho.pac.client;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -136,6 +138,14 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
   protected Widget getPage(AdminConsolePageId pageId) {
     PageInfo pageInfo = pageMap.get(pageId.ordinal());
     return pageInfo != null ? pageInfo.page : null;
+  }
+  
+  protected Collection<Widget> getPages() {
+    ArrayList<Widget> pages = new ArrayList<Widget>();
+    for (PageInfo pageInfo : pageMap.values()) {
+      pages.add(pageInfo.page);
+    }
+    return pages;
   }
   
   protected void addPageToDeck(int pageId, String toggleButtonLabel, Widget widget) {
