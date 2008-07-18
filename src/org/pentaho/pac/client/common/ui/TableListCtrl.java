@@ -32,8 +32,7 @@ public class TableListCtrl<RowDataType> extends ScrollPanel {
   private static final int SELECT_COLUMN = 0;
   private static final int FIRST_COLUMN = SELECT_COLUMN+1;
   private static final String BLANK = "&nbsp;"; //$NON-NLS-1$
-  private static final String DEFAULT_HEIGHT = "230px"; //$NON-NLS-1$
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
+ 	private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   
   public TableListCtrl( String[] columnHeaderNames )
   {
@@ -44,7 +43,6 @@ public class TableListCtrl<RowDataType> extends ScrollPanel {
   {
     super();
 
-    setHeight( DEFAULT_HEIGHT );
     table = createTable( columnHeaderWidgets );
     add( table );
   }
