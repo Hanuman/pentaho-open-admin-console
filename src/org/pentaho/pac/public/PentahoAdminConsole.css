@@ -1490,6 +1490,11 @@ a:visited {
 	height: 475px;
 }
 
+.schedulerListCtrl {
+	background-color: purple;
+	height: 510px;
+}
+	
 /* modest kludge to force some space around the enclosed panel 
    kludge required because IE7 doesn't handle margins worth a duck */
 .paddingPanel {
