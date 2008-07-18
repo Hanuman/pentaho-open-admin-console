@@ -50,8 +50,8 @@ public class SchedulerPanel extends VerticalPanel {
     schedulesListCtrl = new SchedulesListCtrl();
     add( schedulesListCtrl );
 
-    setCellHeight(schedulerToolbar, "10px" );
-    setCellHeight(schedulesListCtrl, "100%" );
+//    setCellHeight(schedulerToolbar, "10px" );
+//    setCellHeight(schedulesListCtrl, "100%" );
   }
   
   public SchedulerToolbar getSchedulerToolbar() {
