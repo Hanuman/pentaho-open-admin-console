@@ -1492,7 +1492,8 @@ a:visited {
 
 .schedulerListCtrl {
 	background-color: purple;
-	height: 510px;
+	/*height: 510px;*/
+	height: 100%;
 }
 	
 /* modest kludge to force some space around the enclosed panel 
