@@ -156,7 +156,6 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
     dataSourcesList.addChangeListener(this);
     addDataSourceBtn.addClickListener(this);
     deleteDataSourceBtn.addClickListener(this);
-    refresh();
     return dataSourceListPanel;
   }
 
