@@ -16,6 +16,8 @@
 
 package org.pentaho.pac.client.scheduler.view;
 
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class SchedulerPanel extends VerticalPanel {
@@ -39,6 +41,9 @@ public class SchedulerPanel extends VerticalPanel {
   
   private void createUI()
   {
+    setVerticalAlignment( HasVerticalAlignment.ALIGN_TOP );
+    setHorizontalAlignment( HasHorizontalAlignment.ALIGN_LEFT );
+
     schedulerToolbar = new SchedulerToolbar();
     add( schedulerToolbar );
     
