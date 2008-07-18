@@ -22,6 +22,7 @@ import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -32,7 +33,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class SchedulerToolbar extends HorizontalPanel {
 
   protected static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
-  public final static String ALL_FILTER = "All";
+  public final static String ALL_FILTER = "All Groups";
   private PushButton createBtn = null;
   private PushButton updateBtn = null;
   private PushButton deleteBtn = null;
@@ -170,10 +171,10 @@ public class SchedulerToolbar extends HorizontalPanel {
     filterPanel.setStyleName( "filterPanel" );
     Label l = new Label( MSGS.filterBy() );
     filterPanel.add( l );
+    filterPanel.setVerticalAlignment( HasVerticalAlignment.ALIGN_MIDDLE );
     
     filterList = new ListBox();
     filterList.setVisibleItemCount( 1 );
-    filterList.addItem( ALL_FILTER );
 
     filterList.addChangeListener( new ChangeListener() {
       public void onChange(Widget sender) {
@@ -209,8 +210,26 @@ public class SchedulerToolbar extends HorizontalPanel {
     filterList.addItem( name );
   }
   
+  /**
+   * 
+   * @return null if list is emtpy, otherwise the value of the selected item
+   */
   public String getFilterValue() {
-    return filterList.getValue( filterList.getSelectedIndex() );
+    return ( 0 == filterList.getItemCount() )
+      ? null
+      : filterList.getValue( filterList.getSelectedIndex() );
+  }
+  
+  public void setFilterValue( String value ) {
+    int selectedIdx = 0;
+    for ( int ii=0; ii<filterList.getItemCount(); ++ii ) {
+      String filterValue = filterList.getValue( ii );
+      if ( filterValue.equals( value ) ) {
+        selectedIdx = ii;
+        break;
+      }
+    }
+    filterList.setSelectedIndex( selectedIdx );
   }
   
   public void setOnCreateListener( ICallback<Widget> cb ) {
