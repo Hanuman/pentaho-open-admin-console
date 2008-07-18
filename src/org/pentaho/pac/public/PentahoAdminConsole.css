@@ -987,6 +987,11 @@ a:visited {
 	padding: 10px;
 }
 
+.schedulerPanel td {
+	padding:0px;
+	vertical-align: top;
+}
+
 .schedulerPanel a {
 	cursor: hand;
 	cursor: pointer;
@@ -1485,15 +1490,15 @@ a:visited {
 }
 /* end style for the tab labels in the Schedule Creator dialog's 2 tabs */
 
+/* tab panels in the schedule editor (Schedule, Scheduled Actions)*/
 .schedulerTabPanel {
 	width: 100%;
 	height: 475px;
 }
 
 .schedulerListCtrl {
-	background-color: purple;
-	/*height: 510px;*/
-	height: 100%;
+	/*background-color: purple;*/
+	height: 555px;
 }
 	
 /* modest kludge to force some space around the enclosed panel 
@@ -1517,6 +1522,9 @@ a:visited {
 	border: 1px dotted #999999;
 	width:100%;
 	background-color: #DDDDDD;
+}
+
+.schedToolbar td {
 }
 
 .schedToolbar\.leftPanel {
