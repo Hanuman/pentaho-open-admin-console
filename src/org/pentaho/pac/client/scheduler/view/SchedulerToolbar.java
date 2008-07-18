@@ -169,9 +169,9 @@ public class SchedulerToolbar extends HorizontalPanel {
     
     HorizontalPanel filterPanel = new HorizontalPanel();
     filterPanel.setStyleName( "filterPanel" );
+    filterPanel.setVerticalAlignment( HasVerticalAlignment.ALIGN_MIDDLE );
     Label l = new Label( MSGS.filterBy() );
     filterPanel.add( l );
-    filterPanel.setVerticalAlignment( HasVerticalAlignment.ALIGN_MIDDLE );
     
     filterList = new ListBox();
     filterList.setVisibleItemCount( 1 );
