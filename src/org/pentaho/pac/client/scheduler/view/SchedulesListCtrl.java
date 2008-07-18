@@ -46,7 +46,7 @@ public class SchedulesListCtrl extends TableListCtrl<Schedule> {
   {
     super( COLUMN_HEADER_TITLE );
     
-    setHeight( "230px" ); //$NON-NLS-1$
+    setStyleName( "schedulerListCtrl" );
     setTableStyleName( "schedulesTable" ); //$NON-NLS-1$
     setTableHeaderStyleName( "schedulesTableHeader" ); //$NON-NLS-1$
   }
