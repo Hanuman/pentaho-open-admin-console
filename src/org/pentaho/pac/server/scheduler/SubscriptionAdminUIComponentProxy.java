@@ -207,7 +207,7 @@ public class SubscriptionAdminUIComponentProxy {
       throw new SchedulerServiceException( e.getMessage(), e );
     }
     XmlSerializer s = new XmlSerializer();
-    s.detectExceptionInXml( strXmlResponse );
+    s.detectSubscriptionExceptionInXml( strXmlResponse );
     return strXmlResponse;
   }
   
@@ -219,7 +219,7 @@ public class SubscriptionAdminUIComponentProxy {
       throw new SchedulerServiceException( e.getMessage(), e );
     }
     XmlSerializer s = new XmlSerializer();
-    s.detectExceptionInXml( strXmlResponse );
+    s.detectSubscriptionExceptionInXml( strXmlResponse );
     return strXmlResponse;
   }
 }
