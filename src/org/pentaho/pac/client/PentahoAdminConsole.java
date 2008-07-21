@@ -53,7 +53,6 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
   protected Widget body; 
   
   protected HomePanel homePanel;
-  protected SimplePanel commonTasks;
   
   public enum AdminConsolePageId {
     HOME_PAGE, ADMIN_PAGE
@@ -77,7 +76,7 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
   
   public Widget buildBody() {
     DockPanel centerPanel = new DockPanel();
-    commonTasks = createCommonTasks();
+    SimplePanel commonTasks = createCommonTasks();
     VerticalPanel leftPanel = new VerticalPanel();
     SimplePanel tempPanel = new SimplePanel();
     tempPanel.setStyleName("leftTabPanel_top"); //$NON-NLS-1$
@@ -92,10 +91,13 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
     adminTabPanel.setHeight("100%"); //$NON-NLS-1$
     adminTabPanel.getDeckPanel().setHeight("100%"); //$NON-NLS-1$
     
-    spacer = new Label();
-    leftVerticalPanel.add(spacer);
-    leftVerticalPanel.setCellHeight(spacer, "50"); //$NON-NLS-1$
-    leftVerticalPanel.add(commonTasks);
+    if (commonTasks != null) {
+      spacer = new Label();
+      leftVerticalPanel.add(spacer);
+      leftVerticalPanel.setCellHeight(spacer, "50"); //$NON-NLS-1$
+      leftVerticalPanel.add(commonTasks);
+    }
+    
     spacer = new Label();
     leftVerticalPanel.add(spacer);
     leftVerticalPanel.setCellHeight(spacer, "100%"); //$NON-NLS-1$
@@ -333,29 +335,7 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
   
   
   protected SimplePanel createCommonTasks() {
-    SimplePanel commonTasks = new SimplePanel();
-    VerticalPanel vertPanel = new VerticalPanel();
-    
-    SimplePanel headerPanel = new SimplePanel();
-    headerPanel.setStyleName("CommonTasksHeader"); //$NON-NLS-1$
-    
-    Label header = new Label("Common Tasks");
-    header.setStyleName("commonTasksHeaderText"); //$NON-NLS-1$
-    headerPanel.add(header);
-    vertPanel.add(headerPanel);
-    
-    VerticalPanel list = new VerticalPanel();
-    list.add(new Hyperlink("Link 1 text","Link1")); //$NON-NLS-1$ //$NON-NLS-2$
-    list.add(new Hyperlink("Link 2 text","Link2")); //$NON-NLS-1$ //$NON-NLS-2$
-    list.add(new Hyperlink("Link 3 text","Link3")); //$NON-NLS-1$ //$NON-NLS-2$
-    
-    list.setStyleName("CommonTasksLinks"); //$NON-NLS-1$
-    vertPanel.add(list);
-    
-    commonTasks.setStyleName("CommonTasks"); //$NON-NLS-1$
-    commonTasks.add(vertPanel);
-    
-    return commonTasks;
+    return null;
   }
   
   private class DeckPanelWrapper extends DockPanel{

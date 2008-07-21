@@ -51,12 +51,12 @@ public class AdministrationTabPanel extends TabPanel {
     switch (tabIndex) {
       case ADMIN_USERS_ROLES_TAB_INDEX:
         if (!securityInfoInitialized) {
-          //initializeSecurityInfo();
+          initializeSecurityInfo();
         }
         break;
       case ADMIN_DATA_SOURCES_TAB_INDEX: 
         if (!dataSourcesPanel.isInitialized()) {
-          //dataSourcesPanel.refresh();
+          dataSourcesPanel.refresh();
         }
         break;
       case ADMIN_SERVICES_TAB_INDEX:
