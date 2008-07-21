@@ -62,12 +62,11 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
   private SolutionRepositoryItemPicker solRepItemPicker = new SolutionRepositoryItemPicker();
   private Label scheduleTabLabel = new Label( TabIndex.SCHEDULE.toString() );
   private Label scheduleActionTabLabel = new Label( TabIndex.SCHEDULE_ACTION.toString() );
-  private Map<TabIndex, Label> tabMap = new HashMap<TabIndex, Label>();
+  private Map<TabIndex, Label> tabLabelMap = new HashMap<TabIndex, Label>();
   private TabPanel tabPanel = new TabPanel();
   
   public ScheduleCreatorDialog() {
     super();
-
     this.setNoBorderOnClientPanel();
     setTitle( "Schedule Creator" );
     setClientSize( "475px", "450px" );
@@ -89,8 +88,8 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
     
     scheduleTabLabel.setStylePrimaryName( "tabLabel" ); //$NON-NLS-1$
     scheduleActionTabLabel.setStylePrimaryName( "tabLabel" ); //$NON-NLS-1$
-    tabMap.put( TabIndex.SCHEDULE, scheduleTabLabel );
-    tabMap.put( TabIndex.SCHEDULE_ACTION, scheduleActionTabLabel );
+    tabLabelMap.put( TabIndex.SCHEDULE, scheduleTabLabel );
+    tabLabelMap.put( TabIndex.SCHEDULE_ACTION, scheduleActionTabLabel );
     
     tabPanel.selectTab( TabIndex.SCHEDULE.value() );
     
@@ -99,12 +98,20 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
         return true;
       }
       public void onTabSelected(SourcesTabEvents sender, int tabIndex) {
-        for ( Map.Entry<TabIndex,Label> me : tabMap.entrySet() ) {
+        for ( Map.Entry<TabIndex,Label> me : tabLabelMap.entrySet() ) {
           Label l = me.getValue();
           l.removeStyleDependentName( "selected" );
         }
-        Label l = tabMap.get( TabIndex.get(  tabIndex ) );
+        Label l = tabLabelMap.get( TabIndex.get(  tabIndex ) );
         l.addStyleDependentName( "selected" );
+        switch (TabIndex.get( tabIndex) ) {
+          case SCHEDULE:
+            scheduleEditor.setFocus();
+            break;
+          case SCHEDULE_ACTION:
+            solRepItemPicker.setFocus();
+            break;
+        }
       }
     });
     
@@ -135,11 +142,11 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
   }
   
   public void setTabError( TabIndex tabKey ) {
-    tabMap.get(tabKey).setStylePrimaryName( "tabLabelError" ); //$NON-NLS-1$
+    tabLabelMap.get(tabKey).setStylePrimaryName( "tabLabelError" ); //$NON-NLS-1$
   }
   
   public void clearTabError() {
-    for ( Map.Entry<TabIndex, Label> me : tabMap.entrySet() ) {
+    for ( Map.Entry<TabIndex, Label> me : tabLabelMap.entrySet() ) {
       me.getValue().setStylePrimaryName( "tabLabel" ); //$NON-NLS-1$
     }
   }
