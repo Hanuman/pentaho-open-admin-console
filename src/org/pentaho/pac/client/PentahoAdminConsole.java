@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.pentaho.pac.client.common.SelectListener;
 import org.pentaho.pac.client.home.HomePanel;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.utils.PacImageBundle;
@@ -18,7 +19,6 @@ import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -55,7 +55,7 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
   protected HomePanel homePanel;
   
   public enum AdminConsolePageId {
-    HOME_PAGE, ADMIN_PAGE
+    HOME_PAGE, ADMIN_PAGE,PDI_PAGE
   };
   
   public PentahoAdminConsole() {
@@ -150,7 +150,7 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
     return pages;
   }
   
-  protected void addPageToDeck(int pageId, String toggleButtonLabel, Widget widget) {
+  protected void addPageToDeck(int pageId, String toggleButtonLabel, final Widget widget) {
 
     ToggleButton toggleButton = new ToggleButton(toggleButtonLabel);
     toggleButton.setStylePrimaryName("leftToggleButtons"); //$NON-NLS-1$
@@ -161,6 +161,15 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
     widget.setWidth("100%"); //$NON-NLS-1$
     widget.setHeight("100%"); //$NON-NLS-1$
     deckPanel.add(widget);
+    
+    if (widget instanceof SelectListener)
+    	toggleButton.addClickListener(new ClickListener()
+    	{
+			public void onClick(Widget sender) {
+				((SelectListener)widget).onSelect(sender);
+			}
+    		
+    	});
   }
   
   public HorizontalPanel buildTopPanel() {
