@@ -76,4 +76,9 @@ public class SolutionRepositoryItemPicker extends VerticalPanel {
   public void setSingleSelect(boolean isSingleSelect) {
     bIsSingleSelect = isSingleSelect;
   }
+  
+  public void setFocus() {
+    actionsTA.setFocus( true );
+    actionsTA.setSelectionRange( 0, actionsTA.getText().length() );
+  }
 }

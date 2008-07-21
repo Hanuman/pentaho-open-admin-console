@@ -490,4 +490,9 @@ public class ScheduleEditor extends VerticalPanel {
   private static TemporalValue scheduleTypeToTemporalValue( ScheduleType st ) {
     return scheduleTypeToTemporalValueMap.get( st );
   }
+  
+  public void setFocus() {
+    nameTb.setFocus( true );
+    nameTb.setSelectionRange( 0, nameTb.getText().length() );
+  }
 }
