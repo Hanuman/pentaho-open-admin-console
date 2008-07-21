@@ -344,18 +344,26 @@ public class SchedulerAdminUIComponentProxy {
   // TODO sbarkdull, need to look at xml response from server, and throw exceptions if necessary,
   // see how the SubscriptionAdminUIComponentProxy does it.
   private String executeGetMethod( Map<String, Object> params ) throws SchedulerServiceException {
+    String strXmlResponse;
     try {
-      return biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.GET, userName, params );
+      strXmlResponse = biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.GET, userName, params );
     } catch (ProxyException e) {
       throw new SchedulerServiceException( e.getMessage(), e );
     }
+    XmlSerializer s = new XmlSerializer();
+    s.detectSchedulerExceptionInXml( strXmlResponse );
+    return strXmlResponse;
   }
   
   private String executePostMethod(Map<String, Object> params ) throws SchedulerServiceException {
+    String strXmlResponse;
     try {
-      return biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.POST, userName, params );
+      strXmlResponse = biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.POST, userName, params );
     } catch (ProxyException e) {
       throw new SchedulerServiceException( e.getMessage(), e );
     }
+    XmlSerializer s = new XmlSerializer();
+    s.detectSchedulerExceptionInXml( strXmlResponse );
+    return strXmlResponse;
   }
 }
