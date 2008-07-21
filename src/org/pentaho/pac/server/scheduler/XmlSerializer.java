@@ -86,7 +86,7 @@ public class XmlSerializer {
   {
     SubscriptionScheduleParserHandler subscriptionSchedHandler = null;
     try {
-      detectExceptionInXml( strXml );
+      detectSubscriptionExceptionInXml( strXml );
       subscriptionSchedHandler = parseSubscriptionScheduleJobsXml( strXml );
     } catch (SAXException e) {
       logger.error( e.getMessage() );
@@ -101,11 +101,31 @@ public class XmlSerializer {
     return subscriptionSchedHandler.schedules;
   }
   
-  public void detectExceptionInXml( String strXml ) throws SchedulerServiceException {
+  public void detectSchedulerExceptionInXml( String strXml ) throws SchedulerServiceException {
 
-    ExceptionParserHandler exceptionHandler;
+    SchedulerExceptionParserHandler exceptionHandler;
     try {
-      exceptionHandler = parseExceptionXml( strXml );
+      exceptionHandler = parseSchedulerExceptionXml( strXml );
+    } catch (SAXException e) {
+      logger.error( e.getMessage() );
+      throw new SchedulerServiceException( e.getMessage() );
+    } catch (IOException e) {
+      logger.error( e.getMessage() );
+      throw new SchedulerServiceException( e.getMessage() );
+    } catch (ParserConfigurationException e) {
+      logger.error( e.getMessage() );
+      throw new SchedulerServiceException( e.getMessage() );
+    }
+    if ( null != exceptionHandler.exceptionMessage ) {
+      throw new SchedulerServiceException( exceptionHandler.exceptionMessage );
+    }
+  }
+  
+  public void detectSubscriptionExceptionInXml( String strXml ) throws SchedulerServiceException {
+
+    SubscriptionExceptionParserHandler exceptionHandler;
+    try {
+      exceptionHandler = parseSubscriptionExceptionXml( strXml );
     } catch (SAXException e) {
       logger.error( e.getMessage() );
       throw new SchedulerServiceException( e.getMessage() );
@@ -506,10 +526,10 @@ public class XmlSerializer {
     }
   }
   
-  private ExceptionParserHandler parseExceptionXml( String strXml ) throws SAXException, IOException, ParserConfigurationException
+  private SubscriptionExceptionParserHandler parseSubscriptionExceptionXml( String strXml ) throws SAXException, IOException, ParserConfigurationException
   {
       SAXParser parser = getSAXParserFactory().newSAXParser();
-      ExceptionParserHandler h = new ExceptionParserHandler();
+      SubscriptionExceptionParserHandler h = new SubscriptionExceptionParserHandler();
       // TODO sbarkdull, need to set encoding
 //      String encoding = CleanXmlHelper.getEncoding( strXml );
 //      InputStream is = new ByteArrayInputStream( strXml.getBytes( encoding ) );
@@ -529,14 +549,14 @@ public class XmlSerializer {
    * @author Steven Barkdull
    *
    */
-  private static class ExceptionParserHandler extends DefaultHandler {
+  private static class SubscriptionExceptionParserHandler extends DefaultHandler {
 
     private String currentText = null;
     public String exceptionMessage = null;
     private boolean isException = false;
     private boolean isMessage = false;
     
-    public ExceptionParserHandler()
+    public SubscriptionExceptionParserHandler()
     {
     }
   
@@ -563,6 +583,69 @@ public class XmlSerializer {
         isException = true;
       } else if ( qName.equals( "message" ) ) { //$NON-NLS-1$
         isMessage = true;
+      }
+    }
+  }
+
+  /**
+   * 
+   * @param strXml
+   * @return
+   * @throws SAXException
+   * @throws IOException
+   * @throws ParserConfigurationException
+   */
+  private SchedulerExceptionParserHandler parseSchedulerExceptionXml( String strXml ) throws SAXException, IOException, ParserConfigurationException
+  {
+      SAXParser parser = getSAXParserFactory().newSAXParser();
+      SchedulerExceptionParserHandler h = new SchedulerExceptionParserHandler();
+      // TODO sbarkdull, need to set encoding
+//      String encoding = CleanXmlHelper.getEncoding( strXml );
+//      InputStream is = new ByteArrayInputStream( strXml.getBytes( encoding ) );
+      InputStream is = new ByteArrayInputStream( strXml.getBytes( "UTF-8" ) ); //$NON-NLS-1$
+     
+      parser.parse( is, h );
+      return h;
+  }
+
+  /**
+   * <?xml version="1.0" encoding="UTF-8"?>
+   * <schedulerResults>
+   *   <error
+   *     msg="Failed to execute job ff. Job with that name does not exist in scheduler. ff" />
+   * </schedulerResults>
+   * @author Steven Barkdull
+   *
+   */
+  private static class SchedulerExceptionParserHandler extends DefaultHandler {
+
+    public String exceptionMessage = null;
+    private boolean isSchedulerResults = false;
+    
+    public SchedulerExceptionParserHandler()
+    {
+    }
+  
+    public void characters( char[] ch, int startIdx, int length )
+    {
+      // no-op
+    }
+    
+    public void endElement(String uri, String localName, String qName ) throws SAXException
+    {
+      if ( qName.equals( "schedulerResults" ) ) { //$NON-NLS-1$
+        isSchedulerResults = false;
+      }
+    }
+
+    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException
+    {
+      if ( qName.equals( "schedulerResults" ) ) { //$NON-NLS-1$
+        isSchedulerResults = true;
+      } else if ( qName.equals( "error" ) ) { //$NON-NLS-1$
+        if ( isSchedulerResults ) {
+          exceptionMessage = attributes.getValue( "msg" );//$NON-NLS-1$
+        }
       }
     }
   }
