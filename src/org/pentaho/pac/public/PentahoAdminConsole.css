@@ -1614,3 +1614,9 @@ a:visited {
 	width: 100%;
 	height: 100%;
 }*/
+
+
+.configConsolePanel{
+  height: 570px;
+  overflow:auto;
+}
