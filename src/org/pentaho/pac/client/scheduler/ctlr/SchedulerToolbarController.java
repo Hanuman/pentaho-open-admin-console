@@ -72,7 +72,7 @@ public class SchedulerToolbarController {
     this.schedulesListController = pSchedulesListController;
     
     final SchedulerToolbarController localThis = this;
-    
+
     schedulerToolbar.setOnCreateListener( new ICallback<Widget>() { 
       public void onHandle(Widget w) {
         localThis.handleCreateSchedule();
@@ -171,9 +171,6 @@ public class SchedulerToolbarController {
     // TODO, List<Schedule> is probably not what we will get back
     AsyncCallback<List<Schedule>> responseCallback = new AsyncCallback<List<Schedule>>() {
       public void onSuccess( List<Schedule> pSchedulesList ) {
-        MessageDialog messageDialog = new MessageDialog( "Kool!", 
-            "Success, I guess!" );
-        messageDialog.center();
         scheduleCreatorDialog.hide();
         loadJobsTable();
       }
@@ -402,9 +399,6 @@ public class SchedulerToolbarController {
     // TODO, List<Schedule> is probably not what we will get back
     AsyncCallback<List<Schedule>> responseCallback = new AsyncCallback<List<Schedule>>() {
       public void onSuccess( List<Schedule> pSchedulesList ) {
-        MessageDialog messageDialog = new MessageDialog( "Kool!", 
-            "Success, I guess!" );
-        messageDialog.center();
         scheduleCreatorDialog.hide();
         loadJobsTable();
       }
@@ -621,6 +615,7 @@ public class SchedulerToolbarController {
     // TODO sbarkdull, if we decide to create regular schedules, we'll need to do something different here
     scheduleCreatorDialog.getSolutionRepositoryItemPicker().setSingleSelect( false );
     scheduleCreatorDialog.center();
+    scheduleCreatorDialog.getScheduleEditor().setFocus();
   }
   
   private void handleUpdateSchedule() {
@@ -647,6 +642,7 @@ public class SchedulerToolbarController {
     try {
       initScheduleCreatorDialog( sched );
       scheduleCreatorDialog.center();
+      scheduleCreatorDialog.getScheduleEditor().setFocus();
     } catch (CronParseException e) {
       final MessageDialog errorDialog = new MessageDialog( "Error",
           "Attempt to initialize the Recurrence Dialog with an invalid CRON string: "
