@@ -11,12 +11,9 @@ public interface SchedulerService extends RemoteService, ISchedulerService {
   
   public void deleteJob( String jobName, String jobGroup ) throws SchedulerServiceException;
   public void executeJob( String jobName, String jobGroup ) throws SchedulerServiceException;
-  public void executeJobs( List<Schedule> scheduleList ) throws SchedulerServiceException;
   public boolean isSchedulerPaused() throws SchedulerServiceException;
   public void pauseAll() throws SchedulerServiceException;
   public void pauseJob( String jobName, String jobGroup ) throws SchedulerServiceException;
-  public void pauseJobs( List<Schedule> scheduleList ) throws SchedulerServiceException;
   public void resumeAll() throws SchedulerServiceException;
   public void resumeJob( String jobName, String jobGroup ) throws SchedulerServiceException;
-  public void resumeJobs( List<Schedule> scheduleList ) throws SchedulerServiceException;
 }

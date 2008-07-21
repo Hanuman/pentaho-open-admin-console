@@ -198,6 +198,38 @@ public class SubscriptionAdminUIComponentProxy {
       String responseStrXml = executeGetMethod( params );
     }
   }
+  public void pauseJobs( List<Schedule> scheduleList ) throws SchedulerServiceException {
+    
+    for ( Schedule s : scheduleList ) {
+      Map<String, Object> params = new HashMap<String, Object>();
+      params.put( "schedulerAction", "doPauseJob" ); //$NON-NLS-1$  //$NON-NLS-2$
+      params.put( "jobId", s.getJobName() ); //$NON-NLS-1$
+
+      String responseStrXml = executeGetMethod( params );
+    }
+  }
+  
+  public void resumeJobs( List<Schedule> scheduleList ) throws SchedulerServiceException {
+    
+    for ( Schedule s : scheduleList ) {
+      Map<String, Object> params = new HashMap<String, Object>();
+      params.put( "schedulerAction", "doResumeJob" ); //$NON-NLS-1$  //$NON-NLS-2$
+      params.put( "jobId", s.getJobName() ); //$NON-NLS-1$
+
+      String responseStrXml = executeGetMethod( params );
+    }
+  }
+  
+  public void executeJobs( List<Schedule> scheduleList ) throws SchedulerServiceException {
+    
+    for ( Schedule s : scheduleList ) {
+      Map<String, Object> params = new HashMap<String, Object>();
+      params.put( "schedulerAction", "doExecuteJob" ); //$NON-NLS-1$  //$NON-NLS-2$
+      params.put( "jobId", s.getJobName() ); //$NON-NLS-1$
+
+      String responseStrXml = executeGetMethod( params );
+    }
+  }
   
   private String executeGetMethod( Map<String, Object> params ) throws SchedulerServiceException {
     String strXmlResponse;

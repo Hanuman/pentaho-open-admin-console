@@ -79,4 +79,16 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
   public void deleteJobs( List<Schedule> scheduleList ) throws SchedulerServiceException {
     subscriptionProxy.deleteJobs( scheduleList );
   }
+  
+  public void resumeJobs( List<Schedule> scheduleList ) throws SchedulerServiceException {
+    subscriptionProxy.resumeJobs( scheduleList );
+  }
+  
+  public void pauseJobs( List<Schedule> scheduleList ) throws SchedulerServiceException {
+    subscriptionProxy.pauseJobs( scheduleList );
+  }
+  
+  public void executeJobs( List<Schedule> scheduleList ) throws SchedulerServiceException {
+    subscriptionProxy.executeJobs( scheduleList );
+  }
 }

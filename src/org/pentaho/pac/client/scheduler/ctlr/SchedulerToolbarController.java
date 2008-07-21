@@ -488,7 +488,7 @@ public class SchedulerToolbarController {
   }
   
   private void deleteSelectedSchedules() {
-    final List<Schedule> scheduleList = schedulesListCtrl.getSelectedSchedules();
+    final List<Schedule> selectedScheduleList = schedulesListCtrl.getSelectedSchedules();
     
     AsyncCallback<Object> outerCallback = new AsyncCallback<Object>() {
       
@@ -504,7 +504,7 @@ public class SchedulerToolbarController {
             messageDialog.center();
           }
         }; // end inner callback
-        final List<Schedule> subscriptionSchedList = getSubscriptionSchedules( scheduleList );
+        final List<Schedule> subscriptionSchedList = getSubscriptionSchedules( selectedScheduleList );
         PacServiceFactory.getSubscriptionService().deleteJobs( subscriptionSchedList, innerCallback );
       } // end onSuccess
       
@@ -516,9 +516,8 @@ public class SchedulerToolbarController {
       }
     }; // end outer callback -----------
 
-    List<Schedule> nonSubscriptionSchedList = getSchedules( scheduleList );
+    List<Schedule> nonSubscriptionSchedList = getSchedules( selectedScheduleList );
     PacServiceFactory.getSchedulerService().deleteJobs( nonSubscriptionSchedList, outerCallback );
-    
   }
   
   /**
@@ -673,56 +672,102 @@ public class SchedulerToolbarController {
   }
   
   private void handleResumeSchedules() {
-    final List<Schedule> scheduleList = schedulesListCtrl.getSelectedSchedules();
+    final List<Schedule> selectedScheduleList = schedulesListCtrl.getSelectedSchedules();
     
-    AsyncCallback<Object> callback = new AsyncCallback<Object>() {
+    AsyncCallback<Object> outerCallback = new AsyncCallback<Object>() {
+      
       public void onSuccess(Object result) {
-        loadJobsTable();
-      }
+        AsyncCallback<Object> innerCallback = new AsyncCallback<Object>() {
+          public void onSuccess(Object pResult) {
+            loadJobsTable();
+          }
+          public void onFailure(Throwable caught) {
+            // TODO sbarkdull
+            MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
+                caught.getMessage() );
+            messageDialog.center();
+          }
+        }; // end inner callback
+        final List<Schedule> subscriptionSchedList = getSubscriptionSchedules( selectedScheduleList );
+        PacServiceFactory.getSubscriptionService().resumeJobs( subscriptionSchedList, innerCallback );
+      } // end onSuccess
+      
       public void onFailure(Throwable caught) {
         // TODO sbarkdull
         MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
             caught.getMessage() );
         messageDialog.center();
       }
-    };
-    PacServiceFactory.getSchedulerService().resumeJobs( scheduleList, callback );
+    }; // end outer callback -----------
+
+    List<Schedule> nonSubscriptionSchedList = getSchedules( selectedScheduleList );
+    PacServiceFactory.getSchedulerService().resumeJobs( nonSubscriptionSchedList, outerCallback );
   }
   
   private void handlePauseSchedules() {
-    final List<Schedule> scheduleList = schedulesListCtrl.getSelectedSchedules();
+    final List<Schedule> selectedScheduleList = schedulesListCtrl.getSelectedSchedules();
     
-    AsyncCallback<Object> callback = new AsyncCallback<Object>() {
+    AsyncCallback<Object> outerCallback = new AsyncCallback<Object>() {
+      
       public void onSuccess(Object result) {
-        loadJobsTable();
-      }
+        AsyncCallback<Object> innerCallback = new AsyncCallback<Object>() {
+          public void onSuccess(Object pResult) {
+            loadJobsTable();
+          }
+          public void onFailure(Throwable caught) {
+            // TODO sbarkdull
+            MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
+                caught.getMessage() );
+            messageDialog.center();
+          }
+        }; // end inner callback
+        final List<Schedule> subscriptionSchedList = getSubscriptionSchedules( selectedScheduleList );
+        PacServiceFactory.getSubscriptionService().pauseJobs( subscriptionSchedList, innerCallback );
+      } // end onSuccess
+      
       public void onFailure(Throwable caught) {
         // TODO sbarkdull
         MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
             caught.getMessage() );
         messageDialog.center();
       }
-    };
-    PacServiceFactory.getSchedulerService().pauseJobs( scheduleList, callback );
+    }; // end outer callback -----------
+
+    List<Schedule> nonSubscriptionSchedList = getSchedules( selectedScheduleList );
+    PacServiceFactory.getSchedulerService().pauseJobs( nonSubscriptionSchedList, outerCallback );
   }
   
   private void handleRunNowSchedules() {
-    assert false : "handleRunNowSchedules not yet implemented";
-//    SchedulesListCtrl schedulesListCtrl = schedulerPanel.getSchedulesListCtrl();
-//    final List<Schedule> scheduleList = schedulesListCtrl.getSelectedSchedules();
-//    
-//    AsyncCallback<Object> callback = new AsyncCallback<Object>() {
-//      public void onSuccess(Object result) {
-//        loadJobsTable();
-//      }
-//      public void onFailure(Throwable caught) {
-//        // TODO sbarkdull
-//        MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
-//            caught.getMessage() );
-//        messageDialog.center();
-//      }
-//    };
-//    PacServiceFactory.getSchedulerService().pauseJobs( scheduleList, callback );
+    final List<Schedule> selectedScheduleList = schedulesListCtrl.getSelectedSchedules();
+    
+    AsyncCallback<Object> outerCallback = new AsyncCallback<Object>() {
+      
+      public void onSuccess(Object result) {
+        AsyncCallback<Object> innerCallback = new AsyncCallback<Object>() {
+          public void onSuccess(Object pResult) {
+            loadJobsTable();
+          }
+          public void onFailure(Throwable caught) {
+            // TODO sbarkdull
+            MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
+                caught.getMessage() );
+            messageDialog.center();
+          }
+        }; // end inner callback
+        final List<Schedule> subscriptionSchedList = getSubscriptionSchedules( selectedScheduleList );
+        PacServiceFactory.getSubscriptionService().executeJobs( subscriptionSchedList, innerCallback );
+      } // end onSuccess
+      
+      public void onFailure(Throwable caught) {
+        // TODO sbarkdull
+        MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
+            caught.getMessage() );
+        messageDialog.center();
+      }
+    }; // end outer callback -----------
+
+    List<Schedule> nonSubscriptionSchedList = getSchedules( selectedScheduleList );
+    PacServiceFactory.getSchedulerService().executeJobs( nonSubscriptionSchedList, outerCallback );
   }
 
   

@@ -32,4 +32,7 @@ public interface ISchedulerService {
       String actionsList ) throws SchedulerServiceException;
   
   public void deleteJobs( List<Schedule> scheduleList ) throws SchedulerServiceException;
+  public void pauseJobs( List<Schedule> scheduleList ) throws SchedulerServiceException;
+  public void resumeJobs( List<Schedule> scheduleList ) throws SchedulerServiceException;
+  public void executeJobs( List<Schedule> scheduleList ) throws SchedulerServiceException;
 }

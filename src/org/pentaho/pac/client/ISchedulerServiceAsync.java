@@ -32,4 +32,7 @@ public interface ISchedulerServiceAsync {
       String actionsList, AsyncCallback callback );
   
   public void deleteJobs( List<Schedule> scheduleList, AsyncCallback callback );
+  public void pauseJobs( List<Schedule> scheduleList, AsyncCallback callback );
+  public void resumeJobs( List<Schedule> scheduleList, AsyncCallback callback );
+  public void executeJobs( List<Schedule> scheduleList, AsyncCallback callback );
 }
