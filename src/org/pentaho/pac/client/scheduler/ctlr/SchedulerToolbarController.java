@@ -58,6 +58,7 @@ public class SchedulerToolbarController {
   private SchedulesModel schedulesModel = null;
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   private static final int INVALID_SCROLL_POS = -1;
+  private static final String DISABLED = "disabled"; //$NON-NLS-1$
   
   public SchedulerToolbarController( SchedulerToolbar schedulerToolbar, SchedulesListCtrl schedulesListCtrl ) {
     this.schedulerToolbar = schedulerToolbar;
@@ -127,7 +128,7 @@ public class SchedulerToolbarController {
   
   private List<Schedule> getSortedSchedulesList( List<Schedule> scheduleList ) {
 
-    assert null != scheduleList : "getSortedSchedulesList(): Schedule list cannot be null.";
+    assert null != scheduleList : "getSortedSchedulesList(): Schedule list cannot be null."; //$NON-NLS-1$
     Collections.sort( scheduleList, new Comparator<Schedule>() {
       public int compare(Schedule s1, Schedule s2) {
         return s1.getJobName().compareToIgnoreCase( s2.getJobName() );
@@ -260,7 +261,7 @@ public class SchedulerToolbarController {
           );
         break;
       default:
-        throw new RuntimeException( "Invalid Run Type: " + rt.toString() );
+        throw new RuntimeException( MSGS.invalidRunType( rt.toString() ) );
     }
   }
 
@@ -384,9 +385,9 @@ public class SchedulerToolbarController {
   private static void enableWidget( ButtonBase btn, boolean isEnabled ) {
     btn.setEnabled( isEnabled );
     if ( isEnabled ) {
-      btn.removeStyleDependentName( "disabled" );
+      btn.removeStyleDependentName( DISABLED );
     } else {
-      btn.addStyleDependentName( "disabled" );
+      btn.addStyleDependentName( DISABLED );
     }
   }
   
@@ -483,7 +484,7 @@ public class SchedulerToolbarController {
           );
         break;
       default:
-        throw new RuntimeException( "Invalid Run Type: " + rt.toString() );
+        throw new RuntimeException( MSGS.invalidRunType( rt.toString() ) );
     }
   }
   
@@ -552,7 +553,7 @@ public class SchedulerToolbarController {
         scheduleEditor.setRepeatInSecs( repeatIntervalInSecs );
       }
     } else {
-      throw new RuntimeException( "Illegal state, must have either a cron string or a repeat time." );
+      throw new RuntimeException( MSGS.illegalStateMissingCronAndRepeat() );
     }
 
     String timePart = null;
@@ -597,7 +598,7 @@ public class SchedulerToolbarController {
   private void handleCreateSchedule() {
     final SchedulerToolbarController localThis = this;
     
-    scheduleCreatorDialog.setTitle( "Schedule Creator" );
+    scheduleCreatorDialog.setTitle( MSGS.scheduleCreator() );
     scheduleCreatorDialog.reset( new Date() );
     
     scheduleCreatorDialog.setOnOkHandler( new ICallback<MessageDialog>() {
@@ -620,7 +621,7 @@ public class SchedulerToolbarController {
   private void handleUpdateSchedule() {
     final SchedulerToolbarController localThis = this;
 
-    scheduleCreatorDialog.setTitle( "Schedule Editor" );
+    scheduleCreatorDialog.setTitle( MSGS.scheduleEditor() );
     final List<Schedule> scheduleList = schedulesListCtrl.getSelectedSchedules();
     
     scheduleCreatorDialog.setOnOkHandler( new ICallback<MessageDialog>() {
@@ -634,7 +635,7 @@ public class SchedulerToolbarController {
       }
     });
     // the update button should be enabled/disabled to guarantee that one and only one schedule is selected
-    assert scheduleList.size() == 1 : "When clicking update, exactly one schedule should be selected.";
+    assert scheduleList.size() == 1 : "When clicking update, exactly one schedule should be selected."; //$NON-NLS-1$
     
     Schedule sched = scheduleList.get( 0 );
     scheduleCreatorDialog.getSolutionRepositoryItemPicker().setSingleSelect( !sched.isSubscriptionSchedule() );
@@ -643,11 +644,8 @@ public class SchedulerToolbarController {
       scheduleCreatorDialog.center();
       scheduleCreatorDialog.getScheduleEditor().setFocus();
     } catch (CronParseException e) {
-      final MessageDialog errorDialog = new MessageDialog( "Error",
-          "Attempt to initialize the Recurrence Dialog with an invalid CRON string: "
-          + sched.getCronString()
-          + " Error details: "
-          + e.getMessage() );
+      final MessageDialog errorDialog = new MessageDialog( MSGS.error(),
+          MSGS.invalidCronInInitOfRecurrenceDialog( sched.getCronString(), e.getMessage() ) );
       errorDialog.setOnOkHandler( new ICallback<MessageDialog>() {
         public void onHandle(MessageDialog messageDialog ) {
           errorDialog.hide();

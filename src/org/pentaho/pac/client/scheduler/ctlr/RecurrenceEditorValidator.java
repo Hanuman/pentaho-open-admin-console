@@ -15,8 +15,10 @@
  */
 package org.pentaho.pac.client.scheduler.ctlr;
 
+import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.util.StringUtils;
 import org.pentaho.pac.client.common.util.TimeUtil;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.scheduler.view.RecurrenceEditor;
 import org.pentaho.pac.client.scheduler.view.RecurrenceEditor.DailyRecurrenceEditor;
 import org.pentaho.pac.client.scheduler.view.RecurrenceEditor.HourlyRecurrenceEditor;
@@ -32,10 +34,11 @@ import org.pentaho.pac.client.scheduler.view.RecurrenceEditor.YearlyRecurrenceEd
  *
  */
 public class RecurrenceEditorValidator implements IUiValidator {
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   
   private RecurrenceEditor recurrenceEditor = null;
   private DateRangeEditorValidator dateRangeEditorValidator = null;
-  private static final String MUST_BE_A_NUMBER = "must be a number greater than 0 and less than 2147483647.";
+  private static final String MUST_BE_A_NUMBER = MSGS.mustBeIntegerRange();
   
   public RecurrenceEditorValidator( RecurrenceEditor recurrenceEditor ) {
     this.recurrenceEditor = recurrenceEditor; 
@@ -56,7 +59,7 @@ public class RecurrenceEditorValidator implements IUiValidator {
           isValid = false;
         }
         if ( !isValid ) {
-          sEd.setValueError( "Seconds must be a number <= " + TimeUtil.MAX_SECOND_BY_MILLISEC );
+          sEd.setValueError( MSGS.mustBeSecondsRange( Integer.toString( TimeUtil.MAX_SECOND_BY_MILLISEC ) ) );
         }
         break;
       case MINUTES:
@@ -70,7 +73,7 @@ public class RecurrenceEditorValidator implements IUiValidator {
           isValid = false;
         }
         if ( !isValid ) {
-          mEd.setValueError( "Minues must be a number <= " + TimeUtil.MAX_MINUTE_BY_MILLISEC );
+          mEd.setValueError( MSGS.mustBeMinutesRange( Integer.toString( TimeUtil.MAX_MINUTE_BY_MILLISEC ) ) );
         }
         break;
       case HOURS:
@@ -84,7 +87,7 @@ public class RecurrenceEditorValidator implements IUiValidator {
           isValid = false;
         }
         if ( !isValid ) {
-          hEd.setValueError( "Hours must be a number <= " + TimeUtil.MAX_HOUR_BY_MILLISEC );
+          hEd.setValueError( MSGS.mustBeHoursRange( Integer.toString( TimeUtil.MAX_HOUR_BY_MILLISEC ) ) );
         }
         break;
       case DAILY:
@@ -94,7 +97,7 @@ public class RecurrenceEditorValidator implements IUiValidator {
           if ( !StringUtils.isPositiveInteger( days ) 
               || ( Integer.parseInt( days ) <= 0 ) ) {
             isValid = false;
-            dEd.setRepeatError( "Days " + MUST_BE_A_NUMBER );
+            dEd.setRepeatError( MSGS.days( MUST_BE_A_NUMBER ) );
           }
         }
         break;
@@ -102,7 +105,7 @@ public class RecurrenceEditorValidator implements IUiValidator {
         WeeklyRecurrenceEditor wEd = recurrenceEditor.getWeeklyEditor();
         if ( wEd.getNumCheckedDays() < 1 ) {
           isValid = false;
-          wEd.setEveryDayOnError( "One or more days must be checked." );
+          wEd.setEveryDayOnError( MSGS.oneOrMoreMustBeChecked() );
         }
         break;
       case MONTHLY:
@@ -112,7 +115,7 @@ public class RecurrenceEditorValidator implements IUiValidator {
           if ( !StringUtils.isPositiveInteger( dayNOfMonth ) 
               || !TimeUtil.isDayOfMonth( Integer.parseInt( dayNOfMonth ) ) ) {
             isValid = false;
-            monthlyEd.setDayNOfMonthError( "Day of month must be a number between 1 and 31." );
+            monthlyEd.setDayNOfMonthError( MSGS.dayOfMonthMustBeBetween() );
           }
         }
         break;
@@ -123,13 +126,12 @@ public class RecurrenceEditorValidator implements IUiValidator {
           if ( !StringUtils.isPositiveInteger( dayNOfMonth ) 
               || !TimeUtil.isDayOfMonth( Integer.parseInt( dayNOfMonth ) ) ) {
             isValid = false;
-            yearlyEd.setDayOfMonthError( "Day of month must be a number between 1 and 31." );
+            yearlyEd.setDayOfMonthError( MSGS.dayOfMonthMustBeBetween() );
           }
         }
         break;
       default:
-        throw new RuntimeException( "Unrecognized ScheduleType in RecurrenceEditor.isValid():"
-          + recurrenceEditor.getTemporalState().toString() );
+        throw new RuntimeException( MSGS.unrecognizedSchedType( recurrenceEditor.getTemporalState().toString() ) );
     }
     isValid &= dateRangeEditorValidator.isValid();
     return isValid;

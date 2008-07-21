@@ -20,7 +20,7 @@ public class SimpleGroupBox extends ComplexPanel {
     fieldSet.appendChild(legend);
     setElement(fieldSet);
     setCaption(caption);
-    setStyleName( "simpleGroupBox" );
+    setStyleName( "simpleGroupBox" ); //$NON-NLS-1$
   }
 
   public String getCaption() {

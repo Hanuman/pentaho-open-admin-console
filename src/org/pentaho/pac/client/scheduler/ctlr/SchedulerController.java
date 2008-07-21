@@ -37,7 +37,7 @@ public class SchedulerController {
   private ScheduleCreatorDialog scheduleCreatorDialog = null;
   
   public SchedulerController( SchedulerPanel schedulerPanel ) {
-    assert (null != schedulerPanel ) : "schedulerPanel cannot be null.";
+    assert (null != schedulerPanel ) : "schedulerPanel cannot be null."; //$NON-NLS-1$
     
     this.schedulerPanel = schedulerPanel;
     this.scheduleCreatorDialog = new ScheduleCreatorDialog();

@@ -5,12 +5,15 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.EnumException;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 
 public class TimeUtil {
 
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   public static final int HOURS_IN_DAY = 24;
 
   public static final int MINUTES_IN_HOUR = 60;
@@ -29,9 +32,9 @@ public class TimeUtil {
   public static final int MAX_HOUR_BY_MILLISEC = MAX_MINUTE_BY_MILLISEC / MINUTES_IN_HOUR;
 
   public enum TimeOfDay {
-    AM(0, "AM"),
-    PM(1, "PM");
-
+    AM(0, MSGS.am() ),
+    PM(1, MSGS.pm() );
+    
     TimeOfDay(int value, String name) {
       this.value = value;
       this.name = name;
@@ -67,18 +70,18 @@ public class TimeUtil {
           return v;
         }
       }
-      throw new EnumException( "Invalid String for time of day value: " + timeOfDay );
+      throw new EnumException( MSGS.invalidStringForTimeOfDay( timeOfDay ) );
     }
   } // end enum TimeOfDay
   
   public enum DayOfWeek {
-    SUN(0, "Sunday"),
-    MON(1, "Monday"),
-    TUES(2, "Tuesday"),
-    WED(3, "Wednesday"),
-    THUR(4, "Thursday"),
-    FRI(5, "Friday"), 
-    SAT(6, "Saturday");
+    SUN(0, MSGS.sunday() ),
+    MON(1, MSGS.monday() ),
+    TUES(2, MSGS.tuesday() ),
+    WED(3, MSGS.wednesday() ),
+    THUR(4, MSGS.thursday() ),
+    FRI(5, MSGS.friday() ), 
+    SAT(6, MSGS.saturday() );
 
     DayOfWeek(int value, String name) {
       this.value = value;
@@ -111,18 +114,18 @@ public class TimeUtil {
   } /* end enum */
 
   public enum MonthOfYear {
-    JAN(0, "January"), 
-    FEB(1, "February"), 
-    MAR(2, "March"), 
-    APR(3, "April"), 
-    MAY(4, "May"), 
-    JUN(5, "June"), 
-    JUL(6, "July"), 
-    AUG(7, "August"), 
-    SEPT(8, "September"), 
-    OCT(9, "October"), 
-    NOV(10, "November"), 
-    DEC(11, "December");
+    JAN(0, MSGS.january()), 
+    FEB(1, MSGS.february()), 
+    MAR(2, MSGS.march()), 
+    APR(3, MSGS.april()), 
+    MAY(4, MSGS.may()), 
+    JUN(5, MSGS.june()), 
+    JUL(6, MSGS.july()), 
+    AUG(7, MSGS.august()), 
+    SEPT(8, MSGS.september()), 
+    OCT(9, MSGS.october()), 
+    NOV(10, MSGS.november()), 
+    DEC(11, MSGS.december());
 
     MonthOfYear(int value, String name) {
       this.value = value;
@@ -155,11 +158,11 @@ public class TimeUtil {
   } /* end enum */
 
   public enum WeekOfMonth {
-    FIRST( 0, "first" ),
-    SECOND( 1, "second" ),
-    THIRD( 2, "third" ),
-    FOURTH( 3, "fourth" ),
-    LAST( 4, "last" );
+    FIRST( 0, MSGS.first() ),
+    SECOND( 1, MSGS.second() ),
+    THIRD( 2, MSGS.third() ),
+    FOURTH( 3, MSGS.fourth() ),
+    LAST( 4, MSGS.last() );
     
     WeekOfMonth( int value, String name ) {
       this.value = value;
@@ -196,7 +199,7 @@ public class TimeUtil {
           return v;
         }
       }
-      throw new EnumException( "Invalid String for week of month: " + weekOfMonth );
+      throw new EnumException( MSGS.invalidStringForWeekOfMonth( weekOfMonth ) );
     }
   } // end enum WeekOfMonth
 
@@ -275,7 +278,7 @@ public class TimeUtil {
    * @return int integer in the range 0..11
    */
   public static int to12HourClock( int int0To23hour ) {
-    assert int0To23hour >=0 && int0To23hour<=23 : "int0To23hour is out of range";
+    assert int0To23hour >=0 && int0To23hour<=23 : "int0To23hour is out of range"; //$NON-NLS-1$
     
     int int0To11 = int0To23hour < MAX_HOUR
       ? int0To23hour
@@ -328,7 +331,7 @@ public class TimeUtil {
   
   // this code runs in a single thread, so it is ok to share these two DateTimeFormats
   private static DateTimeFormat dateFormatter = DateTimeFormat.getLongDateFormat();
-  private static DateTimeFormat dateTimeFormatter = DateTimeFormat.getFormat( "MMM dd, yyyy HH:mm:ss a" );
+  private static DateTimeFormat dateTimeFormatter = DateTimeFormat.getFormat( "MMM dd, yyyy HH:mm:ss a" ); //$NON-NLS-1$
   
   public static Date getDateTime( String time, Date date ) {
     String strDate = dateFormatter.format( date );
@@ -351,10 +354,10 @@ public class TimeUtil {
    * @return String HH:mm:ss a
    */
   public static String getTimePart( String dateTime ) {
-    String[] parts = dateTime.split( "\\s" );
+    String[] parts = dateTime.split( "\\s" ); //$NON-NLS-1$
 
     //TODO sbarkdull, use StringBuilder
-    return parts[3] + " " + parts[4];
+    return parts[3] + " " + parts[4]; //$NON-NLS-1$
   }
 
   /**
@@ -374,19 +377,19 @@ public class TimeUtil {
    * @return String HH:mm:ss a
    */
   public static String getDatePart( String dateTime ) {
-    String[] parts = dateTime.split( "\\s" );
+    String[] parts = dateTime.split( "\\s" ); //$NON-NLS-1$
     //TODO sbarkdull, use StringBuilder
-    return parts[0] + " " + parts[1] + " " + parts[2];
+    return parts[0] + " " + parts[1] + " " + parts[2]; //$NON-NLS-1$ //$NON-NLS-2$
   }
   
   public static String get0thTime() {
     //TODO sbarkdull, use StringBuilder
-    return "12:00:00 " + TimeOfDay.AM.toString();
+    return "12:00:00 " + TimeOfDay.AM.toString(); //$NON-NLS-1$
   }
   
   public static String zeroTimePart( String dateTime ) {
     //TODO sbarkdull, use StringBuilder
-    return getDatePart( dateTime ) + " " + get0thTime();
+    return getDatePart( dateTime ) + " " + get0thTime(); //$NON-NLS-1$
   }
   
   public static Date zeroTimePart( Date dateTime ) {
@@ -406,7 +409,7 @@ public class TimeUtil {
       .append( month )
       .append( " " ) //$NON-NLS-1$
       .append( dayInMonth )
-      .append( ", " )
+      .append( ", " ) //$NON-NLS-1$
       .append( year ).toString();
   }
 
@@ -506,10 +509,10 @@ public class TimeUtil {
     assert getTimeOfDayBy0To23Hour( "13" ) == TimeOfDay.PM : "hour 13 is PM"; //$NON-NLS-1$ //$NON-NLS-2$
     assert getTimeOfDayBy0To23Hour( "23" ) == TimeOfDay.PM : "hour 23 is PM"; //$NON-NLS-1$ //$NON-NLS-2$
 
-    assert to12HourClock( 0 )==( 1 ) : "0 is 1"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    assert to12HourClock( 11 )==( 12 ) : "11 is 12"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    assert to12HourClock( 12 )==( 1 ) : "12 is 1"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    assert to12HourClock( 23 )==( 11 ) : "23 is 11"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    assert to12HourClock( 0 )==( 1 ) : "0 is 1"; //$NON-NLS-1$
+    assert to12HourClock( 11 )==( 12 ) : "11 is 12"; //$NON-NLS-1$
+    assert to12HourClock( 12 )==( 1 ) : "12 is 1"; //$NON-NLS-1$
+    assert to12HourClock( 23 )==( 11 ) : "23 is 11"; //$NON-NLS-1$
     
     System.out.println( "done" ); //$NON-NLS-1$
   }

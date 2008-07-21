@@ -15,12 +15,15 @@
  */
 package org.pentaho.pac.client.scheduler.ctlr;
 
+import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.util.StringUtils;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.scheduler.model.Schedule;
 import org.pentaho.pac.client.scheduler.model.SchedulesModel;
 import org.pentaho.pac.client.scheduler.view.ScheduleEditor;
 
 public class NewScheduleEditorValidator extends ScheduleEditorValidator {
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
 
   public NewScheduleEditorValidator(ScheduleEditor schedEd, SchedulesModel schedulesModel ) {
     super(schedEd, schedulesModel );
@@ -33,7 +36,7 @@ public class NewScheduleEditorValidator extends ScheduleEditorValidator {
       Schedule s = schedulesModel.get( schedEd.getName() );
       if ( null != s ) {
         isValid = false;
-        schedEd.setNameError( "Schedule with name \"" + schedEd.getName() + "\" already exists. Select another name." );
+        schedEd.setNameError( MSGS.scheduleNameAlreadyExists( schedEd.getName() ) );
       }
     }
     

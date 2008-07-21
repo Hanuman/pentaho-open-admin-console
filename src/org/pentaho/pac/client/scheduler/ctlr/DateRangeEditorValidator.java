@@ -15,9 +15,12 @@
  */
 package org.pentaho.pac.client.scheduler.ctlr;
 
+import org.pentaho.pac.client.PentahoAdminConsole;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.scheduler.view.DateRangeEditor;
 
 public class DateRangeEditorValidator implements IUiValidator {
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
 
   private DateRangeEditor dateRangeEditor = null;
   public DateRangeEditorValidator( DateRangeEditor dateRangeEditor ) {
@@ -29,13 +32,13 @@ public class DateRangeEditorValidator implements IUiValidator {
     
     if ( null == dateRangeEditor.getStartDate() ) {
       isValid = false;
-      dateRangeEditor.setStartDateError( "Specify a start date." );
+      dateRangeEditor.setStartDateError( MSGS.specifyStartDate() );
     }
 
     if ( dateRangeEditor.isEndBy() 
         && ( null == dateRangeEditor.getEndDate() ) ) {
       isValid = false;
-      dateRangeEditor.setEndByError( "Specify an end date." );
+      dateRangeEditor.setEndByError( MSGS.specifyEndDate() );
     }
     return isValid;
   }

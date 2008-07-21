@@ -2,8 +2,10 @@ package org.pentaho.pac.client.scheduler.view;
 
 import java.util.Date;
 
+import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.widget.ErrorLabel;
 import org.pentaho.pac.client.common.util.TimeUtil;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
@@ -14,9 +16,10 @@ public class CronEditor extends VerticalPanel {
   private TextBox cronTb = new TextBox();
   private DateRangeEditor dateRangeEditor = null;
   private ErrorLabel cronLabel = null;
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   
   public CronEditor() {
-    Label l = new Label( "Cron String:" );
+    Label l = new Label( MSGS.cronLabel() );
     cronLabel = new ErrorLabel( l );
     add( cronLabel );
     add( cronTb );
@@ -26,7 +29,7 @@ public class CronEditor extends VerticalPanel {
   }
   
   public void reset( Date d ) {
-    cronTb.setText( "" );
+    cronTb.setText( "" ); //$NON-NLS-1$
     dateRangeEditor.reset( d );
   }
 

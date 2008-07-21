@@ -24,7 +24,7 @@ public class DateTimePicker extends FlowPanel {
       ? new HorizontalPanel()
       : new VerticalPanel();
     add( p );
-    datePicker.setWidth( "12ex" );
+    datePicker.setWidth( "12ex" ); //$NON-NLS-1$
     datePicker.setYoungestDate( new Date() );
     p.add( datePicker );
     //timePicker.setWidth( "100%" );

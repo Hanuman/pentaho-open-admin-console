@@ -89,7 +89,7 @@ public class BasicDialog extends DialogBox {
   }
   
   private void initTitleBar() {
-    titleBarLabel.setStyleName( "titleBarLabel" );
+    titleBarLabel.setStyleName( "titleBarLabel" ); //$NON-NLS-1$
     // add a span tag to the title bar to store the title and X icon later
     titleBarSpanId = "basicDialogTitle" + Integer.toString( idCounter ); //$NON-NLS-1$
     idCounter++;

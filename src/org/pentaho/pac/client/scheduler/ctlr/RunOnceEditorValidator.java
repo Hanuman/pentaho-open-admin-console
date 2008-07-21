@@ -15,10 +15,13 @@
  */
 package org.pentaho.pac.client.scheduler.ctlr;
 
+import org.pentaho.pac.client.PentahoAdminConsole;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.scheduler.view.RunOnceEditor;
 
 
 public class RunOnceEditorValidator implements IUiValidator {
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
 
   private RunOnceEditor editor = null;
   
@@ -30,7 +33,7 @@ public class RunOnceEditorValidator implements IUiValidator {
     boolean isValid = true;
     if ( null == editor.getStartDate() ) {
       isValid = false;
-      editor.setStartDateError( "Specify a start date." );
+      editor.setStartDateError( MSGS.specifyStartDate() );
     }
     return isValid;
   }

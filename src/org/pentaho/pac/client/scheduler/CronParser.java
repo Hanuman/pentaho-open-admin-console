@@ -17,9 +17,11 @@ package org.pentaho.pac.client.scheduler;
 
 import java.util.EnumSet;
 
+import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.EnumException;
 import org.pentaho.pac.client.common.util.StringUtils;
 import org.pentaho.pac.client.common.util.TimeUtil;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
 /**
  * 
@@ -28,6 +30,7 @@ import org.pentaho.pac.client.common.util.TimeUtil;
  */
 public class CronParser {
 
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   private String cronStr;
   private RecurrenceType recurrenceType = RecurrenceType.EveryWeekday;
   private int startSecond = -1;
@@ -78,7 +81,7 @@ public class CronParser {
           return d;
         }
       }
-      throw new EnumException( "Invalid String for RecurrenceType: " + str );
+      throw new EnumException( MSGS.invalidStringForRecurrenceType( str ) );
     }
   };
   
@@ -87,23 +90,23 @@ public class CronParser {
   }
   
   private static boolean isMultipleOfN( int testValue, int n ) {
-    assert n != 0 : "isMultipleOfN(), n cannot be zero.";
+    assert n != 0 : "isMultipleOfN(), n cannot be zero."; //$NON-NLS-1$
     return ( ( testValue / n ) * n ) == testValue;
   }
 
-  private static final String MATCH_DAY_OF_MONTH_FIELD_RE = "^(\\*|\\?|L|([0-9]{1,2}(W|(,[0-9]{1,2}){0,30}))|([0-9]{1,2}[/-][0-9]{1,2}))$";
+  private static final String MATCH_DAY_OF_MONTH_FIELD_RE = "^(\\*|\\?|L|([0-9]{1,2}(W|(,[0-9]{1,2}){0,30}))|([0-9]{1,2}[/-][0-9]{1,2}))$"; //$NON-NLS-1$
   public static boolean isDayOfMonthField( String fld ) {
     return fld.matches( MATCH_DAY_OF_MONTH_FIELD_RE );
   }
-  private static final String MATCH_MONTH_FIELD_RE = "^(\\*|([0-9]{1,2}(,[0-9]{1,2}){0,11})|([0-9]{1,2}[/-][0-9]{1,2}))$";
+  private static final String MATCH_MONTH_FIELD_RE = "^(\\*|([0-9]{1,2}(,[0-9]{1,2}){0,11})|([0-9]{1,2}[/-][0-9]{1,2}))$"; //$NON-NLS-1$
   public static boolean isMonthField( String fld ) {
     return fld.matches( MATCH_MONTH_FIELD_RE );
   }
-  private static final String MATCH_DAY_OF_WEEK_FIELD_RE = "^(\\*|\\?|L|([0-9]{1,2}(,[0-9]{1,2}){0,6})|([0-9]{1,2}[/#-][0-9]{1,2}))$";
+  private static final String MATCH_DAY_OF_WEEK_FIELD_RE = "^(\\*|\\?|L|([0-9]{1,2}(,[0-9]{1,2}){0,6})|([0-9]{1,2}[/#-][0-9]{1,2}))$"; //$NON-NLS-1$
   public static boolean isDayOfWeekField( String fld ) {
     return fld.matches( MATCH_DAY_OF_WEEK_FIELD_RE );
   }
-  private static final String MATCH_YEAR_FIELD_RE = "^[0-9]{1,4}$";
+  private static final String MATCH_YEAR_FIELD_RE = "^[0-9]{1,4}$"; //$NON-NLS-1$
   public static boolean isYearField( String fld ) {
     return fld.matches( MATCH_YEAR_FIELD_RE );
   }
@@ -119,7 +122,7 @@ public class CronParser {
    */
   public static boolean isValidCronString( String strInt ) {
     boolean isValid = true;
-    String parts[] = strInt.split( "\\s" );
+    String parts[] = strInt.split( "\\s" ); //$NON-NLS-1$
 
     if ( parts.length < 6 ) {
       return false;
@@ -329,15 +332,15 @@ public class CronParser {
       return; // CRON string not parse-able into a recurrence string
     }
     
-    String[] tokens = cronStr.split( "\\s" ); // split on white space
+    String[] tokens = cronStr.split( "\\s" ); // split on white space //$NON-NLS-1$
     if ( REQUIRED_NUM_TOKENS != tokens.length ) {
-      throw new CronParseException( "Invalid number of tokens" );
+      throw new CronParseException( MSGS.invalidNumTokens() );
     }
     
     if ( StringUtils.isPositiveInteger( tokens[CronField.SECONDS.value] ) ) {
       int num = Integer.parseInt( tokens[CronField.SECONDS.value] );
       if ( !TimeUtil.isSecond( num ) ) {
-        throw new CronParseException( "Seconds token must be an integer between 0 and 59, but it is: " + tokens[0] );
+        throw new CronParseException( MSGS.invalidSecondsToken( tokens[0] ) );
       } else {
         startSecond = num;
       }
@@ -346,7 +349,7 @@ public class CronParser {
     if ( StringUtils.isPositiveInteger( tokens[CronField.MINUTES.value] ) ) {
       int num = Integer.parseInt( tokens[CronField.MINUTES.value] );
       if ( !TimeUtil.isMinute( num ) ) {
-        throw new CronParseException( "Minute token must be an integer between 0 and 59, but it is: " + tokens[0] );
+        throw new CronParseException( MSGS.invalidMinutesToken( tokens[0] ) );
       } else {
         startMinute = num;
       }
@@ -355,7 +358,7 @@ public class CronParser {
     if ( StringUtils.isPositiveInteger( tokens[CronField.HOURS.value] ) ) {
       int num = Integer.parseInt( tokens[CronField.HOURS.value] );
       if ( !TimeUtil.isHour( num ) ) {
-        throw new CronParseException( "Hours token must be an integer between 0 and 23, but it is: " + tokens[0] );
+        throw new CronParseException( MSGS.invalidHoursToken( tokens[0] ) );
       } else {
         startHour = num;
       }
@@ -389,11 +392,11 @@ public class CronParser {
       break;
     default:
       //oops
-      throw new CronParseException( "getDayOfMonth() not valid for recurrence type: " + this.recurrenceType.toString() );
+      throw new CronParseException( MSGS.invalidDayOfMonthForRecurrenceType( this.recurrenceType.toString() ) );
     }
     int dayOfMonth = Integer.parseInt( strVal );
     if ( !TimeUtil.isDayOfMonth( dayOfMonth ) ) {
-      throw new CronParseException( "Invalid day of month: " + strVal ); 
+      throw new CronParseException( MSGS.invalidDayOfMonth( strVal ) ); 
     }
     return dayOfMonth;
   }
@@ -416,12 +419,12 @@ public class CronParser {
       for ( int ii=0; ii<days.length; ++ii ) {
         intDays[ii] = Integer.parseInt( days[ ii ] );
         if ( !TimeUtil.isDayOfWeek( intDays[ii] ) ) {
-          throw new CronParseException( "Invalid day of week: " + days[ii] );
+          throw new CronParseException( MSGS.invalidDayOfWeek( days[ii] ) );
         }
       }
       return intDays;
     default:
-      throw new CronParseException( "getDaysOfWeek() not valid for recurrence type: " + this.recurrenceType.toString() );
+      throw new CronParseException( MSGS.invalidDayOfWeekForRecurrenceType( this.recurrenceType.toString() ) );
     }
   }
   
@@ -452,11 +455,11 @@ public class CronParser {
       strVal = dayOfWeekToke.split( N_TH )[1];
       int weekOfMonth = Integer.parseInt( strVal );
       if ( !TimeUtil.isWeekOfMonth( weekOfMonth ) ) {
-        throw new CronParseException( "Invalid week of month: " + strVal );
+        throw new CronParseException( MSGS.invalidWeekOfMonth( strVal ) );
       }
       return weekOfMonth;
     default:
-      throw new CronParseException( "getWhichWeekOfMonth() not valid for recurrence type: " + this.recurrenceType.toString() );
+      throw new CronParseException( MSGS.invalidWeekOfMonthForRecurrenceType( this.recurrenceType.toString() ) ) ;
     }
   }
 
@@ -498,11 +501,11 @@ public class CronParser {
       dayOfWeek = Integer.parseInt( strDay );
       break;
     default:
-      throw new CronParseException( "getWhichDayOfWeek() not valid for recurrence type: " + this.recurrenceType.toString() );
+      throw new CronParseException( MSGS.invalidDayOfMonthForRecurrenceType( this.recurrenceType.toString() ) );
     }
     
     if ( !TimeUtil.isDayOfWeek( dayOfWeek) ) {
-      throw new CronParseException( "Invalid day of week: " + Integer.toString( dayOfWeek ) );
+      throw new CronParseException( MSGS.invalidDayOfMonth( Integer.toString( dayOfWeek ) ) );
     }
     return dayOfWeek;
   }
@@ -538,10 +541,10 @@ public class CronParser {
       monthOfYear = Integer.parseInt( monthToke );
       break;
     default:
-      throw new CronParseException( "getWhichMonthOfYear() not valid for recurrence type: " + this.recurrenceType.toString() );
+      throw new CronParseException( MSGS.invalidMonthOfYearForRecurrenceType( this.recurrenceType.toString() ) );
     }
     if ( !TimeUtil.isMonthOfYear( monthOfYear ) ) {
-      throw new CronParseException( "Invalid month of year: " + monthToke );
+      throw new CronParseException( MSGS.invalidMonthOfYear( monthToke ) );
     }
     return monthOfYear;
   }
@@ -594,7 +597,7 @@ public class CronParser {
 
   private static void validateIsInt( String strInt ) throws CronParseException {
     if ( !StringUtils.isPositiveInteger( strInt ) ) {
-      throw new CronParseException( "Invalid token, must be an integer: " + strInt );
+      throw new CronParseException( MSGS.invalidIntegerToken( strInt ) );
     }
   }
   
@@ -604,7 +607,7 @@ public class CronParser {
     // TODO, could make sure that the ints are unique
     boolean matches = strInts.matches( COMMA_SEPARATED_LIST_OF_WEEKDAY_INTS );
     if ( !matches ) {
-      throw new CronParseException( "Invalid token, must be a list of integers: " + strInts );
+      throw new CronParseException( MSGS.invalidIntegerListToken( strInts ) );
     }
   }
   
@@ -688,9 +691,9 @@ public class CronParser {
       cronToken5 = recurrenceTokens[4] + LAST;
       break;
     case Unknown:
-      throw new RuntimeException( "Illegal to call recurrenceStringToCronStr with a RecurrenceType of Unknown." );
+      throw new RuntimeException( MSGS.illegalRecurrenceTypeUnknown() );
     default:
-      throw new RuntimeException( "Invalid recurrenceType: " + recurrenceTokens[0] );
+      throw new RuntimeException( MSGS.invalidRecurrenceType( recurrenceTokens[0] ) );
     }
     sb.append( cronToken3 ).append( " " ); //$NON-NLS-1$
     sb.append( cronToken4 ).append( " " ); //$NON-NLS-1$
@@ -968,7 +971,7 @@ public class CronParser {
     } catch (EnumException e1) {
       bThrewException = true;
     }
-    assert !bThrewException : "Should not have thrown exception";
+    assert !bThrewException : "Should not have thrown exception"; //$NON-NLS-1$
     bThrewException = false;
     try {
       st = RecurrenceType.stringToScheduleType( RecurrenceType.NthDayNameOfMonth.toString() );
@@ -976,7 +979,7 @@ public class CronParser {
     } catch (EnumException e1) {
       bThrewException = true;
     }
-    assert !bThrewException : "Should not have thrown exception";
+    assert !bThrewException : "Should not have thrown exception"; //$NON-NLS-1$
     bThrewException = false;
     try {
       st = RecurrenceType.stringToScheduleType( RecurrenceType.EveryMonthNameN.toString() );
@@ -984,37 +987,37 @@ public class CronParser {
     } catch (EnumException e1) {
       bThrewException = true;
     }
-    assert !bThrewException : "Should not have thrown exception";
+    assert !bThrewException : "Should not have thrown exception"; //$NON-NLS-1$
     bThrewException = false;
 
     String r;
     try {
-      r = recurrenceStringToCronString( "EveryNthDayOfMonth 0 22 4 toke" );
+      r = recurrenceStringToCronString( "EveryNthDayOfMonth 0 22 4 toke" ); //$NON-NLS-1$
     } catch (CronParseException e) {
       bThrewException = true;
     }
-    assert bThrewException : "Should have thrown exception";
+    assert bThrewException : "Should have thrown exception"; //$NON-NLS-1$
     bThrewException = false;
     try {
-      r = recurrenceStringToCronString( "WeeklyOn 0 33 6 1,toke,5" );
+      r = recurrenceStringToCronString( "WeeklyOn 0 33 6 1,toke,5" ); //$NON-NLS-1$
     } catch (CronParseException e) {
       bThrewException = true;
     }
-    assert bThrewException : "Should have thrown exception";
+    assert bThrewException : "Should have thrown exception"; //$NON-NLS-1$
     bThrewException = false;
     try {
-      r = recurrenceStringToCronString( "DayNOfMonth 0 5 toke 13" );
+      r = recurrenceStringToCronString( "DayNOfMonth 0 5 toke 13" ); //$NON-NLS-1$
     } catch (CronParseException e) {
       bThrewException = true;
     }
-    assert bThrewException : "Should have thrown exception";
+    assert bThrewException : "Should have thrown exception"; //$NON-NLS-1$
     bThrewException = false;
     try {
-      r = recurrenceStringToCronString( "NthDayNameOfMonthName 0 3 5 7 3 toke" );
+      r = recurrenceStringToCronString( "NthDayNameOfMonthName 0 3 5 7 3 toke" ); //$NON-NLS-1$
     } catch (CronParseException e) {
       bThrewException = true;
     }
-    assert bThrewException : "Should have thrown exception";
+    assert bThrewException : "Should have thrown exception"; //$NON-NLS-1$
     bThrewException = false;
   }
 }

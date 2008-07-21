@@ -79,7 +79,7 @@ public class TableListCtrl<RowDataType> extends ScrollPanel {
   {
     final TableListCtrl<RowDataType> localThis = this;
     selectAllCb = new CheckBox();
-    selectAllCb.setTitle( "Check to select all rows" );
+    selectAllCb.setTitle( MSGS.checkToSelectAll() );
     selectAllCb.addClickListener( new ClickListener() {
       public void onClick(Widget sender) {
         if ( localThis.selectAllCb.isChecked() ) {
@@ -203,7 +203,7 @@ public class TableListCtrl<RowDataType> extends ScrollPanel {
       setCellWidget( newRowNum-FIRST_ROW, ii+1, w );
     }
     dataList.add( data );
-    assert dataList.size() == (table.getRowCount()-FIRST_ROW) : "Number of items in data list does not equal the number of items in the list.";
+    assert dataList.size() == (table.getRowCount()-FIRST_ROW) : "Number of items in data list does not equal the number of items in the list."; //$NON-NLS-1$
   }
 
   public void setCellWidget( int rowNum, int colNum, Widget w ) {

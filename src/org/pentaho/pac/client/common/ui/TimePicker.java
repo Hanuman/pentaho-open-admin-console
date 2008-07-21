@@ -43,8 +43,8 @@ public class TimePicker extends HorizontalPanel {
    * @param time
    */
   public void setTime( String time ) {
-    String[] parts = time.split( ":" );
-    String[] lastParts = parts[2].split( "\\s" );
+    String[] parts = time.split( ":" ); //$NON-NLS-1$
+    String[] lastParts = parts[2].split( "\\s" ); //$NON-NLS-1$
     setHour( parts[0] );
     setMinute( parts[1] );
     //setSeconds( lastParts[0] );
@@ -58,10 +58,10 @@ public class TimePicker extends HorizontalPanel {
    */
   public String getTime() {
     StringBuilder sb = new StringBuilder( getHour() )
-      .append( ":" )
+      .append( ":" ) //$NON-NLS-1$
       .append( getMinute() )
-      .append( ":" )
-      .append( "00 " )
+      .append( ":" ) //$NON-NLS-1$
+      .append( "00 " ) //$NON-NLS-1$
       .append( getTimeOfDay().toString() );
     
     return sb.toString();
@@ -70,8 +70,8 @@ public class TimePicker extends HorizontalPanel {
     hourLB.setVisibleItemCount( 1 );
     for ( int ii=1; ii<=TimeUtil.MAX_HOUR; ++ii ) {
       String strHrDisplay = Integer.toString( ii );
-      strHrDisplay = ( strHrDisplay.length() == 1 ) ? "0" + strHrDisplay : strHrDisplay;  // left pad single digit values with 0
-      String strHrValue = (ii == 12) ? "0" : Integer.toString( ii );
+      strHrDisplay = ( strHrDisplay.length() == 1 ) ? "0" + strHrDisplay : strHrDisplay;  // left pad single digit values with 0 //$NON-NLS-1$
+      String strHrValue = (ii == 12) ? "0" : Integer.toString( ii ); //$NON-NLS-1$
       hourLB.addItem( strHrDisplay, strHrValue );
     }
   }
@@ -80,7 +80,7 @@ public class TimePicker extends HorizontalPanel {
     minuteLB.setVisibleItemCount( 1 );
     for ( int ii=0; ii<TimeUtil.MAX_MINUTE; ++ii ) {
       String strMinute = Integer.toString( ii );
-      strMinute = ( strMinute.length() == 1 ) ? "0" + strMinute : strMinute;  // left pad single digit values with 0
+      strMinute = ( strMinute.length() == 1 ) ? "0" + strMinute : strMinute;  // left pad single digit values with 0 //$NON-NLS-1$
       minuteLB.addItem( strMinute );
     }
   }

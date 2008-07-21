@@ -31,9 +31,10 @@ public class SchedulesListController {
 
   private static int NUM_COLUMNS = SchedulesListCtrl.COLUMN_HEADER_TITLE.length;
   private SchedulesListCtrl schedulesListCtrl = null;
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   
   public SchedulesListController( SchedulesListCtrl schedulesListCtrl ) {
-    assert (null != schedulesListCtrl ) : "schedulesListCtrl cannot be null.";
+    assert (null != schedulesListCtrl ) : "schedulesListCtrl cannot be null."; //$NON-NLS-1$
     this.schedulesListCtrl = schedulesListCtrl;
   }
   
@@ -41,6 +42,7 @@ public class SchedulesListController {
   {
     schedulesListCtrl.removeAll();
     if ( scheduleList.size() > 0 ) {
+      for ( int ii=0; ii<10; ii++ ) {
       for ( int scheduleIdx=0; scheduleIdx< scheduleList.size(); ++scheduleIdx ) {
         Schedule schedule = scheduleList.get( scheduleIdx );
   
@@ -72,11 +74,12 @@ public class SchedulesListController {
         // column 5
         String labelTxt = schedule.isSubscriptionSchedule()
           ? schedule.getSubscriberCount()
-          : "n/a";
+          : MSGS.notApplicable();
         l = new Label( labelTxt );
         widgets[ 5 ] = l;
 
         schedulesListCtrl.addRow( widgets, schedule );
+      }
       }
     } else {
       PacLocalizedMessages msgs = PentahoAdminConsole.getLocalizedMessages();
