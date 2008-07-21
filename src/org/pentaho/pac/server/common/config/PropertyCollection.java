@@ -38,7 +38,7 @@ public class PropertyCollection<E extends PacProperty> implements Iterable<E>{
 
 	}
 
-	@Override
+
 	public Iterator<E> iterator() {
 		return props.iterator();
 	}
