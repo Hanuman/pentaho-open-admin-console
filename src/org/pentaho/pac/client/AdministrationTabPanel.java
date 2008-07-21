@@ -7,8 +7,10 @@ import org.pentaho.pac.client.scheduler.view.SchedulerPanel;
 import org.pentaho.pac.client.services.AdminServicesPanel;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SourcesTabEvents;
 import com.google.gwt.user.client.ui.TabPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class AdministrationTabPanel extends TabPanel {
 
@@ -34,7 +36,10 @@ public class AdministrationTabPanel extends TabPanel {
     add(dataSourcesPanel, PentahoAdminConsole.MSGS.dataSources());
     add(servicesPanel, PentahoAdminConsole.MSGS.services());
     SchedulerPanel schedulerPanel = new SchedulerPanel();
-    add(schedulerPanel, PentahoAdminConsole.MSGS.scheduler());
+    Panel p = new VerticalPanel();
+    p.setStyleName( "schedulerPanelPadderPanel" );
+    p.add(schedulerPanel );
+    add(p, PentahoAdminConsole.MSGS.scheduler());
     schedulerController = new SchedulerController( schedulerPanel );
     
     usersAndRolesPanel.setWidth("100%"); //$NON-NLS-1$
