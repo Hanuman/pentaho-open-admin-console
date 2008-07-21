@@ -5,7 +5,6 @@ import org.hibernate.Session;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Configuration;
 import org.pentaho.pac.server.common.config.PacProperty;
-import org.pentaho.pac.server.pdi.PdiProperty;
 
 
 /**
