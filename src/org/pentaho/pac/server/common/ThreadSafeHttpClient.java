@@ -36,9 +36,9 @@ import org.apache.commons.logging.LogFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.common.PacServiceException;
+import org.pentaho.pac.server.i18n.Messages;
 
 public class ThreadSafeHttpClient {
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   private static final Log logger = LogFactory.getLog(ThreadSafeHttpClient.class);
 
   private static final String REQUESTED_MIME_TYPE = "requestedMimeType"; //$NON-NLS-1$
@@ -112,7 +112,7 @@ public class ThreadSafeHttpClient {
         method.setFollowRedirects( true );
         break;
       default:
-        throw new RuntimeException( MSGS.invalidHttpMethodType( methodType.toString() ) );  // can never happen
+        throw new RuntimeException( Messages.getString( "ThreadSafeHttpClient.invalidHttpMethodType", methodType.toString() ) );  // can never happen
     }
     return executeMethod( method );
   }
