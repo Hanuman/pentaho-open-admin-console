@@ -16,9 +16,9 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String dbValidationQuery();
 
   /**
-   * Translated "Details:".
+   * Translated "Details".
    * 
-   * @return translated "Details:"
+   * @return translated "Details"
    * @gwt.key userDetails
    */
   String userDetails();
@@ -38,6 +38,22 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key endByLabel
    */
   String endByLabel();
+
+  /**
+   * Translated "Resume selected schedule(s)".
+   * 
+   * @return translated "Resume selected schedule(s)"
+   * @gwt.key resumeSchedules
+   */
+  String resumeSchedules();
+
+  /**
+   * Translated "of every month".
+   * 
+   * @return translated "of every month"
+   * @gwt.key ofEveryMonth
+   */
+  String ofEveryMonth();
 
   /**
    * Translated "Refresh System Settings".
@@ -78,6 +94,23 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key invalidDayOfMonth
    */
   String invalidDayOfMonth(String arg0);
+
+  /**
+   * Translated "Run selected schedule(s) now".
+   * 
+   * @return translated "Run selected schedule(s) now"
+   * @gwt.key runSchedules
+   */
+  String runSchedules();
+
+  /**
+   * Translated "Error Deleting Data Source".
+   * 
+   * @return translated "Error Deleting Data Source"
+   * @gwt.key errorDeletingDataSource
+   */
+  String errorDeletingDataSource();
+
   /**
    * Translated "July".
    * 
@@ -95,6 +128,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String assignedItemsTitle();
 
   /**
+   * Translated "All Groups".
+   * 
+   * @return translated "All Groups"
+   * @gwt.key allGroups
+   */
+  String allGroups();
+
+  /**
    * Translated "Invalid token, must be a list of integers: {0}.".
    * 
    * @return translated "Invalid token, must be a list of integers: {0}."
@@ -109,6 +150,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key invalidTabIndex
    */
   String invalidTabIndex(String arg0);
+
+  /**
+   * Translated "Successfully updated the DataSource.".
+   * 
+   * @return translated "Successfully updated the DataSource."
+   * @gwt.key successfulDataSourceUpdate
+   */
+  String successfulDataSourceUpdate();
 
   /**
    * Translated "Running".
@@ -215,6 +264,22 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String weekly();
 
   /**
+   * Translated "Number of days to repeat.".
+   * 
+   * @return translated "Number of days to repeat."
+   * @gwt.key numDaysToRepeat
+   */
+  String numDaysToRepeat();
+
+  /**
+   * Translated "Create schedule".
+   * 
+   * @return translated "Create schedule"
+   * @gwt.key createSchedule
+   */
+  String createSchedule();
+
+  /**
    * Translated "first".
    * 
    * @return translated "first"
@@ -271,6 +336,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String invalidSecondsToken(String arg0);
 
   /**
+   * Translated "Every".
+   * 
+   * @return translated "Every"
+   * @gwt.key every
+   */
+  String every();
+
+  /**
    * Translated "State".
    * 
    * @return translated "State"
@@ -279,12 +352,28 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String state();
 
   /**
+   * Translated "Resume scheduler".
+   * 
+   * @return translated "Resume scheduler"
+   * @gwt.key resumeScheduler
+   */
+  String resumeScheduler();
+
+  /**
    * Translated "Update User".
    * 
    * @return translated "Update User"
    * @gwt.key updateUser
    */
   String updateUser();
+
+  /**
+   * Translated "Suspend scheduler".
+   * 
+   * @return translated "Suspend scheduler"
+   * @gwt.key suspendScheduler
+   */
+  String suspendScheduler();
 
   /**
    * Translated "Update".
@@ -309,6 +398,22 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key assignedUsers
    */
   String assignedUsers();
+
+  /**
+   * Translated "Suspend selected schedule(s)".
+   * 
+   * @return translated "Suspend selected schedule(s)"
+   * @gwt.key suspendSchedules
+   */
+  String suspendSchedules();
+
+  /**
+   * Translated "Recurrence:".
+   * 
+   * @return translated "Recurrence:"
+   * @gwt.key recurrenceColon
+   */
+  String recurrenceColon();
 
   /**
    * Translated "Filter:".
@@ -431,6 +536,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String noEndDateLabel();
 
   /**
+   * Translated "Schedule".
+   * 
+   * @return translated "Schedule"
+   * @gwt.key schedule
+   */
+  String schedule();
+
+  /**
    * Translated "Delete".
    * 
    * @return translated "Delete"
@@ -527,6 +640,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String testConnection();
 
   /**
+   * Translated "Number of {0} to repeat.".
+   * 
+   * @return translated "Number of {0} to repeat."
+   * @gwt.key numberOfXToRepeat
+   */
+  String numberOfXToRepeat(String arg0);
+
+  /**
    * Translated "Remove Roles".
    * 
    * @return translated "Remove Roles"
@@ -581,6 +702,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key cronLabel
    */
   String cronLabel();
+
+  /**
+   * Translated "Description:".
+   * 
+   * @return translated "Description:"
+   * @gwt.key descriptionColon
+   */
+  String descriptionColon();
 
   /**
    * Translated "Delete Data Sources".
@@ -655,6 +784,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String illegalRecurrenceTypeUnknown();
 
   /**
+   * Translated "minute(s)".
+   * 
+   * @return translated "minute(s)"
+   * @gwt.key minutesLabel
+   */
+  String minutesLabel();
+
+  /**
    * Translated "Security".
    * 
    * @return translated "Security"
@@ -669,6 +806,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key june
    */
   String june();
+
+  /**
+   * Translated "Edit schedule".
+   * 
+   * @return translated "Edit schedule"
+   * @gwt.key editSchedule
+   */
+  String editSchedule();
 
   /**
    * Translated "User Name".
@@ -741,6 +886,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key yearly
    */
   String yearly();
+
+  /**
+   * Translated "second(s)".
+   * 
+   * @return translated "second(s)"
+   * @gwt.key secondsLabel
+   */
+  String secondsLabel();
 
   /**
    * Translated "AM".
@@ -847,6 +1000,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String unrecognizedSchedType(String arg0);
 
   /**
+   * Translated "If any of the fields are left empty, platform will use the default values stored in the pentaho.xml for connection pooling.".
+   * 
+   * @return translated "If any of the fields are left empty, platform will use the default values stored in the pentaho.xml for connection pooling."
+   * @gwt.key datasourceAdvanceInfo
+   */
+  String datasourceAdvanceInfo();
+
+  /**
    * Translated "Hours token must be an integer between 0 and 23, but it is: {0}.".
    * 
    * @return translated "Hours token must be an integer between 0 and 23, but it is: {0}."
@@ -893,6 +1054,22 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key minutes
    */
   String minutes();
+
+  /**
+   * Translated "Run Once".
+   * 
+   * @return translated "Run Once"
+   * @gwt.key runOnce
+   */
+  String runOnce();
+
+  /**
+   * Translated "Invalid String for temporal value: {0}".
+   * 
+   * @return translated "Invalid String for temporal value: {0}"
+   * @gwt.key invalidTemporalValue
+   */
+  String invalidTemporalValue(String arg0);
 
   /**
    * Translated "Role does not exist: {0} ".
@@ -967,6 +1144,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String confirmDeleteQuestion();
 
   /**
+   * Translated "Name:".
+   * 
+   * @return translated "Name:"
+   * @gwt.key nameColon
+   */
+  String nameColon();
+
+  /**
    * Translated "August".
    * 
    * @return translated "August"
@@ -1007,6 +1192,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String XmlSerializer_stateNone();
 
   /**
+   * Translated "Invalid TemporalValue in getCronString(): {0}".
+   * 
+   * @return translated "Invalid TemporalValue in getCronString(): {0}"
+   * @gwt.key invalidTemporalValueInGetCronString
+   */
+  String invalidTemporalValueInGetCronString(String arg0);
+
+  /**
    * Translated "Error Creating Data Source".
    * 
    * @return translated "Error Creating Data Source"
@@ -1023,12 +1216,44 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String onlyOneActionSequence();
 
   /**
+   * Translated "The".
+   * 
+   * @return translated "The"
+   * @gwt.key the
+   */
+  String the();
+
+  /**
+   * Translated "Group:".
+   * 
+   * @return translated "Group:"
+   * @gwt.key groupColon
+   */
+  String groupColon();
+
+  /**
+   * Translated "of".
+   * 
+   * @return translated "of"
+   * @gwt.key of
+   */
+  String of();
+
+  /**
    * Translated "Hours must be a number <= {0}.".
    * 
    * @return translated "Hours must be a number <= {0}."
    * @gwt.key mustBeHoursRange
    */
   String mustBeHoursRange(String arg0);
+
+  /**
+   * Translated "Day".
+   * 
+   * @return translated "Day"
+   * @gwt.key day
+   */
+  String day();
 
   /**
    * Translated "No".
@@ -1119,6 +1344,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String confirmRemoveRoleAssignmentMsg();
 
   /**
+   * Translated "Every weekday".
+   * 
+   * @return translated "Every weekday"
+   * @gwt.key everyWeekDay
+   */
+  String everyWeekDay();
+
+  /**
    * Translated "Purge Mondrian Schema Cache".
    * 
    * @return translated "Purge Mondrian Schema Cache"
@@ -1183,6 +1416,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String monday();
 
   /**
+   * Translated "Start Time:".
+   * 
+   * @return translated "Start Time:"
+   * @gwt.key startTimeColon
+   */
+  String startTimeColon();
+
+  /**
    * Translated "Wednesday".
    * 
    * @return translated "Wednesday"
@@ -1213,6 +1454,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key deleteRoles
    */
   String deleteRoles();
+
+  /**
+   * Translated "Invalid recurrence string: {0}".
+   * 
+   * @return translated "Invalid recurrence string: {0}"
+   * @gwt.key invalidRecurrenceString
+   */
+  String invalidRecurrenceString(String arg0);
 
   /**
    * Translated "Server Status:".
@@ -1247,6 +1496,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String invalidWeekOfMonthForRecurrenceType(String arg0);
 
   /**
+   * Translated "Recurrence pattern".
+   * 
+   * @return translated "Recurrence pattern"
+   * @gwt.key recurrencePattern
+   */
+  String recurrencePattern();
+
+  /**
    * Translated "Invalid role name.;".
    * 
    * @return translated "Invalid role name.;"
@@ -1261,6 +1518,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key february
    */
   String february();
+
+  /**
+   * Translated "day(s)".
+   * 
+   * @return translated "day(s)"
+   * @gwt.key daysLabel
+   */
+  String daysLabel();
 
   /**
    * Translated "Refresh Solution Repository".
@@ -1327,6 +1592,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String pm();
 
   /**
+   * Translated "Comma separated list of action sequence paths:".
+   * 
+   * @return translated "Comma separated list of action sequence paths:"
+   * @gwt.key commaSeparatedList
+   */
+  String commaSeparatedList();
+
+  /**
    * Translated "OK".
    * 
    * @return translated "OK"
@@ -1389,6 +1662,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key missingDbUserName
    */
   String missingDbUserName();
+
+  /**
+   * Translated "Scheduled Action".
+   * 
+   * @return translated "Scheduled Action"
+   * @gwt.key scheduledAction
+   */
+  String scheduledAction();
 
   /**
    * Translated "Execute Global Actions".
@@ -1463,6 +1744,22 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String days(String arg0);
 
   /**
+   * Translated "Start Date:".
+   * 
+   * @return translated "Start Date:"
+   * @gwt.key startDate
+   */
+  String startDate();
+
+  /**
+   * Translated "Recur every week on:".
+   * 
+   * @return translated "Recur every week on:"
+   * @gwt.key recurEveryWeek
+   */
+  String recurEveryWeek();
+
+  /**
    * Translated "November".
    * 
    * @return translated "November"
@@ -1485,6 +1782,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key jndiName
    */
   String jndiName();
+
+  /**
+   * Translated "hour(s)".
+   * 
+   * @return translated "hour(s)"
+   * @gwt.key hoursLabel
+   */
+  String hoursLabel();
 
   /**
    * Translated "September".
@@ -1543,12 +1848,20 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String tuesday();
 
   /**
-   * Translated "Are your sure you want to delete the selected data sources?".
+   * Translated "Are your sure you want to delete the selected data sources? If you are using connection pooling in the platform, it will require a server restart inorder for this change to take effect.".
    * 
-   * @return translated "Are your sure you want to delete the selected data sources?"
+   * @return translated "Are your sure you want to delete the selected data sources? If you are using connection pooling in the platform, it will require a server restart inorder for this change to take effect."
    * @gwt.key confirmDataSourceDeletionMsg
    */
   String confirmDataSourceDeletionMsg();
+
+  /**
+   * Translated "Start Time".
+   * 
+   * @return translated "Start Time"
+   * @gwt.key startTime
+   */
+  String startTime();
 
   /**
    * Translated "Unable to load Home page, reason: {0}".
@@ -1583,12 +1896,28 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String cantAssignNonexistingUserToRole(String arg0);
 
   /**
+   * Translated "Invalid TemporalValue in getRepeatInSecs(): {0}".
+   * 
+   * @return translated "Invalid TemporalValue in getRepeatInSecs(): {0}"
+   * @gwt.key invalidTemporalValueInGetRepeatInSecs
+   */
+  String invalidTemporalValueInGetRepeatInSecs(String arg0);
+
+  /**
    * Translated "Range of recurrence".
    * 
    * @return translated "Range of recurrence"
    * @gwt.key rangeOfRecurrence
    */
   String rangeOfRecurrence();
+
+  /**
+   * Translated "Successfully Deleted the selected datasource(s).".
+   * 
+   * @return translated "Successfully Deleted the selected datasource(s)."
+   * @gwt.key successfulDataSourceDelete
+   */
+  String successfulDataSourceDelete();
 
   /**
    * Translated "Data Sources".
@@ -1607,12 +1936,28 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String invalidCronString();
 
   /**
+   * Translated "Refresh schedule list".
+   * 
+   * @return translated "Refresh schedule list"
+   * @gwt.key refreshScheduleList
+   */
+  String refreshScheduleList();
+
+  /**
    * Translated "Invalid number of tokens.".
    * 
    * @return translated "Invalid number of tokens."
    * @gwt.key invalidNumTokens
    */
   String invalidNumTokens();
+
+  /**
+   * Translated "Cron".
+   * 
+   * @return translated "Cron"
+   * @gwt.key cron
+   */
+  String cron();
 
   /**
    * Translated "Not running".
@@ -1639,6 +1984,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String description();
 
   /**
+   * Translated "There seems to not be any radio button selected, which is theoretically impossible.".
+   * 
+   * @return translated "There seems to not be any radio button selected, which is theoretically impossible."
+   * @gwt.key noRadioBtnsSelected
+   */
+  String noRadioBtnsSelected();
+
+  /**
    * Translated "Suspend All Jobs".
    * 
    * @return translated "Suspend All Jobs"
@@ -1655,32 +2008,10 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String mustBeSecondsRange(String arg0);
 
   /**
-   * Translated "Error Deleting Data Source".
+   * Translated "Delete schedule(s)".
    * 
-   * @return translated "Error Deleting Data Source"
-   * @gwt.key errorDeletingDataSource
+   * @return translated "Delete schedule(s)"
+   * @gwt.key deleteSchedules
    */
-  String errorDeletingDataSource();  
-  /**
-   * Translated "Successfully Deleted the selected datasource(s).".
-   * 
-   * @return translated "Successfully Deleted the selected datasource(s)."
-   * @gwt.key successfulDataSourceDelete
-   */
-  String successfulDataSourceDelete();  
-  /**
-   * Translated "Successfully updated the DataSource."
-   * 
-   * @return translated "Successfully updated the DataSource."
-   * @gwt.key successfulDataSourceUpdate
-   */
-  String successfulDataSourceUpdate();
-  /**
-   * Translated "If any of the fields are left empty, platform will use the default value stored in the pentaho.xml for connection pooling."
-   * 
-   * @return translated "
-   * If any of the fields are left empty, platform will use the default value stored in the pentaho.xml for connection pooling."
-   * @gwt.key datasourceAdvanceInfo
-   */
-  String datasourceAdvanceInfo();    
+  String deleteSchedules();
 }
