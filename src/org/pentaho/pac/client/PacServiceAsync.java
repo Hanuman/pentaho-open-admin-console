@@ -41,6 +41,6 @@ public interface PacServiceAsync {
   public void refreshReportingMetadata(AsyncCallback callback);
   public void getHomePageAsHtml(String url, AsyncCallback<String> callback);
   
-  public void isBiServerAlive( AsyncCallback callback );
-  public void getBiServerStatusCheckPeriod( AsyncCallback callback );
+  public void isBiServerAlive( AsyncCallback<Object> callback );
+  public void getBiServerStatusCheckPeriod( AsyncCallback<Integer> callback );
 }
