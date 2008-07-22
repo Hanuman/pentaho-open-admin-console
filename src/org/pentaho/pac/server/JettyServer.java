@@ -72,7 +72,8 @@ public class JettyServer {
     
     ServletHolder subscriptionsvc = new ServletHolder(new org.pentaho.pac.server.SubscriptionServiceImpl() );
     startExecution.addServlet(subscriptionsvc, "/subscriptionsvc"); //$NON-NLS-1$
-    
+
+    // TODO sbarkdull, can this be deleted?
     //sample
     Handler hello = new HomeHandler();
     
@@ -113,7 +114,7 @@ public class JettyServer {
     JettyServer server = new JettyServer();
   }
   
-  
+  // TODO sbarkdull, can this be deleted?
   public static class HomeHandler extends AbstractHandler
   {
       public void handle(String target, HttpServletRequest request, HttpServletResponse response, int dispatch) throws IOException, ServletException
