@@ -717,7 +717,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
 
   private String executeXAction(String solution, String path, String xAction ) throws PacServiceException{
 
-    Map params = new HashMap();
+    Map<String,Object> params = new HashMap<String,Object>();
     params.put( "solution", solution ); //$NON-NLS-1$
     params.put( "path", path ); //$NON-NLS-1$
     params.put( "action", xAction ); //$NON-NLS-1$
@@ -744,7 +744,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   
   private String executePublishRequest(String publisherClassName ) throws PacServiceException {
     
-    Map params = new HashMap();
+    Map<String,Object> params = new HashMap<String,Object>();
     params.put( "publish", "now" ); //$NON-NLS-1$ //$NON-NLS-2$
     params.put( "style", "popup" ); //$NON-NLS-1$ //$NON-NLS-2$
     params.put( "class", publisherClassName ); //$NON-NLS-1$
