@@ -29,7 +29,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class SchedulesListController {
 
-  private static int NUM_COLUMNS = SchedulesListCtrl.COLUMN_HEADER_TITLE.length;
   private SchedulesListCtrl schedulesListCtrl = null;
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   
@@ -45,7 +44,7 @@ public class SchedulesListController {
       for ( int scheduleIdx=0; scheduleIdx< scheduleList.size(); ++scheduleIdx ) {
         Schedule schedule = scheduleList.get( scheduleIdx );
   
-        Widget[] widgets = new Widget[ NUM_COLUMNS ];
+        Widget[] widgets = new Widget[ schedulesListCtrl.getNumColumns() ];
 
         // column 0
         Label l = new Label( schedule.getJobName());
