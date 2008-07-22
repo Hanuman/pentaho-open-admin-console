@@ -26,7 +26,7 @@ public class SchedulerServiceImpl extends RemoteServiceServlet implements Schedu
   private static SchedulerAdminUIComponentProxy schedulerProxy = null;
   static {
     String userName = StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getProperty("pentaho.platform.userName"), System.getProperty("pentaho.platform.userName") ); //$NON-NLS-1$ //$NON-NLS-2$
-    String biServerBaseURL = AppConfigProperties.getInstance().getProperty( "biServerBaseURL" );
+    String biServerBaseURL = AppConfigProperties.getInstance().getProperty( "biServerBaseURL" ); //$NON-NLS-1$
     schedulerProxy = new SchedulerAdminUIComponentProxy( userName, biServerBaseURL );
   }
   
