@@ -45,7 +45,7 @@ public class UserAndRoleMgmtService {
     if (userRoleSecurityInfo != null) {
       roles = new ProxyPentahoRole[userRoleSecurityInfo.getRoles().size()];
       for (int i = 0; i < roles.length; i++) {
-        roles[i] = (ProxyPentahoRole) ((ProxyPentahoRole) userRoleSecurityInfo.getRoles().get(i)).clone();
+        roles[i] = (ProxyPentahoRole) (userRoleSecurityInfo.getRoles().get(i)).clone();
       }
     }
     return roles;
@@ -56,7 +56,7 @@ public class UserAndRoleMgmtService {
     if (userRoleSecurityInfo != null) {
       users = new ProxyPentahoUser[userRoleSecurityInfo.getUsers().size()];
       for (int i = 0; i < users.length; i++) {
-        users[i] = (ProxyPentahoUser) ((ProxyPentahoUser) userRoleSecurityInfo.getUsers().get(i)).clone();
+        users[i] = (ProxyPentahoUser) (userRoleSecurityInfo.getUsers().get(i)).clone();
       }
     }
     return users;
@@ -65,7 +65,7 @@ public class UserAndRoleMgmtService {
   public ProxyPentahoRole[] getRoles(ProxyPentahoUser user) {
     ProxyPentahoRole[] roles = new ProxyPentahoRole[0];
     if (userRoleSecurityInfo != null) {
-      List roleNames = new ArrayList();
+      List roleNames = new ArrayList<String>();
       List assignedRoles = new ArrayList();
       for (Iterator iter = userRoleSecurityInfo.getAssignments().iterator(); iter.hasNext();) {
         UserToRoleAssignment userToRoleAssignment = (UserToRoleAssignment) iter.next();
