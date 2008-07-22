@@ -120,7 +120,7 @@ public class SubscriptionAdminUIComponentProxy {
     if ( null != strRepeatCount ) {
       params.put( "repeat-count", strRepeatCount ); //$NON-NLS-1$
     }
-    assert Integer.parseInt( repeatInterval ) >= 0 : "Invalid repeat interval";
+    assert Integer.parseInt( repeatInterval ) >= 0 : "Invalid repeat interval"; //$NON-NLS-1$
     params.put( "repeat-time-millisecs", repeatInterval ); //$NON-NLS-1$
     params.put( "group", jobGroup ); //$NON-NLS-1$
     params.put( "actionRefs", actionsList ); //$NON-NLS-1$
@@ -149,7 +149,7 @@ public class SubscriptionAdminUIComponentProxy {
       params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
     }
     params.put( "cron", cronString ); //$NON-NLS-1$S
-    String[] actionsAr = actionsList.split( "," );
+    String[] actionsAr = actionsList.split( "," ); //$NON-NLS-1$
     params.put( "actionRefs", actionsAr ); //$NON-NLS-1$
 
     String responseStrXml = executePostMethod( params );
@@ -180,9 +180,9 @@ public class SubscriptionAdminUIComponentProxy {
     if ( null != strRepeatCount ) {
       params.put( "repeat-count", strRepeatCount ); //$NON-NLS-1$
     }
-    assert Integer.parseInt( repeatInterval ) >= 0 : "Invalid repeat interval";
+    assert Integer.parseInt( repeatInterval ) >= 0 : "Invalid repeat interval"; //$NON-NLS-1$
     params.put( "repeat-time-millisecs", repeatInterval ); //$NON-NLS-1$
-    String[] actionsAr = actionsList.split( "," );
+    String[] actionsAr = actionsList.split( "," ); //$NON-NLS-1$
     params.put( "actionRefs", actionsAr ); //$NON-NLS-1$
 
     String responseStrXml = executePostMethod( params );
