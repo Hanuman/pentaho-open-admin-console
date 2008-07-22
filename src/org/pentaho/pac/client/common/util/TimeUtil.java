@@ -328,10 +328,10 @@ public class TimeUtil {
       .append( " " ) //$NON-NLS-1$
       .append( timeOfDay.toString() ).toString();
   }
-  
+
   // this code runs in a single thread, so it is ok to share these two DateTimeFormats
   private static DateTimeFormat dateFormatter = DateTimeFormat.getLongDateFormat();
-  private static DateTimeFormat dateTimeFormatter = DateTimeFormat.getFormat( "MMM dd, yyyy HH:mm:ss a" ); //$NON-NLS-1$
+  private static DateTimeFormat dateTimeFormatter = DateTimeFormat.getFormat( MSGS.dateFormatLongMedium() );
   
   public static Date getDateTime( String time, Date date ) {
     String strDate = dateFormatter.format( date );
