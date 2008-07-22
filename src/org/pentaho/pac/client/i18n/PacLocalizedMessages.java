@@ -3,7 +3,7 @@ package org.pentaho.pac.client.i18n;
 
 /**
  * Interface to represent the messages contained in resource  bundle:
- * 	C:/projects/pentaho1.6/pentaho-open-admin-console/src/org/pentaho/pac/client/i18n/PacLocalizedMessages.properties'.
+ *  C:/projects/pentaho1.6/pentaho-open-admin-console/src/org/pentaho/pac/client/i18n/PacLocalizedMessages.properties'.
  */
 public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Messages {
   
@@ -222,7 +222,7 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key error
    */
   String error();
-
+  
   /**
    * Translated "second".
    * 
@@ -1048,14 +1048,6 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String invalidStringForTimeOfDay(String arg0);
 
   /**
-   * Translated "Deleting Data Source=Error Deleting Data Source".
-   * 
-   * @return translated "Deleting Data Source=Error Deleting Data Source"
-   * @gwt.key Error
-   */
-  String Error();
-
-  /**
    * Translated "Are your sure you want to remove the selected user(s) from the selected role(s)?".
    * 
    * @return translated "Are your sure you want to remove the selected user(s) from the selected role(s)?"
@@ -1550,4 +1542,33 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key mustBeSecondsRange
    */
   String mustBeSecondsRange(String arg0);
+  
+  /**
+   * Translated "Are your sure you want to delete the selected data sources?".
+   * 
+   * @return translated "Are your sure you want to delete the selected data sources?"
+   * @gwt.key confirmDataSourceDeletionMsg
+   */
+  String confirmDataSourceDeletionMsg();  
+  /**
+   * Translated "Error Deleting Data Source".
+   * 
+   * @return translated "Error Deleting Data Source"
+   * @gwt.key errorDeletingDataSource
+   */
+  String errorDeletingDataSource();  
+  /**
+   * Translated "Successfully Deleted the selected datasource(s).".
+   * 
+   * @return translated "Successfully Deleted the selected datasource(s)."
+   * @gwt.key successfulDataSourceDelete
+   */
+  String successfulDataSourceDelete();  
+  /**
+   * Translated "Successfully updated the DataSource."
+   * 
+   * @return translated "Successfully updated the DataSource."
+   * @gwt.key successfulDataSourceUpdate
+   */
+  String successfulDataSourceUpdate();  
 }
