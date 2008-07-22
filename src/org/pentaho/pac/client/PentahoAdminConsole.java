@@ -308,7 +308,7 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
         public void run()
         {
           PacServiceFactory.getPacService().isBiServerAlive(
-              new AsyncCallback() {
+              new AsyncCallback<Object>() {
                 public void onSuccess( Object isAlive ) {
                   serverIcon.setStyleName( "biServerAliveIcon" ); //$NON-NLS-1$
                   serverIcon.setTitle( PentahoAdminConsole.MSGS.biServerAlive() );
@@ -323,9 +323,8 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
       };
       
       PacServiceFactory.getPacService().getBiServerStatusCheckPeriod(
-        new AsyncCallback() {
-          public void onSuccess( Object oCheckPeriod ) {
-            int checkPeriod = ((Integer)oCheckPeriod ).intValue();
+        new AsyncCallback<Integer>() {
+          public void onSuccess( Integer checkPeriod ) {
             if ( checkPeriod > 0 ) {
               statusTimer.scheduleRepeating( checkPeriod );
             }
