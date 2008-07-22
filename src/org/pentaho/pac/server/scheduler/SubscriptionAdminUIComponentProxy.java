@@ -4,7 +4,6 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import org.pentaho.pac.client.scheduler.model.Schedule;
@@ -12,15 +11,12 @@ import org.pentaho.pac.common.SchedulerServiceException;
 import org.pentaho.pac.server.common.BiServerTrustedProxy;
 import org.pentaho.pac.server.common.ProxyException;
 import org.pentaho.pac.server.common.ThreadSafeHttpClient.HttpMethodType;
+import org.pentaho.pac.server.common.util.DateUtil;
 
 public class SubscriptionAdminUIComponentProxy {
 
   private static final String SUBSCRIPTION_SERVICE_NAME = "SubscriptionAdmin"; //$NON-NLS-1$
   private String userName = null;
-  // TODO sbarkdull clean up
-  private static DateFormat dateTimeFormatter = DateFormat.getDateTimeInstance(DateFormat.LONG,
-    DateFormat.MEDIUM,
-    Locale.getDefault());
 
   private static BiServerTrustedProxy biServerProxy;
   static {
@@ -74,6 +70,7 @@ public class SubscriptionAdminUIComponentProxy {
       String cronString,
       String actionsList ) throws SchedulerServiceException {
   
+    DateFormat dateTimeFormatter = DateUtil.getDateTimeFormatter();
     String strStartDate = dateTimeFormatter.format( startDate );
     String strEndDate = null != endDate
       ? dateTimeFormatter.format( endDate )
@@ -103,6 +100,7 @@ public class SubscriptionAdminUIComponentProxy {
       String strRepeatCount, String repeatInterval,
       String actionsList ) throws SchedulerServiceException {
 
+    DateFormat dateTimeFormatter = DateUtil.getDateTimeFormatter();
     String strStartDate = dateTimeFormatter.format( startDate );
     String strEndDate = null != endDate
       ? dateTimeFormatter.format( endDate )
@@ -133,6 +131,7 @@ public class SubscriptionAdminUIComponentProxy {
       Date startDate, Date endDate,
       String cronString, String actionsList ) throws SchedulerServiceException {
 
+    DateFormat dateTimeFormatter = DateUtil.getDateTimeFormatter();
     String strStartDate = dateTimeFormatter.format( startDate );
     String strEndDate = null != endDate
       ? dateTimeFormatter.format( endDate )
@@ -161,6 +160,7 @@ public class SubscriptionAdminUIComponentProxy {
       String strRepeatCount, String repeatInterval,
       String actionsList ) throws SchedulerServiceException {
 
+    DateFormat dateTimeFormatter = DateUtil.getDateTimeFormatter();
     String strStartDate = dateTimeFormatter.format( startDate );
     String strEndDate = null != endDate 
       ? dateTimeFormatter.format( endDate )

@@ -28,15 +28,13 @@ import org.pentaho.pac.common.SchedulerServiceException;
 import org.pentaho.pac.server.common.BiServerTrustedProxy;
 import org.pentaho.pac.server.common.ProxyException;
 import org.pentaho.pac.server.common.ThreadSafeHttpClient.HttpMethodType;
+import org.pentaho.pac.server.common.util.DateUtil;
 
 public class SchedulerAdminUIComponentProxy {
 
   private static final String SCHEDULER_SERVICE_NAME = "SchedulerAdmin"; //$NON-NLS-1$
   private static final int NUM_RETRIES = 3; // TODO is used?
   private String userName = null;
-  private static DateFormat dateTimeFormatter = DateFormat.getDateTimeInstance(DateFormat.LONG,
-    DateFormat.MEDIUM,
-    Locale.getDefault());
 
   private static BiServerTrustedProxy biServerProxy;
   static {
@@ -235,6 +233,7 @@ public class SchedulerAdminUIComponentProxy {
       String cronString,
       String actionsList ) throws SchedulerServiceException {
     
+    DateFormat dateTimeFormatter = DateUtil.getDateTimeFormatter();
     String strStartDate = dateTimeFormatter.format( startDate );
     String strEndDate = null != endDate
       ? dateTimeFormatter.format( endDate )
@@ -259,7 +258,8 @@ public class SchedulerAdminUIComponentProxy {
       Date startDate, Date endDate,
       String strRepeatCount, String repeatInterval,
       String actionsList ) throws SchedulerServiceException {
-    
+
+    DateFormat dateTimeFormatter = DateUtil.getDateTimeFormatter();
     String strStartDate = dateTimeFormatter.format( startDate );
     String strEndDate = null != endDate
       ? dateTimeFormatter.format( endDate )
@@ -287,7 +287,8 @@ public class SchedulerAdminUIComponentProxy {
       String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
       String cronString, String actionsList ) throws SchedulerServiceException {
-    
+
+    DateFormat dateTimeFormatter = DateUtil.getDateTimeFormatter();
     String strStartDate = dateTimeFormatter.format( startDate );
     String strEndDate = null != endDate
       ? dateTimeFormatter.format( endDate )
@@ -316,6 +317,7 @@ public class SchedulerAdminUIComponentProxy {
       String strRepeatCount, String repeatInterval,
       String actionsList ) throws SchedulerServiceException {
 
+    DateFormat dateTimeFormatter = DateUtil.getDateTimeFormatter();
     String strStartDate = dateTimeFormatter.format( startDate );
     String strEndDate = null != endDate
       ? dateTimeFormatter.format( endDate )
