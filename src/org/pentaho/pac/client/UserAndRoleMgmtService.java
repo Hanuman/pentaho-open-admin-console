@@ -26,10 +26,10 @@ public class UserAndRoleMgmtService {
     return userAndRoleMgmtService;
   }
 
-  public void refreshSecurityInfo(final AsyncCallback callback) {
-    AsyncCallback innerCallback = new AsyncCallback() {
-      public void onSuccess(Object result) {
-        userRoleSecurityInfo = (UserRoleSecurityInfo) result;
+  public void refreshSecurityInfo(final AsyncCallback<Object> callback) {
+    AsyncCallback<UserRoleSecurityInfo> innerCallback = new AsyncCallback<UserRoleSecurityInfo>() {
+      public void onSuccess(UserRoleSecurityInfo result) {
+        userRoleSecurityInfo = result;
         callback.onSuccess(null);
       }
 
@@ -65,18 +65,15 @@ public class UserAndRoleMgmtService {
   public ProxyPentahoRole[] getRoles(ProxyPentahoUser user) {
     ProxyPentahoRole[] roles = new ProxyPentahoRole[0];
     if (userRoleSecurityInfo != null) {
-      List roleNames = new ArrayList<String>();
-      List assignedRoles = new ArrayList();
-      for (Iterator iter = userRoleSecurityInfo.getAssignments().iterator(); iter.hasNext();) {
-        UserToRoleAssignment userToRoleAssignment = (UserToRoleAssignment) iter.next();
+      List<String> roleNames = new ArrayList<String>();
+      List<ProxyPentahoRole> assignedRoles = new ArrayList<ProxyPentahoRole>();
+      for( UserToRoleAssignment userToRoleAssignment : userRoleSecurityInfo.getAssignments() ) {
         if (userToRoleAssignment.getUserId().equals(user.getName())) {
           roleNames.add(userToRoleAssignment.getRoleId());
         }
       }
-      for (Iterator iter = roleNames.iterator(); iter.hasNext();) {
-        String roleName = iter.next().toString();
-        for (Iterator iter2 = userRoleSecurityInfo.getRoles().iterator(); iter2.hasNext();) {
-          ProxyPentahoRole role = (ProxyPentahoRole) iter2.next();
+      for ( String roleName : roleNames ) {
+        for( ProxyPentahoRole role : userRoleSecurityInfo.getRoles() ) {
           if (role.getName().equals(roleName)) {
             assignedRoles.add(role);
             break;
@@ -85,7 +82,7 @@ public class UserAndRoleMgmtService {
       }
       roles = new ProxyPentahoRole[assignedRoles.size()];
       for (int i = 0; i < roles.length; i++) {
-        roles[i] = (ProxyPentahoRole) ((ProxyPentahoRole) assignedRoles.get(i)).clone();
+        roles[i] = (ProxyPentahoRole) (assignedRoles.get(i)).clone();
       }
     }
     return roles;
@@ -94,18 +91,17 @@ public class UserAndRoleMgmtService {
   public ProxyPentahoUser[] getUsers(ProxyPentahoRole role) {
     ProxyPentahoUser[] users = new ProxyPentahoUser[0];
     if (userRoleSecurityInfo != null) {
-      List userNames = new ArrayList();
-      List assignedUsers = new ArrayList();
-      for (Iterator iter = userRoleSecurityInfo.getAssignments().iterator(); iter.hasNext();) {
-        UserToRoleAssignment userToRoleAssignment = (UserToRoleAssignment) iter.next();
+      List<String> userNames = new ArrayList<String>();
+      List<ProxyPentahoUser> assignedUsers = new ArrayList<ProxyPentahoUser>();
+      
+      for ( UserToRoleAssignment userToRoleAssignment : userRoleSecurityInfo.getAssignments() ) {
         if (userToRoleAssignment.getRoleId().equals(role.getName())) {
           userNames.add(userToRoleAssignment.getUserId());
         }
       }
-      for (Iterator iter = userNames.iterator(); iter.hasNext();) {
-        String userName = iter.next().toString();
-        for (Iterator iter2 = userRoleSecurityInfo.getUsers().iterator(); iter2.hasNext();) {
-          ProxyPentahoUser user = (ProxyPentahoUser) iter2.next();
+
+      for ( String userName : userNames ) {
+        for ( ProxyPentahoUser user : userRoleSecurityInfo.getUsers() ) {
           if (user.getName().equals(userName)) {
             assignedUsers.add(user);
             break;
@@ -114,15 +110,15 @@ public class UserAndRoleMgmtService {
       }
       users = new ProxyPentahoUser[assignedUsers.size()];
       for (int i = 0; i < users.length; i++) {
-        users[i] = (ProxyPentahoUser) ((ProxyPentahoUser) assignedUsers.get(i)).clone();
+        users[i] = (ProxyPentahoUser) (assignedUsers.get(i)).clone();
       }
     }
     return users;
   }
 
-  public void createUser(final ProxyPentahoUser user, final AsyncCallback callback) {
-    AsyncCallback innerCallback = new AsyncCallback() {
-      public void onSuccess(Object result) {
+  public void createUser(final ProxyPentahoUser user, final AsyncCallback<Object> callback) {
+    AsyncCallback<Boolean> innerCallback = new AsyncCallback<Boolean>() {
+      public void onSuccess(Boolean result) {
         userRoleSecurityInfo.getUsers().add((ProxyPentahoUser)user.clone());
         callback.onSuccess(null);
       }
@@ -134,9 +130,9 @@ public class UserAndRoleMgmtService {
     PacServiceFactory.getPacService().createUser(user, innerCallback);
   }
 
-  public void updateUser(final ProxyPentahoUser user, final AsyncCallback callback) {
-    AsyncCallback innerCallback = new AsyncCallback() {
-      public void onSuccess(Object result) {
+  public void updateUser(final ProxyPentahoUser user, final AsyncCallback<Boolean> callback) {
+    AsyncCallback<Boolean> innerCallback = new AsyncCallback<Boolean>() {
+      public void onSuccess(Boolean result) {
         int index = userRoleSecurityInfo.getUsers().indexOf(user);
         if (index >= 0) {
           userRoleSecurityInfo.getUsers().set(index, (ProxyPentahoUser)user.clone());
@@ -153,15 +149,14 @@ public class UserAndRoleMgmtService {
     PacServiceFactory.getPacService().updateUser(user, innerCallback);
   }
 
-  public void deleteUsers(final ProxyPentahoUser[] users, final AsyncCallback callback) {
+  public void deleteUsers(final ProxyPentahoUser[] users, final AsyncCallback<Boolean> callback) {
 
-    AsyncCallback innerCallback = new AsyncCallback() {
-      public void onSuccess(Object result) {
+    AsyncCallback<Boolean> innerCallback = new AsyncCallback<Boolean>() {
+      public void onSuccess(Boolean result) {
         userRoleSecurityInfo.getUsers().removeAll(Arrays.asList(users));
-        ArrayList assignmentsToRemove = new ArrayList();
+        List<UserToRoleAssignment> assignmentsToRemove = new ArrayList<UserToRoleAssignment>();
         for (int i = 0; i < users.length; i++) {
-          for (Iterator iter = userRoleSecurityInfo.getAssignments().iterator(); iter.hasNext();) {
-            UserToRoleAssignment userToRoleAssignment = (UserToRoleAssignment) iter.next();
+          for ( UserToRoleAssignment userToRoleAssignment : userRoleSecurityInfo.getAssignments() ) {
             if (userToRoleAssignment.getUserId().equals(users[i].getName())) {
               assignmentsToRemove.add(userToRoleAssignment);
             }
@@ -178,9 +173,9 @@ public class UserAndRoleMgmtService {
     PacServiceFactory.getPacService().deleteUsers(users, innerCallback);
   }
 
-  public void createRole(final ProxyPentahoRole role, final AsyncCallback callback) {
-    AsyncCallback innerCallback = new AsyncCallback() {
-      public void onSuccess(Object result) {
+  public void createRole(final ProxyPentahoRole role, final AsyncCallback<Boolean> callback) {
+    AsyncCallback<Boolean> innerCallback = new AsyncCallback<Boolean>() {
+      public void onSuccess(Boolean result) {
         userRoleSecurityInfo.getRoles().add((ProxyPentahoRole)role.clone());
         callback.onSuccess(null);
       }
@@ -192,9 +187,9 @@ public class UserAndRoleMgmtService {
     PacServiceFactory.getPacService().createRole(role, innerCallback);
   }
 
-  public void updateRole(final ProxyPentahoRole role, final AsyncCallback callback) {
-    AsyncCallback innerCallback = new AsyncCallback() {
-      public void onSuccess(Object result) {
+  public void updateRole(final ProxyPentahoRole role, final AsyncCallback<Boolean> callback) {
+    AsyncCallback<Boolean> innerCallback = new AsyncCallback<Boolean>() {
+      public void onSuccess(Boolean result) {
         int index = userRoleSecurityInfo.getRoles().indexOf(role);
         if (index >= 0) {
           userRoleSecurityInfo.getRoles().set(index, (ProxyPentahoRole)role.clone());
@@ -211,15 +206,14 @@ public class UserAndRoleMgmtService {
     PacServiceFactory.getPacService().updateRole(role, innerCallback);
   }
 
-  public void deleteRoles(final ProxyPentahoRole[] roles, final AsyncCallback callback) {
+  public void deleteRoles(final ProxyPentahoRole[] roles, final AsyncCallback<Boolean> callback) {
 
-    AsyncCallback innerCallback = new AsyncCallback() {
-      public void onSuccess(Object result) {
+    AsyncCallback<Boolean> innerCallback = new AsyncCallback<Boolean>() {
+      public void onSuccess(Boolean result) {
         userRoleSecurityInfo.getRoles().removeAll(Arrays.asList(roles));
-        ArrayList assignmentsToRemove = new ArrayList();
+        List<UserToRoleAssignment> assignmentsToRemove = new ArrayList<UserToRoleAssignment>();
         for (int i = 0; i < roles.length; i++) {
-          for (Iterator iter = userRoleSecurityInfo.getAssignments().iterator(); iter.hasNext();) {
-            UserToRoleAssignment userToRoleAssignment = (UserToRoleAssignment) iter.next();
+          for ( UserToRoleAssignment userToRoleAssignment : userRoleSecurityInfo.getAssignments() ) {
             if (userToRoleAssignment.getRoleId().equals(roles[i].getName())) {
               assignmentsToRemove.add(userToRoleAssignment);
             }
@@ -236,28 +230,25 @@ public class UserAndRoleMgmtService {
     PacServiceFactory.getPacService().deleteRoles(roles, innerCallback);
   }
 
-  public void setUsers(final ProxyPentahoRole role, final ProxyPentahoUser[] assignedUsers, final AsyncCallback callback) {
-    AsyncCallback innerCallback = new AsyncCallback() {
+  public void setUsers(final ProxyPentahoRole role, final ProxyPentahoUser[] assignedUsers, final AsyncCallback<Object> callback) {
+    AsyncCallback<Object> innerCallback = new AsyncCallback<Object>() {
       public void onSuccess(Object result) {
         if (userRoleSecurityInfo != null) {
-          ArrayList currentMappings = new ArrayList();
-          ArrayList mappingsToAdd = new ArrayList();
-          ArrayList mappingsToRemove = new ArrayList();
+          List<UserToRoleAssignment> currentMappings = new ArrayList<UserToRoleAssignment>();
+          List<UserToRoleAssignment> mappingsToAdd = new ArrayList<UserToRoleAssignment>();
+          List<UserToRoleAssignment> mappingsToRemove = new ArrayList<UserToRoleAssignment>();
 
           for (int i = 0; i < assignedUsers.length; i++) {
             currentMappings.add(new UserToRoleAssignment(assignedUsers[i].getName(), role.getName()));
           }
-
-          for (Iterator iter = userRoleSecurityInfo.getAssignments().iterator(); iter.hasNext();) {
-            UserToRoleAssignment userToRoleAssignment = (UserToRoleAssignment) iter.next();
+          for ( UserToRoleAssignment userToRoleAssignment : userRoleSecurityInfo.getAssignments() ) {
             if (userToRoleAssignment.getRoleId().equals(role.getName())
                 && !currentMappings.contains(userToRoleAssignment)) {
               mappingsToRemove.add(userToRoleAssignment);
             }
           }
 
-          for (Iterator iter = currentMappings.iterator(); iter.hasNext();) {
-            UserToRoleAssignment userToRoleAssignment = (UserToRoleAssignment) iter.next();
+          for ( UserToRoleAssignment userToRoleAssignment : currentMappings ) {
             if (!userRoleSecurityInfo.getAssignments().contains(userToRoleAssignment)) {
               mappingsToAdd.add(userToRoleAssignment);
             }
@@ -275,28 +266,26 @@ public class UserAndRoleMgmtService {
     PacServiceFactory.getPacService().setUsers(role, assignedUsers, innerCallback);
   }
 
-  public void setRoles(final ProxyPentahoUser user, final ProxyPentahoRole[] assignedRoles, final AsyncCallback callback) {
-    AsyncCallback innerCallback = new AsyncCallback() {
+  public void setRoles(final ProxyPentahoUser user, final ProxyPentahoRole[] assignedRoles, final AsyncCallback<Object> callback) {
+    AsyncCallback<Object> innerCallback = new AsyncCallback<Object>() {
       public void onSuccess(Object result) {
         if (userRoleSecurityInfo != null) {
-          ArrayList currentMappings = new ArrayList();
-          ArrayList mappingsToAdd = new ArrayList();
-          ArrayList mappingsToRemove = new ArrayList();
+          List<UserToRoleAssignment> currentMappings = new ArrayList<UserToRoleAssignment>();
+          List<UserToRoleAssignment> mappingsToAdd = new ArrayList<UserToRoleAssignment>();
+          List<UserToRoleAssignment> mappingsToRemove = new ArrayList<UserToRoleAssignment>();
 
           for (int i = 0; i < assignedRoles.length; i++) {
             currentMappings.add(new UserToRoleAssignment(user.getName(), assignedRoles[i].getName()));
           }
 
-          for (Iterator iter = userRoleSecurityInfo.getAssignments().iterator(); iter.hasNext();) {
-            UserToRoleAssignment userToRoleAssignment = (UserToRoleAssignment) iter.next();
+          for ( UserToRoleAssignment userToRoleAssignment : userRoleSecurityInfo.getAssignments() ) {
             if (userToRoleAssignment.getUserId().equals(user.getName())
                 && !currentMappings.contains(userToRoleAssignment)) {
               mappingsToRemove.add(userToRoleAssignment);
             }
           }
 
-          for (Iterator iter = currentMappings.iterator(); iter.hasNext();) {
-            UserToRoleAssignment userToRoleAssignment = (UserToRoleAssignment) iter.next();
+          for ( UserToRoleAssignment userToRoleAssignment : currentMappings ) {
             if (!userRoleSecurityInfo.getAssignments().contains(userToRoleAssignment)) {
               mappingsToAdd.add(userToRoleAssignment);
             }

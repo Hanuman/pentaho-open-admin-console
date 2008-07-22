@@ -17,6 +17,7 @@ package org.pentaho.pac.client.scheduler.ctlr;
 
 import org.pentaho.pac.client.common.ui.ICallback;
 import org.pentaho.pac.client.common.ui.TableListCtrl;
+import org.pentaho.pac.client.common.ui.dialog.BasicDialog;
 import org.pentaho.pac.client.scheduler.model.Schedule;
 import org.pentaho.pac.client.scheduler.model.SchedulesModel;
 import org.pentaho.pac.client.scheduler.view.ScheduleCreatorDialog;
@@ -41,8 +42,8 @@ public class SchedulerController {
     
     this.schedulerPanel = schedulerPanel;
     this.scheduleCreatorDialog = new ScheduleCreatorDialog();
-    this.scheduleCreatorDialog.setOnCancelHandler( new ICallback<Object>() {
-      public void onHandle(Object o) {
+    this.scheduleCreatorDialog.setOnCancelHandler( new ICallback<BasicDialog>() {
+      public void onHandle(BasicDialog dlg) {
         clearScheduleEditorValidationMsgs();
         scheduleCreatorDialog.hide();
       }

@@ -9,19 +9,19 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public interface PacServiceAsync {
   public void getUserRoleSecurityInfo(AsyncCallback callback);
   
-  public void createUser(ProxyPentahoUser user, AsyncCallback callback);
-  public void deleteUsers(ProxyPentahoUser[] users, AsyncCallback callback);
-  public void updateUser(ProxyPentahoUser user, AsyncCallback callback);
+  public void createUser(ProxyPentahoUser user, AsyncCallback<Boolean> callback);
+  public void deleteUsers(ProxyPentahoUser[] users, AsyncCallback<Boolean> callback);
+  public void updateUser(ProxyPentahoUser user, AsyncCallback<Boolean> callback);
   public void getUsers(AsyncCallback callback);
   public void getUsers(ProxyPentahoRole role, AsyncCallback callback);
-  public void setUsers(ProxyPentahoRole role, ProxyPentahoUser[] assignedUsers, AsyncCallback callback);
+  public void setUsers(ProxyPentahoRole role, ProxyPentahoUser[] assignedUsers, AsyncCallback<Object> callback);
   
-  public void createRole(ProxyPentahoRole role, AsyncCallback callback);
-  public void deleteRoles(ProxyPentahoRole[] roles, AsyncCallback callback);
-  public void updateRole(ProxyPentahoRole role, AsyncCallback callback);
+  public void createRole(ProxyPentahoRole role, AsyncCallback<Boolean> callback);
+  public void deleteRoles(ProxyPentahoRole[] roles, AsyncCallback<Boolean> callback);
+  public void updateRole(ProxyPentahoRole role, AsyncCallback<Boolean> callback);
   public void getRoles(AsyncCallback callback);
   public void getRoles(ProxyPentahoUser user, AsyncCallback callback);
-  public void setRoles(ProxyPentahoUser user, ProxyPentahoRole[] assignedRoles, AsyncCallback callback);
+  public void setRoles(ProxyPentahoUser user, ProxyPentahoRole[] assignedRoles, AsyncCallback<Object> callback);
   
   public void createDataSource(PentahoDataSource dataSource, AsyncCallback callback);
   public void deleteDataSources(PentahoDataSource[] dataSources, AsyncCallback callback);

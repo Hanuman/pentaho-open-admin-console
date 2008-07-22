@@ -14,18 +14,19 @@ import com.google.gwt.user.client.ui.Widget;
 public class ConfirmDialog extends MessageDialog {
 
   protected Button cancelBtn = null;
-  private ICallback<Object> cancelHandler = new ICallback<Object>() {
-    public void onHandle(Object o) {
+  private ICallback<BasicDialog> cancelHandler = new ICallback<BasicDialog>() {
+    public void onHandle(BasicDialog dlg) {
       hide();
     }
   };
   
   public ConfirmDialog( String title, String msg ) {
     super( title, msg );
+    final ConfirmDialog localThis = this;
     cancelBtn = new Button(MSGS.cancel(), new ClickListener() {
       public void onClick(Widget sender) {
         if (cancelHandler != null) {
-          cancelHandler.onHandle(sender);
+          cancelHandler.onHandle(localThis);
         }
       }
     });
@@ -40,7 +41,7 @@ public class ConfirmDialog extends MessageDialog {
     this( "", "" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
   
-  public void setOnCancelHandler( final ICallback handler )
+  public void setOnCancelHandler( final ICallback<BasicDialog> handler )
   {
     cancelHandler = handler;
     setOnCloseHandler( handler );

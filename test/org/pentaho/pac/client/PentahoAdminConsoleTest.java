@@ -26,7 +26,7 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
 
     // Refresh the security into. This will make an async. call 
     // to the server, which will take some time to complete.
-    AsyncCallback callback = new AsyncCallback() {
+    AsyncCallback<Object> callback = new AsyncCallback<Object>() {
       public void onSuccess(Object result) {
       }
 
