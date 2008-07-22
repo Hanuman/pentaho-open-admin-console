@@ -112,7 +112,7 @@ public class ThreadSafeHttpClient {
         method.setFollowRedirects( true );
         break;
       default:
-        throw new RuntimeException( Messages.getString( "ThreadSafeHttpClient.invalidHttpMethodType", methodType.toString() ) );  // can never happen
+        throw new RuntimeException( Messages.getString( "ThreadSafeHttpClient.invalidHttpMethodType", methodType.toString() ) );  // can never happen //$NON-NLS-1$
     }
     return executeMethod( method );
   }
