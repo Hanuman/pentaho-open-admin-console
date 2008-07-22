@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
-import org.pentaho.pac.client.common.ui.FieldsetPanel;
 import org.pentaho.pac.client.common.ui.ICallback;
 import org.pentaho.pac.client.common.ui.IListBoxFilter;
+import org.pentaho.pac.client.common.ui.SimpleGroupBox;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
@@ -132,7 +132,7 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 
 	public VerticalPanel buildUserDetailsDockPanel() {
 	  
-	  FieldsetPanel assignedRolesPanel = buildAssignedRolesPanel();
+	  SimpleGroupBox assignedRolesPanel = buildAssignedRolesPanel();
     
     VerticalPanel mainUserDetailsPanel = new VerticalPanel();
     
@@ -145,8 +145,7 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     
     userPanelFieldsetContent.setCellHorizontalAlignment(updateUserBtn, VerticalPanel.ALIGN_RIGHT);
     
-    FieldsetPanel fieldsetPanel = new FieldsetPanel();
-    fieldsetPanel.setLegend(MSGS.userDetails()); //$NON-NLS-1$
+    SimpleGroupBox fieldsetPanel = new SimpleGroupBox(MSGS.userDetails());
     fieldsetPanel.add(userPanelFieldsetContent);
     userPanelFieldsetContent.setWidth("100%"); //$NON-NLS-1$
     
@@ -199,11 +198,10 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     return userListPanel;
 	}
 	
-	public FieldsetPanel buildAssignedRolesPanel() {
+	public SimpleGroupBox buildAssignedRolesPanel() {
     DockPanel headerDockPanel = new DockPanel();
     
-    FieldsetPanel fieldsetPanel = new FieldsetPanel();
-    fieldsetPanel.setLegend(MSGS.assignedRoles());
+    SimpleGroupBox fieldsetPanel = new SimpleGroupBox(MSGS.assignedRoles());
     
     headerDockPanel.add(deleteRoleAssignmentBtn, DockPanel.EAST);
     headerDockPanel.add(addRoleAssignmentBtn, DockPanel.EAST);
