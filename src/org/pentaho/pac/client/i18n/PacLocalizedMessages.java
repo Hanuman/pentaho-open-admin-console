@@ -800,6 +800,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String security();
 
   /**
+   * Translated "MMM dd, yyyy HH:mm:ss a".
+   * 
+   * @return translated "MMM dd, yyyy HH:mm:ss a"
+   * @gwt.key dateFormatLongMedium
+   */
+  String dateFormatLongMedium();
+
+  /**
    * Translated "June".
    * 
    * @return translated "June"
