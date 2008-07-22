@@ -17,10 +17,14 @@ package org.pentaho.pac.client.scheduler.ctlr;
 
 import java.util.List;
 
+import org.pentaho.pac.client.PentahoAdminConsole;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.scheduler.view.SolutionRepositoryItemPicker;
 
 public class SolutionRepositoryItemPickerValidator implements IUiValidator {
 
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
+  
   private SolutionRepositoryItemPicker solRepPicker = null;
 
   public SolutionRepositoryItemPickerValidator(SolutionRepositoryItemPicker solRepPicker) {
@@ -33,10 +37,10 @@ public class SolutionRepositoryItemPickerValidator implements IUiValidator {
     List<String> actionList = solRepPicker.getActionsAsList();
     if ( solRepPicker.isSingleSelect() && actionList.size() > 1 ) {
       isValid = false;
-      solRepPicker.setActionsError( "Only allowed to specify one action sequence." );
+      solRepPicker.setActionsError( MSGS.onlyOneActionSequence() );
     } else if ( actionList.size() <= 0 ) {
       isValid = false;
-      solRepPicker.setActionsError( "Action sequence list cannot be empty." );
+      solRepPicker.setActionsError( MSGS.actionSequenceCannotBeEmpty() );
 //    } else if () {
 //      TODO sbarkdull
 //      validate that each action sequence string has 2 "/" and ends in ".xaction"

@@ -146,7 +146,7 @@ public class SchedulerToolbarController {
   private List<Schedule> getFilteredSchedulesList( List<Schedule> scheduleList ) {
     List<Schedule> filteredList = null;
     String filterVal = schedulerToolbar.getFilterValue();
-    if ( !SchedulerToolbar.ALL_FILTER.equals( filterVal ) ) {
+    if ( !SchedulerToolbar.ALL_GROUPS_FILTER.equals( filterVal ) ) {
       filteredList = new ArrayList<Schedule>();
       for ( int ii=0; ii<scheduleList.size(); ++ii ) {
         Schedule s = scheduleList.get( ii );
@@ -170,8 +170,8 @@ public class SchedulerToolbarController {
     Schedule oldSchedule = scheduleList.get( 0 );
     
     // TODO, List<Schedule> is probably not what we will get back
-    AsyncCallback<List<Schedule>> responseCallback = new AsyncCallback<List<Schedule>>() {
-      public void onSuccess( List<Schedule> pSchedulesList ) {
+    AsyncCallback<Object> responseCallback = new AsyncCallback<Object>() {
+      public void onSuccess( Object o ) {
         scheduleCreatorDialog.hide();
         loadJobsTable();
       }
@@ -296,7 +296,7 @@ public class SchedulerToolbarController {
   
   private void initFilterList() {
     String currentFilter = schedulerToolbar.getFilterValue();
-    currentFilter = ( null == currentFilter ) ? SchedulerToolbar.ALL_FILTER : currentFilter;
+    currentFilter = ( null == currentFilter ) ? SchedulerToolbar.ALL_GROUPS_FILTER : currentFilter;
     
     Set<String> groupNames = new HashSet<String>();
     List<Schedule> scheduleList = schedulesModel.getScheduleList();
@@ -309,7 +309,7 @@ public class SchedulerToolbarController {
     }
     schedulerToolbar.clearFilters();
     
-    schedulerToolbar.addFilterItem( SchedulerToolbar.ALL_FILTER );
+    schedulerToolbar.addFilterItem( SchedulerToolbar.ALL_GROUPS_FILTER );
     for ( String name : groupNames ) {
       schedulerToolbar.addFilterItem(name );
     }
@@ -398,8 +398,8 @@ public class SchedulerToolbarController {
   @SuppressWarnings("fallthrough")
   private void createSchedule() {
     // TODO, List<Schedule> is probably not what we will get back
-    AsyncCallback<List<Schedule>> responseCallback = new AsyncCallback<List<Schedule>>() {
-      public void onSuccess( List<Schedule> pSchedulesList ) {
+    AsyncCallback<Object> responseCallback = new AsyncCallback<Object>() {
+      public void onSuccess( Object o ) {
         scheduleCreatorDialog.hide();
         loadJobsTable();
       }
@@ -409,7 +409,8 @@ public class SchedulerToolbarController {
             caught.getMessage() );
         messageDialog.center();
       }
-    };
+    }; // end responseCallback
+    
     // TODO sbarkdull scheduleCreatorDialog -> scheduleEditorDialog
     ScheduleEditor scheduleEditor = scheduleCreatorDialog.getScheduleEditor();
 
@@ -658,8 +659,8 @@ public class SchedulerToolbarController {
 
   private void handleDeleteSchedules() {
     final SchedulerToolbarController localThis = this;
-    final ConfirmDialog confirm = new ConfirmDialog( "Confirm Delete",
-        "Are you sure you want to delete all checked schedules?" );
+    final ConfirmDialog confirm = new ConfirmDialog( MSGS.confirmDelete(),
+        MSGS.confirmDeleteQuestion() );
     confirm.setOnOkHandler( new ICallback<MessageDialog>() {
       public void onHandle( MessageDialog d ) {
         confirm.hide();
