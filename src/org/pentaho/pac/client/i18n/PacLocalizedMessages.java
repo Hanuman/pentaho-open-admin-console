@@ -78,15 +78,6 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key invalidDayOfMonth
    */
   String invalidDayOfMonth(String arg0);
-
-  /**
-   * Translated "Error Deleting Data Source".
-   * 
-   * @return translated "Error Deleting Data Source"
-   * @gwt.key errorDeletingDataSource
-   */
-  String errorDeletingDataSource();
-
   /**
    * Translated "July".
    * 
@@ -118,14 +109,6 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key invalidTabIndex
    */
   String invalidTabIndex(String arg0);
-
-  /**
-   * Translated "Successfully updated the DataSource.".
-   * 
-   * @return translated "Successfully updated the DataSource."
-   * @gwt.key successfulDataSourceUpdate
-   */
-  String successfulDataSourceUpdate();
 
   /**
    * Translated "Running".
@@ -1608,14 +1591,6 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String rangeOfRecurrence();
 
   /**
-   * Translated "Successfully Deleted the selected datasource(s).".
-   * 
-   * @return translated "Successfully Deleted the selected datasource(s)."
-   * @gwt.key successfulDataSourceDelete
-   */
-  String successfulDataSourceDelete();
-
-  /**
    * Translated "Data Sources".
    * 
    * @return translated "Data Sources"
@@ -1678,4 +1653,34 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key mustBeSecondsRange
    */
   String mustBeSecondsRange(String arg0);
+
+  /**
+   * Translated "Error Deleting Data Source".
+   * 
+   * @return translated "Error Deleting Data Source"
+   * @gwt.key errorDeletingDataSource
+   */
+  String errorDeletingDataSource();  
+  /**
+   * Translated "Successfully Deleted the selected datasource(s).".
+   * 
+   * @return translated "Successfully Deleted the selected datasource(s)."
+   * @gwt.key successfulDataSourceDelete
+   */
+  String successfulDataSourceDelete();  
+  /**
+   * Translated "Successfully updated the DataSource."
+   * 
+   * @return translated "Successfully updated the DataSource."
+   * @gwt.key successfulDataSourceUpdate
+   */
+  String successfulDataSourceUpdate();
+  /**
+   * Translated "If any of the fields are left empty, platform will use the default value stored in the pentaho.xml for connection pooling."
+   * 
+   * @return translated "
+   * If any of the fields are left empty, platform will use the default value stored in the pentaho.xml for connection pooling."
+   * @gwt.key datasourceAdvanceInfo
+   */
+  String datasourceAdvanceInfo();    
 }

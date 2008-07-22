@@ -14,6 +14,7 @@ public class DataSourceAdvancePanel extends VerticalPanel {
   TextBox idleConnTextBox = new TextBox();
   TextBox validationQueryTextBox = new TextBox();
   TextBox waitTextBox = new TextBox();
+  Label label = new Label(MSGS.datasourceAdvanceInfo());
   
   public DataSourceAdvancePanel() {
     add(new Label(MSGS.maxActiveDbConnections()));
@@ -24,10 +25,12 @@ public class DataSourceAdvancePanel extends VerticalPanel {
     add(validationQueryTextBox);
     add(new Label(MSGS.dbWaitTime()));
     add(waitTextBox);
+    add(label);
     maxActiveConnTextBox.setWidth("100%"); //$NON-NLS-1$
     idleConnTextBox.setWidth("100%"); //$NON-NLS-1$
     validationQueryTextBox.setWidth("100%"); //$NON-NLS-1$
     waitTextBox.setWidth("100%"); //$NON-NLS-1$
+    label.setWidth("100%"); //$NON-NLS-1$
   }
 
   public int getMaxActiveConnections() {
