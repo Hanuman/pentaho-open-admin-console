@@ -46,7 +46,7 @@ public class SchedulesListCtrl extends TableListCtrl<Schedule> {
   {
     super( COLUMN_HEADER_TITLE );
     
-    setStyleName( "schedulerListCtrl" );
+    setStyleName( "schedulerListCtrl" ); //$NON-NLS-1$
     setTableStyleName( "schedulesTable" ); //$NON-NLS-1$
     setTableHeaderStyleName( "schedulesTableHeader" ); //$NON-NLS-1$
   }
@@ -63,7 +63,7 @@ public class SchedulesListCtrl extends TableListCtrl<Schedule> {
   }
   
   public void setStateToLoading() {
-    setTempMessage( "Loading..." );
+    setTempMessage( MSGS.loading() );
   }
   
   public void clearStateLoading() {

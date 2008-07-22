@@ -5,6 +5,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.EnumException;
 import org.pentaho.pac.client.common.ui.SimpleGroupBox;
 import org.pentaho.pac.client.common.ui.TimePicker;
@@ -15,6 +16,7 @@ import org.pentaho.pac.client.common.util.TimeUtil.DayOfWeek;
 import org.pentaho.pac.client.common.util.TimeUtil.MonthOfYear;
 import org.pentaho.pac.client.common.util.TimeUtil.TimeOfDay;
 import org.pentaho.pac.client.common.util.TimeUtil.WeekOfMonth;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.scheduler.CronParseException;
 import org.pentaho.pac.client.scheduler.CronParser;
 import org.pentaho.pac.client.scheduler.CronParser.RecurrenceType;
@@ -31,6 +33,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class RecurrenceEditor extends VerticalPanel {
 
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
+  
   private TimePicker startTimePicker = null;
 
   private SecondlyRecurrenceEditor secondlyEditor = null;
@@ -58,13 +62,13 @@ public class RecurrenceEditor extends VerticalPanel {
   private Map<TemporalValue, Panel> temporalPanelMap = new HashMap<TemporalValue, Panel>();
 
   public enum TemporalValue {
-    SECONDS(0, "Seconds"), 
-    MINUTES(1, "Minutes"), 
-    HOURS(2, "Hours"), 
-    DAILY(3, "Daily"), 
-    WEEKLY(4, "Weekly"), 
-    MONTHLY(5, "Monthly"), 
-    YEARLY(6, "Yearly");
+    SECONDS(0, MSGS.seconds()), 
+    MINUTES(1, MSGS.minutes()), 
+    HOURS(2, MSGS.hours()), 
+    DAILY(3, MSGS.daily()), 
+    WEEKLY(4, MSGS.weekly()), 
+    MONTHLY(5, MSGS.monthly()), 
+    YEARLY(6, MSGS.yearly());
 
     private TemporalValue(int value, String name) {
       this.value = value;
@@ -107,7 +111,7 @@ public class RecurrenceEditor extends VerticalPanel {
           return v;
         }
       }
-      throw new EnumException( "Invalid String for temporal value: " + temporalValue );
+      throw new EnumException( MSGS.invalidTemporalValue( temporalValue ) );
     }
   } /* end enum */
   
@@ -134,8 +138,8 @@ public class RecurrenceEditor extends VerticalPanel {
   
   public void reset( Date d ) {
 
-    startTimePicker.setHour( "12" );
-    startTimePicker.setMinute( "00" );
+    startTimePicker.setHour( "12" ); //$NON-NLS-1$
+    startTimePicker.setMinute( "00" ); //$NON-NLS-1$
     startTimePicker.setTimeOfDay( TimeUtil.TimeOfDay.AM );
 
     dateRangeEditor.reset( d );
@@ -287,7 +291,7 @@ public class RecurrenceEditor extends VerticalPanel {
 
   
   private Panel createStartTimePanel() {
-    SimpleGroupBox startTimeGB = new SimpleGroupBox("Start Time");
+    SimpleGroupBox startTimeGB = new SimpleGroupBox( MSGS.startTime() );
 
     startTimePicker = new TimePicker();
     startTimeGB.add(startTimePicker);
@@ -297,7 +301,7 @@ public class RecurrenceEditor extends VerticalPanel {
 
   private Panel createRecurrencePanel() {
 
-    SimpleGroupBox recurrenceGB = new SimpleGroupBox("Recurrence pattern");
+    SimpleGroupBox recurrenceGB = new SimpleGroupBox(MSGS.recurrencePattern() );
 
     VerticalPanel p = new VerticalPanel();
     recurrenceGB.add(p);
@@ -327,7 +331,7 @@ public class RecurrenceEditor extends VerticalPanel {
 
   private void createTemporalMap() {
     // must come after creation of temporal panels
-    assert dailyEditor != null : "Temporal panels must be initialized before calling createTemporalCombo.";
+    assert dailyEditor != null : "Temporal panels must be initialized before calling createTemporalCombo."; //$NON-NLS-1$
 
     temporalPanelMap.put( TemporalValue.SECONDS, secondlyEditor );
     temporalPanelMap.put( TemporalValue.MINUTES, minutelyEditor );
@@ -346,12 +350,12 @@ public class RecurrenceEditor extends VerticalPanel {
       setVisible(false);
 
       HorizontalPanel hp = new HorizontalPanel();
-      Label l = new Label( "Every" );
+      Label l = new Label( MSGS.every() );
       l.setStyleName("startLabel"); //$NON-NLS-1$
       hp.add(l);
 
       valueTb.setWidth( "3em" ); //$NON-NLS-1$
-      valueTb.setTitle( "Number of " + strLabel + " to repeat." );
+      valueTb.setTitle( MSGS.numberOfXToRepeat( strLabel ) );
       hp.add(valueTb);
 
       l = new Label( strLabel );
@@ -381,48 +385,48 @@ public class RecurrenceEditor extends VerticalPanel {
 
   public class SecondlyRecurrenceEditor extends SimpleRecurrencePanel {
     public SecondlyRecurrenceEditor() {
-      super( "second(s)" );
+      super( MSGS.seconds() );
     }
   }
 
   public class MinutelyRecurrenceEditor extends SimpleRecurrencePanel {
     public MinutelyRecurrenceEditor() {
-      super( "minute(s)" );
+      super( MSGS.minutesLabel() );
     }
   }
 
   public class HourlyRecurrenceEditor extends SimpleRecurrencePanel {
     public HourlyRecurrenceEditor() {
-      super( "hour(s)" );
+      super( MSGS.hoursLabel() );
     }
   }
 
   public class DailyRecurrenceEditor extends VerticalPanel {
 
     private TextBox repeatValueTb = new TextBox();
-    private RadioButton everyNDaysRb = new RadioButton(DAILY_RB_GROUP, "Every");
-    private RadioButton everyWeekdayRb = new RadioButton(DAILY_RB_GROUP, "Every weekday");
+    private RadioButton everyNDaysRb = new RadioButton(DAILY_RB_GROUP, MSGS.every() );
+    private RadioButton everyWeekdayRb = new RadioButton(DAILY_RB_GROUP, MSGS.everyWeekDay() );
     private ErrorLabel repeatLabel = null;
     
     public DailyRecurrenceEditor() {
       setVisible(false);
 
       HorizontalPanel hp = new HorizontalPanel();
-      everyNDaysRb.setStyleName("recurrenceRadioButton");
+      everyNDaysRb.setStyleName("recurrenceRadioButton"); //$NON-NLS-1$
       everyNDaysRb.setChecked(true);
       hp.add(everyNDaysRb);
 
-      repeatValueTb.setWidth("3em");
-      repeatValueTb.setTitle("Number of days to repeat.");
+      repeatValueTb.setWidth("3em"); //$NON-NLS-1$
+      repeatValueTb.setTitle( MSGS.numDaysToRepeat() );
       hp.add(repeatValueTb);
 
-      Label l = new Label("day(s)");
-      l.setStyleName("endLabel");
+      Label l = new Label( MSGS.daysLabel() );
+      l.setStyleName("endLabel"); //$NON-NLS-1$
       hp.add(l);
       repeatLabel = new ErrorLabel( hp );
       add( repeatLabel );
 
-      everyWeekdayRb.setStyleName("recurrenceRadioButton");
+      everyWeekdayRb.setStyleName("recurrenceRadioButton"); //$NON-NLS-1$
       add(everyWeekdayRb);
     }
     
@@ -468,12 +472,12 @@ public class RecurrenceEditor extends VerticalPanel {
     private ErrorLabel everyWeekOnLabel = null;
     
     public WeeklyRecurrenceEditor() {
-      setStyleName("weeklyRecurrencePanel");
+      setStyleName("weeklyRecurrencePanel"); //$NON-NLS-1$
       setVisible(false);
 
-      Label l = new Label( "Recur every week on:" );
+      Label l = new Label( MSGS.recurEveryWeek() );
       everyWeekOnLabel = new ErrorLabel( l );
-      l.setStyleName("startLabel");
+      l.setStyleName("startLabel"); //$NON-NLS-1$
       add( everyWeekOnLabel );
 
       FlexTable gp = new FlexTable();
@@ -515,7 +519,7 @@ public class RecurrenceEditor extends VerticalPanel {
       for ( DayOfWeek d : EnumSet.range( DayOfWeek.SUN, DayOfWeek.SAT) ) {
         CheckBox cb = dayToCheckBox.get( d );
         if ( cb.isChecked() ) {
-          sb.append( Integer.toString( d.value()+valueOfSunday ) ).append( "," );
+          sb.append( Integer.toString( d.value()+valueOfSunday ) ).append( "," ); //$NON-NLS-1$
         }
       }
       sb.deleteCharAt( sb.length()-1 );
@@ -529,7 +533,7 @@ public class RecurrenceEditor extends VerticalPanel {
      * @return String comma separated list of numeric days of the week.
      */
     public void setCheckedDaysAsString( String strDays, int valueOfSunday ) {
-      String[] days = strDays.split( "," );
+      String[] days = strDays.split( "," ); //$NON-NLS-1$
       for ( String day : days ) {
         int intDay = Integer.parseInt( day ) - valueOfSunday;
         DayOfWeek dayOfWeek = DayOfWeek.get( intDay );
@@ -556,8 +560,8 @@ public class RecurrenceEditor extends VerticalPanel {
 
   public class MonthlyRecurrenceEditor extends VerticalPanel {
     
-    private RadioButton dayNOfMonthRb = new RadioButton(MONTHLY_RB_GROUP, "Day");
-    private RadioButton nthDayNameOfMonthRb = new RadioButton(MONTHLY_RB_GROUP, "The");
+    private RadioButton dayNOfMonthRb = new RadioButton(MONTHLY_RB_GROUP, MSGS.day());
+    private RadioButton nthDayNameOfMonthRb = new RadioButton(MONTHLY_RB_GROUP, MSGS.the() );
     private TextBox dayOfMonthTb = new TextBox();
     private ListBox whichWeekLb = createWhichWeekListBox();
     private ListBox dayOfWeekLb = createDayOfWeekListBox();
@@ -567,33 +571,33 @@ public class RecurrenceEditor extends VerticalPanel {
       setVisible(false);
 
       HorizontalPanel hp = new HorizontalPanel();
-      dayNOfMonthRb.setStyleName("recurrenceRadioButton");
+      dayNOfMonthRb.setStyleName("recurrenceRadioButton"); //$NON-NLS-1$
       dayNOfMonthRb.setChecked( true );
       hp.add(dayNOfMonthRb);
-      dayOfMonthTb.setWidth("3em");
+      dayOfMonthTb.setWidth("3em"); //$NON-NLS-1$
       hp.add(dayOfMonthTb);
-      Label l = new Label("of every month");
-      l.setStyleName("endLabel");
+      Label l = new Label( MSGS.ofEveryMonth() );
+      l.setStyleName("endLabel"); //$NON-NLS-1$
       hp.add(l);
       
       dayNOfMonthLabel = new ErrorLabel( hp );
       add( dayNOfMonthLabel );
 
       hp = new HorizontalPanel();
-      nthDayNameOfMonthRb.setStyleName("recurrenceRadioButton");
+      nthDayNameOfMonthRb.setStyleName("recurrenceRadioButton"); //$NON-NLS-1$
       hp.add(nthDayNameOfMonthRb);
       hp.add(whichWeekLb);
 
       hp.add(dayOfWeekLb);
-      l = new Label("of every month");
-      l.setStyleName("endLabel");
+      l = new Label( MSGS.ofEveryMonth() );
+      l.setStyleName("endLabel"); //$NON-NLS-1$
       hp.add(l);
       add(hp);
     }
     
     public void reset() {
       setDayNOfMonth();
-      setDayOfMonth( "" );
+      setDayOfMonth( "" ); //$NON-NLS-1$
       setWeekOfMonth( WeekOfMonth.FIRST );
       setDayOfWeek( DayOfWeek.SUN );
     }
@@ -647,8 +651,8 @@ public class RecurrenceEditor extends VerticalPanel {
 
   public class YearlyRecurrenceEditor extends VerticalPanel {
     
-    private RadioButton everyMonthOnNthDayRb = new RadioButton(YEARLY_RB_GROUP, "Every");
-    private RadioButton nthDayNameOfMonthNameRb = new RadioButton(YEARLY_RB_GROUP, "The");
+    private RadioButton everyMonthOnNthDayRb = new RadioButton(YEARLY_RB_GROUP, MSGS.every() );
+    private RadioButton nthDayNameOfMonthNameRb = new RadioButton(YEARLY_RB_GROUP, MSGS.the() );
     private TextBox dayOfMonthTb = new TextBox();
     private ListBox monthOfYearLb0 = createMonthOfYearListBox();
     private ListBox monthOfYearLb1 = createMonthOfYearListBox();
@@ -676,7 +680,7 @@ public class RecurrenceEditor extends VerticalPanel {
       p.add(nthDayNameOfMonthNameRb);
       p.add(whichWeekLb);
       p.add(dayOfWeekLb);
-      Label l = new Label("of");
+      Label l = new Label( MSGS.of() );
       l.setStyleName("middleLabel"); //$NON-NLS-1$
       p.add(l);
       p.add( monthOfYearLb1 );
@@ -686,7 +690,7 @@ public class RecurrenceEditor extends VerticalPanel {
     public void reset() {
       setEveryMonthOnNthDay();
       setMonthOfYear0( MonthOfYear.JAN );
-      setDayOfMonth( "" );
+      setDayOfMonth( "" ); //$NON-NLS-1$
       setWeekOfMonth( WeekOfMonth.FIRST );
       setDayOfWeek( DayOfWeek.SUN );
       setMonthOfYear1( MonthOfYear.JAN );
@@ -816,7 +820,7 @@ public class RecurrenceEditor extends VerticalPanel {
       case DAILY:
         return TimeUtil.daysToSecs( Integer.parseInt( dailyEditor.getRepeatValue() ) );
       default:
-        throw new RuntimeException( "Invalid TemporalValue in getRepeatInSecs(): " + temporalState );
+        throw new RuntimeException( MSGS.invalidTemporalValueInGetRepeatInSecs( temporalState.toString() ) );
     }
   }
 
@@ -844,7 +848,7 @@ public class RecurrenceEditor extends VerticalPanel {
       case YEARLY:
         return getYearlyCronString();
       default:
-        throw new RuntimeException( "Invalid TemporalValue in getCronString(): " + temporalState );
+        throw new RuntimeException( MSGS.invalidTemporalValueInGetCronString( temporalState.toString() ) );
     }
   }
   
@@ -865,7 +869,7 @@ public class RecurrenceEditor extends VerticalPanel {
       try {
         cronStr = CronParser.recurrenceStringToCronString( recurrenceSb.toString() );
       } catch (CronParseException e) {
-        throw new RuntimeException( "Invalid recurrence string: " + recurrenceSb.toString() );
+        throw new RuntimeException( MSGS.invalidRecurrenceString( recurrenceSb.toString() ) );
       }
       return cronStr;
     }
@@ -881,7 +885,7 @@ public class RecurrenceEditor extends VerticalPanel {
     try {
       cronStr = CronParser.recurrenceStringToCronString( recurrenceSb.toString() );
     } catch (CronParseException e) {
-      throw new RuntimeException( "Invalid recurrence string: " + recurrenceSb.toString() );
+      throw new RuntimeException( MSGS.invalidRecurrenceString( recurrenceSb.toString() ) );
     }
     return cronStr;
     
@@ -909,12 +913,12 @@ public class RecurrenceEditor extends VerticalPanel {
           .append( dayOfWeek );
       }
     } else {
-      throw new RuntimeException( "There seems to not be any radio button selected, which is theoretically impossible." );
+      throw new RuntimeException( MSGS.noRadioBtnsSelected() );
     }
     try {
       cronStr = CronParser.recurrenceStringToCronString( recurrenceSb.toString() );
     } catch (CronParseException e) {
-      throw new RuntimeException( "Invalid recurrence string: " + recurrenceSb.toString() );
+      throw new RuntimeException(  MSGS.invalidRecurrenceString( recurrenceSb.toString() ) );
     }
     return cronStr;
   }
@@ -947,12 +951,12 @@ public class RecurrenceEditor extends VerticalPanel {
           .append( monthOfYear );
       }
     } else {
-      throw new RuntimeException( "There seems to not be any radio button selected, which is theoretically impossible." );
+      throw new RuntimeException( MSGS.noRadioBtnsSelected() );
     }
     try {
       cronStr = CronParser.recurrenceStringToCronString( recurrenceSb.toString() );
     } catch (CronParseException e) {
-      throw new RuntimeException( "Invalid recurrence string: " + recurrenceSb.toString() );
+      throw new RuntimeException(  MSGS.invalidRecurrenceString( recurrenceSb.toString() ) );
     }
     return cronStr;
   }
@@ -962,7 +966,7 @@ public class RecurrenceEditor extends VerticalPanel {
       ? TimeUtil.MIN_HOUR   // 0
       : TimeUtil.MAX_HOUR;  // 12
     String strHour = StringUtils.addStringToInt( startTimePicker.getHour(), timeOfDayAdjust );
-    return new StringBuilder().append( "00" ).append( SPACE )
+    return new StringBuilder().append( "00" ).append( SPACE ) //$NON-NLS-1$
     .append( startTimePicker.getMinute() ).append( SPACE )
     .append( strHour );
   }

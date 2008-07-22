@@ -2,9 +2,11 @@ package org.pentaho.pac.client.scheduler.view;
 
 import java.util.Date;
 
+import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.DatePickerEx;
 import org.pentaho.pac.client.common.ui.SimpleGroupBox;
 import org.pentaho.pac.client.common.ui.widget.ErrorLabel;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -15,6 +17,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class DateRangeEditor extends SimpleGroupBox {
 
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   private static final String END_DATE_RB_GROUP = "end-date-group"; //$NON-NLS-1$
 
   private DatePickerEx startDatePicker = null;
@@ -24,14 +27,14 @@ public class DateRangeEditor extends SimpleGroupBox {
 
   public DateRangeEditor( Date date ) {
 
-    super( "Range of recurrence" );
+    super( MSGS.rangeOfRecurrence() );
 
     HorizontalPanel outerHP = new HorizontalPanel();
     add( outerHP );
     
     HorizontalPanel hp = new HorizontalPanel();
-    Label l = new Label( "Start:" );
-    l.setStyleName("startLabel");
+    Label l = new Label( MSGS.startLabel() );
+    l.setStyleName("startLabel"); //$NON-NLS-1$
     hp.add( l );
     startDatePicker = new DatePickerEx();
     hp.add(startDatePicker);
@@ -100,16 +103,16 @@ public class DateRangeEditor extends SimpleGroupBox {
     public EndDatePanel( Date date ) {
       final EndDatePanel localThis = this;
   
-      noEndDateRb = new RadioButton(END_DATE_RB_GROUP, "No end date");
-      noEndDateRb.setStyleName("recurrenceRadioButton");
+      noEndDateRb = new RadioButton(END_DATE_RB_GROUP, MSGS.noEndDateLabel() );
+      noEndDateRb.setStyleName("recurrenceRadioButton"); //$NON-NLS-1$
       noEndDateRb.setChecked(true);
       add(noEndDateRb);
       HorizontalPanel hp = new HorizontalPanel();
       add(hp);
   
       HorizontalPanel endByPanel = new HorizontalPanel();
-      endByRb = new RadioButton(END_DATE_RB_GROUP, "End by:");
-      endByRb.setStyleName("recurrenceRadioButton");
+      endByRb = new RadioButton(END_DATE_RB_GROUP, MSGS.endByLabel() );
+      endByRb.setStyleName("recurrenceRadioButton"); //$NON-NLS-1$
       endByPanel.add(endByRb);
       endDatePicker = new DatePickerEx();
       endDatePicker.setEnabled(false);

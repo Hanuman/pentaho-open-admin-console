@@ -2,16 +2,19 @@ package org.pentaho.pac.client.scheduler.view;
 
 import java.util.Date;
 
+import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.DatePickerEx;
 import org.pentaho.pac.client.common.ui.TimePicker;
 import org.pentaho.pac.client.common.ui.widget.ErrorLabel;
 import org.pentaho.pac.client.common.util.TimeUtil;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class RunOnceEditor extends VerticalPanel{
 
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   private TimePicker startTimePicker = new TimePicker();
   private DatePickerEx startDatePicker = new DatePickerEx();
   private Label startTimeLabel = null;
@@ -21,10 +24,10 @@ public class RunOnceEditor extends VerticalPanel{
   private static final TimeUtil.TimeOfDay DEFAULT_TIME_OF_DAY = TimeUtil.TimeOfDay.AM;
   
   public RunOnceEditor() {
-    startTimeLabel = new Label( "Start Time:" );
+    startTimeLabel = new Label( MSGS.startTimeColon() );
     add( startTimeLabel );
     add( startTimePicker );
-    startDateLabel = new ErrorLabel( new Label( "Start Date:" ) );
+    startDateLabel = new ErrorLabel( new Label( MSGS.startDate() ) );
     add( startDateLabel );
     add( startDatePicker );
   }

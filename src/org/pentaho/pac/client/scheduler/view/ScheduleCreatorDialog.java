@@ -19,7 +19,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -28,10 +30,11 @@ import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.TabPanel;
 
 public class ScheduleCreatorDialog extends ConfirmDialog {
-
+  private static final String SELECTED = "selected"; //$NON-NLS-1$
+  
   public enum TabIndex {
-    SCHEDULE( 0, "Schedule" ),
-    SCHEDULE_ACTION( 1, "Scheduled Action" );
+    SCHEDULE( 0, MSGS.schedule() ),
+    SCHEDULE_ACTION( 1, MSGS.scheduledAction() );
     
     private TabIndex( int value, String name ) {
       this.value = value;
@@ -68,21 +71,21 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
   public ScheduleCreatorDialog() {
     super();
     this.setNoBorderOnClientPanel();
-    setTitle( "Schedule Creator" );
-    setClientSize( "475px", "450px" );
+    setTitle( MSGS.scheduleCreator() );
+    setClientSize( "475px", "450px" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    solRepItemPicker.setWidth( "100%" );
-    solRepItemPicker.setHeight( "100%" );
+    solRepItemPicker.setWidth( "100%" ); //$NON-NLS-1$
+    solRepItemPicker.setHeight( "100%" ); //$NON-NLS-1$
     
     tabPanel.setStylePrimaryName( "schedulerTabPanel" ); //$NON-NLS-1$
     
     SimplePanel p = new SimplePanel();  // Simple panel required to accomodate an IE7 defect in margin styles
-    p.setStyleName( "paddingPanel" );
+    p.setStyleName( "paddingPanel" ); //$NON-NLS-1$
     p.add(scheduleEditor);
     tabPanel.add( p, scheduleTabLabel );
     
     p = new SimplePanel();  // Simple panel required to accomodate an IE7 defect in margin styles
-    p.setStyleName( "paddingPanel" );
+    p.setStyleName( "paddingPanel" ); //$NON-NLS-1$
     p.add(solRepItemPicker);
     tabPanel.add( p, scheduleActionTabLabel );
     
@@ -100,10 +103,10 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
       public void onTabSelected(SourcesTabEvents sender, int tabIndex) {
         for ( Map.Entry<TabIndex,Label> me : tabLabelMap.entrySet() ) {
           Label l = me.getValue();
-          l.removeStyleDependentName( "selected" );
+          l.removeStyleDependentName( SELECTED );
         }
         Label l = tabLabelMap.get( TabIndex.get(  tabIndex ) );
-        l.addStyleDependentName( "selected" );
+        l.addStyleDependentName( SELECTED );
         switch (TabIndex.get( tabIndex) ) {
           case SCHEDULE:
             scheduleEditor.setFocus();

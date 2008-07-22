@@ -3,14 +3,18 @@ package org.pentaho.pac.client.scheduler.view;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.widget.ErrorLabel;
 import org.pentaho.pac.client.common.util.StringUtils;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class SolutionRepositoryItemPicker extends VerticalPanel {
+  
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
 
   private TextArea actionsTA = new TextArea();
 
@@ -20,10 +24,10 @@ public class SolutionRepositoryItemPicker extends VerticalPanel {
   public SolutionRepositoryItemPicker() {
     super();
 
-    setStylePrimaryName( "solRepItemPicker" );
-    actionsTA.setWidth( "100%" );
-    actionsTA.setHeight( "20ex" );
-    actionsLabel = new ErrorLabel( new Label( "Comma separated list of action sequence paths:" ) );
+    setStylePrimaryName( "solRepItemPicker" ); //$NON-NLS-1$
+    actionsTA.setWidth( "100%" ); //$NON-NLS-1$
+    actionsTA.setHeight( "20ex" ); //$NON-NLS-1$
+    actionsLabel = new ErrorLabel( new Label( MSGS.commaSeparatedList() ) );
     add( actionsLabel );
     add( actionsTA );
   }
@@ -56,7 +60,7 @@ public class SolutionRepositoryItemPicker extends VerticalPanel {
     int numActions = actions.size();
     for ( int ii=0; ii<numActions-1; ++ii ) {
       String action = actions.get( ii );
-      strBldr.append( action ).append( "," );
+      strBldr.append( action ).append( "," ); //$NON-NLS-1$
     }
     if ( numActions > 0 ) {
       String action = actions.get( numActions-1 );

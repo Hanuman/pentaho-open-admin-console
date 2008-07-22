@@ -33,7 +33,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class SchedulerToolbar extends HorizontalPanel {
 
   protected static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
-  public final static String ALL_FILTER = "All Groups";
+  public final static String ALL_GROUPS_FILTER = MSGS.allGroups();
   private PushButton createBtn = null;
   private PushButton updateBtn = null;
   private PushButton deleteBtn = null;
@@ -58,21 +58,21 @@ public class SchedulerToolbar extends HorizontalPanel {
   
   public SchedulerToolbar() {
     super();
-    setStyleName( "schedToolbar" );
+    setStyleName( "schedToolbar" ); //$NON-NLS-1$
     createToolbar();
   }
   
   private void createToolbar() {
 
     HorizontalPanel leftPanel = new HorizontalPanel();
-    leftPanel.setStyleName( "schedToolbar.leftPanel" );
+    leftPanel.setStyleName( "schedToolbar.leftPanel" ); //$NON-NLS-1$
     add( leftPanel );
     
     HorizontalPanel rightPanel = new HorizontalPanel();
-    rightPanel.setStyleName( "schedToolbar.rightPanel" );
+    rightPanel.setStyleName( "schedToolbar.rightPanel" ); //$NON-NLS-1$
     add( rightPanel );
     
-    createBtn = createPushButton( "Create schedule", "toolbarCreateBtn", new ClickListener() {
+    createBtn = createPushButton( MSGS.createSchedule(), "toolbarCreateBtn", new ClickListener() { //$NON-NLS-1$
       public void onClick(Widget sender) {
         if ( null != onCreateListener ) {
           onCreateListener.onHandle( null );
@@ -81,7 +81,7 @@ public class SchedulerToolbar extends HorizontalPanel {
     });
     leftPanel.add( createBtn );
     
-    updateBtn = createPushButton( "Edit schedule", "toolbarUpdateBtn", new ClickListener() {
+    updateBtn = createPushButton( MSGS.editSchedule(), "toolbarUpdateBtn", new ClickListener() { //$NON-NLS-1$
       public void onClick(Widget sender) {
         if ( null != onUpdateListener ) {
           onUpdateListener.onHandle( null );
@@ -90,7 +90,7 @@ public class SchedulerToolbar extends HorizontalPanel {
     });
     leftPanel.add( updateBtn );
 
-    deleteBtn = createPushButton( "Delete schedule(s)", "toolbarDeleteBtn", new ClickListener() {
+    deleteBtn = createPushButton( MSGS.deleteSchedules(), "toolbarDeleteBtn", new ClickListener() { //$NON-NLS-1$
       public void onClick(Widget sender) {
         if ( null != onDeleteListener ) {
           onDeleteListener.onHandle( null );
@@ -100,10 +100,10 @@ public class SchedulerToolbar extends HorizontalPanel {
     leftPanel.add( deleteBtn );
     
     //toolbarDivider
-    Image img = new Image( "style/images/toolbarDivider.png", 0, 0, 2, 16 );
+    Image img = new Image( "style/images/toolbarDivider.png", 0, 0, 2, 16 ); //$NON-NLS-1$
     leftPanel.add( img );
 
-    suspendBtn = createPushButton( "Suspend selected schedule(s)", "toolbarSuspendBtn", new ClickListener() {
+    suspendBtn = createPushButton( MSGS.suspendSchedules(), "toolbarSuspendBtn", new ClickListener() { //$NON-NLS-1$
       public void onClick(Widget sender) {
         if ( null != onSuspendListener ) {
           onSuspendListener.onHandle( null );
@@ -112,7 +112,7 @@ public class SchedulerToolbar extends HorizontalPanel {
     });
     leftPanel.add( suspendBtn );
 
-    resumeBtn = createPushButton( "Resume selected schedule(s)", "toolbarResumeBtn", new ClickListener() {
+    resumeBtn = createPushButton( MSGS.resumeSchedules(), "toolbarResumeBtn", new ClickListener() { //$NON-NLS-1$
       public void onClick(Widget sender) {
         if ( null != onResumeListener ) {
           onResumeListener.onHandle( null );
@@ -121,7 +121,7 @@ public class SchedulerToolbar extends HorizontalPanel {
     });
     leftPanel.add( resumeBtn );
 
-    runNowBtn = createPushButton( "Run selected schedule(s) now", "toolbarRunNowBtn", new ClickListener() {
+    runNowBtn = createPushButton( MSGS.runSchedules(), "toolbarRunNowBtn", new ClickListener() { //$NON-NLS-1$
       public void onClick(Widget sender) {
         if ( null != onRunNowListener ) {
           onRunNowListener.onHandle( null );
@@ -131,12 +131,12 @@ public class SchedulerToolbar extends HorizontalPanel {
     leftPanel.add( runNowBtn );
     
     //toolbarDivider
-    img = new Image( "style/images/toolbarDivider.png", 0, 0, 2, 16 );
+    img = new Image( "style/images/toolbarDivider.png", 0, 0, 2, 16 ); //$NON-NLS-1$
     leftPanel.add( img );
     
-    suspendSchedulerBtn = createPushButton( "Suspend scheduler", "toolbarSuspendSchedulerBtn", new ClickListener() {
+    suspendSchedulerBtn = createPushButton( MSGS.suspendScheduler(), "toolbarSuspendSchedulerBtn", new ClickListener() { //$NON-NLS-1$
       public void onClick(Widget sender) {
-        assert false : "note implemented";
+        assert false : "note implemented"; //$NON-NLS-1$
         if ( null != onSuspendSchedulerListener ) {
           onSuspendSchedulerListener.onHandle( null );
         }
@@ -144,9 +144,9 @@ public class SchedulerToolbar extends HorizontalPanel {
     });
     leftPanel.add( suspendSchedulerBtn );
 
-    resumeSchedulerBtn = createPushButton( "Resume scheduler", "toolbarResumeSchedulerBtn", new ClickListener() {
+    resumeSchedulerBtn = createPushButton( MSGS.resumeScheduler(), "toolbarResumeSchedulerBtn", new ClickListener() { //$NON-NLS-1$
       public void onClick(Widget sender) {
-        assert false : "note implemented";
+        assert false : "note implemented"; //$NON-NLS-1$
         if ( null != onResumeSchedulerListener ) {
           onResumeSchedulerListener.onHandle( null );
         }
@@ -155,10 +155,10 @@ public class SchedulerToolbar extends HorizontalPanel {
     leftPanel.add( resumeSchedulerBtn );
     
     //toolbarDivider
-    img = new Image( "style/images/toolbarDivider.png", 0, 0, 2, 16 );
+    img = new Image( "style/images/toolbarDivider.png", 0, 0, 2, 16 ); //$NON-NLS-1$
     leftPanel.add( img );
     
-    refreshBtn = createPushButton( "Refresh schedule list", "toolbarRefreshBtn", new ClickListener() {
+    refreshBtn = createPushButton( MSGS.refreshScheduleList(), "toolbarRefreshBtn", new ClickListener() { //$NON-NLS-1$
       public void onClick(Widget sender) {
         if ( null != onRefreshListener ) {
           onRefreshListener.onHandle( null );
@@ -168,7 +168,7 @@ public class SchedulerToolbar extends HorizontalPanel {
     leftPanel.add( refreshBtn );
     
     HorizontalPanel filterPanel = new HorizontalPanel();
-    filterPanel.setStyleName( "filterPanel" );
+    filterPanel.setStyleName( "filterPanel" ); //$NON-NLS-1$
     filterPanel.setVerticalAlignment( HasVerticalAlignment.ALIGN_MIDDLE );
     Label l = new Label( MSGS.filterBy() );
     filterPanel.add( l );
@@ -196,7 +196,7 @@ public class SchedulerToolbar extends HorizontalPanel {
     btn.addClickListener( clickListener ); 
     
     btn.setStylePrimaryName( styleName );
-    btn.addStyleName( "toolbarBtn" );
+    btn.addStyleName( "toolbarBtn" ); //$NON-NLS-1$
     btn.setTitle( hoverText );
     
     return btn;

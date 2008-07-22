@@ -20,9 +20,11 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.EnumException;
 import org.pentaho.pac.client.common.ui.widget.ErrorLabel;
 import org.pentaho.pac.client.common.util.TimeUtil;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.scheduler.CronParseException;
 import org.pentaho.pac.client.scheduler.CronParser;
 import org.pentaho.pac.client.scheduler.view.RecurrenceEditor.TemporalValue;
@@ -42,16 +44,18 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class ScheduleEditor extends VerticalPanel {
 
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
+
   public enum ScheduleType {
-    RUN_ONCE(0, "Run Once"), 
-    SECONDS(1, "Seconds"), 
-    MINUTES(2, "Minutes"), 
-    HOURS(3, "Hours"), 
-    DAILY(4, "Daily"), 
-    WEEKLY(5, "Weekly"), 
-    MONTHLY(6, "Monthly"), 
-    YEARLY(7, "Yearly"),
-    CRON(8, "Cron");
+    RUN_ONCE(0, MSGS.runOnce()), 
+    SECONDS(1, MSGS.seconds()), 
+    MINUTES(2, MSGS.minutes()), 
+    HOURS(3, MSGS.hours()), 
+    DAILY(4, MSGS.daily()), 
+    WEEKLY(5, MSGS.weekly()), 
+    MONTHLY(6, MSGS.monthly()), 
+    YEARLY(7, MSGS.yearly()),
+    CRON(8, MSGS.cron());
 
     private ScheduleType(int value, String name) {
       this.value = value;
@@ -96,7 +100,7 @@ public class ScheduleEditor extends VerticalPanel {
           return v;
         }
       }
-      throw new EnumException( "Invalid String for temporal value: " + scheduleValue );
+      throw new EnumException( MSGS.invalidTemporalValue( scheduleValue.toString() ) );
     }
   } /* end enum */
 
@@ -127,25 +131,25 @@ public class ScheduleEditor extends VerticalPanel {
   public ScheduleEditor() {
     super();
     
-    setStylePrimaryName( "scheduleEditor" );
+    setStylePrimaryName( "scheduleEditor" ); //$NON-NLS-1$
     int rowNum = 0;
-    nameLabel = new ErrorLabel( new Label( "Name:" ) );
+    nameLabel = new ErrorLabel( new Label( MSGS.nameColon() ) );
     add( nameLabel );
     add( nameTb );
     
     rowNum++;
-    groupNameLabel = new ErrorLabel( new Label( "Group:" ) );
+    groupNameLabel = new ErrorLabel( new Label( MSGS.groupColon() ) );
     add( groupNameLabel );
     add( groupNameTb );
 
     rowNum++;
-    Label l = new Label( "Description:" );
+    Label l = new Label( MSGS.descriptionColon() );
     add( l );
     add( descriptionTb );
 
     rowNum++;
     scheduleCombo = createScheduleCombo();
-    l = new Label( "Recurrence:" );
+    l = new Label( MSGS.recurrenceColon() );
     add( l );
     add( scheduleCombo );
 
@@ -226,7 +230,7 @@ public class ScheduleEditor extends VerticalPanel {
       case CRON:
         return cronEditor.getCronString();
       default:
-        throw new RuntimeException( "Invalid Run Type: " + getScheduleType().toString() );
+        throw new RuntimeException( MSGS.invalidRunType( getScheduleType().toString() ) );
     }
   }
   /**
@@ -355,7 +359,7 @@ public class ScheduleEditor extends VerticalPanel {
       case CRON:
         return cronEditor.getStartTime();
       default:
-        throw new RuntimeException( "Invalid Run Type: " + getScheduleType().toString() );
+        throw new RuntimeException( MSGS.invalidRunType( getScheduleType().toString() ) );
     }
   }
 
@@ -383,7 +387,7 @@ public class ScheduleEditor extends VerticalPanel {
       case CRON:
         return cronEditor.getStartDate();
       default:
-        throw new RuntimeException( "Invalid Run Type: " + getScheduleType().toString() );
+        throw new RuntimeException( MSGS.invalidRunType( getScheduleType().toString() ) );
     }
   }
 
@@ -407,7 +411,7 @@ public class ScheduleEditor extends VerticalPanel {
       case CRON:
         return cronEditor.getEndDate();
       default:
-        throw new RuntimeException( "Invalid Run Type: " + getScheduleType().toString() );
+        throw new RuntimeException( MSGS.invalidRunType( getScheduleType().toString() ) );
     }
   }
 
