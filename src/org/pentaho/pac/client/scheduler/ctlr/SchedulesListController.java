@@ -42,7 +42,6 @@ public class SchedulesListController {
   {
     schedulesListCtrl.removeAll();
     if ( scheduleList.size() > 0 ) {
-      for ( int ii=0; ii<10; ii++ ) {
       for ( int scheduleIdx=0; scheduleIdx< scheduleList.size(); ++scheduleIdx ) {
         Schedule schedule = scheduleList.get( scheduleIdx );
   
@@ -79,7 +78,6 @@ public class SchedulesListController {
         widgets[ 5 ] = l;
 
         schedulesListCtrl.addRow( widgets, schedule );
-      }
       }
     } else {
       PacLocalizedMessages msgs = PentahoAdminConsole.getLocalizedMessages();
