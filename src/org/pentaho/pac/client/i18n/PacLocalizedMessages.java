@@ -272,14 +272,6 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String updateUser();
 
   /**
-   * Translated "updated the DataSource.=Successfully updated the DataSource.".
-   * 
-   * @return translated "updated the DataSource.=Successfully updated the DataSource."
-   * @gwt.key Successfully
-   */
-  String Successfully();
-
-  /**
    * Translated "Update".
    * 
    * @return translated "Update"
