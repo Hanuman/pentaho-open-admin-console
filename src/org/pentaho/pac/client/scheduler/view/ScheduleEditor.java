@@ -188,7 +188,7 @@ public class ScheduleEditor extends VerticalPanel {
     recurrenceEditor.reset( now );
     cronEditor.reset( now );
     
-    selectScheduleTypeEditor( ScheduleType.RUN_ONCE );
+    setScheduleType( ScheduleType.RUN_ONCE );
   }
   
   public String getName() {
