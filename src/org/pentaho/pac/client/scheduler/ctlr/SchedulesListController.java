@@ -62,11 +62,11 @@ public class SchedulesListController {
         widgets[ 2 ] = l;
 
         // column 3 
-        l = new Label( schedule.getPrevFireTime() );
+        l = new Label( schedule.getNextFireTime() );
         widgets[ 3 ] = l;
         
         // column 4
-        l = new Label( schedule.getNextFireTime() );
+        l = new Label( schedule.getPrevFireTime() );
         widgets[ 4 ] = l;
 
         // column 5
