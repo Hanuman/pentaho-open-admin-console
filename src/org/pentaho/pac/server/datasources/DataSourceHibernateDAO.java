@@ -11,9 +11,9 @@ import org.pentaho.pac.common.datasources.NonExistingDataSourceException;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
 import org.pentaho.pac.server.common.DAOException;
 import org.pentaho.pac.server.common.HibernateSessionFactory;
+import org.pentaho.pac.server.common.PasswordServiceFactory;
 import org.pentaho.platform.api.util.IPasswordService;
 import org.pentaho.platform.api.util.PasswordServiceException;
-import org.pentaho.platform.util.Base64PasswordService;
 
 public class DataSourceHibernateDAO implements IDataSourceDAO {
 
@@ -24,7 +24,7 @@ public class DataSourceHibernateDAO implements IDataSourceDAO {
     if (getDataSource(newDataSource.getName()) == null) {
       try {
       // Get the password service
-        IPasswordService passwordService = new Base64PasswordService();
+        IPasswordService passwordService = PasswordServiceFactory.getPasswordService();
         // Store the new encrypted password in the datasource object
         newDataSource.setPassword(passwordService.encrypt(newDataSource.getPassword()));
         getSession().save(newDataSource);
@@ -57,7 +57,7 @@ public class DataSourceHibernateDAO implements IDataSourceDAO {
     try {
       PentahoDataSource pentahoDataSource = (PentahoDataSource) getSession().get(PentahoDataSource.class.getName(), jndiName);
       if(pentahoDataSource != null) {
-        IPasswordService passwordService = new Base64PasswordService();
+        IPasswordService passwordService = PasswordServiceFactory.getPasswordService();
         pentahoDataSource.setPassword(passwordService.decrypt(pentahoDataSource.getPassword()));
       }
       return pentahoDataSource;
@@ -77,7 +77,7 @@ public class DataSourceHibernateDAO implements IDataSourceDAO {
       try {
             // Get the password service
         if(pentahoDataSource != null) {
-          IPasswordService passwordService = new Base64PasswordService();
+          IPasswordService passwordService = PasswordServiceFactory.getPasswordService();
           pentahoDataSource.setPassword(passwordService.decrypt(pentahoDataSource.getPassword()));
         }
       } catch(PasswordServiceException pse) {
@@ -94,7 +94,7 @@ public class DataSourceHibernateDAO implements IDataSourceDAO {
     if (getDataSource(dataSource.getName()) != null) {
       try {
         // Get the password service
-        IPasswordService passwordService = new Base64PasswordService();
+        IPasswordService passwordService = PasswordServiceFactory.getPasswordService();
         // Store the new encrypted password in the datasource object
         dataSource.setPassword(passwordService.encrypt(dataSource.getPassword()));
         getSession().update(dataSource);

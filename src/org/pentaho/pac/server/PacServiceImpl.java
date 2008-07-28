@@ -30,7 +30,6 @@ import org.pentaho.pac.common.UserRoleSecurityInfo;
 import org.pentaho.pac.common.UserToRoleAssignment;
 import org.pentaho.pac.common.datasources.DataSourceManagementException;
 import org.pentaho.pac.common.datasources.DuplicateDataSourceException;
-import org.pentaho.pac.common.datasources.IPentahoDataSource;
 import org.pentaho.pac.common.datasources.NonExistingDataSourceException;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
 import org.pentaho.pac.common.roles.DuplicateRoleException;
@@ -537,39 +536,33 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
 
     String driverClass = ds.getDriverClass();
     if (StringUtils.isEmpty(driverClass)) {
-      throw new DataSourceManagementException("Connection attempt failed, no driver class available: " + driverClass); //$NON-NLS-1$
+      throw new DataSourceManagementException(Messages.getString("PacService.CONNECTION_ATTEMPT_FAILED",driverClass)); //$NON-NLS-1$  
     }
     Class<?> driverC = null;
 
     try {
       driverC = Class.forName(driverClass);
     } catch (ClassNotFoundException e) {
-      throw new DataSourceManagementException("Connection attempt failed, driver class " + driverClass  //$NON-NLS-1$ 
-          + " not in classpath. "); //$NON-NLS-1$
+      throw new DataSourceManagementException(Messages.getString("PacService.DRIVER_NOT_FOUND_IN_CLASSPATH",driverClass), e); //$NON-NLS-1$
     }
     if (!Driver.class.isAssignableFrom(driverC)) {
-      throw new DataSourceManagementException("Connection attempt failed, driver class " + driverClass //$NON-NLS-1$
-          + " not in classpath. "); //$NON-NLS-1$
+      throw new DataSourceManagementException(Messages.getString("PacService.DRIVER_NOT_FOUND_IN_CLASSPATH",driverClass)); //$NON-NLS-1$    }
     }
-
     Driver driver = null;
-
+    
     try {
       driver = driverC.asSubclass(Driver.class).newInstance();
     } catch (InstantiationException e) {
-      throw new DataSourceManagementException("Connection attempt failed, unable to create driver class instance: " //$NON-NLS-1$
-          + driverClass, e); 
+      throw new DataSourceManagementException(Messages.getString("PacService.UNABLE_TO_INSTANCE_DRIVER",driverClass), e); //$NON-NLS-1$
     } catch (IllegalAccessException e) {
-      throw new DataSourceManagementException("Connection attempt failed, unable to create driver class instance: " //$NON-NLS-1$
-          + driverClass, e);
+      throw new DataSourceManagementException(Messages.getString("PacService.UNABLE_TO_INSTANCE_DRIVER",driverClass), e); //$NON-NLS-1$    }
     }
-
     try {
       DriverManager.registerDriver(driver);
       conn = DriverManager.getConnection(ds.getUrl(), ds.getUserName(), ds.getPassword());
       return conn;
     } catch (SQLException e) {
-      throw new DataSourceManagementException("Connection attempt failed. " + e.getMessage(), e); //$NON-NLS-1$
+      throw new DataSourceManagementException(Messages.getString("PacService.CONNECTION_ATTEMPT_FAILED",driverClass), e); //$NON-NLS-1$
     }
   }
 
@@ -602,12 +595,12 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
         stmt = conn.createStatement();
         rs = stmt.executeQuery(ds.getQuery());
       } else {
-        throw new PacServiceException("Data Source configuration does not contain a validation query."); //$NON-NLS-1$
+        throw new PacServiceException(Messages.getString("PacService.QUERY_NOT_VALID")); //$NON-NLS-1$
       }
     } catch (DataSourceManagementException dme) {
-      throw new PacServiceException("Data Source validation query failed. Query: " + ds.getQuery(), dme); //$NON-NLS-1$
+      throw new PacServiceException(Messages.getString("PacService.QUERY_VALIDATION_FAILED",ds.getQuery()), dme); //$NON-NLS-1$
     } catch (SQLException e) {
-      throw new PacServiceException("Data Source validation query failed. Query: " + ds.getQuery(), e); //$NON-NLS-1$
+      throw new PacServiceException(Messages.getString("PacService.QUERY_VALIDATION_FAILED",ds.getQuery()), e); //$NON-NLS-1$
     } finally {
       try {
         if (rs != null) {

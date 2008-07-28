@@ -37,10 +37,12 @@ import org.pentaho.pac.server.i18n.Messages;
 public class AppConfigProperties {
 
   public static final String DEFAULT_PROPERTIES_FILE_NAME = "pac.properties"; //$NON-NLS-1$
+  public static final String PASSWORD_SERVICE_CLASS = "password.service.class.name"; //$NON-NLS-1$
+  public static final String PASSWORD_SERVICE_DEFAULT = "org.pentaho.platform.util.Base64PasswordService"; //$NON-NLS-1$
   private static final Log logger = LogFactory.getLog(AppConfigProperties.class);
   private Properties properties = null;
   private static AppConfigProperties instance = new AppConfigProperties();
-
+  
   protected AppConfigProperties() {
     init( DEFAULT_PROPERTIES_FILE_NAME );
   }
@@ -65,11 +67,17 @@ public class AppConfigProperties {
         logger.error( Messages.getString( "PacService.LOAD_PROPS_FAILED", pathToConfigResource ) ); //$NON-NLS-1$
       }
     }
+    
+    String passwordServiceClassName = properties.getProperty(PASSWORD_SERVICE_CLASS, PASSWORD_SERVICE_DEFAULT);
+    PasswordServiceFactory.init(passwordServiceClassName);
   }
   
   public void init( Properties p ) {
     properties = p;
+    String passwordServiceClassName = properties.getProperty(PASSWORD_SERVICE_CLASS, PASSWORD_SERVICE_DEFAULT);
+    PasswordServiceFactory.init(passwordServiceClassName);  
   }
+ 
   
   public void setProperties( Properties p )
   {
