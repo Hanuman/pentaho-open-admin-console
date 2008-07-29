@@ -8,6 +8,7 @@ import org.pentaho.pac.client.services.AdminServicesPanel;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SourcesTabEvents;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -37,9 +38,17 @@ public class AdministrationTabPanel extends TabPanel {
     add(servicesPanel, PentahoAdminConsole.MSGS.services());
     SchedulerPanel schedulerPanel = new SchedulerPanel();
     Panel p = new VerticalPanel();
-    p.setStyleName( "schedulerPanelPadderPanel" );
+    p.setStyleName( "schedulerPanelPadderPanel" );    //$NON-NLS-1$
     p.add(schedulerPanel );
-    add(p, PentahoAdminConsole.MSGS.scheduler());
+    
+    SimplePanel schedulerScrollWrapper = new SimplePanel();
+    schedulerScrollWrapper.setStyleName("configConsolePanel");  //$NON-NLS-1$
+    schedulerScrollWrapper.setWidth("100%");    //$NON-NLS-1$
+    schedulerScrollWrapper.setHeight("570px");  //$NON-NLS-1$
+
+    schedulerScrollWrapper.add(p);
+    
+    add(schedulerScrollWrapper, PentahoAdminConsole.MSGS.scheduler());
     schedulerController = new SchedulerController( schedulerPanel );
     
     usersAndRolesPanel.setWidth("100%"); //$NON-NLS-1$
@@ -51,6 +60,7 @@ public class AdministrationTabPanel extends TabPanel {
     selectTab(AdministrationTabPanel.ADMIN_USERS_ROLES_TAB_INDEX);
   }
   
+  @Override
   public void onTabSelected(SourcesTabEvents sender, int tabIndex) {
     super.onTabSelected(sender, tabIndex);
     switch (tabIndex) {
