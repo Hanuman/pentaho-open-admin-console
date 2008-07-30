@@ -43,6 +43,16 @@ public class HibernateSessionFactory {
     
     public static void addConfiguration(String name,String configFile)
     {
+    	if (configs.containsKey(name))
+    		throw new HibernateException("Configuration " + name + " already exists!");
+    	
+    	addOrUpdateConfiguration(name,configFile);
+    }
+    
+    
+    
+    public static void addOrUpdateConfiguration(String name,String configFile)
+    {
     	Configuration configuration = new AnnotationConfiguration();
     	
     	try {
