@@ -1,10 +1,13 @@
 package org.pentaho.pac.server.common;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Configuration;
-import org.pentaho.pac.server.common.config.PacProperty;
 
 
 /**
@@ -14,7 +17,8 @@ import org.pentaho.pac.server.common.config.PacProperty;
  */
 public class HibernateSessionFactory {
 
-    /** 
+    private static final String DEFAULT_CONFIG_NAME = "$$DEFAULT_CONFIG";
+	/** 
      * Location of hibernate.cfg.xml file.
      * Location should be on the classpath as Hibernate uses  
      * #resourceAsStream style lookup for its configuration file. 
@@ -22,25 +26,34 @@ public class HibernateSessionFactory {
      * in the default package. Use #setConfigFile() to update 
      * the location of the configuration file for the current session.   
      */
-    private static String CONFIG_FILE_LOCATION = "hibernate.cfg.xml"; //$NON-NLS-1$
-    private static final ThreadLocal<Session> threadLocal = new ThreadLocal<Session>();
-    private  static org.hibernate.cfg.AnnotationConfiguration configuration = new AnnotationConfiguration();
-    private static org.hibernate.SessionFactory sessionFactory;
-    private static String configFile = CONFIG_FILE_LOCATION;
+    private static String DEFAULT_CONFIG_FILE_LOCATION = "hibernate.cfg.xml"; //$NON-NLS-1$
+   // private static final ThreadLocal<Session> threadLocal = new ThreadLocal<Session>();
+   // private  static org.hibernate.cfg.AnnotationConfiguration configuration = new AnnotationConfiguration();
+    //private static org.hibernate.SessionFactory sessionFactory;
+     
+    private static Map<String,HibConfig> configs = new HashMap<String,HibConfig>();
 
+    
 	static {
+    	addConfiguration(DEFAULT_CONFIG_NAME,DEFAULT_CONFIG_FILE_LOCATION);
+    }
+	
+    private HibernateSessionFactory() {
+    }
+    
+    public static void addConfiguration(String name,String configFile)
+    {
+    	Configuration configuration = new AnnotationConfiguration();
+    	
     	try {
 			configuration.configure(configFile);
-			configuration.addAnnotatedClass(PacProperty.class);
-			
-			sessionFactory = configuration.buildSessionFactory();
+			SessionFactory sessionFactory = configuration.buildSessionFactory();
+			configs.put(name,new HibConfig(sessionFactory,configuration,configFile));
 		} catch (Exception e) {
 			System.err
-					.println("%%%% Error Creating SessionFactory %%%%"); //$NON-NLS-1$
+					.println("%%%% Error Creating SessionFactory %%%%");
 			e.printStackTrace();
 		}
-    }
-    private HibernateSessionFactory() {
     }
 	
 	/**
@@ -51,28 +64,45 @@ public class HibernateSessionFactory {
      *  @throws HibernateException
      */
     public static Session getSession() throws HibernateException {
-        Session session = (Session) threadLocal.get();
+       return getSession(DEFAULT_CONFIG_FILE_LOCATION);
+    }
+    
+    /**
+     * Returns the ThreadLocal Session instance.  Lazy initialize
+     * the <code>SessionFactory</code> if needed.
+     *
+     *  @return Session
+     *  @throws HibernateException
+     */
+    public static Session getSession(String configName) throws HibernateException {
+    	HibConfig cfg = configs.get(configName);
+    	if (cfg==null)
+    		throw new HibernateException("Unknown configuration: " + configName);
+    	
+        Session session = cfg.threadLocal.get();
 
 		if (session == null || !session.isOpen()) {
-			if (sessionFactory == null) {
-				rebuildSessionFactory();
+			if (cfg.sessionFactory == null) {
+				rebuildSessionFactory(cfg);
 			}
-			session = (sessionFactory != null) ? sessionFactory.openSession()
+			session = (cfg.sessionFactory != null) ? cfg.sessionFactory.openSession()
 					: null;
-			threadLocal.set(session);
+			cfg.threadLocal.set(session);
 		}
 
         return session;
     }
+    
+    
 
 	/**
      *  Rebuild hibernate session factory
      *
      */
-	public static void rebuildSessionFactory() {
+	public static void rebuildSessionFactory(HibConfig cfg) {
 		try {
-			configuration.configure(configFile);
-			sessionFactory = configuration.buildSessionFactory();
+			cfg.configuration.configure(cfg.configFile);
+			cfg.sessionFactory = cfg.configuration.buildSessionFactory();
 		} catch (Exception e) {
 			System.err
 					.println("%%%% Error Creating SessionFactory %%%%"); //$NON-NLS-1$
@@ -86,12 +116,21 @@ public class HibernateSessionFactory {
      *  @throws HibernateException
      */
     public static void closeSession() throws HibernateException {
-        Session session = (Session) threadLocal.get();
-        threadLocal.set(null);
+       closeSession(DEFAULT_CONFIG_FILE_LOCATION);
+    }
+    
+    public static void closeSession(String configName)
+    {
+    	HibConfig cfg = configs.get(configName);
+    	if (cfg==null)
+    		throw new HibernateException("Unknown configuration: " + configName);
+    	
+    	 Session session = (Session) cfg.threadLocal.get();
+         cfg.threadLocal.set(null);
 
-        if (session != null) {
-            session.close();
-        }
+         if (session != null) {
+             session.close();
+         }
     }
 
 	/**
@@ -99,17 +138,15 @@ public class HibernateSessionFactory {
      *
      */
 	public static org.hibernate.SessionFactory getSessionFactory() {
-		return sessionFactory;
+		return getSessionFactory(DEFAULT_CONFIG_FILE_LOCATION);
 	}
-
-	/**
-     *  return session factory
-     *
-     *	session factory will be rebuilded in the next call
-     */
-	public static void setConfigFile(String configFile) {
-		HibernateSessionFactory.configFile = configFile;
-		sessionFactory = null;
+	
+	public static org.hibernate.SessionFactory getSessionFactory(String configName) {
+		HibConfig cfg = configs.get(configName);
+    	if (cfg==null)
+    		throw new HibernateException("Unknown configuration: " + configName);
+    	
+    	return cfg.sessionFactory;
 	}
 
 	/**
@@ -117,7 +154,34 @@ public class HibernateSessionFactory {
      *
      */
 	public static Configuration getConfiguration() {
-		return configuration;
+		return getConfiguration(DEFAULT_CONFIG_FILE_LOCATION);
+	}
+	
+	/**
+     *  return hibernate configuration
+     *
+     */
+	public static Configuration getConfiguration(String configName) {
+		HibConfig cfg = configs.get(configName);
+    	if (cfg==null)
+    		throw new HibernateException("Unknown configuration: " + configName);
+    	
+    	return cfg.configuration;
+	}
+	
+	private static class HibConfig
+	{
+		HibConfig(SessionFactory sessionFactory,Configuration configuration,String configFile)
+		{
+			this.sessionFactory = sessionFactory;
+			this.configuration = configuration;
+			this.configFile = configFile;
+		}
+		SessionFactory sessionFactory;
+		Configuration configuration;
+		ThreadLocal<Session> threadLocal = new ThreadLocal<Session>();
+		String configFile;
+		
 	}
 
 }
