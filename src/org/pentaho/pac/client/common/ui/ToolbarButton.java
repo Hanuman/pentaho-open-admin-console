@@ -41,6 +41,7 @@ public class ToolbarButton {
    */
   public ToolbarButton(Image img){
     button = new PushButton(img);
+    this.image = img;
     button.setStylePrimaryName("common-toolbar-button");
   }
 
