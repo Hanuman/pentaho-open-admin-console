@@ -36,6 +36,7 @@
 	<classpathentry kind="lib" path="lib/hibernate/ejb3-persistence.jar"/>
 	<classpathentry kind="lib" path="lib/hibernate/hibernate-commons-annotations.jar"/>
 	<classpathentry kind="lib" path="lib/hibernate/ehcache-1.2.3.jar"/>
+	<classpathentry kind="lib" path="res/hibernate"/>
+	<classpathentry kind="lib" path="lib/jdbc/msql5/mysql-connector-java-5.1.5-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
-

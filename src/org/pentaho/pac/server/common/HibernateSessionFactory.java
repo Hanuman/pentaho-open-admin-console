@@ -26,16 +26,16 @@ public class HibernateSessionFactory {
      * in the default package. Use #setConfigFile() to update 
      * the location of the configuration file for the current session.   
      */
-    private static String DEFAULT_CONFIG_FILE_LOCATION = "hibernate.cfg.xml"; //$NON-NLS-1$
    // private static final ThreadLocal<Session> threadLocal = new ThreadLocal<Session>();
    // private  static org.hibernate.cfg.AnnotationConfiguration configuration = new AnnotationConfiguration();
     //private static org.hibernate.SessionFactory sessionFactory;
      
     private static Map<String,HibConfig> configs = new HashMap<String,HibConfig>();
-
-    
+    private static final String HIBERNATE_CFG_PATH = "hibernate.config.path"; //$NON-NLS-1$
+    private static String defaultConfigFile = null;
 	static {
-    	addConfiguration(DEFAULT_CONFIG_NAME,DEFAULT_CONFIG_FILE_LOCATION);
+	  defaultConfigFile = AppConfigProperties.getInstance().getProperty(HIBERNATE_CFG_PATH);	  
+    	addConfiguration(DEFAULT_CONFIG_NAME,defaultConfigFile);
     }
 	
     private HibernateSessionFactory() {
@@ -74,7 +74,7 @@ public class HibernateSessionFactory {
      *  @throws HibernateException
      */
     public static Session getSession() throws HibernateException {
-       return getSession(DEFAULT_CONFIG_FILE_LOCATION);
+       return getSession(DEFAULT_CONFIG_NAME);
     }
     
     /**
@@ -126,7 +126,7 @@ public class HibernateSessionFactory {
      *  @throws HibernateException
      */
     public static void closeSession() throws HibernateException {
-       closeSession(DEFAULT_CONFIG_FILE_LOCATION);
+       closeSession(DEFAULT_CONFIG_NAME);
     }
     
     public static void closeSession(String configName)
@@ -148,7 +148,7 @@ public class HibernateSessionFactory {
      *
      */
 	public static org.hibernate.SessionFactory getSessionFactory() {
-		return getSessionFactory(DEFAULT_CONFIG_FILE_LOCATION);
+		return getSessionFactory(defaultConfigFile);
 	}
 	
 	public static org.hibernate.SessionFactory getSessionFactory(String configName) {
@@ -164,7 +164,7 @@ public class HibernateSessionFactory {
      *
      */
 	public static Configuration getConfiguration() {
-		return getConfiguration(DEFAULT_CONFIG_FILE_LOCATION);
+		return getConfiguration(defaultConfigFile);
 	}
 	
 	/**
