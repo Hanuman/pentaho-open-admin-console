@@ -11,9 +11,6 @@ import org.pentaho.pac.common.datasources.NonExistingDataSourceException;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
 import org.pentaho.pac.server.common.DAOException;
 import org.pentaho.pac.server.common.HibernateSessionFactory;
-import org.pentaho.pac.server.common.PasswordServiceFactory;
-import org.pentaho.platform.api.util.IPasswordService;
-import org.pentaho.platform.api.util.PasswordServiceException;
 
 public class DataSourceHibernateDAO implements IDataSourceDAO {
 
@@ -23,14 +20,7 @@ public class DataSourceHibernateDAO implements IDataSourceDAO {
   public void createDataSource(PentahoDataSource newDataSource) throws DuplicateDataSourceException, DAOException {
     if (getDataSource(newDataSource.getName()) == null) {
       try {
-      // Get the password service
-        IPasswordService passwordService = PasswordServiceFactory.getPasswordService();
-        // Store the new encrypted password in the datasource object
-        newDataSource.setPassword(passwordService.encrypt(newDataSource.getPassword()));
         getSession().save(newDataSource);
-      } catch(PasswordServiceException pse) {
-      getSession().evict(newDataSource);
-        throw new DAOException( pse.getMessage(), pse );
       } catch (HibernateException ex) {
         getSession().evict(newDataSource);
         throw new DAOException( ex.getMessage(), ex );
@@ -55,14 +45,7 @@ public class DataSourceHibernateDAO implements IDataSourceDAO {
 
   public PentahoDataSource getDataSource(String jndiName) throws DAOException {
     try {
-      PentahoDataSource pentahoDataSource = (PentahoDataSource) getSession().get(PentahoDataSource.class.getName(), jndiName);
-      if(pentahoDataSource != null) {
-        IPasswordService passwordService = PasswordServiceFactory.getPasswordService();
-        pentahoDataSource.setPassword(passwordService.decrypt(pentahoDataSource.getPassword()));
-      }
-      return pentahoDataSource;
-    } catch(PasswordServiceException pse) {
-      throw new DAOException( pse.getMessage(), pse );
+      return(PentahoDataSource) getSession().get(PentahoDataSource.class.getName(), jndiName);
     } catch (HibernateException ex) {
       throw new DAOException(ex.getMessage(), ex);
     }
@@ -72,39 +55,17 @@ public class DataSourceHibernateDAO implements IDataSourceDAO {
     try {
       String queryString = "from PentahoDataSource";  //$NON-NLS-1$
       Query queryObject = getSession().createQuery(queryString);
-      List<PentahoDataSource> pentahoDataSourceList = queryObject.list();
-      for(PentahoDataSource pentahoDataSource: pentahoDataSourceList) {
-      try {
-            // Get the password service
-        if(pentahoDataSource != null) {
-          IPasswordService passwordService = PasswordServiceFactory.getPasswordService();
-          pentahoDataSource.setPassword(passwordService.decrypt(pentahoDataSource.getPassword()));
-        }
-      } catch(PasswordServiceException pse) {
-        throw new DAOException( pse.getMessage(), pse );
-      }         
-      }
-      return pentahoDataSourceList;
+      return queryObject.list();
     } catch (HibernateException ex) {
       throw new DAOException( ex.getMessage(), ex );
     }
   }
 
   public void updateDataSource(PentahoDataSource dataSource) throws NonExistingDataSourceException, DAOException {
-    if (getDataSource(dataSource.getName()) != null) {
-      try {
-        // Get the password service
-        IPasswordService passwordService = PasswordServiceFactory.getPasswordService();
-        // Store the new encrypted password in the datasource object
-        dataSource.setPassword(passwordService.encrypt(dataSource.getPassword()));
-        getSession().update(dataSource);
-      } catch(PasswordServiceException pse) {
-          throw new DAOException( pse.getMessage(), pse );
-      } catch (HibernateException ex) {
-        throw new DAOException( ex.getMessage(), ex );
-      }
-    } else {
-      throw new NonExistingDataSourceException(dataSource.getName());
+    try {
+      getSession().update(dataSource);
+    } catch (HibernateException ex) {
+      throw new DAOException( ex.getMessage(), ex );
     }
   }
 

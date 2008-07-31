@@ -41,6 +41,7 @@ import org.pentaho.pac.common.users.ProxyPentahoUser;
 import org.pentaho.pac.server.common.AppConfigProperties;
 import org.pentaho.pac.server.common.BiServerTrustedProxy;
 import org.pentaho.pac.server.common.DAOException;
+import org.pentaho.pac.server.common.PasswordServiceFactory;
 import org.pentaho.pac.server.common.ProxyException;
 import org.pentaho.pac.server.common.ThreadSafeHttpClient;
 import org.pentaho.pac.server.common.ThreadSafeHttpClient.HttpMethodType;
@@ -49,6 +50,8 @@ import org.pentaho.pac.server.datasources.IDataSourceMgmtService;
 import org.pentaho.pac.server.i18n.Messages;
 import org.pentaho.pac.server.scheduler.XmlSerializer;
 import org.pentaho.pac.server.scheduler.XmlSerializerException;
+import org.pentaho.platform.api.util.IPasswordService;
+import org.pentaho.platform.api.util.PasswordServiceException;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -407,9 +410,16 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     boolean result = false;
     try {
       dataSourceMgmtService.beginTransaction();
+      // Get the password service
+      IPasswordService passwordService = PasswordServiceFactory.getPasswordService();
+      // Store the new encrypted password in the datasource object
+      String encryptedPassword = passwordService.encrypt(dataSource.getPassword());
+      dataSource.setPassword(encryptedPassword);
       dataSourceMgmtService.createDataSource(dataSource);
       dataSourceMgmtService.commitTransaction();
       result = true;
+    } catch(PasswordServiceException pse) {
+      throw new PacServiceException( pse.getMessage(), pse );
     } catch (DuplicateDataSourceException dde) {
       String msg = Messages.getString("PacService.ERROR_0009_DATASOURCE_ALREADY_EXIST", dataSource.getName()) //$NON-NLS-1$
           + " " + dde.getMessage(); //$NON-NLS-1$
@@ -478,7 +488,9 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       ds.setDriverClass(dataSource.getDriverClass());
       ds.setIdleConn(dataSource.getIdleConn());
       ds.setMaxActConn(dataSource.getMaxActConn());
-      ds.setPassword(dataSource.getPassword());
+      IPasswordService passwordService = PasswordServiceFactory.getPasswordService();
+      // Store the new encrypted password in the datasource object
+      ds.setPassword(passwordService.encrypt(dataSource.getPassword()));
       ds.setQuery(dataSource.getQuery());
       ds.setUrl(dataSource.getUrl());
       ds.setUserName(dataSource.getUserName());
@@ -487,6 +499,8 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       dataSourceMgmtService.updateDataSource(ds);
       dataSourceMgmtService.commitTransaction();
       result = true;
+    } catch(PasswordServiceException pse) {
+        throw new PacServiceException( pse.getMessage(), pse );
     } catch (NonExistingDataSourceException neds) {
       String msg = Messages.getString("PacService.DATASOURCE_UPDATE_FAILED_DOES_NOT_EXIST", dataSource.getName()) //$NON-NLS-1$
           + " " + neds.getMessage(); //$NON-NLS-1$
@@ -514,6 +528,19 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     List<PentahoDataSource> dataSources;
     try {
       dataSources = dataSourceMgmtService.getDataSources();
+      for(PentahoDataSource pentahoDataSource: dataSources) {
+        try {
+              // Get the password service
+          if(pentahoDataSource != null) {
+            IPasswordService passwordService = PasswordServiceFactory.getPasswordService();
+            String decryptedPassword = passwordService.decrypt(pentahoDataSource.getPassword());
+            pentahoDataSource.setPassword(decryptedPassword);
+          }
+        } catch(PasswordServiceException pse) {
+          throw new DAOException( pse.getMessage(), pse );
+        }         
+      }
+
     } catch (DAOException e) {
       // TODO need a way better error message here please, maybe include some information from the exception?
       throw new PacServiceException(Messages.getString("PacService.FAILED_TO_GET_DATASDOURCE"), e); //$NON-NLS-1$
