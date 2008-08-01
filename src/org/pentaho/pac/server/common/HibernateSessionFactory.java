@@ -18,6 +18,7 @@ import org.hibernate.cfg.Configuration;
 public class HibernateSessionFactory {
 
     private static final String DEFAULT_CONFIG_NAME = "$$DEFAULT_CONFIG";
+    private static String DEFAULT_CONFIG_FILE_LOCATION = "hsql.hibernate.cfg.xml"; //$NON-NLS-1$
 	/** 
      * Location of hibernate.cfg.xml file.
      * Location should be on the classpath as Hibernate uses  
@@ -34,8 +35,13 @@ public class HibernateSessionFactory {
     private static final String HIBERNATE_CFG_PATH = "hibernate.config.path"; //$NON-NLS-1$
     private static String defaultConfigFile = null;
 	static {
-	  defaultConfigFile = AppConfigProperties.getInstance().getProperty(HIBERNATE_CFG_PATH);	  
-    	addConfiguration(DEFAULT_CONFIG_NAME,defaultConfigFile);
+	  defaultConfigFile = AppConfigProperties.getInstance().getProperty(HIBERNATE_CFG_PATH);
+  	  if(defaultConfigFile != null && defaultConfigFile.length() > 0) {
+  	    addConfiguration(DEFAULT_CONFIG_NAME,defaultConfigFile);
+  	  } else {
+  	    defaultConfigFile = DEFAULT_CONFIG_FILE_LOCATION;
+  	    addConfiguration(DEFAULT_CONFIG_NAME,defaultConfigFile);
+  	  }
     }
 	
     private HibernateSessionFactory() {
