@@ -486,15 +486,29 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
         throw new NonExistingDataSourceException(dataSource.getName());
       }
       ds.setDriverClass(dataSource.getDriverClass());
-      ds.setIdleConn(dataSource.getIdleConn());
-      ds.setMaxActConn(dataSource.getMaxActConn());
+      if(dataSource.getIdleConn() < 0) {
+        ds.setIdleConn(0);
+      } else {
+        ds.setIdleConn(dataSource.getIdleConn());  
+      }
+      if(dataSource.getMaxActConn() < 0) {
+        ds.setMaxActConn(0);
+      } else {
+        ds.setMaxActConn(dataSource.getMaxActConn());  
+      }
+      
       IPasswordService passwordService = PasswordServiceFactory.getPasswordService();
       // Store the new encrypted password in the datasource object
       ds.setPassword(passwordService.encrypt(dataSource.getPassword()));
       ds.setQuery(dataSource.getQuery());
       ds.setUrl(dataSource.getUrl());
       ds.setUserName(dataSource.getUserName());
-      ds.setWait(dataSource.getWait());
+      if(dataSource.getMaxActConn() < 0) {
+        ds.setWait(0);
+      } else {
+        ds.setWait(dataSource.getWait());  
+      }
+      
       dataSourceMgmtService.beginTransaction();
       dataSourceMgmtService.updateDataSource(ds);
       dataSourceMgmtService.commitTransaction();

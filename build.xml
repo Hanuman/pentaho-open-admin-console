@@ -27,36 +27,25 @@
         target: clean              
     =================================================================== -->
 
-	<target name="clean" depends="clean-test"
-	   description="deletes all generated files">
-		<delete dir=".gwt-cache"/>
-		<delete dir="${build.dir}"/>
+	<target name="clean" depends="clean-test" description="deletes all generated files">
+		<delete dir=".gwt-cache" />
+		<delete dir="${build.dir}" />
 		<delete dir="${dist.dir}" />
-		<delete dir="tomcat"/>
+		<delete dir="tomcat" />
 	</target>
 	<!-- ===================================================================
         target: clean-test              
     =================================================================== -->
 
 	<target name="clean-test" description="deletes all generated test files">
-		<delete dir="${test.reports.dir}"/>
+		<delete dir="${test.reports.dir}" />
 	</target>
 	<!-- ===================================================================
         target: compile              
     =================================================================== -->
 
 	<target name="compile" depends="init" description="compiles Java source files to bytecode">
-		<javac 
-	    		srcdir="${src.dir}" 
-	    		destdir="${build.classes.dir}" 
-	    		debug="${debug}" 
-	    		optimize="${optimize}" 
-	    		deprecation="${deprecation}" 
-	    		compiler="modern" 
-	    		source="1.5" 
-	    		target="1.5" 
-	    		fork="true"  
-	    		classpathref="classpath">
+		<javac srcdir="${src.dir}" destdir="${build.classes.dir}" debug="${debug}" optimize="${optimize}" deprecation="${deprecation}" compiler="modern" source="1.5" target="1.5" fork="true" classpathref="classpath">
 		</javac>
 	</target>
 	<!-- ===================================================================
@@ -88,14 +77,14 @@
 				<attribute name="Implementation-Vendor" value="${impl.vendor}" />
 				<attribute name="Implementation-ProductID" value="${impl.productID}" />
 				<attribute name="Main-Class" value="org.pentaho.pac.server.JettyServer" />
-				<attribute name="Class-Path" value="../config/ ${class-path}" />
+				<attribute name="Class-Path" value="../config/ ../res/hibernate/ ${class-path}" />
 			</manifest>
-			<fileset dir="${build.classes.dir}"/>
-			<fileset dir="${src.dir}" excludes="**/*.java"/>
-			<fileset dir="${gwt.output.dir}"/>
+			<fileset dir="${build.classes.dir}" />
+			<fileset dir="${src.dir}" excludes="**/*.java" />
+			<fileset dir="${gwt.output.dir}" />
 		</jar>
 	</target>
-	
+
 	<target name="jar-gwt-module" depends="init,compile">
 		<jar destfile="${build.jars.dir}/pentaho-admin-module.jar">
 			<manifest>
@@ -104,24 +93,25 @@
 				<attribute name="Implementation-Vendor" value="${impl.vendor}" />
 				<attribute name="Implementation-ProductID" value="${impl.productID}" />
 			</manifest>
-			<fileset dir="${build.classes.dir}"/>
-			<fileset dir="${src.dir}"/>
- 			<fileset dir="${config.dir}"/>
+			<fileset dir="${build.classes.dir}" />
+			<fileset dir="${src.dir}" />
+			<fileset dir="${config.dir}" />
 		</jar>
 	</target>
 
-	<path id="class.path">		
-	  <fileset dir="lib" >
-		<exclude name="**/test/*"/>
-	  </fileset>
+	<path id="class.path">
+		<fileset dir="lib">
+			<exclude name="**/test/*" />
+		</fileset>
 	</path>
-	
+
 	<pathconvert property="class-path" pathsep=" " dirsep="/">
-	  <path refid="class.path"></path>
-	  <map from="${basedir}${file.separator}lib/" to=""/>		
+		<path refid="class.path">
+		</path>
+		<map from="${basedir}${file.separator}lib/" to="" />
 	</pathconvert>
-	
-	
+
+
 	<!-- =================================
 		 target: jar-messages
 
@@ -149,14 +139,12 @@
 		 Runs application in a hosted mode
 		 ================================= -->
 
-	<target name="hosted" depends="compile"
-	    description="runs the application in hosted mode">
-		<java classname="com.google.gwt.dev.GWTShell"
-	      classpathref="classpath" fork="true">
+	<target name="hosted" depends="compile" description="runs the application in hosted mode">
+		<java classname="com.google.gwt.dev.GWTShell" classpathref="classpath" fork="true">
 			<!-- next line is only for Mac OS X -->
-			<jvmarg value="-XstartOnFirstThread"/>
-			<arg line="-out ./www"/>
-			<arg line="${pac.app}/$PentahoAdminConsole.html"/>
+			<jvmarg value="-XstartOnFirstThread" />
+			<arg line="-out ./www" />
+			<arg line="${pac.app}/$PentahoAdminConsole.html" />
 		</java>
 	</target>
 
@@ -166,27 +154,26 @@
 		 Runs JUnit Test
 		 ================================= -->
 
-	<target name="test" depends="clean-test,compile"
-	    description="runs all JUnit tests">
-		<mkdir dir="${test.reports.dir}"/>
+	<target name="test" depends="clean-test,compile" description="runs all JUnit tests">
+		<mkdir dir="${test.reports.dir}" />
 		<junit fork="yes" printsummary="yes">
 			<!-- next line is only for Mac OS X -->
-			<jvmarg value="-XstartOnFirstThread"/>
-			<classpath refid="classpath"/>
+			<jvmarg value="-XstartOnFirstThread" />
+			<classpath refid="classpath" />
 			<batchtest todir="${test.reports.dir}">
-				<fileset dir="src" includes="**/*Test.java"/>
+				<fileset dir="src" includes="**/*Test.java" />
 			</batchtest>
-			<formatter type="xml"/>
+			<formatter type="xml" />
 		</junit>
 		<junitreport toDir="${test.reports.dir}">
-			<fileset dir="${test.reports.dir}"/>
-			<report format="frames" todir="${test.reports.dir}"/>
+			<fileset dir="${test.reports.dir}" />
+			<report format="frames" todir="${test.reports.dir}" />
 		</junitreport>
 		<exec os="Windows" executable="cmd.exe">
-			<arg line="/c start test/reports/index.html"/>
+			<arg line="/c start test/reports/index.html" />
 		</exec>
 		<exec os="Mac OS X" executable="open">
-			<arg line="-a /Applications/Safari.app test/reports/index.html"/>
+			<arg line="-a /Applications/Safari.app test/reports/index.html" />
 		</exec>
 	</target>
 
@@ -196,13 +183,14 @@
 		 package up distribution in a zip file
 		 ================================= -->
 
-	<target name="dist" depends="clean, jar-console, jar-messages" description="create distribution" >
+	<target name="dist" depends="clean, jar-console, jar-messages" description="create distribution">
 		<zip destfile="${dist.dir}/pentaho-admin-console-${impl.version}.zip">
-			<zipfileset dir="${build.jars.dir}" prefix="pentaho-admin-console/lib"/>
-			<zipfileset dir="lib" excludes="**/test/*" prefix="pentaho-admin-console/lib"/>
-			<zipfileset dir="config" prefix="pentaho-admin-console/config"/>
-			<zipfileset dir="${gwt.output.dir}" prefix="pentaho-admin-console/www"/>
-			<zipfileset dir="build-res" includes="*.bat" prefix="pentaho-admin-console"/>
+			<zipfileset dir="${build.jars.dir}" prefix="pentaho-admin-console/lib" />
+			<zipfileset dir="lib" excludes="**/test/*" prefix="pentaho-admin-console/lib" />
+			<zipfileset dir="config" prefix="pentaho-admin-console/config" />
+			<zipfileset dir="${gwt.output.dir}" prefix="pentaho-admin-console/www" />
+			<zipfileset dir="build-res" includes="*.bat" prefix="pentaho-admin-console" />
+			<zipfileset dir="${res.dir}" prefix="pentaho-admin-console/res/hibernate" />
 		</zip>
 		<jar destfile="${dist.dir}/pentaho-admin-module-${impl.version}.jar">
 			<manifest>
@@ -211,9 +199,10 @@
 				<attribute name="Implementation-Vendor" value="${impl.vendor}" />
 				<attribute name="Implementation-ProductID" value="${impl.productID}" />
 			</manifest>
-			<fileset dir="${build.classes.dir}"/>
-			<fileset dir="${src.dir}"/>
- 			<fileset dir="${config.dir}"/>
+			<fileset dir="${build.classes.dir}" />
+			<fileset dir="${src.dir}" />
+			<fileset dir="${config.dir}" />
+			<fileset dir="${res.dir}" includes="**/**/*.xml"/>
 		</jar>
 	</target>
 
@@ -227,13 +216,13 @@
 
 		<java classname="org.pentaho.pac.server.JettyServer" fork="true" dir="${dist.dir}/exploded/pentaho-admin-console">
 			<classpath>
-				<fileset dir="${dist.dir}/exploded/pentaho-admin-console/lib/"	includes="**/*.jar"/>
+				<fileset dir="${dist.dir}/exploded/pentaho-admin-console/lib/" includes="**/*.jar" />
 			</classpath>
 		</java>
 	</target>
 
 	<target name="unpackConsole" description="unzip the distribution">
-		<unzip src="${dist.dir}/pentaho-admin-console.zip" dest="${dist.dir}/exploded/"/>
+		<unzip src="${dist.dir}/pentaho-admin-console.zip" dest="${dist.dir}/exploded/" />
 	</target>
 
 </project>
