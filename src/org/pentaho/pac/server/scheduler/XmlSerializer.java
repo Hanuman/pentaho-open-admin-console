@@ -141,6 +141,26 @@ public class XmlSerializer {
     }
   }
   
+  public void detectSubscriptionErrorInXml( String strXml ) throws SchedulerServiceException {
+
+    SubscriptionErrorParserHandler errorHandler;
+    try {
+      errorHandler = parseSubscriptionErrorXml( strXml );
+    } catch (SAXException e) {
+      logger.error( e.getMessage() );
+      throw new SchedulerServiceException( e.getMessage() );
+    } catch (IOException e) {
+      logger.error( e.getMessage() );
+      throw new SchedulerServiceException( e.getMessage() );
+    } catch (ParserConfigurationException e) {
+      logger.error( e.getMessage() );
+      throw new SchedulerServiceException( e.getMessage() );
+    }
+    if ( null != errorHandler.errorMessage ) {
+      throw new SchedulerServiceException( errorHandler.errorMessage );
+    }
+  }
+  
   private JobsParserHandler parseJobNamesXml( String strXml ) throws SAXException, IOException, ParserConfigurationException
   {
       SAXParser parser = getSAXParserFactory().newSAXParser();
@@ -583,6 +603,74 @@ public class XmlSerializer {
         isException = true;
       } else if ( qName.equals( "message" ) ) { //$NON-NLS-1$
         isMessage = true;
+      }
+    }
+  }
+  
+  private SubscriptionErrorParserHandler parseSubscriptionErrorXml( String strXml ) throws SAXException, IOException, ParserConfigurationException
+  {
+      SAXParser parser = getSAXParserFactory().newSAXParser();
+      SubscriptionErrorParserHandler h = new SubscriptionErrorParserHandler();
+      // TODO sbarkdull, need to set encoding
+//      String encoding = CleanXmlHelper.getEncoding( strXml );
+//      InputStream is = new ByteArrayInputStream( strXml.getBytes( encoding ) );
+      InputStream is = new ByteArrayInputStream( strXml.getBytes( "UTF-8" ) ); //$NON-NLS-1$
+     
+      parser.parse( is, h );
+      return h;
+  }
+  
+  /**
+   * <?xml version="1.0" encoding="UTF-8"?>
+   * <commandResult result="ERROR">
+   *   <message result="ERROR">
+   *     Unable to complete request:
+   *     org.hibernate.exception.ConstraintViolationException: could not
+   *     delete:
+   *     [org.pentaho.platform.repository.subscription.SubscribeContent#34c6b532-5cd5-11dd-9b0d-53348ed62413]
+   *   </message>
+   * </commandResult>
+   * @author Steven Barkdull
+   *
+   */
+  private static class SubscriptionErrorParserHandler extends DefaultHandler {
+
+    private String currentText = null;
+    public String errorMessage = null;
+    private boolean isCommandResult = false;
+    private boolean isErrorMessage = false;
+    private boolean isMessage = false;
+    
+    public SubscriptionErrorParserHandler()
+    {
+    }
+  
+    public void characters( char[] ch, int startIdx, int length )
+    {
+      currentText = String.valueOf( ch, startIdx, length );
+    }
+    
+    public void endElement(String uri, String localName, String qName ) throws SAXException
+    {
+      if ( qName.equals( "commandResult" ) ) { //$NON-NLS-1$
+        isCommandResult = false;
+      } else if ( qName.equals( "message" ) ) { //$NON-NLS-1$
+        if ( isCommandResult && isMessage && isErrorMessage ) {
+          errorMessage = currentText;
+          isErrorMessage = false;
+        }
+        isMessage = false;
+      }
+    }
+
+    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException
+    {
+      if ( qName.equals( "commandResult" ) ) { //$NON-NLS-1$
+        isCommandResult = true;
+      } else if ( qName.equals( "message" ) ) { //$NON-NLS-1$
+        isMessage = true;
+        // result="ERROR"
+        isErrorMessage = attributes.getValue( "result" ).equals( "ERROR" ); //$NON-NLS-1$  //$NON-NLS-2$
       }
     }
   }
