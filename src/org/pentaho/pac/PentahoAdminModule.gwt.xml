@@ -1,11 +1,12 @@
-<module>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><module>
 
 	<!-- Inherit the core Web Toolkit stuff.                  -->
-	<inherits name='com.google.gwt.user.User'/>
-	<inherits name='org.pentaho.pac.PacServiceModule'/>
-	<inherits name='org.pentaho.pac.SchedulerServiceModule'/>
-	<inherits name='org.pentaho.pac.SubscriptionServiceModule'/>
+	<inherits name="com.google.gwt.user.User"/>
+	<inherits name="org.pentaho.pac.PacServiceModule"/>
+	<inherits name="org.pentaho.pac.SchedulerServiceModule"/>
+	<inherits name="org.pentaho.pac.SubscriptionServiceModule"/>
 
 	<source path="client"/>
 	<source path="common"/>
+	<source path="gwt"/>
 </module>
