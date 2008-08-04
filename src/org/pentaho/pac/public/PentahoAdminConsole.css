@@ -18,6 +18,13 @@ a:active{color:#ff0000}
 	width:100%;
 }
 
+.bordered-grey-panel{
+	border: 1px solid #777;
+	background-color: #E0E0E0;
+	padding:2px;
+	width:100%;
+}
+
 #canvas{
 	width:1150px;
 	height: 700px;
