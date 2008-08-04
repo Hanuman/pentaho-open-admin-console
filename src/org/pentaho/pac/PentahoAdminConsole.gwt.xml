@@ -1,13 +1,19 @@
-<module>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><module>
 
 	<!-- Inherit the core Web Toolkit stuff.                  -->
-	<inherits name='com.google.gwt.user.User'/>
-	<inherits name='org.pentaho.pac.PacServiceModule'/>
-	<inherits name='org.pentaho.pac.SchedulerServiceModule'/>
-	<inherits name='org.pentaho.pac.SubscriptionServiceModule'/>
+	<inherits name="com.google.gwt.user.User"/>
+	<inherits name="org.pentaho.pac.PacServiceModule"/>
+	<inherits name="org.pentaho.pac.SchedulerServiceModule"/>
+	<inherits name="org.pentaho.pac.SubscriptionServiceModule"/>
+	<inherits name="org.hanson.gwt.widgets/WidgetLibrary"/>
 
 	<!-- Specify the app entry point class.                   -->
-	<entry-point class='org.pentaho.pac.client.PentahoAdminConsoleEntryPoint'/>
+	<entry-point class="org.pentaho.pac.client.PentahoAdminConsoleEntryPoint"/>
+	<servlet class="org.pentaho.pac.server.pdi.svc.PdiServiceImpl" path="/pdiservice"/> 
+	<servlet class="org.pentaho.pac.server.pdi.svc.PdiEntriesTableServiceImpl" path="/pdientries"/> 
+	<servlet class="org.pentaho.pac.server.pdi.svc.StepMetricsServiceImpl" path="/stepmetrics"/> 
+	
 	<source path="client"/>
 	<source path="common"/>
+	<source path="gwt"/>
 </module>
