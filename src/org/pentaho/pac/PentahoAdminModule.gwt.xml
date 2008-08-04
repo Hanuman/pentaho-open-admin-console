@@ -8,5 +8,4 @@
 
 	<source path="client"/>
 	<source path="common"/>
-	<source path="gwt"/>
 </module>
