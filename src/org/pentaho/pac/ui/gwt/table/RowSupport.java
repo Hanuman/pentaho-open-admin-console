@@ -1,6 +1,5 @@
 package org.pentaho.pac.ui.gwt.table;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,9 +25,10 @@ public class RowSupport {
 
 	private TableDataServiceAsync dataService;
 
-	private List<NameValue> discriminators = new ArrayList<NameValue>();
+	private List<NameValue> discriminators;
+	
 
-	public RowSupport(TableModel model, TableStyles styles,
+	public RowSupport(TableModel model,
 			TableDataServiceAsync dataService) {
 		this.model = model;
 		visibleRows = model.visibleRows() + 1;
@@ -36,12 +36,8 @@ public class RowSupport {
 		this.dataService = dataService;
 	}
 
-	public void addDiscriminator(String name, String value) {
-		discriminators.add(new NameValue(name, value));
-	}
-
-	public void clearDiscriminators() {
-		discriminators.clear();
+	protected void setDiscriminators(List<NameValue> discriminators) {
+		this.discriminators = discriminators;
 	}
 
 	public void removeRows(Grid where, ColumnSupport cs) {
@@ -66,8 +62,9 @@ public class RowSupport {
 		if (dataService == null)
 			return;
 
-		dataService.getData(colSupport.getColumnNames(), discriminators
-				.toArray(new NameValue[discriminators.size()]),
+		dataService.getData(colSupport.getColumnNames(),
+				discriminators == null ? new NameValue[] {} : discriminators
+						.toArray(new NameValue[discriminators.size()]),
 				new AsyncCallback<Map<String, String[]>>() {
 
 					public void onFailure(Throwable caught) {
@@ -110,6 +107,17 @@ public class RowSupport {
 								rowWidgets[i][k].setPixelSize(columns[k]
 										.getWidth(), rowHeight);
 								where.setWidget(i, k, rowWidgets[i][k]);
+
+								if (model.getStyles() != null) {
+									List<String> styleNames = model.getStyles()
+											.getStyleNames(i % 2 == 0 ? TableStyles.Type.EVEN_ROW
+													: TableStyles.Type.ODD_ROW);
+									if (styleNames != null
+											&& styleNames.size() > 0)
+										where.getRowFormatter().setStyleName(i,
+												styleNames.get(0));
+								}
+
 							}
 							model.visible(idx);
 						}
@@ -120,50 +128,4 @@ public class RowSupport {
 
 	}
 
-	// public void layoutRows2(final AbsolutePanel where,
-	// final ColumnSupport colSupport, final int currentPosition) {
-	// if (dataService == null)
-	// return;
-	//
-	// dataService.getData(colSupport.getColumnNames(),new
-	// AsyncCallback<Map<String,String[]>>() {
-	//
-	// public void onFailure(Throwable caught) {
-	// Window.alert(caught.getMessage());
-	//
-	// }
-	//
-	// public void onSuccess(Map<String,String[]> results) {
-	// for (int i = 0; i < visibleRows; i++)
-	// if (rowWidgets[i][0] != null)
-	// model.hidden(i + idxOfTopRow);
-	//
-	// idxOfTopRow = currentPosition / model.getPixelRowHeight();
-	// int rowCount = model.getRowCount();
-	// for (int i = 0; i < visibleRows; i++) {
-	// int idx = idxOfTopRow + i;
-	// if (idx >= rowCount)
-	// break;
-	//
-	// ColumnModel[] columns = colSupport.getColumns();
-	// int[] columnPos = colSupport.getColPos();
-	//
-	// for (int k = 0; k < columns.length; k++) {
-	// Widget existing = rowWidgets[i][k];
-	// rowWidgets[i][k] = columns[k].getCell(idx,results);
-	// if (existing != null && existing != rowWidgets[i][k])
-	// where.remove(existing);
-	// rowWidgets[i][k].setPixelSize(columns[k].getWidth(),
-	// rowHeight);
-	// where.add(rowWidgets[i][k], columnPos[k],
-	// (i + idxOfTopRow) * rowHeight);
-	// }
-	// model.visible(idx);
-	// }
-	//
-	// }
-	//
-	// });
-	//
-	// }
 }

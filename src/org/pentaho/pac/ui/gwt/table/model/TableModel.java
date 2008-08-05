@@ -1,5 +1,7 @@
 package org.pentaho.pac.ui.gwt.table.model;
 
+import org.pentaho.pac.ui.gwt.table.TableStyles;
+
 
 
 public interface TableModel {
@@ -27,5 +29,11 @@ public interface TableModel {
 	public void hidden(int i);
 
 	public void visible(int i);
+	
+	/**
+	 * This method CANNOT return null. It all goes to hell if it does.
+	 * @return
+	 */
+	TableStyles getStyles();
 
 }
