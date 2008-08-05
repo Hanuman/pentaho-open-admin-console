@@ -114,4 +114,10 @@ public class MessageDialog extends BasicDialog {
       return false;
     }
   }
+
+  @Override
+  public void setSize(String width, String height) {
+    this.setClientSize(width, height);
+    super.setSize(width, height);
+  }
 }
