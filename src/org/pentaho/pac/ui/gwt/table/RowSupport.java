@@ -31,7 +31,7 @@ public class RowSupport {
 	public RowSupport(TableModel model,
 			TableDataServiceAsync dataService) {
 		this.model = model;
-		visibleRows = model.visibleRows() + 1;
+		visibleRows = model.getVisibleRows() + 1;
 		rowHeight = model.getPixelRowHeight();
 		this.dataService = dataService;
 	}
@@ -86,12 +86,9 @@ public class RowSupport {
 
 						// to get the row count it is easy. We just need to
 						// count the length of one of the strings
-						int rowCount = results.values().iterator().next().length;// model
-						// .
-						// getRowCount
-						// (
-						// )
-						// ;
+						int rowCount = results.values().iterator().next().length;
+						model.setActualRowCount(rowCount);
+						
 						for (int i = 0; i < visibleRows; i++) {
 							int idx = idxOfTopRow + i;
 							if (idx >= rowCount)

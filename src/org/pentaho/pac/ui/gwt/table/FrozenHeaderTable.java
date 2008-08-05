@@ -131,7 +131,7 @@ public class FrozenHeaderTable extends Composite implements ScrollListener {
 			}
 
 			public void onSuccess(Integer result) {
-				int visibleRows = model.visibleRows();
+				int visibleRows = model.getVisibleRows();
 				int rowCount = result;
 				if (rowCount < visibleRows)
 					visibleRows = rowCount;
@@ -185,7 +185,7 @@ public class FrozenHeaderTable extends Composite implements ScrollListener {
 		String oddStyleName = getSingleStyleName(TableStyles.Type.ODD_ROW);
 		RowFormatter gridRowFormatter = table.getRowFormatter();
 
-		for (int row = 0; row <= table.getRowCount(); row++) {
+		for (int row = 0; row <= model.getActualRowCount(); row++) {
 			if (row == this.selectedRowIndex) {
 				gridRowFormatter.setStyleName(row, selectedStyle);
 			} else {

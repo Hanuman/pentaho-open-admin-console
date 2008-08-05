@@ -20,7 +20,7 @@ public interface TableModel {
 	
 	int getTotalWidth();
 	
-	int visibleRows();
+	
 	
 	int getPixelHeaderHeight();
 	
@@ -35,5 +35,10 @@ public interface TableModel {
 	 * @return
 	 */
 	TableStyles getStyles();
+	
+	int getActualRowCount();
+	int setActualRowCount(int i);
+	
+	int getVisibleRows();
 
 }
