@@ -35,6 +35,9 @@ public class FrozenHeaderTable extends Composite implements ScrollListener {
 
 	public FrozenHeaderTable(TableModel tableModel) {
 		this.model = tableModel;
+		addTableStyle(TableStyles.Type.TABLE_HEADER, "pentaho-tableHeader");
+		addTableStyle(TableStyles.Type.EVEN_ROW, "pentaho-tableRow-even");
+		addTableStyle(TableStyles.Type.ODD_ROW, "pentaho-tableRow-odd");
 	}
 
 	public void init() {
@@ -51,6 +54,10 @@ public class FrozenHeaderTable extends Composite implements ScrollListener {
 		root.add(scroller, 0, 20);
 		refresh();
 		initWidget(root);
+	}
+
+	public RowSupport getRowSupport() {
+		return rowSupport;
 	}
 
 	public void addTableStyle(TableStyles.Type type, String styleName) {

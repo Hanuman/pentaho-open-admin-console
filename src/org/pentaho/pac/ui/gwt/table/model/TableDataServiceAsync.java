@@ -2,10 +2,12 @@ package org.pentaho.pac.ui.gwt.table.model;
 
 import java.util.Map;
 
+import org.pentaho.pac.ui.gwt.table.NameValue;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface TableDataServiceAsync {
-	public void getData(String[] colNames, AsyncCallback<Map<String, String[]>> callback);
+	public void getData(String[] colNames,NameValue[] discriminators, AsyncCallback<Map<String, String[]>> callback);
 
 	/**
 	 * Returns the number of rows in the model. A <code>JTable</code> uses this

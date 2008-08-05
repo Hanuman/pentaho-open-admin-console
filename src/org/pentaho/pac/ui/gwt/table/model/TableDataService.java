@@ -2,10 +2,12 @@ package org.pentaho.pac.ui.gwt.table.model;
 
 import java.util.Map;
 
+import org.pentaho.pac.ui.gwt.table.NameValue;
+
 import com.google.gwt.user.client.rpc.RemoteService;
 
 public interface TableDataService extends RemoteService {
-	public Map<String, String[]> getData(String[] colNames);
+	public Map<String, String[]> getData(String[] colNames,NameValue[] discriminators);
 
 	/**
 	 * Returns the number of rows in the model. A <code>JTable</code> uses this
