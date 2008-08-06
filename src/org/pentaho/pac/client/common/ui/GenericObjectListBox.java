@@ -82,6 +82,12 @@ public class GenericObjectListBox<T> extends ListBox {
     removeObjects(getSelectedObjects());
   }
   
+  public void removeObject(T object) {
+    ArrayList<T> list = new ArrayList<T>();
+    list.add(object);
+    removeObjects(list);
+  }
+  
   public void removeObjects(List<T> objectsToRemove) {
     List<T> selectedObjects = getSelectedObjects();
     int selectedIndex = -1;
