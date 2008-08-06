@@ -20,7 +20,6 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import org.pentaho.pac.client.scheduler.model.Schedule;
@@ -35,6 +34,7 @@ public class SchedulerAdminUIComponentProxy {
   private static final String SCHEDULER_SERVICE_NAME = "SchedulerAdmin"; //$NON-NLS-1$
   private static final int NUM_RETRIES = 3; // TODO is used?
   private String userName = null;
+  private static String RE_MATCH_ACTION_REF = "^[^,/]+/[^,/]+/[^,/]+$"; //$NON-NLS-1$
 
   private static BiServerTrustedProxy biServerProxy;
   static {
@@ -118,8 +118,7 @@ public class SchedulerAdminUIComponentProxy {
 
     String responseStrXml = executeGetMethod( params );
 
-    // TODO sbarkdull, should XmlSerializer be a static class?
-    XmlSerializer s = new XmlSerializer();
+    SchedulerXmlSerializer s = new SchedulerXmlSerializer();
     Map<String, Schedule> m;
     try {
       m = s.getSchedulesFromXml( responseStrXml );
@@ -138,7 +137,7 @@ public class SchedulerAdminUIComponentProxy {
     params.put( "schedulerAction", "isSchedulerPaused" ); //$NON-NLS-1$  //$NON-NLS-2$
 
     String responseStrXml = executeGetMethod( params );
-    XmlSerializer s = new XmlSerializer();
+    SchedulerXmlSerializer s = new SchedulerXmlSerializer();
     boolean isRunning = s.getSchedulerStatusFromXml( responseStrXml );
     
     return isRunning;
@@ -231,7 +230,9 @@ public class SchedulerAdminUIComponentProxy {
   public void createCronSchedule( String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
       String cronString,
-      String actionsList ) throws SchedulerServiceException {
+      String actionRef ) throws SchedulerServiceException {
+    
+    assert actionRef.matches( RE_MATCH_ACTION_REF ) : "Invalid actionRef " + actionRef; //$NON-NLS-1$
     
     DateFormat dateTimeFormatter = DateUtil.getDateTimeFormatter();
     String strStartDate = dateTimeFormatter.format( startDate );
@@ -249,7 +250,7 @@ public class SchedulerAdminUIComponentProxy {
       params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
     }
     params.put( "cron-string", cronString ); //$NON-NLS-1$
-    params.put( "actionRefs", actionsList ); //$NON-NLS-1$
+    params.put( "actionRef", actionRef ); //$NON-NLS-1$
 
     String responseStrXml = executePostMethod( params );
   }
@@ -257,8 +258,10 @@ public class SchedulerAdminUIComponentProxy {
   public void createRepeatSchedule( String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
       String strRepeatCount, String repeatInterval,
-      String actionsList ) throws SchedulerServiceException {
+      String actionRef ) throws SchedulerServiceException {
 
+    assert actionRef.matches( RE_MATCH_ACTION_REF ) : "Invalid actionRef " + actionRef; //$NON-NLS-1$
+    
     DateFormat dateTimeFormatter = DateUtil.getDateTimeFormatter();
     String strStartDate = dateTimeFormatter.format( startDate );
     String strEndDate = null != endDate
@@ -278,7 +281,7 @@ public class SchedulerAdminUIComponentProxy {
       params.put( "repeat-count", strRepeatCount ); //$NON-NLS-1$
     }
     params.put( "repeat-time-millisecs", repeatInterval ); //$NON-NLS-1$
-    params.put( "actionRefs", actionsList ); //$NON-NLS-1$
+    params.put( "actionRef", actionRef ); //$NON-NLS-1$
 
     String responseStrXml = executePostMethod( params );
   }
@@ -286,8 +289,10 @@ public class SchedulerAdminUIComponentProxy {
   public void updateCronSchedule( String oldJobName, String oldJobGroup, String schedId,
       String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
-      String cronString, String actionsList ) throws SchedulerServiceException {
+      String cronString, String actionRef ) throws SchedulerServiceException {
 
+    assert actionRef.matches( RE_MATCH_ACTION_REF ) : "Invalid actionRef " + actionRef; //$NON-NLS-1$
+    
     DateFormat dateTimeFormatter = DateUtil.getDateTimeFormatter();
     String strStartDate = dateTimeFormatter.format( startDate );
     String strEndDate = null != endDate
@@ -306,7 +311,7 @@ public class SchedulerAdminUIComponentProxy {
       params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
     }
     params.put( "cron-string", cronString ); //$NON-NLS-1$
-    params.put( "actionRefs", actionsList ); //$NON-NLS-1$
+    params.put( "actionRef", actionRef ); //$NON-NLS-1$
 
     String responseStrXml = executePostMethod( params );
   }
@@ -315,8 +320,10 @@ public class SchedulerAdminUIComponentProxy {
       String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
       String strRepeatCount, String repeatInterval,
-      String actionsList ) throws SchedulerServiceException {
+      String actionRef ) throws SchedulerServiceException {
 
+    assert actionRef.matches( RE_MATCH_ACTION_REF ) : "Invalid actionRef " + actionRef; //$NON-NLS-1$
+    
     DateFormat dateTimeFormatter = DateUtil.getDateTimeFormatter();
     String strStartDate = dateTimeFormatter.format( startDate );
     String strEndDate = null != endDate
@@ -338,7 +345,7 @@ public class SchedulerAdminUIComponentProxy {
       params.put( "repeat-count", strRepeatCount ); //$NON-NLS-1$
     }
     params.put( "repeat-time-millisecs", repeatInterval ); //$NON-NLS-1$
-    params.put( "actionRefs", actionsList ); //$NON-NLS-1$
+    params.put( "actionRef", actionRef ); //$NON-NLS-1$
 
     String responseStrXml = executePostMethod( params );
   }
@@ -352,7 +359,7 @@ public class SchedulerAdminUIComponentProxy {
     } catch (ProxyException e) {
       throw new SchedulerServiceException( e.getMessage(), e );
     }
-    XmlSerializer s = new XmlSerializer();
+    SchedulerXmlSerializer s = new SchedulerXmlSerializer();
     s.detectSchedulerExceptionInXml( strXmlResponse );
     return strXmlResponse;
   }
@@ -364,7 +371,7 @@ public class SchedulerAdminUIComponentProxy {
     } catch (ProxyException e) {
       throw new SchedulerServiceException( e.getMessage(), e );
     }
-    XmlSerializer s = new XmlSerializer();
+    SchedulerXmlSerializer s = new SchedulerXmlSerializer();
     s.detectSchedulerExceptionInXml( strXmlResponse );
     return strXmlResponse;
   }

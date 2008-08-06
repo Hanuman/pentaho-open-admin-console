@@ -48,6 +48,7 @@ import org.pentaho.pac.server.common.ThreadSafeHttpClient.HttpMethodType;
 import org.pentaho.pac.server.datasources.DataSourceMgmtService;
 import org.pentaho.pac.server.datasources.IDataSourceMgmtService;
 import org.pentaho.pac.server.i18n.Messages;
+import org.pentaho.pac.server.scheduler.XActionXmlSerializer;
 import org.pentaho.pac.server.scheduler.XmlSerializer;
 import org.pentaho.pac.server.scheduler.XmlSerializerException;
 import org.pentaho.platform.api.util.IPasswordService;
@@ -744,7 +745,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     } catch (ProxyException e) {
       throw new PacServiceException( e.getMessage(), e );
     } 
-    XmlSerializer s = new XmlSerializer();
+    XActionXmlSerializer s = new XActionXmlSerializer();
     String errorMsg;
     try {
       errorMsg = s.getXActionResponseStatusFromXml( strResponse );
@@ -771,7 +772,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     } catch (ProxyException e) {
       throw new PacServiceException( e.getMessage(), e );
     } 
-    XmlSerializer s = new XmlSerializer();
+    XActionXmlSerializer s = new XActionXmlSerializer();
     String errorMsg = s.getPublishStatusFromXml( strResponse );
     if ( null != errorMsg ) {
       throw new PacServiceException( errorMsg );

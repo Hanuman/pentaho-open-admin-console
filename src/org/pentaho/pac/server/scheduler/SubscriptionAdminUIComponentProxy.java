@@ -36,7 +36,7 @@ public class SubscriptionAdminUIComponentProxy {
     params.put( "schedulerAction", "listSchedules" ); //$NON-NLS-1$  //$NON-NLS-2$
 
     String responseStrXml = executeGetMethod( params );
-    XmlSerializer s = new XmlSerializer();
+    SubscriptionXmlSerializer s = new SubscriptionXmlSerializer();
     Map<String, Schedule> m;
     try {
       m = s.getSubscriptionSchedulesFromXml( responseStrXml );
@@ -87,8 +87,8 @@ public class SubscriptionAdminUIComponentProxy {
     }
     params.put( "cron", cronString ); //$NON-NLS-1$
     params.put( "group", jobGroup ); //$NON-NLS-1$
-    // TODO sbarkdull, what if solutionPath is empty? 
-    params.put( "actionRefs", actionsList ); //$NON-NLS-1$
+    String[] actionsAr = actionsList.split( "," ); //$NON-NLS-1$
+    params.put( "actionRefs", actionsAr ); //$NON-NLS-1$
 
     String responseStrXml = executePostMethod( params );
     // TODO sbarkdull
@@ -121,7 +121,8 @@ public class SubscriptionAdminUIComponentProxy {
     assert Integer.parseInt( repeatInterval ) >= 0 : "Invalid repeat interval"; //$NON-NLS-1$
     params.put( "repeat-time-millisecs", repeatInterval ); //$NON-NLS-1$
     params.put( "group", jobGroup ); //$NON-NLS-1$
-    params.put( "actionRefs", actionsList ); //$NON-NLS-1$
+    String[] actionsAr = actionsList.split( "," ); //$NON-NLS-1$
+    params.put( "actionRefs", actionsAr ); //$NON-NLS-1$
 
     String responseStrXml = executePostMethod( params );
   }
@@ -192,7 +193,7 @@ public class SubscriptionAdminUIComponentProxy {
     
     for ( Schedule s : scheduleList ) {
       Map<String, Object> params = new HashMap<String, Object>();
-      params.put( "schedulerAction", "doDeleteSchedule" ); //$NON-NLS-1$  //$NON-NLS-2$
+      params.put( "schedulerAction", "doDeleteScheduleContentAndSubscription" ); //$NON-NLS-1$  //$NON-NLS-2$
       params.put( "schedId", s.getSchedId() ); //$NON-NLS-1$
 
       String responseStrXml = executeGetMethod( params );
@@ -238,8 +239,9 @@ public class SubscriptionAdminUIComponentProxy {
     } catch (ProxyException e) {
       throw new SchedulerServiceException( e.getMessage(), e );
     }
-    XmlSerializer s = new XmlSerializer();
+    SubscriptionXmlSerializer s = new SubscriptionXmlSerializer();
     s.detectSubscriptionExceptionInXml( strXmlResponse );
+    s.detectSubscriptionErrorInXml( strXmlResponse );
     return strXmlResponse;
   }
   
@@ -250,8 +252,9 @@ public class SubscriptionAdminUIComponentProxy {
     } catch (ProxyException e) {
       throw new SchedulerServiceException( e.getMessage(), e );
     }
-    XmlSerializer s = new XmlSerializer();
+    SubscriptionXmlSerializer s = new SubscriptionXmlSerializer();
     s.detectSubscriptionExceptionInXml( strXmlResponse );
+    s.detectSubscriptionErrorInXml( strXmlResponse );
     return strXmlResponse;
   }
 }
