@@ -47,6 +47,8 @@ public class CronParser {
   public final static String DONT_CARE = "?"; //$NON-NLS-1$
   public final static String N_TH = "#"; //$NON-NLS-1$
   public final static String LAST = "L"; //$NON-NLS-1$
+  private static final int MIN_CRON_FIELDS = 6;
+  private static final int MAX_CRON_FIELDS = 7;
   
   enum CronField {
     SECONDS(0),
@@ -124,7 +126,7 @@ public class CronParser {
     boolean isValid = true;
     String parts[] = strInt.split( "\\s" ); //$NON-NLS-1$
 
-    if ( parts.length < 6 ) {
+    if ( ( parts.length < MIN_CRON_FIELDS ) || ( parts.length > MAX_CRON_FIELDS ) ) {
       return false;
     }
     isValid &= isValidSecondsField( parts[0] );
@@ -134,7 +136,10 @@ public class CronParser {
     isValid &= isDayOfMonthField( parts[3] );
     isValid &= isMonthField( parts[4] );
     isValid &= isDayOfWeekField( parts[5] );
-    if ( parts.length >= 7 ) {
+    
+    isValid &= ( DONT_CARE.equals( parts[3] ) || DONT_CARE.equals( parts[5] ) );
+    
+    if ( parts.length == MAX_CRON_FIELDS ) {
       isValid &= isYearField( parts[6] );
     }
     
