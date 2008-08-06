@@ -95,6 +95,8 @@ public class NewUserDialogBox extends ConfirmDialog {
       if (user != null) {
         AsyncCallback callback = new AsyncCallback() {
           public void onSuccess(Object result) {
+            okBtn.setEnabled(true);
+            cancelBtn.setEnabled(true);
             userCreated = true;
             hide();
           }
@@ -108,8 +110,12 @@ public class NewUserDialogBox extends ConfirmDialog {
               messageDialog.setMessage(caught.getMessage());
             }
             messageDialog.center();
+            okBtn.setEnabled(true);
+            cancelBtn.setEnabled(true);
           }
         };
+        okBtn.setEnabled(false);
+        cancelBtn.setEnabled(false);
         UserAndRoleMgmtService.instance().createUser(user, callback);
       }
     }

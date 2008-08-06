@@ -75,6 +75,8 @@ public class NewRoleDialogBox extends ConfirmDialog {
       if (role != null) {
         AsyncCallback callback = new AsyncCallback() {
           public void onSuccess(Object result) {
+            okBtn.setEnabled(true);
+            cancelBtn.setEnabled(true);
             roleCreated = true;
             hide();
           }
@@ -88,8 +90,12 @@ public class NewRoleDialogBox extends ConfirmDialog {
               messageDialog.setMessage(MSGS.roleCreationFailed(caught.getMessage()));
             }
             messageDialog.center();
+            okBtn.setEnabled(true);
+            cancelBtn.setEnabled(true);
           }
         };
+        okBtn.setEnabled(false);
+        cancelBtn.setEnabled(false);
         UserAndRoleMgmtService.instance().createRole(role, callback);
       }
     }
