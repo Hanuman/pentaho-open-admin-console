@@ -2022,4 +2022,8 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key deleteSchedules
    */
   String deleteSchedules();
+  
+  String cause();
+  
+  String roleCreationFailed(String arg0);
 }

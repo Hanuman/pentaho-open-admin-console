@@ -4,6 +4,7 @@ import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.client.common.ui.ICallback;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
+import org.pentaho.pac.common.PacServiceException;
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
 import org.pentaho.pac.common.users.DuplicateUserException;
@@ -84,7 +85,7 @@ public class NewRoleDialogBox extends ConfirmDialog {
             } else if (caught instanceof DuplicateUserException) {
               messageDialog.setMessage(MSGS.roleAlreadyExists());
             } else {
-              messageDialog.setMessage(caught.getMessage());
+              messageDialog.setMessage(MSGS.roleCreationFailed(caught.getMessage()));
             }
             messageDialog.center();
           }
