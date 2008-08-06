@@ -3,7 +3,7 @@ package org.pentaho.pac.client.i18n;
 
 /**
  * Interface to represent the messages contained in resource  bundle:
- * 	C:/projects/pentaho1.6/pentaho-open-admin-console/src/org/pentaho/pac/client/i18n/PacLocalizedMessages.properties'.
+ * 	C:/projects/pentaho.2.trunk/pentaho-admin-console/src/org/pentaho/pac/client/i18n/PacLocalizedMessages.properties'.
  */
 public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Messages {
   
@@ -1144,12 +1144,12 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String confirmRoleDeletionMsg();
 
   /**
-   * Translated "Are you sure you want to delete all checked schedules?".
+   * Translated "Are you sure you want to delete all checked schedules? There are {0} users subscribed to this schedule.".
    * 
-   * @return translated "Are you sure you want to delete all checked schedules?"
+   * @return translated "Are you sure you want to delete all checked schedules? There are {0} users subscribed to this schedule."
    * @gwt.key confirmDeleteQuestion
    */
-  String confirmDeleteQuestion();
+  String confirmDeleteQuestion(String arg0);
 
   /**
    * Translated "Name:".
@@ -1374,14 +1374,6 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key thursday
    */
   String thursday();
-
-  /**
-   * Translated "Are you sure you want to delete this job?".
-   * 
-   * @return translated "Are you sure you want to delete this job?"
-   * @gwt.key areYouSure
-   */
-  String areYouSure();
 
   /**
    * Translated "All Jobs Suspended".
