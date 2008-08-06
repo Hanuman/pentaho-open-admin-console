@@ -184,7 +184,7 @@ public class FrozenHeaderTable extends Composite implements ScrollListener {
 		String evenStyleName = getSingleStyleName(TableStyles.Type.EVEN_ROW);
 		String oddStyleName = getSingleStyleName(TableStyles.Type.ODD_ROW);
 		RowFormatter gridRowFormatter = table.getRowFormatter();
-
+		
 		for (int row = 0; row <= model.getActualRowCount(); row++) {
 			if (row == this.selectedRowIndex) {
 				gridRowFormatter.setStyleName(row, selectedStyle);
