@@ -37,7 +37,7 @@ public interface TableModel {
 	TableStyles getStyles();
 	
 	int getActualRowCount();
-	int setActualRowCount(int i);
+	void setActualRowCount(int i);
 	
 	int getVisibleRows();
 
