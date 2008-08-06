@@ -818,8 +818,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       userRoleMgmtService.commitTransaction();
       result = true;
     } catch ( DAOException e) {
-      throw new PacServiceException( 
-          Messages.getString( "PacService.ERROR_0001_ROLE_CREATION_FAILED", proxyRole.getName() ), e ); //$NON-NLS-1$
+      throw new PacServiceException(e.getClass().getName() + " " + e.getMessage()); //$NON-NLS-1$
     }
     finally {
       if (!result) {
