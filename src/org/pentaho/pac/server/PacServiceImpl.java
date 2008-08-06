@@ -421,19 +421,12 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     } catch(PasswordServiceException pse) {
       throw new PacServiceException( pse.getMessage(), pse );
     } catch (DuplicateDataSourceException dde) {
-      String msg = Messages.getString("PacService.ERROR_0009_DATASOURCE_ALREADY_EXIST", dataSource.getName()) //$NON-NLS-1$
-          + " " + dde.getMessage(); //$NON-NLS-1$
-      throw new PacServiceException(msg, dde);
+      throw new PacServiceException(Messages.getString("PacService.ERROR_0009_DATASOURCE_ALREADY_EXIST", dataSource.getName()), dde);
 
     } catch (DAOException e) {
-      String msg = Messages.getString("PacService.ERROR_0007_DATASOURCE_CREATION_FAILED", dataSource.getName()) //$NON-NLS-1$
-          + " " + e.getMessage(); //$NON-NLS-1$
-      throw new PacServiceException(msg, e);
+      throw new PacServiceException(Messages.getString("PacService.ERROR_0007_DATASOURCE_CREATION_FAILED", dataSource.getName()), e);
     } catch (PentahoSecurityException pse) {
-      String msg = Messages.getString(
-          "PacService.ERROR_0008_NO_CREATE_DATASOURCE_PERMISSION", dataSource.getName()) //$NON-NLS-1$
-          + " " + pse.getMessage(); //$NON-NLS-1$
-      throw new PacServiceException(msg, pse);
+      throw new PacServiceException(Messages.getString("PacService.ERROR_0008_NO_CREATE_DATASOURCE_PERMISSION", dataSource.getName()), pse);
 
     } finally {
       if (!result) {
@@ -462,13 +455,9 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
           + " " + neds.getMessage(); //$NON-NLS-1$
       throw new PacServiceException(msg, neds);
     } catch (DAOException e) {
-      String msg = Messages.getString("PacService.DATASOURCE_DELETION_FAILED", persistedDataSources.getName()) //$NON-NLS-1$
-          + " " + e.getMessage(); //$NON-NLS-1$
-      throw new PacServiceException(msg, e);
+      throw new PacServiceException(Messages.getString("PacService.DATASOURCE_DELETION_FAILED", persistedDataSources.getName()), e);
     } catch (PentahoSecurityException pse) {
-      String msg = Messages.getString("PacService.DATASOURCE_DELETION_FAILED_NO_PERMISSION", persistedDataSources.getName()) //$NON-NLS-1$
-          + " " + pse.getMessage(); //$NON-NLS-1$
-      throw new PacServiceException(msg, pse);
+      throw new PacServiceException(Messages.getString("PacService.DATASOURCE_DELETION_FAILED_NO_PERMISSION", persistedDataSources.getName()), pse);
     } finally {
       if (!result) {
         rollbackTransaction();
@@ -516,18 +505,11 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     } catch(PasswordServiceException pse) {
         throw new PacServiceException( pse.getMessage(), pse );
     } catch (NonExistingDataSourceException neds) {
-      String msg = Messages.getString("PacService.DATASOURCE_UPDATE_FAILED_DOES_NOT_EXIST", dataSource.getName()) //$NON-NLS-1$
-          + " " + neds.getMessage(); //$NON-NLS-1$
-      throw new PacServiceException(msg, neds);
-
+      throw new PacServiceException(Messages.getString("PacService.DATASOURCE_UPDATE_FAILED_DOES_NOT_EXIST", dataSource.getName()), neds);
     } catch (DAOException e) {
-      String msg = Messages.getString("PacService.DATASOURCE_UPDATE_FAILED", dataSource.getName()) //$NON-NLS-1$
-          + " " + e.getMessage(); //$NON-NLS-1$
-      throw new PacServiceException(msg, e);
+      throw new PacServiceException(Messages.getString("PacService.DATASOURCE_UPDATE_FAILED", dataSource.getName()), e);
     } catch (PentahoSecurityException pse) {
-      String msg = Messages.getString("PacService.DATASOURCE_UPDATE_FAILED_NO_PERMISSION", dataSource.getName()) //$NON-NLS-1$
-          + " " + pse.getMessage(); //$NON-NLS-1$
-      throw new PacServiceException(msg, pse);
+      throw new PacServiceException(Messages.getString("PacService.DATASOURCE_UPDATE_FAILED_NO_PERMISSION", dataSource.getName()), pse);
 
     } finally {
       if (!result) {
@@ -603,7 +585,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       conn = DriverManager.getConnection(ds.getUrl(), ds.getUserName(), ds.getPassword());
       return conn;
     } catch (SQLException e) {
-      throw new DataSourceManagementException(Messages.getString("PacService.CONNECTION_ATTEMPT_FAILED",driverClass), e); //$NON-NLS-1$
+      throw new DataSourceManagementException(Messages.getString("PacService.UNABLE_TO_CONNECT",e.getMessage()), e); //$NON-NLS-1$
     }
   }
 
