@@ -19,9 +19,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
