@@ -659,8 +659,9 @@ public class SchedulerToolbarController {
 
   private void handleDeleteSchedules() {
     final SchedulerToolbarController localThis = this;
+    
     final ConfirmDialog confirm = new ConfirmDialog( MSGS.confirmDelete(),
-        MSGS.confirmDeleteQuestion() );
+        MSGS.confirmDeleteQuestion( Integer.toString( getNumSubscribers() ) ) );
     confirm.setOnOkHandler( new ICallback<MessageDialog>() {
       public void onHandle( MessageDialog d ) {
         confirm.hide();
@@ -668,6 +669,15 @@ public class SchedulerToolbarController {
       }
     });
     confirm.center();
+  }
+  
+  private int getNumSubscribers() {
+    List<Schedule> schedList = schedulesListCtrl.getSelectedSchedules();
+    int numSubscribers = 0;
+    for ( Schedule sched: schedList ) {
+      numSubscribers += Integer.parseInt( sched.getSubscriberCount() );
+    }
+    return numSubscribers;
   }
   
   private void handleResumeSchedules() {
