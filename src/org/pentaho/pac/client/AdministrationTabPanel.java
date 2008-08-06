@@ -2,6 +2,7 @@ package org.pentaho.pac.client;
 
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.datasources.DataSourcesPanel;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.scheduler.ctlr.SchedulerController;
 import org.pentaho.pac.client.scheduler.view.SchedulerPanel;
 import org.pentaho.pac.client.services.AdminServicesPanel;
@@ -15,6 +16,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class AdministrationTabPanel extends TabPanel {
 
+  protected static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
+  
   public static final int ADMIN_USERS_ROLES_TAB_INDEX = 0;
   public static final int ADMIN_DATA_SOURCES_TAB_INDEX = 1;
   public static final int ADMIN_SERVICES_TAB_INDEX = 2;
@@ -33,9 +36,9 @@ public class AdministrationTabPanel extends TabPanel {
     // Order that things are placed in the tab panel is important. There are
     // static constants defined within this class that assume a given tab position
     // for each of the panels on the tab panel.
-    add(usersAndRolesPanel, PentahoAdminConsole.MSGS.usersAndRoles());
-    add(dataSourcesPanel, PentahoAdminConsole.MSGS.dataSources());
-    add(servicesPanel, PentahoAdminConsole.MSGS.services());
+    add(usersAndRolesPanel, MSGS.usersAndRoles());
+    add(dataSourcesPanel, MSGS.dataSources());
+    add(servicesPanel, MSGS.services());
     SchedulerPanel schedulerPanel = new SchedulerPanel();
     Panel p = new VerticalPanel();
     p.setStyleName( "schedulerPanelPadderPanel" );    //$NON-NLS-1$
@@ -48,7 +51,7 @@ public class AdministrationTabPanel extends TabPanel {
 
     schedulerScrollWrapper.add(p);
     
-    add(schedulerScrollWrapper, PentahoAdminConsole.MSGS.scheduler());
+    add(schedulerScrollWrapper, MSGS.scheduler());
     schedulerController = new SchedulerController( schedulerPanel );
     
     usersAndRolesPanel.setWidth("100%"); //$NON-NLS-1$
@@ -81,7 +84,7 @@ public class AdministrationTabPanel extends TabPanel {
         schedulerController.init();
         break;
       default:
-        throw new RuntimeException(PentahoAdminConsole.MSGS.invalidTabIndex(Integer.toString(tabIndex)));
+        throw new RuntimeException(MSGS.invalidTabIndex(Integer.toString(tabIndex)));
     }   
   }
   
@@ -93,8 +96,8 @@ public class AdministrationTabPanel extends TabPanel {
       }
     
       public void onFailure(Throwable caught) {
-        MessageDialog messageDialog = new MessageDialog( PentahoAdminConsole.MSGS.error() );
-        messageDialog.setMessage(PentahoAdminConsole.MSGS.securityRefreshError(caught.getMessage()));
+        MessageDialog messageDialog = new MessageDialog( MSGS.error() );
+        messageDialog.setMessage(MSGS.securityRefreshError(caught.getMessage()));
         messageDialog.center();
       }
     };

@@ -49,7 +49,6 @@ import org.pentaho.pac.server.datasources.DataSourceMgmtService;
 import org.pentaho.pac.server.datasources.IDataSourceMgmtService;
 import org.pentaho.pac.server.i18n.Messages;
 import org.pentaho.pac.server.scheduler.XActionXmlSerializer;
-import org.pentaho.pac.server.scheduler.XmlSerializer;
 import org.pentaho.pac.server.scheduler.XmlSerializerException;
 import org.pentaho.platform.api.util.IPasswordService;
 import org.pentaho.platform.api.util.PasswordServiceException;

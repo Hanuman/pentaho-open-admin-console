@@ -21,7 +21,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class SchedulerXmlSerializer {
 
-  private static final Log logger = LogFactory.getLog(XmlSerializer.class);
+  private static final Log logger = LogFactory.getLog(SchedulerXmlSerializer.class);
 
   public SchedulerXmlSerializer() {
     
