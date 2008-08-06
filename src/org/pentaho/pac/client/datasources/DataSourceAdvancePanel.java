@@ -4,11 +4,13 @@ import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
 
+import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
-public class DataSourceAdvancePanel extends VerticalPanel {
+public class DataSourceAdvancePanel extends VerticalPanel implements KeyboardListener{
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   TextBox maxActiveConnTextBox = new TextBox();
   TextBox idleConnTextBox = new TextBox();
@@ -26,6 +28,10 @@ public class DataSourceAdvancePanel extends VerticalPanel {
     add(new Label(MSGS.dbWaitTime()));
     add(waitTextBox);
     add(label);
+    maxActiveConnTextBox.addKeyboardListener(this);
+    idleConnTextBox.addKeyboardListener(this);
+    waitTextBox.addKeyboardListener(this);
+    
     maxActiveConnTextBox.setWidth("100%"); //$NON-NLS-1$
     idleConnTextBox.setWidth("100%"); //$NON-NLS-1$
     validationQueryTextBox.setWidth("100%"); //$NON-NLS-1$
@@ -128,5 +134,18 @@ public class DataSourceAdvancePanel extends VerticalPanel {
     validationQueryTextBox.setEnabled(enabled);
     waitTextBox.setEnabled(enabled);
   }
+
+  public void onKeyDown(Widget sender, char keyCode, int modifiers) {
+  }
+
+  public void onKeyPress(Widget sender, char keyCode, int modifiers) {
+    if (!Character.isDigit(keyCode)) {
+      TextBox textBox = (TextBox)sender;
+      textBox.cancelKey();
+    }    
+  }
+
+  public void onKeyUp(Widget sender, char keyCode, int modifiers) {
+   }
  
 }
