@@ -356,7 +356,11 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	    
 	    AsyncCallback callback = new AsyncCallback() {
 	      public void onSuccess(Object result) {
-	        usersList.addObject((ProxyPentahoUser)user);
+	        // Since users are compared by name, removeObject() will remove the old user from the list
+	        // and addObject() will add the new user to the list.
+	        usersList.removeObject(user);
+	        usersList.addObject(user);
+	        usersList.setSelectedObject(user);
 	        ((Button)sender).setEnabled( true );
 	      }
 

@@ -320,7 +320,12 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     final ProxyPentahoRole role = roleDetailsPanel.getRole();
     AsyncCallback callback = new AsyncCallback() {
       public void onSuccess(Object result) {
-        rolesList.addObject((ProxyPentahoRole)role);
+        // Since roles are compared by name, removeObject() will remove the old role from the list
+        // and addObject() will add the new role to the list.
+        rolesList.removeObject(role);
+        rolesList.addObject(role);
+        rolesList.setSelectedObject(role);
+        ((Button)sender).setEnabled( true );
       }
 
       public void onFailure(Throwable caught) {
@@ -337,6 +342,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
         ((Button)sender).setEnabled( true );
       }
     };
+    ((Button)sender).setEnabled( false );
     UserAndRoleMgmtService.instance().updateRole(role, callback);
 	}
 	
