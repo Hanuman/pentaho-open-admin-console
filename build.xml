@@ -85,18 +85,23 @@
 		</jar>
 	</target>
 
-	<target name="jar-gwt-module" depends="init,compile">
-		<jar destfile="${build.jars.dir}/pentaho-admin-module.jar">
-			<manifest>
-				<attribute name="Implementation-Title" value="${impl.title}" />
-				<attribute name="Implementation-Version" value="${impl.version}" />
-				<attribute name="Implementation-Vendor" value="${impl.vendor}" />
-				<attribute name="Implementation-ProductID" value="${impl.productID}" />
-			</manifest>
-			<fileset dir="${build.classes.dir}" />
-			<fileset dir="${src.dir}" />
-			<fileset dir="${config.dir}" />
-		</jar>
+	<target name="jar-gwt-module" depends="clean, jar-console, jar-messages" description="create module jar">
+			<jar destfile="${dist.dir}/pentaho-admin-module-${impl.version}.jar">
+				<manifest>
+					<attribute name="Implementation-Title" value="${impl.title}" />
+					<attribute name="Implementation-Version" value="${impl.version}" />
+					<attribute name="Implementation-Vendor" value="${impl.vendor}" />
+					<attribute name="Implementation-ProductID" value="${impl.productID}" />
+				</manifest>
+				<fileset dir="${build.classes.dir}" />
+				<fileset dir="${src.dir}" />
+				<fileset dir="${config.dir}" />
+				<fileset dir="${res.dir}" includes="**/*.xml"/>
+			</jar>
+		</target>
+
+	<target name="copy-gwt-module">
+		<copyfile dest="../pentaho-mgmt-services/lib-ext/pentaho/pentaho-admin-module.jar" src="${build.jars.dir}/pentaho-admin-module.jar" />
 	</target>
 
 	<path id="class.path">
