@@ -1299,20 +1299,36 @@ a:visited {
 	padding: 4px 4px 0px 10px;	
 }
 
-.groupbox-nw {
-	background: url(style/images/dialog_nw.png) repeat-x;
+.groupbox-nw-grey {
+	background: url(style/images/dialog_nw_grey.png) repeat-x;
 	height: 28px;
 	width: 10px;
+}
+
+.groupbox-n-grey {
+	background: url(style/images/dialog_n_grey.png) repeat-x;
+}
+
+.groupbox-ne-grey {
+	background: url(style/images/dialog_ne_grey.png) repeat-x;
+	height: 28px;
+	width: 10px;
+}
+
+.groupbox-nw {
+  background: url(style/images/dialog_nw.png) repeat-x;
+  height: 28px;
+  width: 10px;
 }
 
 .groupbox-n {
-	background: url(style/images/dialog_n.png) repeat-x;
+  background: url(style/images/dialog_n.png) repeat-x;
 }
 
 .groupbox-ne {
-	background: url(style/images/dialog_ne.png) repeat-x;
-	height: 28px;
-	width: 10px;
+  background: url(style/images/dialog_ne.png) repeat-x;
+  height: 28px;
+  width: 10px;
 }
 
 .groupbox-w {
