@@ -7,7 +7,7 @@ a:active{color:#ff0000}
 
 .configConsolePanel{
   height: 570px;
-  overflow:auto;x;
+  overflow:auto;
   width: 100%;
 }
 
@@ -780,14 +780,14 @@ a:visited {
 .toolbar_right{
 	width: 6px;
 	height: 55px;
-	overflow: hide;
+	overflow: hidden;
 	background: url('style/images/toolbar_right.png') top left no-repeat;	
 }
 
 .toolbar_center{
 	width: 100%;
 	height: 55px;
-	overflow: hide;
+	overflow: hidden;
 	background: url('style/images/toolbar_background.png') top left no-repeat;
 }
 
