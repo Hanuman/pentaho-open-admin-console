@@ -38,7 +38,7 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
     }
   }
    
-  private static final PacLocalizedMessages MSGS = (PacLocalizedMessages)GWT.create(PacLocalizedMessages.class);
+  public static final PacLocalizedMessages MSGS = (PacLocalizedMessages)GWT.create(PacLocalizedMessages.class);
   
   protected Map<Integer, PageInfo> pageMap = new HashMap<Integer, PageInfo>();
   
