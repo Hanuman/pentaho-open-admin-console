@@ -1,5 +1,6 @@
 package org.pentaho.pac.ui.gwt.table.model;
 
+import java.util.List;
 import java.util.Map;
 
 import org.pentaho.pac.ui.gwt.table.NameValue;
@@ -18,5 +19,7 @@ public interface TableDataServiceAsync {
 	 * @see #getColumnCount
 	 */
 	public void getRowCount(AsyncCallback<Integer> callback);
+	
+	public void getData(NameValue[] discriminators,AsyncCallback<List<String[]>> callback);
 
 }
