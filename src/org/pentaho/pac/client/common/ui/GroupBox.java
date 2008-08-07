@@ -8,6 +8,8 @@ import com.google.gwt.user.client.ui.Widget;
 public class GroupBox extends DockPanel{
   private Label title;
   private Grid grid;
+  public static final int GREEN = 0;
+  public static final int GREY = 1;
   
   public GroupBox(String title){
     this.setStylePrimaryName("GroupBox"); //$NON-NLS-1$
@@ -36,6 +38,19 @@ public class GroupBox extends DockPanel{
     this.add(grid, DockPanel.CENTER);
 
   }
+  
+  public GroupBox(String title, int style){
+    this(title);
+    
+    String color = (style == GroupBox.GREEN) ? "" : "-grey";     //$NON-NLS-1$  //$NON-NLS-2$ 
+    
+    grid.getCellFormatter().setStyleName(0, 0, "groupbox-nw"+color); //$NON-NLS-1$ 
+    grid.getCellFormatter().setStyleName(0, 1, "groupbox-n"+color); //$NON-NLS-1$
+    grid.getCellFormatter().setStyleName(0, 2, "groupbox-ne"+color); //$NON-NLS-1$ 
+    
+
+  }
+  
   public GroupBox(String title, Widget widget){
     this(title);
     this.setContent(widget);
@@ -43,8 +58,6 @@ public class GroupBox extends DockPanel{
   
   public void setContent(Widget widget){
     grid.setWidget(1,1, widget);
-    
-    
   }
 }
 
