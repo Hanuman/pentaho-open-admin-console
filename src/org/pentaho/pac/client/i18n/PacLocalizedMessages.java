@@ -1720,14 +1720,6 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String march();
 
   /**
-   * Translated "your sure you want to delete the selected data sources?=Are your sure you want to delete the selected data sources?".
-   * 
-   * @return translated "your sure you want to delete the selected data sources?=Are your sure you want to delete the selected data sources?"
-   * @gwt.key Are
-   */
-  String Are();
-
-  /**
    * Translated "Start:".
    * 
    * @return translated "Start:"
