@@ -18,7 +18,7 @@ public class PropertyLoader {
 		Transaction tx = null;
 
 		try {
-			s = HibernateSessionFactory.getSession();
+			s = HibernateSessionFactory.getSession("MGMT-SERVICES");
 			tx = s.beginTransaction();
 			@SuppressWarnings("unchecked")
 			PropertyCollection<E> props = new PropertyCollection<E>(s
@@ -38,7 +38,7 @@ public class PropertyLoader {
 		Transaction tx = null;
 
 		try {
-			s = HibernateSessionFactory.getSession();
+			s = HibernateSessionFactory.getSession("MGMT-SERVICES");
 			tx = s.beginTransaction();
 			for (PacProperty prop : props) {
 				s.saveOrUpdate(prop);
