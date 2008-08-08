@@ -133,7 +133,7 @@ public class RecurrenceEditor extends VerticalPanel {
     add( dateRangeEditor );
     
     // TODO sbarkdull, is this necessary?
-    setTemporalState( TemporalValue.SECONDS );
+    //setTemporalState( TemporalValue.SECONDS );
   }
   
   public void reset( Date d ) {
