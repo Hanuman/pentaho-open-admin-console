@@ -652,7 +652,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   }
   
   public String refreshSolutionRepository() throws PacServiceException {
-    return executePublishRequest("org.pentaho.core.solution.SolutionPublisher" ); //$NON-NLS-1$
+    return executePublishRequest("org.pentaho.platform.engine.services.solution.SolutionPublisher" ); //$NON-NLS-1$
   }
   
   public String cleanRepository() throws PacServiceException {
@@ -702,6 +702,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     userName = StringUtils.defaultIfEmpty( appCfg.getProperty("pentaho.platform.userName"), System.getProperty("pentaho.platform.userName") ); //$NON-NLS-1$ //$NON-NLS-2$
     pciContextPath = StringUtils.defaultIfEmpty( appCfg.getProperty("pciContextPath"), System.getProperty("pciContextPath") ); //$NON-NLS-1$ //$NON-NLS-2$
     biServerBaseURL = StringUtils.defaultIfEmpty( appCfg.getProperty("biServerBaseURL"), System.getProperty("biServerBaseURL") ); //$NON-NLS-1$ //$NON-NLS-2$biServerBaseURL = StringUtils.defaultIfEmpty( p.getProperty("biServerBaseURL"), System.getProperty("biServerBaseURL") );
+    biServerProxy.setBaseUrl( biServerBaseURL );
     String strBiServerStatusCheckPeriod = StringUtils.defaultIfEmpty( appCfg.getProperty("consoleToolBar.biServerStatusCheckPeriod"), System.getProperty("consoleToolBar.biServerStatusCheckPeriod") ); //$NON-NLS-1$ //$NON-NLS-2$
     try {
       biServerStatusCheckPeriod = Integer.parseInt( strBiServerStatusCheckPeriod );
