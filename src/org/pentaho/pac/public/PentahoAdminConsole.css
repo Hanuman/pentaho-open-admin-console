@@ -1499,11 +1499,6 @@ a:visited {
 /* end */
 
 /* begin recurrence dialog ------------------------------------------------------*/
-.temporalCombo {
-	padding-right: 5px;
-	margin-right: 5px;
-}
-
 .startLabel {
 	padding-right: 1ex;
 	white-space: nowrap;
@@ -1524,6 +1519,9 @@ a:visited {
 .recurrenceRadioButton label {
 	padding-right: 1ex;
 	white-space: nowrap;
+}
+
+.weeklyRecurrencePanel {
 }
 /* end recurrence dialog ----------------------------------------------------------*/
 
