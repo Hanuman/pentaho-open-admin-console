@@ -15,6 +15,8 @@
  */
 package org.pentaho.pac.client.scheduler.ctlr;
 
+
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,6 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.pentaho.gwt.widgets.client.controls.schededitor.ScheduleEditor;
+import org.pentaho.gwt.widgets.client.utils.CronParseException;
+import org.pentaho.gwt.widgets.client.utils.TimeUtil;
 import org.pentaho.pac.client.ISchedulerServiceAsync;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
@@ -32,22 +37,19 @@ import org.pentaho.pac.client.common.ui.ICallback;
 import org.pentaho.pac.client.common.ui.IResponseCallback;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
-import org.pentaho.pac.client.common.util.TimeUtil;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
-import org.pentaho.pac.client.scheduler.CronParseException;
 import org.pentaho.pac.client.scheduler.model.Schedule;
 import org.pentaho.pac.client.scheduler.model.SchedulesModel;
 import org.pentaho.pac.client.scheduler.view.ScheduleCreatorDialog;
-import org.pentaho.pac.client.scheduler.view.ScheduleEditor;
 import org.pentaho.pac.client.scheduler.view.SchedulerToolbar;
 import org.pentaho.pac.client.scheduler.view.SchedulesListCtrl;
 import org.pentaho.pac.client.scheduler.view.SolutionRepositoryItemPicker;
 import org.pentaho.pac.client.scheduler.view.ScheduleCreatorDialog.TabIndex;
-import org.pentaho.pac.client.scheduler.view.ScheduleEditor.ScheduleType;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.Widget;
+
 
 public class SchedulerToolbarController {
   
@@ -199,7 +201,7 @@ public class SchedulerToolbarController {
       endDate = (null != endDate) ? TimeUtil.getDateTime( startTime, endDate ) : null;
     }
     
-    ScheduleType rt = scheduleEditor.getScheduleType(); 
+    ScheduleEditor.ScheduleType rt = scheduleEditor.getScheduleType(); 
     switch ( rt ) {
       case RUN_ONCE:
         schedSvc.updateRepeatSchedule(
@@ -424,7 +426,7 @@ public class SchedulerToolbarController {
       endDate = (null != endDate) ? TimeUtil.getDateTime( startTime, endDate ) : null;
     }
     
-    ScheduleType rt = scheduleEditor.getScheduleType();
+    ScheduleEditor.ScheduleType rt = scheduleEditor.getScheduleType();
 
     // TODO sbarkdull, if we want to support creation of scheduler schedules, we need to supply
  // a UI mechanism like a checkbox to allow user to identify scheduler vs subscription, 
@@ -548,7 +550,7 @@ public class SchedulerToolbarController {
       int repeatIntervalInSecs = TimeUtil.millsecondsToSecs( Integer.parseInt( repeatIntervalInMillisecs ) );
       if ( 0 == repeatIntervalInSecs ) {
         // run once
-        scheduleEditor.setScheduleType( ScheduleType.RUN_ONCE );
+        scheduleEditor.setScheduleType( ScheduleEditor.ScheduleType.RUN_ONCE );
       } else {
         // run multiple
         scheduleEditor.setRepeatInSecs( repeatIntervalInSecs );

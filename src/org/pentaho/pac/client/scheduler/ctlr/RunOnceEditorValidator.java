@@ -15,9 +15,9 @@
  */
 package org.pentaho.pac.client.scheduler.ctlr;
 
+import org.pentaho.gwt.widgets.client.controls.schededitor.RunOnceEditor;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
-import org.pentaho.pac.client.scheduler.view.RunOnceEditor;
 
 
 public class RunOnceEditorValidator implements IUiValidator {

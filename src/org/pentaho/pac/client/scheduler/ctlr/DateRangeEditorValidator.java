@@ -15,9 +15,9 @@
  */
 package org.pentaho.pac.client.scheduler.ctlr;
 
+import org.pentaho.gwt.widgets.client.controls.DateRangeEditor;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
-import org.pentaho.pac.client.scheduler.view.DateRangeEditor;
 
 public class DateRangeEditorValidator implements IUiValidator {
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();

@@ -3,9 +3,9 @@ package org.pentaho.pac.client.scheduler.view;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.pentaho.gwt.widgets.client.controls.ErrorLabel;
+import org.pentaho.gwt.widgets.client.utils.StringUtils;
 import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.common.ui.widget.ErrorLabel;
-import org.pentaho.pac.client.common.util.StringUtils;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
 import com.google.gwt.user.client.ui.Label;

@@ -15,18 +15,11 @@
  */
 package org.pentaho.pac.client.scheduler.ctlr;
 
+import org.pentaho.gwt.widgets.client.controls.schededitor.RecurrenceEditor;
+import org.pentaho.gwt.widgets.client.utils.StringUtils;
+import org.pentaho.gwt.widgets.client.utils.TimeUtil;
 import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.common.util.StringUtils;
-import org.pentaho.pac.client.common.util.TimeUtil;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
-import org.pentaho.pac.client.scheduler.view.RecurrenceEditor;
-import org.pentaho.pac.client.scheduler.view.RecurrenceEditor.DailyRecurrenceEditor;
-import org.pentaho.pac.client.scheduler.view.RecurrenceEditor.HourlyRecurrenceEditor;
-import org.pentaho.pac.client.scheduler.view.RecurrenceEditor.MinutelyRecurrenceEditor;
-import org.pentaho.pac.client.scheduler.view.RecurrenceEditor.MonthlyRecurrenceEditor;
-import org.pentaho.pac.client.scheduler.view.RecurrenceEditor.SecondlyRecurrenceEditor;
-import org.pentaho.pac.client.scheduler.view.RecurrenceEditor.WeeklyRecurrenceEditor;
-import org.pentaho.pac.client.scheduler.view.RecurrenceEditor.YearlyRecurrenceEditor;
 
 /**
  * 
@@ -49,7 +42,7 @@ public class RecurrenceEditorValidator implements IUiValidator {
     boolean isValid = true;
     switch ( recurrenceEditor.getTemporalState() ) {
       case SECONDS:
-        SecondlyRecurrenceEditor sEd = recurrenceEditor.getSecondlyEditor();
+        RecurrenceEditor.SecondlyRecurrenceEditor sEd = recurrenceEditor.getSecondlyEditor();
         String seconds = sEd.getValue();
         if ( !StringUtils.isPositiveInteger( seconds ) 
             || ( Integer.parseInt( seconds ) <= 0 ) ) {
@@ -63,7 +56,7 @@ public class RecurrenceEditorValidator implements IUiValidator {
         }
         break;
       case MINUTES:
-        MinutelyRecurrenceEditor mEd = recurrenceEditor.getMinutelyEditor();
+        RecurrenceEditor.MinutelyRecurrenceEditor mEd = recurrenceEditor.getMinutelyEditor();
         String minutes = mEd.getValue();
         if ( !StringUtils.isPositiveInteger( minutes ) 
             || ( Integer.parseInt( minutes ) <= 0 ) ) {
@@ -77,7 +70,7 @@ public class RecurrenceEditorValidator implements IUiValidator {
         }
         break;
       case HOURS:
-        HourlyRecurrenceEditor hEd = recurrenceEditor.getHourlyEditor();
+        RecurrenceEditor.HourlyRecurrenceEditor hEd = recurrenceEditor.getHourlyEditor();
         String hours = hEd.getValue();
         if ( !StringUtils.isPositiveInteger( hours ) 
             || ( Integer.parseInt( hours ) <= 0 ) ) {
@@ -91,7 +84,7 @@ public class RecurrenceEditorValidator implements IUiValidator {
         }
         break;
       case DAILY:
-        DailyRecurrenceEditor dEd = recurrenceEditor.getDailyEditor();
+        RecurrenceEditor.DailyRecurrenceEditor dEd = recurrenceEditor.getDailyEditor();
         if ( dEd.isEveryNDays() ) {
           String days = dEd.getRepeatValue();
           if ( !StringUtils.isPositiveInteger( days ) 
@@ -102,14 +95,14 @@ public class RecurrenceEditorValidator implements IUiValidator {
         }
         break;
       case WEEKLY:
-        WeeklyRecurrenceEditor wEd = recurrenceEditor.getWeeklyEditor();
+        RecurrenceEditor.WeeklyRecurrenceEditor wEd = recurrenceEditor.getWeeklyEditor();
         if ( wEd.getNumCheckedDays() < 1 ) {
           isValid = false;
           wEd.setEveryDayOnError( MSGS.oneOrMoreMustBeChecked() );
         }
         break;
       case MONTHLY:
-        MonthlyRecurrenceEditor monthlyEd = recurrenceEditor.getMonthlyEditor();
+        RecurrenceEditor.MonthlyRecurrenceEditor monthlyEd = recurrenceEditor.getMonthlyEditor();
         if ( monthlyEd.isDayNOfMonth() ) {
           String dayNOfMonth = monthlyEd.getDayOfMonth();
           if ( !StringUtils.isPositiveInteger( dayNOfMonth ) 
@@ -120,7 +113,7 @@ public class RecurrenceEditorValidator implements IUiValidator {
         }
         break;
       case YEARLY:
-        YearlyRecurrenceEditor yearlyEd = recurrenceEditor.getYearlyEditor();
+        RecurrenceEditor.YearlyRecurrenceEditor yearlyEd = recurrenceEditor.getYearlyEditor();
         if ( yearlyEd.isEveryMonthOnNthDay() ) {
           String dayNOfMonth = yearlyEd.getDayOfMonth();
           if ( !StringUtils.isPositiveInteger( dayNOfMonth ) 

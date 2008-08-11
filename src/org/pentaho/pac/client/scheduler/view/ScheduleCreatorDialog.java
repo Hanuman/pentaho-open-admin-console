@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.pentaho.gwt.widgets.client.controls.schededitor.ScheduleEditor;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 
 import com.google.gwt.user.client.ui.Label;

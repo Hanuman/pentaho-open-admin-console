@@ -17,14 +17,13 @@ package org.pentaho.pac.client.scheduler.ctlr;
 
 import java.util.List;
 
+import org.pentaho.gwt.widgets.client.utils.StringUtils;
 import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.common.util.StringUtils;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.scheduler.model.Schedule;
 import org.pentaho.pac.client.scheduler.view.SchedulesListCtrl;
 
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class SchedulesListController {

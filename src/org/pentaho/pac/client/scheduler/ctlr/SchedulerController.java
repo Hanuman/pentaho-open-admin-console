@@ -15,17 +15,19 @@
  */
 package org.pentaho.pac.client.scheduler.ctlr;
 
+import org.pentaho.gwt.widgets.client.controls.schededitor.ScheduleEditor;
 import org.pentaho.pac.client.common.ui.ICallback;
 import org.pentaho.pac.client.common.ui.TableListCtrl;
 import org.pentaho.pac.client.common.ui.dialog.BasicDialog;
 import org.pentaho.pac.client.scheduler.model.Schedule;
 import org.pentaho.pac.client.scheduler.model.SchedulesModel;
 import org.pentaho.pac.client.scheduler.view.ScheduleCreatorDialog;
-import org.pentaho.pac.client.scheduler.view.ScheduleEditor;
 import org.pentaho.pac.client.scheduler.view.SchedulerPanel;
 import org.pentaho.pac.client.scheduler.view.SchedulerToolbar;
 import org.pentaho.pac.client.scheduler.view.SchedulesListCtrl;
 import org.pentaho.pac.client.scheduler.view.SolutionRepositoryItemPicker;
+
+
 
 
 public class SchedulerController {

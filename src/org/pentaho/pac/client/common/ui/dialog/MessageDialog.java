@@ -1,9 +1,9 @@
 package org.pentaho.pac.client.common.ui.dialog;
 
+import org.pentaho.gwt.widgets.client.utils.StringUtils;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.ICallback;
 import org.pentaho.pac.client.common.ui.IResponseCallback;
-import org.pentaho.pac.client.common.util.StringUtils;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
 import com.google.gwt.user.client.ui.Button;

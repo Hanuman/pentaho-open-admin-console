@@ -5,11 +5,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.pentaho.gwt.widgets.client.containers.SimpleGroupBox;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.client.common.ui.ICallback;
 import org.pentaho.pac.client.common.ui.IListBoxFilter;
-import org.pentaho.pac.client.common.ui.SimpleGroupBox;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;

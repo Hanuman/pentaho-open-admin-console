@@ -15,11 +15,11 @@
  */
 package org.pentaho.pac.client.scheduler.ctlr;
 
+import org.pentaho.gwt.widgets.client.controls.schededitor.ScheduleEditor;
+import org.pentaho.gwt.widgets.client.utils.StringUtils;
 import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.common.util.StringUtils;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.scheduler.model.SchedulesModel;
-import org.pentaho.pac.client.scheduler.view.ScheduleEditor;
 
 public class ScheduleEditorValidator implements IUiValidator {
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
