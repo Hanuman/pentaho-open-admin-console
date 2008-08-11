@@ -61,71 +61,74 @@ public class SchedulerToolbarController {
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   private static final int INVALID_SCROLL_POS = -1;
   private static final String DISABLED = "disabled"; //$NON-NLS-1$
+  private boolean isInitialized = false;
   
   public SchedulerToolbarController( SchedulerToolbar schedulerToolbar, SchedulesListCtrl schedulesListCtrl ) {
     this.schedulerToolbar = schedulerToolbar;
     this.schedulesListCtrl = schedulesListCtrl;
   }
   
-  public void init( SchedulesModel pSchedulesModel, ScheduleCreatorDialog pScheduleCreatorDialog,
+  public void init( ScheduleCreatorDialog pScheduleCreatorDialog,
       SchedulesListController pSchedulesListController ) {
     
-    this.schedulesModel = pSchedulesModel;
-    this.scheduleCreatorDialog = pScheduleCreatorDialog;
-    this.schedulesListController = pSchedulesListController;
-    
-    final SchedulerToolbarController localThis = this;
-
-    schedulerToolbar.setOnCreateListener( new ICallback<Widget>() { 
-      public void onHandle(Widget w) {
-        localThis.handleCreateSchedule();
-      }
-    });
-    
-    schedulerToolbar.setOnUpdateListener( new ICallback<Widget>() { 
-      public void onHandle(Widget w) {
-        localThis.handleUpdateSchedule();
-      }
-    });
-
-    schedulerToolbar.setOnDeleteListener( new ICallback<Widget>() {
-      public void onHandle(Widget w) {
-        localThis.handleDeleteSchedules();
-      }
-    });
-    
-    schedulerToolbar.setOnResumeListener( new ICallback<Widget>() { 
-      public void onHandle(Widget w) {
-        localThis.handleResumeSchedules();
-      }
-    });
-    
-    schedulerToolbar.setOnSuspendListener( new ICallback<Widget>() { 
-      public void onHandle(Widget w) {
-        localThis.handlePauseSchedules();
-      }
-    });
-    
-    schedulerToolbar.setOnRunNowListener( new ICallback<Widget>() { 
-      public void onHandle(Widget w) {
-        localThis.handleRunNowSchedules();
-      }
-    });
-    
-    schedulerToolbar.setOnRefreshListener( new ICallback<Widget>() { 
-      public void onHandle(Widget w) {
-        loadJobsTable();
-      }
-    });
-    
-    schedulerToolbar.setOnFilterListChangeListener( new ICallback<String>() { 
-      public void onHandle(String s) {
-        updateSchedulesTable();
-      }
-    });  
-    
-    enableTools();
-    loadJobsTable();
+    if ( !isInitialized ) {
+      this.scheduleCreatorDialog = pScheduleCreatorDialog;
+      this.schedulesListController = pSchedulesListController;
+      
+      final SchedulerToolbarController localThis = this;
+  
+      schedulerToolbar.setOnCreateListener( new ICallback<Widget>() { 
+        public void onHandle(Widget w) {
+          localThis.handleCreateSchedule();
+        }
+      });
+      
+      schedulerToolbar.setOnUpdateListener( new ICallback<Widget>() { 
+        public void onHandle(Widget w) {
+          localThis.handleUpdateSchedule();
+        }
+      });
+  
+      schedulerToolbar.setOnDeleteListener( new ICallback<Widget>() {
+        public void onHandle(Widget w) {
+          localThis.handleDeleteSchedules();
+        }
+      });
+      
+      schedulerToolbar.setOnResumeListener( new ICallback<Widget>() { 
+        public void onHandle(Widget w) {
+          localThis.handleResumeSchedules();
+        }
+      });
+      
+      schedulerToolbar.setOnSuspendListener( new ICallback<Widget>() { 
+        public void onHandle(Widget w) {
+          localThis.handlePauseSchedules();
+        }
+      });
+      
+      schedulerToolbar.setOnRunNowListener( new ICallback<Widget>() { 
+        public void onHandle(Widget w) {
+          localThis.handleRunNowSchedules();
+        }
+      });
+      
+      schedulerToolbar.setOnRefreshListener( new ICallback<Widget>() { 
+        public void onHandle(Widget w) {
+          loadJobsTable();
+        }
+      });
+      
+      schedulerToolbar.setOnFilterListChangeListener( new ICallback<String>() { 
+        public void onHandle(String s) {
+          updateSchedulesTable();
+        }
+      });  
+      
+      enableTools();
+      loadJobsTable();
+      isInitialized = true;
+    }
   }
   
   private List<Schedule> getSortedSchedulesList( List<Schedule> scheduleList ) {
@@ -854,5 +857,9 @@ public class SchedulerToolbarController {
     }
     
     return isValid;
+  }
+
+  public SchedulesModel getSchedulesModel() {
+    return schedulesModel;
   }
 }

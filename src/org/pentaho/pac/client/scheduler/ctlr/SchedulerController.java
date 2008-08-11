@@ -33,11 +33,11 @@ import org.pentaho.pac.client.scheduler.view.SolutionRepositoryItemPicker;
 public class SchedulerController {
 
   private SchedulerPanel schedulerPanel = null; // this is the view
-  private SchedulesModel schedulesModel = null;   // this is the model
 
   private SchedulesListController schedulesListController = null;
   private SchedulerToolbarController schedulerToolbarController = null;
   private ScheduleCreatorDialog scheduleCreatorDialog = null;
+  private boolean isInitialized = false;
   
   public SchedulerController( SchedulerPanel schedulerPanel ) {
     assert (null != schedulerPanel ) : "schedulerPanel cannot be null."; //$NON-NLS-1$
@@ -54,13 +54,13 @@ public class SchedulerController {
   
   public void init() {
     
-    if ( !isInitialized() ) {
+    if ( !isInitialized ) {
       schedulerPanel.init();
       SchedulerToolbar schedulerToolbar = schedulerPanel.getSchedulerToolbar();
       SchedulesListCtrl listCtrl = schedulerPanel.getSchedulesListCtrl();
       schedulesListController = new SchedulesListController( listCtrl );
       schedulerToolbarController = new SchedulerToolbarController( schedulerToolbar, listCtrl );
-      schedulerToolbarController.init( schedulesModel, scheduleCreatorDialog, schedulesListController );
+      schedulerToolbarController.init( scheduleCreatorDialog, schedulesListController );
       
       listCtrl.setOnSelectHandler( new ICallback<TableListCtrl<Schedule>>() {
         public void onHandle(TableListCtrl<Schedule> pListCtrl) {
@@ -73,11 +73,8 @@ public class SchedulerController {
           schedulerToolbarController.enableTools();
         }
       });
+      isInitialized = true;
     } // end isInitialized
-  }
-  
-  private boolean isInitialized() {
-    return null != schedulesModel;
   }
   
   /**
@@ -91,7 +88,9 @@ public class SchedulerController {
     ScheduleEditor schedEd = scheduleCreatorDialog.getScheduleEditor();
     SolutionRepositoryItemPicker solRepPicker = scheduleCreatorDialog.getSolutionRepositoryItemPicker();
     
-    ScheduleEditorValidator schedEdValidator = new ScheduleEditorValidator( schedEd, schedulesModel );
+    SchedulesModel schedulesModel = schedulerToolbarController.getSchedulesModel();
+    ScheduleEditorValidator schedEdValidator = new ScheduleEditorValidator( 
+        schedEd, schedulesModel );
     schedEdValidator.clear();
     
     SolutionRepositoryItemPickerValidator solRepValidator = new SolutionRepositoryItemPickerValidator( solRepPicker );
