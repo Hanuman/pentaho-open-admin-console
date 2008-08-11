@@ -70,7 +70,7 @@
           Jar the org/pentaho/pac package.
          ================================= -->
 	<target name="jar-console" depends="init,compile-pac">
-		<jar destfile="${build.jars.dir}/pentaho-admin-console.jar">
+		<jar destfile="${build.jars.dir}/pentaho-open-admin-console.jar">
 			<manifest>
 				<attribute name="Implementation-Title" value="${impl.title}" />
 				<attribute name="Implementation-Version" value="${impl.version}" />
@@ -123,7 +123,7 @@
 		 Jar the org/pentaho/pac/messages package.
 		 ================================= -->
 	<target name="jar-messages" depends="init, compile-pac">
-		<jar destfile="${build.jars.dir}/pentaho-admin-console-messages.jar">
+		<jar destfile="${build.jars.dir}/pentaho-open-admin-console-messages.jar">
 			<manifest>
 				<attribute name="Implementation-Title" value="${impl.title}" />
 				<attribute name="Implementation-Version" value="${impl.version}" />
@@ -187,15 +187,16 @@
 
 		 package up distribution in a zip file
 		 ================================= -->
+	<target name="dist" depends="clean, jar-console, jar-messages, dirty-dist" description="create distribution"/>
 
-	<target name="dist" depends="clean, jar-console, jar-messages" description="create distribution">
-		<zip destfile="${dist.dir}/pentaho-admin-console-${impl.version}.zip">
-			<zipfileset dir="${build.jars.dir}" prefix="pentaho-admin-console/lib" />
-			<zipfileset dir="lib" excludes="**/test/*" prefix="pentaho-admin-console/lib" />
-			<zipfileset dir="config" prefix="pentaho-admin-console/config" />
-			<zipfileset dir="${gwt.output.dir}" prefix="pentaho-admin-console/www" />
-			<zipfileset dir="build-res" includes="*.bat" prefix="pentaho-admin-console" />
-			<zipfileset dir="${res.dir}" prefix="pentaho-admin-console/res/hibernate" />
+	<target name="dirty-dist" depends="clean, jar-console, jar-messages" description="create distribution">
+		<zip destfile="${dist.dir}/pentaho-open-admin-console-${impl.version}.zip">
+			<zipfileset dir="${build.jars.dir}" prefix="pentaho-open-admin-console/lib" />
+			<zipfileset dir="lib" excludes="**/test/*" prefix="pentaho-open-admin-console/lib" />
+			<zipfileset dir="config" prefix="pentaho-open-admin-console/config" />
+			<zipfileset dir="${gwt.output.dir}" prefix="pentaho-open-admin-console/www" />
+			<zipfileset dir="build-res" includes="*.bat" prefix="pentaho-open-admin-console" />
+			<zipfileset dir="${res.dir}" prefix="pentaho-open-admin-console/res/hibernate" />
 		</zip>
 		<jar destfile="${dist.dir}/pentaho-admin-module-${impl.version}.jar">
 			<manifest>
@@ -211,6 +212,7 @@
 		</jar>
 	</target>
 
+
 	<!-- =================================
 		 target: run
 
@@ -219,15 +221,15 @@
 
 	<target name="run" description="Executes the console" depends="unpackConsole">
 
-		<java classname="org.pentaho.pac.server.JettyServer" fork="true" dir="${dist.dir}/exploded/pentaho-admin-console">
+		<java classname="org.pentaho.pac.server.JettyServer" fork="true" dir="${dist.dir}/exploded/pentaho-open-admin-console">
 			<classpath>
-				<fileset dir="${dist.dir}/exploded/pentaho-admin-console/lib/" includes="**/*.jar" />
+				<fileset dir="${dist.dir}/exploded/pentaho-open-admin-console/lib/" includes="**/*.jar" />
 			</classpath>
 		</java>
 	</target>
 
 	<target name="unpackConsole" description="unzip the distribution">
-		<unzip src="${dist.dir}/pentaho-admin-console.zip" dest="${dist.dir}/exploded/" />
+		<unzip src="${dist.dir}/pentaho-open-admin-console.zip" dest="${dist.dir}/exploded/" />
 	</target>
 
 </project>

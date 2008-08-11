@@ -1,1 +1,1 @@
-@java -cp "%~dp0\src;%~dp0\bin;C:/software/gwt/gwt-windows-1.4.61/gwt-user.jar;C:/software/gwt/gwt-windows-1.4.61/gwt-dev-windows.jar" com.google.gwt.i18n.tools.I18NSync -out "%~dp0\src" org.pentaho.pac.client.i18n.PacLocalizedMessages -createMessages
+@java -cp "%~dp0\src;%~dp0\bin;/pentaho-open-admin-console/lib/gwt/windows/gwt-user.jar;/pentaho-open-admin-console/lib/gwt/windows/gwt-dev-windows.jar" com.google.gwt.i18n.tools.I18NSync -out "%~dp0\src" org.pentaho.pac.client.i18n.PacLocalizedMessages -createMessages

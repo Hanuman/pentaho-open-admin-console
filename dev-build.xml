@@ -48,18 +48,18 @@
 	</target>
 	
 	<!-- ===================================================================
-        target: init-pentaho-admin-console-classes
+        target: init-pentaho-open-admin-console-classes
        =================================================================== -->
-	<target name="init-pentaho-admin-console-classes">
+	<target name="init-pentaho-open-admin-console-classes">
 		<mkdir dir="${build.classes.dir}" />
 		<echo message="javac.path=${javac.path}" />
 	</target>
 	
 	
 	<!-- ===================================================================
-		 target: init-pentaho-admin-console-wars
+		 target: init-pentaho-open-admin-console-wars
 		 =================================================================== -->
-	<target name="init-pentaho-admin-console-wars">
+	<target name="init-pentaho-open-admin-console-wars">
 		<mkdir dir="${build.wars.dir}" />
 	</target>
 	
@@ -100,9 +100,9 @@
 		</copy>
 	 </target>
 	<!-- ===================================================================
-        target: init-pentaho-admin-console-jars
+        target: init-pentaho-open-admin-console-jars
        =================================================================== -->
-	<target name="init-pentaho-admin-console-jars">
+	<target name="init-pentaho-open-admin-console-jars">
 		<mkdir dir="${build.jars.dir}" />
 	</target>
 	<!-- ===================================================================
@@ -122,12 +122,12 @@
 	</target>	
 	
 	<!-- =================================
-          target: jar-pentaho-admin-console
+          target: jar-pentaho-open-admin-console
 
           Jar the org/pentaho/pac package.
          ================================= -->
-	<target name="jar-pentaho-admin-console" depends="init-pentaho-admin-console-jars,init-pentaho-admin-console-classes,compile-pac">
-		<jar destfile="${build.jars.dir}/pentaho-admin-console.jar">
+	<target name="jar-pentaho-open-admin-console" depends="init-pentaho-open-admin-console-jars,init-pentaho-open-admin-console-classes,compile-pac">
+		<jar destfile="${build.jars.dir}/pentaho-open-admin-console.jar">
 			<manifest>
 				<attribute name="Implementation-Title" value="${impl.title}" />
 				<attribute name="Implementation-Version" value="${impl.version}" />
@@ -219,7 +219,7 @@
 	<!-- =================================
 		 target: undeploy
 		 ================================= -->
-	  <target name="war" depends="init-pentaho-admin-console-wars, init-lib, jar-pentaho-admin-console"  description="builds the war file">
+	  <target name="war" depends="init-pentaho-open-admin-console-wars, init-lib, jar-pentaho-open-admin-console"  description="builds the war file">
 	    <delete file="${build.wars.dir}/${war}"/>
 	    <war warfile="${build.wars.dir}/${war}" webxml="web.xml">
 	      <!-- generated HTML/JavaScript plus your CSS -->
