@@ -2022,4 +2022,36 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key deleteSchedules
    */
   String deleteSchedules();
+
+  /**
+  * Translated "Console Shutdown".
+  * 
+  * @return translated "Console Shutdown"
+  * @gwt.key consoleShutdown
+  */
+  String consoleShutdown();
+  
+  /**
+  * Translated "Console shutdown complete".
+  * 
+  * @return translated "Console shutdown complete"
+  * @gwt.key consoleShutdownComplete
+  */
+  String consoleShutdownComplete();
+
+  /**
+  * Translated "Console Shutdown".
+  * 
+  * @return translated "Console Shutdown"
+  * @gwt.key stoppingServerConfirmation
+  */
+  String stoppingServerConfirmation();
+  
+    /**
+  * Translated "Are you sure you want to stop the console?".
+  * 
+  * @return translated "Are you sure you want to stop the console?"
+  * @gwt.key confirmStopServerMsg
+  */
+  String confirmStopServerMsg();
 }
