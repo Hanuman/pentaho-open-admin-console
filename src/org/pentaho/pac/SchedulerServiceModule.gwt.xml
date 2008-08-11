@@ -2,7 +2,7 @@
 
 	<!-- Inherit the core Web Toolkit stuff.                  -->
 	<inherits name='com.google.gwt.user.User'/>
-	<inherits name='org.zenika.widget.DatePickerModule'/>
+	<inherits name="org.pentaho.gwt.widgets.Widgets"/>
 
 	<!-- Specify the app entry point class.                   -->
 	<servlet path='/schedulersvc' class='org.pentaho.pac.server.SchedulerServiceImpl'/>  
