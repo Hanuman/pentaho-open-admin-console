@@ -86,7 +86,7 @@
 	</target>
 
 	<target name="jar-gwt-module" depends="clean, jar-console, jar-messages" description="create module jar">
-			<jar destfile="${dist.dir}/pentaho-admin-module-${impl.version}.jar">
+			<jar destfile="${dist.dir}/pentaho-open-admin-module-${impl.version}.jar">
 				<manifest>
 					<attribute name="Implementation-Title" value="${impl.title}" />
 					<attribute name="Implementation-Version" value="${impl.version}" />
@@ -101,7 +101,7 @@
 		</target>
 
 	<target name="copy-gwt-module">
-		<copyfile dest="../pentaho-mgmt-services/lib-ext/pentaho/pentaho-admin-module.jar" src="${build.jars.dir}/pentaho-admin-module.jar" />
+		<copyfile dest="../pentaho-mgmt-services/lib-ext/pentaho/pentaho-open-admin-module.jar" src="${build.jars.dir}/pentaho-open-admin-module.jar" />
 	</target>
 
 	<path id="class.path">
@@ -187,9 +187,9 @@
 
 		 package up distribution in a zip file
 		 ================================= -->
-	<target name="dist" depends="clean, jar-console, jar-messages, dirty-dist" description="create distribution"/>
+	<target name="dist" depends="clean, dirty-dist" description="create distribution"/>
 
-	<target name="dirty-dist" depends="clean, jar-console, jar-messages" description="create distribution">
+	<target name="dirty-dist" depends="jar-console, jar-messages" description="create distribution">
 		<zip destfile="${dist.dir}/pentaho-open-admin-console-${impl.version}.zip">
 			<zipfileset dir="${build.jars.dir}" prefix="pentaho-open-admin-console/lib" />
 			<zipfileset dir="lib" excludes="**/test/*" prefix="pentaho-open-admin-console/lib" />
@@ -198,7 +198,7 @@
 			<zipfileset dir="build-res" includes="*.bat" prefix="pentaho-open-admin-console" />
 			<zipfileset dir="${res.dir}" prefix="pentaho-open-admin-console/res/hibernate" />
 		</zip>
-		<jar destfile="${dist.dir}/pentaho-admin-module-${impl.version}.jar">
+		<jar destfile="${dist.dir}/pentaho-open-admin-module-${impl.version}.jar">
 			<manifest>
 				<attribute name="Implementation-Title" value="${impl.title}" />
 				<attribute name="Implementation-Version" value="${impl.version}" />
