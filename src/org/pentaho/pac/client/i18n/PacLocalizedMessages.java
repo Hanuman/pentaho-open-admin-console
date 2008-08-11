@@ -152,9 +152,9 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String invalidTabIndex(String arg0);
 
   /**
-   * Translated "Successfully updated the DataSource.".
+   * Translated "Successfully updated the Data Source.".
    * 
-   * @return translated "Successfully updated the DataSource."
+   * @return translated "Successfully updated the Data Source."
    * @gwt.key successfulDataSourceUpdate
    */
   String successfulDataSourceUpdate();
@@ -184,9 +184,9 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String dbUrl();
 
   /**
-   * Translated "Wait:".
+   * Translated "Wait: (milliseconds)".
    * 
-   * @return translated "Wait:"
+   * @return translated "Wait: (milliseconds)"
    * @gwt.key dbWaitTime
    */
   String dbWaitTime();
@@ -824,20 +824,20 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String editSchedule();
 
   /**
-   * Translated "User Name".
-   * 
-   * @return translated "User Name"
-   * @gwt.key userName
-   */
-  String userName();
-
-  /**
    * Translated "Password does not match password confirmation.".
    * 
    * @return translated "Password does not match password confirmation."
    * @gwt.key passwordConfirmationFailed
    */
   String passwordConfirmationFailed();
+
+  /**
+   * Translated "User Name".
+   * 
+   * @return translated "User Name"
+   * @gwt.key userName
+   */
+  String userName();
 
   /**
    * Translated "Click to edit users.".
@@ -942,6 +942,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key clickEditRoles
    */
   String clickEditRoles();
+
+  /**
+   * Translated "Role creation failed: {0}".
+   * 
+   * @return translated "Role creation failed: {0}"
+   * @gwt.key roleCreationFailed
+   */
+  String roleCreationFailed(String arg0);
 
   /**
    * Translated "Schedule with name "{0}" already exists. Select another name.".
@@ -1312,9 +1320,9 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String specifyStartDate();
 
   /**
-   * Translated "#Idle Conn:".
+   * Translated "Number of Idle Connections:".
    * 
-   * @return translated "#Idle Conn:"
+   * @return translated "Number of Idle Connections:"
    * @gwt.key numIdleDbConnnections
    */
   String numIdleDbConnnections();
@@ -1560,9 +1568,9 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String removeUsers();
 
   /**
-   * Translated "Max Active Conn:".
+   * Translated "Maximum Active Connections:".
    * 
-   * @return translated "Max Active Conn:"
+   * @return translated "Maximum Active Connections:"
    * @gwt.key maxActiveDbConnections
    */
   String maxActiveDbConnections();
@@ -1606,6 +1614,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key ok
    */
   String ok();
+
+  /**
+   * Translated "Cause".
+   * 
+   * @return translated "Cause"
+   * @gwt.key cause
+   */
+  String cause();
 
   /**
    * Translated "Restore Default File Permissions".
@@ -1840,9 +1856,9 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String tuesday();
 
   /**
-   * Translated "Are your sure you want to delete the selected data sources? If you are using connection pooling in the platform, it will require a server restart inorder for this change to take effect.".
+   * Translated "Are your sure you want to delete the selected Data Source(s)? If you are using connection pooling in the platform, it will require a server restart inorder for this change to take effect.".
    * 
-   * @return translated "Are your sure you want to delete the selected data sources? If you are using connection pooling in the platform, it will require a server restart inorder for this change to take effect."
+   * @return translated "Are your sure you want to delete the selected Data Source(s)? If you are using connection pooling in the platform, it will require a server restart inorder for this change to take effect."
    * @gwt.key confirmDataSourceDeletionMsg
    */
   String confirmDataSourceDeletionMsg();
@@ -1904,9 +1920,9 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String rangeOfRecurrence();
 
   /**
-   * Translated "Successfully Deleted the selected datasource(s).".
+   * Translated "Successfully Deleted the selected Data Source(s).".
    * 
-   * @return translated "Successfully Deleted the selected datasource(s)."
+   * @return translated "Successfully Deleted the selected Data Source(s)."
    * @gwt.key successfulDataSourceDelete
    */
   String successfulDataSourceDelete();
@@ -2006,8 +2022,4 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key deleteSchedules
    */
   String deleteSchedules();
-  
-  String cause();
-  
-  String roleCreationFailed(String arg0);
 }
