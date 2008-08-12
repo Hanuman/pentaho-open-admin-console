@@ -13,7 +13,7 @@
 	<servlet class="org.pentaho.pac.server.pdi.svc.PdiServiceImpl" path="/pdiservice"/> 
 	<servlet class="org.pentaho.pac.server.pdi.svc.PdiEntriesTableServiceImpl" path="/pdientries"/> 
 	<servlet class="org.pentaho.pac.server.pdi.svc.StepMetricsServiceImpl" path="/stepmetrics"/> 
-	<servlet class="com.pentaho.pac.server.DefaultConsoleServlet" path="/halt"/>  	
+	<servlet class="org.pentaho.pac.server.DefaultConsoleServlet" path="/halt"/>  	
 	<source path="client"/>
 	<source path="common"/>
 </module>
