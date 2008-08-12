@@ -72,7 +72,7 @@ public class JettyServer implements Halter{
     }
     if(properties != null) {
       String port = properties.getProperty(CONSOLE_PORT_NUMBER, null);
-      String hostname = properties.getProperty(CONSOLE_PORT_NUMBER, null);
+      String hostname = properties.getProperty(CONSOLE_HOST_NAME, null);
 
       if(port != null && port.length() > 0) {
         this.portNumber = Integer.parseInt(port); 
@@ -89,8 +89,7 @@ public class JettyServer implements Halter{
       this.hostname = DEFAULT_HOSTNAME;
       this.portNumber = DEFAULT_PORT_NUMBER;
     }
-    //this.hostname = DEFAULT_HOSTNAME;
-    //this.portNumber = DEFAULT_PORT_NUMBER;
+
     server = new Server();
     setupServer();
     startServer();
@@ -169,8 +168,6 @@ public class JettyServer implements Halter{
       try {
         Constraint constraint = new Constraint();
         constraint.setName(Constraint.__BASIC_AUTH);
-        ;
-        // constraint.setRoles( new String[] { Constraint.ANY_ROLE } );
         constraint.setRoles(new String[] { "admin" });
         constraint.setAuthenticate(true);
         ConstraintMapping constraintMapping = new ConstraintMapping();
