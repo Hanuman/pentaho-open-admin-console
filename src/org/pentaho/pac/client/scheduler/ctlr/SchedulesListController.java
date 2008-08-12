@@ -43,7 +43,7 @@ public class SchedulesListController {
       for ( int scheduleIdx=0; scheduleIdx< scheduleList.size(); ++scheduleIdx ) {
         Schedule schedule = scheduleList.get( scheduleIdx );
   
-        Widget[] widgets = new Widget[ schedulesListCtrl.getNumColumns() ];
+        Widget[] widgets = new Widget[ schedulesListCtrl.getNumColumns()-1 ];
 
         // column 0
         Label l = new Label( schedule.getJobName());
