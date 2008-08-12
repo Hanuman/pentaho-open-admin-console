@@ -127,7 +127,6 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
     confirmStopServerDialog.setOnOkHandler(new ICallback() {
       public void onHandle(Object o) {
         confirmStopServerDialog.hide();
-        removeFromParent();
         VerticalPanel shutdownPanel = getShutDownPanel();
         shutdownPanel.setWidth("100%");
         shutdownPanel.setHeight("100%");
