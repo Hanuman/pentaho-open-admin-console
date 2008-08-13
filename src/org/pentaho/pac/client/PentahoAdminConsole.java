@@ -6,15 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.pentaho.pac.client.common.SelectListener;
-import org.pentaho.pac.client.common.ui.GroupBox;
-import org.pentaho.pac.client.common.ui.ICallback;
-import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 import org.pentaho.pac.client.home.HomePanel;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.utils.PacImageBundle;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -41,9 +37,9 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
       this.page = page;
     }
   }
-  public int shutdownWindowIndex=0;   
+   
   public static final PacLocalizedMessages MSGS = (PacLocalizedMessages)GWT.create(PacLocalizedMessages.class);
-  ConfirmDialog confirmStopServerDialog = new ConfirmDialog(MSGS.stoppingServerConfirmation(), MSGS.confirmStopServerMsg());
+  
   protected Map<Integer, PageInfo> pageMap = new HashMap<Integer, PageInfo>();
   
   protected VerticalPanel leftVerticalPanel = new VerticalPanel();
@@ -124,17 +120,6 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
     centerPanel.setCellHeight(deckPanelWrapper, "100%"); //$NON-NLS-1$
     centerPanel.setCellWidth(deckPanelWrapper, "100%"); //$NON-NLS-1$
     
-    confirmStopServerDialog.setOnOkHandler(new ICallback() {
-      public void onHandle(Object o) {
-        confirmStopServerDialog.hide();
-        VerticalPanel shutdownPanel = getShutDownPanel();
-        shutdownPanel.setWidth("100%");
-        shutdownPanel.setHeight("100%");
-        add(shutdownPanel);
-        deckPanel.showWidget(shutdownWindowIndex);
-        DOM.getElementById("downloadIframe").setAttribute("src", "halt");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      }
-    });
     return centerPanel;
   }
   
@@ -177,13 +162,13 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
     deckPanel.add(widget);
     
     if (widget instanceof SelectListener)
-    	toggleButton.addClickListener(new ClickListener()
-    	{
-			public void onClick(Widget sender) {
-				((SelectListener)widget).onSelect(sender);
-			}
-    		
-    	});
+      toggleButton.addClickListener(new ClickListener()
+      {
+      public void onClick(Widget sender) {
+        ((SelectListener)widget).onSelect(sender);
+      }
+        
+      });
   }
   
   public HorizontalPanel buildTopPanel() {
@@ -303,13 +288,6 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
       indicatorsRight.add(indicators);
       Image helpImage = PacImageBundle.getBundle().helpIcon().createImage();
       Image createImage = PacImageBundle.getBundle().refreshIcon().createImage();
-      Image stopConsoleImage = PacImageBundle.getBundle().stopIcon().createImage();
-      stopConsoleImage.addClickListener( new ClickListener() {
-
-        public void onClick(Widget sender) {
-          confirmStopServerDialog.center();
-        }});
-      
       helpImage.addClickListener( new ClickListener() {
 
         public void onClick(Widget sender) {
@@ -320,7 +298,7 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
 
       addImageButton(createImage);
       addImageButton(helpImage);
-      addImageButton(stopConsoleImage);
+      
       centerPanel.add(buttonsPanel);
       centerPanel.setCellHorizontalAlignment(buttonsPanel, HorizontalPanel.ALIGN_RIGHT);
       centerPanel.setCellVerticalAlignment(buttonsPanel, HorizontalPanel.ALIGN_MIDDLE);
@@ -403,28 +381,6 @@ public class PentahoAdminConsole extends DockPanel implements ClickListener {
       grid.setWidget(1, 0, vertPanel);
       add(grid, DockPanel.CENTER);
     }
-  }
-  
-  private VerticalPanel getShutDownPanel() {
-   
-    
-    GroupBox box = new GroupBox(MSGS.consoleShutdown());
-    
-    VerticalPanel verticalPanel = new VerticalPanel();
-    verticalPanel.add(new Label(MSGS.consoleShutdownComplete()));
-    verticalPanel.setWidth("100%");
-    verticalPanel.setHeight("100%");
-    
-    box.setContent(verticalPanel);
-    box.setHeight("100px");
-    box.setWidth("400px");
-    
-    VerticalPanel vp = new VerticalPanel();
-    vp.add(box);
-    vp.setCellHorizontalAlignment(box, VerticalPanel.ALIGN_CENTER);
-    vp.setCellVerticalAlignment(box, VerticalPanel.ALIGN_MIDDLE);
-    
-    return vp;
   }
   
   static public PacLocalizedMessages getLocalizedMessages() {

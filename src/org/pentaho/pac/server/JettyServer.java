@@ -1,9 +1,13 @@
 package org.pentaho.pac.server;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.BindException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.Properties;
 
 import javax.servlet.ServletException;
@@ -29,7 +33,7 @@ import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
 import org.pentaho.pac.server.i18n.Messages;
 
-public class JettyServer implements Halter{
+public class JettyServer implements Halter {
   protected Server server;
 
   private int portNumber;
@@ -40,99 +44,69 @@ public class JettyServer implements Halter{
 
   public static final String CONSOLE_PASSWORD_FILE_NAME = "config/console.pwd"; //$NON-NLS-1$
 
-  public static final String CONSOLE_PORT_NUMBER = "console.port.number"; //$NON-NLS-1$
+  public static final String CONSOLE_PORT_NUMBER = "console.start.port.number"; //$NON-NLS-1$
 
   public static final String CONSOLE_HOST_NAME = "console.hostname"; //$NON-NLS-1$
 
   public static final int DEFAULT_PORT_NUMBER = 8099;
+  public static final int DEFAULT_STOP_PORT_NUMBER = 8011;
 
   public static final String DEFAULT_HOSTNAME = "localhost"; //$NON-NLS-1$
 
   private static final Log logger = LogFactory.getLog(JettyServer.class);
+  
+  public static final String STOP_ARG = "-STOP"; //$NON-NLS-1$
+  public static final String STOP_PORT = "console.stop.port.number";//$NON-NLS-1$
+  public int stopPort = 0;
   private boolean running = false;
-  
+
   public static JettyServer jettyServer;
-  
-  public JettyServer(){
-    FileInputStream fis = null; 
-    Properties properties = null;
-    try {
-      File file = new File(DEFAULT_CONSOLE_PROPERTIES_FILE_NAME);
-      fis = new FileInputStream(file);
-    } catch (IOException e1) {
-      logger.error( Messages.getString( "PacService.OPEN_PROPS_FAILED", DEFAULT_CONSOLE_PROPERTIES_FILE_NAME ) ); //$NON-NLS-1$
-    }
-    if ( null != fis ) {
-      properties = new Properties();
-      try {
-        properties.load( fis );
-      } catch (IOException e) {
-        logger.error( Messages.getString( "PacService.LOAD_PROPS_FAILED", DEFAULT_CONSOLE_PROPERTIES_FILE_NAME ) ); //$NON-NLS-1$
-      }
-    }
-    if(properties != null) {
-      String port = properties.getProperty(CONSOLE_PORT_NUMBER, null);
-      String hostname = properties.getProperty(CONSOLE_HOST_NAME, null);
 
-      if(port != null && port.length() > 0) {
-        this.portNumber = Integer.parseInt(port); 
-      } else {
-        this.portNumber = DEFAULT_PORT_NUMBER; 
-      }
-      
-      if(hostname != null && hostname.length() > 0) {
-        this.hostname = hostname;
-      }  else {
-        this.hostname = DEFAULT_HOSTNAME;
-      }
-    } else {
-      this.hostname = DEFAULT_HOSTNAME;
-      this.portNumber = DEFAULT_PORT_NUMBER;
-    }
-
+  public JettyServer() {
+    readConfiguration();
     server = new Server();
     setupServer();
     startServer();
+    stopHandler(this, stopPort);
   }
 
-  public JettyServer(String hostname, int port) {
+  public JettyServer(String hostname, int port, int stop) {
     this.portNumber = port;
     this.hostname = hostname;
+    stopPort = stop;
     server = new Server();
     setupServer();
     startServer();
+    stopHandler(this, stopPort);
   }
 
-  
   public static JettyServer getInstance() {
     return jettyServer;
   }
-  
+
   public boolean isRunning() {
     return running;
   }
-  
+
   public void stop() {
 
-    Halter halter = new Halter( this );
+    Halter halter = new Halter(this);
     // Create the thread supplying it with the runnable object
     Thread thread = new Thread(halter);
-      
+
     // Start the thread
     thread.start();
-
   }
 
   public void haltNow() {
+    try {
+      server.stop();
+      running = false;
+    } catch (Exception e) {
+      logger.error("error starting server", e); //$NON-NLS-1$
+    }
+  }
 
-      try {
-          server.stop();
-          running = false;
-        } catch (Exception e) {
-          logger.error("error starting server", e); //$NON-NLS-1$
-        }
-
-}
   private void startServer() {
     SocketConnector connector = new SocketConnector();
     connector.setPort(portNumber);
@@ -140,7 +114,7 @@ public class JettyServer implements Halter{
     connector.setName("Pentaho Console HTTP listener for [" + hostname + ":" + portNumber + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     logger.info("starting " + connector.getName()); //$NON-NLS-1$
     server.setConnectors(new Connector[] { connector });
-    server.setStopAtShutdown(true); 
+    server.setStopAtShutdown(true);
     logger.info("Console Starting"); //$NON-NLS-1$
 
     try {
@@ -192,7 +166,6 @@ public class JettyServer implements Halter{
     startExecution.addServlet(defaultServlet, "/*"); //$NON-NLS-1$
     startExecution.addServlet(defaultServlet, "/halt"); //$NON-NLS-1$
 
-    
     ServletHolder pacsvc = new ServletHolder(new org.pentaho.pac.server.PacServiceImpl());
     startExecution.addServlet(pacsvc, "/pacsvc"); //$NON-NLS-1$
 
@@ -239,7 +212,7 @@ public class JettyServer implements Halter{
   }
 
   public static void main(String[] args) {
-    JettyServer server = new JettyServer();
+    jettyServer = new JettyServer();
   }
 
   // TODO sbarkdull, can this be deleted?
@@ -256,25 +229,124 @@ public class JettyServer implements Halter{
 
     }
   }
-  
+
   private class Halter implements Runnable {
     // This method is called when the thread runs
-  
-  private JettyServer jettyServer;
-  
-  public Halter( JettyServer jettyServer ) {
-    this.jettyServer = jettyServer;
-  }
-  
+
+    private JettyServer jettyServer;
+
+    public Halter(JettyServer jettyServer) {
+      this.jettyServer = jettyServer;
+    }
+
     public void run() {
-      System.out.println( Messages.getString("CONSOLE.WAITING_TO_HALT") ); //$NON-NLS-1$
+      System.out.println(Messages.getString("CONSOLE.WAITING_TO_HALT")); //$NON-NLS-1$
       try {
-          Thread.sleep( 3000 );
+        Thread.sleep(3000);
       } catch (Exception e) {
         // ignore this
       }
-      System.out.println( Messages.getString("CONSOLE.HALTING") ); //$NON-NLS-1$
+      System.out.println(Messages.getString("CONSOLE.HALTING")); //$NON-NLS-1$
       jettyServer.haltNow();
     }
+  }
+  
+  public void readConfiguration() {
+    FileInputStream fis = null;
+    Properties properties = null;
+    try {
+      File file = new File(DEFAULT_CONSOLE_PROPERTIES_FILE_NAME);
+      fis = new FileInputStream(file);
+    } catch (IOException e1) {
+      logger.error(Messages.getString("PacService.OPEN_PROPS_FAILED", DEFAULT_CONSOLE_PROPERTIES_FILE_NAME)); //$NON-NLS-1$
+    }
+    if (null != fis) {
+      properties = new Properties();
+      try {
+        properties.load(fis);
+      } catch (IOException e) {
+        logger.error(Messages.getString("PacService.LOAD_PROPS_FAILED", DEFAULT_CONSOLE_PROPERTIES_FILE_NAME)); //$NON-NLS-1$
+      }
+    }
+    if (properties != null) {
+      String port = properties.getProperty(CONSOLE_PORT_NUMBER, null);
+      String hostname = properties.getProperty(CONSOLE_HOST_NAME, null);
+      String stopPortNumber = properties.getProperty(STOP_PORT, null);
+
+      if (port != null && port.length() > 0) {
+        this.portNumber = Integer.parseInt(port);
+      } else {
+        this.portNumber = DEFAULT_PORT_NUMBER;
+      }
+
+      if (stopPortNumber != null && stopPortNumber.length() > 0) {
+        stopPort = Integer.parseInt(stopPortNumber);
+      } else {
+        stopPort = DEFAULT_STOP_PORT_NUMBER;
+      }
+
+      
+      if (hostname != null && hostname.length() > 0) {
+        this.hostname = hostname;
+      } else {
+        this.hostname = DEFAULT_HOSTNAME;
+      }
+    } else {
+      this.hostname = DEFAULT_HOSTNAME;
+      this.portNumber = DEFAULT_PORT_NUMBER;
+      stopPort = DEFAULT_STOP_PORT_NUMBER;
+    }
+  }
+  public void stopHandler(JettyServer jServer, int stopPort) {
+    ServerSocket server = null;
+    try {
+      server = new ServerSocket(stopPort);
+    } catch (IOException ioe) {
+      System.out.println("IO Error: " + ioe.getLocalizedMessage());//$NON-NLS-1$
+    }
+    try {
+      Socket s = server.accept();
+      Thread t = new Thread(new RequestHandler(jServer, s));
+      t.start();
+    } catch (Exception e) {
+      System.out.println("IO Error: " + e.getLocalizedMessage());//$NON-NLS-1$
+    }
+  }
+  private class RequestHandler implements Runnable {
+    // This method is called when the thread runs
+
+    private JettyServer jettyServer;
+
+    private Socket socket;
+
+    public RequestHandler(JettyServer jettyServer, Socket socket) {
+      this.jettyServer = jettyServer;
+      this.socket = socket;
+    }
+
+    public void run() {
+      try {
+        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        String inputLine;
+        while ((inputLine = in.readLine()) != null) {
+          if (inputLine != null && inputLine.length() > 0) {
+            inputLine = inputLine.trim();
+            if (inputLine.equalsIgnoreCase(STOP_ARG)) {
+              System.out.println("Waiting to halt console"); //$NON-NLS-1$
+              try {
+                Thread.sleep(3000);
+              } catch (Exception e) {
+                // ignore this
+              }
+              System.out.println("Console is halting"); //$NON-NLS-1$
+              jettyServer.haltNow();
+            }
+          }
+        }
+      } catch (IOException ioe) {
+        System.out.println("IO Error: " + ioe.getLocalizedMessage());//$NON-NLS-1$
+      }
+    }
+  }
 }
-}
+
