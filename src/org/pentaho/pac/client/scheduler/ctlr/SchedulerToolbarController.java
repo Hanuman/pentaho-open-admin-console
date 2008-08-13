@@ -28,12 +28,12 @@ import java.util.Map;
 import java.util.Set;
 
 import org.pentaho.gwt.widgets.client.controls.schededitor.ScheduleEditor;
+import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.gwt.widgets.client.utils.CronParseException;
 import org.pentaho.gwt.widgets.client.utils.TimeUtil;
 import org.pentaho.pac.client.ISchedulerServiceAsync;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.common.ui.ICallback;
 import org.pentaho.pac.client.common.ui.IResponseCallback;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;

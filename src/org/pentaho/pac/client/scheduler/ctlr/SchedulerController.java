@@ -16,7 +16,7 @@
 package org.pentaho.pac.client.scheduler.ctlr;
 
 import org.pentaho.gwt.widgets.client.controls.schededitor.ScheduleEditor;
-import org.pentaho.pac.client.common.ui.ICallback;
+import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.common.ui.TableListCtrl;
 import org.pentaho.pac.client.common.ui.dialog.BasicDialog;
 import org.pentaho.pac.client.scheduler.model.Schedule;

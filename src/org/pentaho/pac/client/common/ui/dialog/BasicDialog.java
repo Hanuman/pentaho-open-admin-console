@@ -1,6 +1,6 @@
 package org.pentaho.pac.client.common.ui.dialog;
 
-import org.pentaho.pac.client.common.ui.ICallback;
+import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.utils.PacImageBundle;
 
 import com.google.gwt.user.client.ui.Button;

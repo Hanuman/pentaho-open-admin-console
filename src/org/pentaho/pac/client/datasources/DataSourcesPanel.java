@@ -1,8 +1,8 @@
 package org.pentaho.pac.client.datasources;
 
+import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.common.ui.ICallback;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;

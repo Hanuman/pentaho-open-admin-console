@@ -1,6 +1,6 @@
 package org.pentaho.pac.client.common.ui.dialog;
 
-import org.pentaho.pac.client.common.ui.ICallback;
+import org.pentaho.gwt.widgets.client.ui.ICallback;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;

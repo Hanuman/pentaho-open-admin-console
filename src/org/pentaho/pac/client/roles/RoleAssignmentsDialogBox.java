@@ -5,8 +5,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
-import org.pentaho.pac.client.common.ui.ICallback;
 import org.pentaho.pac.client.common.ui.dialog.AccumulatorDialog;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.common.PentahoSecurityException;

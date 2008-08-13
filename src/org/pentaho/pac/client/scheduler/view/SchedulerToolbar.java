@@ -15,8 +15,8 @@
  */
 package org.pentaho.pac.client.scheduler.view;
 
+import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.common.ui.ICallback;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
 import com.google.gwt.user.client.ui.ChangeListener;

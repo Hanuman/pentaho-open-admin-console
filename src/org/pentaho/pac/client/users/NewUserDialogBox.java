@@ -1,7 +1,7 @@
 package org.pentaho.pac.client.users;
 
+import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
-import org.pentaho.pac.client.common.ui.ICallback;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.common.PentahoSecurityException;
