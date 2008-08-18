@@ -1,4 +1,4 @@
-package org.pentaho.pac.server.scheduler;
+package org.pentaho.pac.server.biplatformproxy.xmlserializer;
 
 import org.pentaho.pac.common.CheckedException;
 

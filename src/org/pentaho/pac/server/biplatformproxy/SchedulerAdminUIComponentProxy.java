@@ -14,7 +14,7 @@
  * @author Steven Barkdull
  */
 
-package org.pentaho.pac.server.scheduler;
+package org.pentaho.pac.server.biplatformproxy;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -24,6 +24,8 @@ import java.util.Map;
 
 import org.pentaho.pac.client.scheduler.model.Schedule;
 import org.pentaho.pac.common.SchedulerServiceException;
+import org.pentaho.pac.server.biplatformproxy.xmlserializer.SchedulerXmlSerializer;
+import org.pentaho.pac.server.biplatformproxy.xmlserializer.XmlSerializerException;
 import org.pentaho.pac.server.common.BiServerTrustedProxy;
 import org.pentaho.pac.server.common.ProxyException;
 import org.pentaho.pac.server.common.ThreadSafeHttpClient.HttpMethodType;

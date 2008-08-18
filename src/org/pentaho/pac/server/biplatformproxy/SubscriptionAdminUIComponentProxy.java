@@ -1,4 +1,4 @@
-package org.pentaho.pac.server.scheduler;
+package org.pentaho.pac.server.biplatformproxy;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -8,6 +8,8 @@ import java.util.Map;
 
 import org.pentaho.pac.client.scheduler.model.Schedule;
 import org.pentaho.pac.common.SchedulerServiceException;
+import org.pentaho.pac.server.biplatformproxy.xmlserializer.SubscriptionXmlSerializer;
+import org.pentaho.pac.server.biplatformproxy.xmlserializer.XmlSerializerException;
 import org.pentaho.pac.server.common.BiServerTrustedProxy;
 import org.pentaho.pac.server.common.ProxyException;
 import org.pentaho.pac.server.common.ThreadSafeHttpClient.HttpMethodType;
@@ -77,8 +79,8 @@ public class SubscriptionAdminUIComponentProxy {
       : null;
     Map<String, Object> params = new HashMap<String, Object>();
     params.put( "schedulerAction", "doAddScheduleAndContent" ); //$NON-NLS-1$  //$NON-NLS-2$
-    // TODO sbarkdull, this ain't right
-    params.put( "title", "someday a title will go here" ); //$NON-NLS-1$
+    // TODO sbarkdull, this may not be right (using jobName for title)
+    params.put( "title", jobName ); //$NON-NLS-1$
     params.put( "schedRef", jobName ); //$NON-NLS-1$
     params.put( "desc", description ); //$NON-NLS-1$
     params.put( "start-date-time", strStartDate ); //$NON-NLS-1$
@@ -107,8 +109,8 @@ public class SubscriptionAdminUIComponentProxy {
       : null;
     Map<String, Object> params = new HashMap<String, Object>();
     params.put( "schedulerAction", "doAddScheduleAndContent" ); //$NON-NLS-1$  //$NON-NLS-2$
-    // TODO sbarkdull, this ain't right
-    params.put( "title", "someday a title will go here" ); //$NON-NLS-1$
+    // TODO sbarkdull, this may not be right (using jobName for title)
+    params.put( "title", jobName ); //$NON-NLS-1$
     params.put( "schedRef", jobName ); //$NON-NLS-1$
     params.put( "desc", description ); //$NON-NLS-1$
     params.put( "start-date-time", strStartDate ); //$NON-NLS-1$
@@ -143,7 +145,8 @@ public class SubscriptionAdminUIComponentProxy {
     params.put( "schedRef", jobName ); //$NON-NLS-1$
     params.put( "group", jobGroup ); //$NON-NLS-1$
     params.put( "desc", description ); //$NON-NLS-1$
-    params.put( "title", "someday a title will go here"); //$NON-NLS-1$
+    // TODO sbarkdull, this may not be right (using jobName for title)
+    params.put( "title", jobName ); //$NON-NLS-1$
     params.put( "start-date-time", strStartDate ); //$NON-NLS-1$
     if ( null != strEndDate ) {
       params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
@@ -173,7 +176,8 @@ public class SubscriptionAdminUIComponentProxy {
     params.put( "schedRef", jobName ); //$NON-NLS-1$
     params.put( "group", jobGroup ); //$NON-NLS-1$
     params.put( "desc", description ); //$NON-NLS-1$
-    params.put( "title", "someday a title will go here"); //$NON-NLS-1$
+    // TODO sbarkdull, this may not be right (using jobName for title)
+    params.put( "title", jobName ); //$NON-NLS-1$
     params.put( "start-date-time", strStartDate ); //$NON-NLS-1$
     if ( null != strEndDate ) {
       params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
