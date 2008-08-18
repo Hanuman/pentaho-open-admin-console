@@ -9,6 +9,7 @@ public class PacServiceFactory {
 
   private static SchedulerServiceAsync schedulerService = null;
   private static SubscriptionServiceAsync subscriptionService = null;
+  private static SolutionRepositoryServiceAsync solutionRepositoryService = null;
 
   public static PacServiceAsync getPacService() {
     if (pacService == null) {
@@ -38,5 +39,15 @@ public class PacServiceFactory {
       endpoint.setServiceEntryPoint(moduleRelativeURL);
     }
     return subscriptionService;
+  }
+
+  public static SolutionRepositoryServiceAsync getSolutionRepositoryService() {
+    if (solutionRepositoryService == null) {
+      solutionRepositoryService = (SolutionRepositoryServiceAsync) GWT.create(SolutionRepositoryService.class);
+      ServiceDefTarget endpoint = (ServiceDefTarget) solutionRepositoryService;
+      String moduleRelativeURL = GWT.getModuleBaseURL() + "solutionrepositorysvc"; //$NON-NLS-1$
+      endpoint.setServiceEntryPoint(moduleRelativeURL);
+    }
+    return solutionRepositoryService;
   }
 }
