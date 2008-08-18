@@ -3,20 +3,21 @@ package org.pentaho.pac.client.scheduler.view;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.pentaho.gwt.filechooser.client.FileChooser;
 import org.pentaho.gwt.widgets.client.controls.ErrorLabel;
 import org.pentaho.gwt.widgets.client.utils.StringUtils;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class SolutionRepositoryItemPicker extends VerticalPanel {
   
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
-
-  private TextArea actionsTA = new TextArea();
+  
+  private ListBoxEx actionsLB = new ListBoxEx();
 
   private ErrorLabel actionsLabel = null;
   private boolean bIsSingleSelect = true;
@@ -25,48 +26,56 @@ public class SolutionRepositoryItemPicker extends VerticalPanel {
     super();
 
     setStylePrimaryName( "solRepItemPicker" ); //$NON-NLS-1$
-    actionsTA.setWidth( "100%" ); //$NON-NLS-1$
-    actionsTA.setHeight( "20ex" ); //$NON-NLS-1$
+//    actionsTA.setWidth( "100%" ); //$NON-NLS-1$
+//    actionsTA.setHeight( "20ex" ); //$NON-NLS-1$
     actionsLabel = new ErrorLabel( new Label( MSGS.commaSeparatedList() ) );
     add( actionsLabel );
-    add( actionsTA );
+    
+    FileChooser f = new FileChooser();
+    
+    add( actionsLB );
   }
   
-  public void reset() {    
-    actionsTA.setText( "" ); //$NON-NLS-1$
+  public void reset() {
+    actionsLB.removeAll();
   }
   
+  /**
+   * Get a comma separated list of the solution paths
+   * @return
+   */
   public String getActionsAsString() {
-    return actionsTA.getText();
+    String actionsList = "";
+    for ( int ii=0; ii<actionsLB.getItemCount(); ++ii ) {
+      actionsList += actionsLB.getValue( ii );
+      if ( ii < actionsLB.getItemCount()-1 ) {
+        actionsList += ",";
+      }
+    }
+    return actionsList;
   }
   
   public List<String> getActionsAsList() {
-    String[] actions = actionsTA.getText().split( "," ); //$NON-NLS-1$
     List<String> l = new ArrayList<String>();
-    if ( actions.length > 1 || ( 1 == actions.length && !StringUtils.isEmpty( actions[0]) ) ) {
-      for ( String action : actions ) {
-        l.add( action.trim() );
-      }
+    for ( int ii=0; ii<actionsLB.getItemCount(); ++ii ) {
+      l.add( actionsLB.getValue( ii ) );
     }
     return l;
   }
   
+  /*
   public void setActionsAsString( String actions ) {
-    actionsTA.setText( actions );
+    String[] actionAr = actions.split( "," );
+    for ( String action : actionAr ) {
+      actionsLB.addItem(item, value)( action );
+    }
   }
+  */
   
   public void setActionsAsList( List<String> actions ) {
-    StringBuilder strBldr = new StringBuilder();
-    int numActions = actions.size();
-    for ( int ii=0; ii<numActions-1; ++ii ) {
-      String action = actions.get( ii );
-      strBldr.append( action ).append( "," ); //$NON-NLS-1$
+    for ( String action : actions ) {
+      actionsLB.addItem( action );
     }
-    if ( numActions > 0 ) {
-      String action = actions.get( numActions-1 );
-      strBldr.append( action );
-    }
-    actionsTA.setText( strBldr.toString() );
   }
   
   public void setActionsError( String errorMsg ) {
@@ -82,7 +91,9 @@ public class SolutionRepositoryItemPicker extends VerticalPanel {
   }
   
   public void setFocus() {
-    actionsTA.setFocus( true );
-    actionsTA.setSelectionRange( 0, actionsTA.getText().length() );
+    // TODO sbarkdull
+    System.out.println( "implement setFocus on SolutionRepositoryITemPicker()" );
+//    actionsTA.setFocus( true );
+//    actionsTA.setSelectionRange( 0, actionsTA.getText().length() );
   }
 }
