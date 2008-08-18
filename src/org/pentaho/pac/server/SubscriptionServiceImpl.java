@@ -8,8 +8,8 @@ import org.apache.commons.lang.StringUtils;
 import org.pentaho.pac.client.SubscriptionService;
 import org.pentaho.pac.client.scheduler.model.Schedule;
 import org.pentaho.pac.common.SchedulerServiceException;
+import org.pentaho.pac.server.biplatformproxy.SubscriptionAdminUIComponentProxy;
 import org.pentaho.pac.server.common.AppConfigProperties;
-import org.pentaho.pac.server.scheduler.SubscriptionAdminUIComponentProxy;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 

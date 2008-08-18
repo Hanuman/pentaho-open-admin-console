@@ -13,8 +13,8 @@ import org.apache.commons.logging.LogFactory;
 import org.pentaho.pac.client.SchedulerService;
 import org.pentaho.pac.client.scheduler.model.Schedule;
 import org.pentaho.pac.common.SchedulerServiceException;
+import org.pentaho.pac.server.biplatformproxy.SchedulerAdminUIComponentProxy;
 import org.pentaho.pac.server.common.AppConfigProperties;
-import org.pentaho.pac.server.scheduler.SchedulerAdminUIComponentProxy;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
