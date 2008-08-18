@@ -1,8 +1,5 @@
 package org.pentaho.pac.client;
 
-import java.util.List;
-
-import org.pentaho.pac.client.scheduler.model.Schedule;
 import org.pentaho.pac.common.SchedulerServiceException;
 
 import com.google.gwt.user.client.rpc.RemoteService;
