@@ -175,6 +175,9 @@ public class JettyServer implements Halter {
     ServletHolder subscriptionsvc = new ServletHolder(new org.pentaho.pac.server.SubscriptionServiceImpl());
     startExecution.addServlet(subscriptionsvc, "/subscriptionsvc"); //$NON-NLS-1$
 
+    ServletHolder solutionrepositorysvc = new ServletHolder(new org.pentaho.pac.server.SolutionRepositoryServiceImpl());
+    startExecution.addServlet(solutionrepositorysvc, "/solutionrepositorysvc"); //$NON-NLS-1$
+
     // TODO sbarkdull, can this be deleted?
     // sample
     Handler hello = new HomeHandler();
