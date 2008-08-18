@@ -19,7 +19,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.pentaho.gwt.widgets.client.controls.schededitor.ScheduleEditor;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 
 import com.google.gwt.user.client.ui.Label;
@@ -60,7 +59,7 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
     }
   }; // end enum
   
-  private ScheduleEditor scheduleEditor = new ScheduleEditor();
+  private DualModeScheduleEditor scheduleEditor = new DualModeScheduleEditor();
   private SolutionRepositoryItemPicker solRepItemPicker = new SolutionRepositoryItemPicker();
   private Label scheduleTabLabel = new Label( TabIndex.SCHEDULE.toString() );
   private Label scheduleActionTabLabel = new Label( TabIndex.SCHEDULE_ACTION.toString() );
@@ -120,7 +119,7 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
     addWidgetToClientArea( tabPanel );
   }
 
-  public ScheduleEditor getScheduleEditor() {
+  public DualModeScheduleEditor getScheduleEditor() {
     return scheduleEditor;
   }
 

@@ -40,6 +40,8 @@ import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.scheduler.model.Schedule;
 import org.pentaho.pac.client.scheduler.model.SchedulesModel;
+import org.pentaho.pac.client.scheduler.model.SolutionRepositoryModel;
+import org.pentaho.pac.client.scheduler.view.DualModeScheduleEditor;
 import org.pentaho.pac.client.scheduler.view.ScheduleCreatorDialog;
 import org.pentaho.pac.client.scheduler.view.SchedulerToolbar;
 import org.pentaho.pac.client.scheduler.view.SchedulesListCtrl;
@@ -49,6 +51,8 @@ import org.pentaho.pac.client.scheduler.view.ScheduleCreatorDialog.TabIndex;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.xml.client.Document;
+import com.google.gwt.xml.client.XMLParser;
 
 
 public class SchedulerToolbarController {
@@ -58,6 +62,7 @@ public class SchedulerToolbarController {
   private ScheduleCreatorDialog scheduleCreatorDialog = null;
   private SchedulesListController schedulesListController = null;
   private SchedulesModel schedulesModel = null;
+  private SolutionRepositoryModel solutionRepositoryModel = null;
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   private static final int INVALID_SCROLL_POS = -1;
   private static final String DISABLED = "disabled"; //$NON-NLS-1$
@@ -126,6 +131,7 @@ public class SchedulerToolbarController {
       });  
       
       enableTools();
+      loadSolutionRepository();
       loadJobsTable();
       isInitialized = true;
     }
@@ -165,17 +171,9 @@ public class SchedulerToolbarController {
     return filteredList;
   }
   
-  /**
-   * 
-   */
-  @SuppressWarnings("fallthrough")
   private void updateSchedule() {
 
-    final List<Schedule> scheduleList = schedulesListCtrl.getSelectedSchedules();
-    Schedule oldSchedule = scheduleList.get( 0 );
-    
-    // TODO, List<Schedule> is probably not what we will get back
-    AsyncCallback<Object> responseCallback = new AsyncCallback<Object>() {
+    AsyncCallback<Object> updateScheduleResponseCallback = new AsyncCallback<Object>() {
       public void onSuccess( Object o ) {
         scheduleCreatorDialog.hide();
         loadJobsTable();
@@ -187,10 +185,11 @@ public class SchedulerToolbarController {
         messageDialog.center();
       }
     };
-    // TODO sbarkdull scheduleCreatorDialog -> scheduleEditorDialog
-    ScheduleEditor scheduleEditor = scheduleCreatorDialog.getScheduleEditor();
-
-    ISchedulerServiceAsync schedSvc = oldSchedule.isSubscriptionSchedule()  
+    final List<Schedule> scheduleList = schedulesListCtrl.getSelectedSchedules();
+    Schedule oldSchedule = scheduleList.get( 0 );
+    DualModeScheduleEditor scheduleEditor = scheduleCreatorDialog.getScheduleEditor();
+    
+    ISchedulerServiceAsync schedSvc = scheduleEditor.isSubscriptionSchedule()
       ? PacServiceFactory.getSubscriptionService()
       : PacServiceFactory.getSchedulerService();
     
@@ -219,7 +218,7 @@ public class SchedulerToolbarController {
             "0" /*repeat count*/, //$NON-NLS-1$
             "0" /*repeat time*/,  //$NON-NLS-1$
             scheduleCreatorDialog.getSolutionRepositoryItemPicker().getActionsAsString().trim(),
-            responseCallback
+            updateScheduleResponseCallback
           );
         break;
       case SECONDS: // fall through
@@ -244,7 +243,7 @@ public class SchedulerToolbarController {
               null /*repeat count*/,
               repeatInterval.trim(), 
               scheduleCreatorDialog.getSolutionRepositoryItemPicker().getActionsAsString().trim(),
-              responseCallback
+              updateScheduleResponseCallback
             );
           break;
         } else {
@@ -262,11 +261,50 @@ public class SchedulerToolbarController {
             endDate,
             cronStr.trim(), 
             scheduleCreatorDialog.getSolutionRepositoryItemPicker().getActionsAsString().trim(),
-            responseCallback
+            updateScheduleResponseCallback
           );
         break;
       default:
         throw new RuntimeException( MSGS.invalidRunType( rt.toString() ) );
+    }
+  }
+  
+  /**
+   * 
+   */
+  @SuppressWarnings("fallthrough")
+  private void updateScheduleWithNewScheduleType() {
+    
+    final List<Schedule> scheduleList = schedulesListCtrl.getSelectedSchedules();
+    Schedule oldSchedule = scheduleList.get( 0 );
+
+    AsyncCallback<Object> deleteScheduleCallback = new AsyncCallback<Object>() {
+      public void onSuccess( Object o ) {
+        createSchedule();
+      }
+
+      public void onFailure(Throwable caught) {
+        MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
+            caught.getMessage() + " " + MSGS.updateFailedScheduleLost() ); //$NON-NLS-1$
+        messageDialog.center();
+      }
+    };
+    
+    // TODO sbarkdull scheduleCreatorDialog -> scheduleEditorDialog
+    DualModeScheduleEditor scheduleEditor = scheduleCreatorDialog.getScheduleEditor();
+
+    ISchedulerServiceAsync schedSvc = null;
+    if ( oldSchedule.isSubscriptionSchedule() != scheduleEditor.isSubscriptionSchedule() ) {
+      // they are changing the schedule type, so delete it, and add a new one
+      schedSvc = oldSchedule.isSubscriptionSchedule()  
+        ? PacServiceFactory.getSubscriptionService()
+        : PacServiceFactory.getSchedulerService();
+      List<Schedule> deleteList = new ArrayList<Schedule>();
+      deleteList.add( oldSchedule );
+      schedSvc.deleteJobs(deleteList, deleteScheduleCallback );
+    } else {
+      // they are NOT changing the schedule type, so just update the existing schedule.
+      updateSchedule();
     }
   }
 
@@ -322,8 +360,27 @@ public class SchedulerToolbarController {
     
   }
   
-  private void loadJobsTable()
-  {
+  private void loadSolutionRepository() {
+
+    AsyncCallback<String> solutionRepositoryCallback = new AsyncCallback<String>() {
+      public void onSuccess( String strXml ) {
+        Document solutionRepositoryDocument = XMLParser.parse( strXml );
+        solutionRepositoryModel = new SolutionRepositoryModel( solutionRepositoryDocument );
+      } // end onSuccess
+
+      public void onFailure(Throwable caught) {
+        MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
+            caught.getMessage() );
+        messageDialog.center();
+        solutionRepositoryModel = null;
+      } // end onFailure
+    }; // end 
+      
+    PacServiceFactory.getSolutionRepositoryService().getSolutionRepositoryAsXml( solutionRepositoryCallback );
+    
+  }
+  
+  private void loadJobsTable() {
     schedulesListCtrl.setStateToLoading();
     final int currScrollPos = schedulesListCtrl.getScrollPosition();
     final Map<String,Schedule> schedulesMap = new HashMap<String,Schedule>();
@@ -417,7 +474,7 @@ public class SchedulerToolbarController {
     }; // end responseCallback
     
     // TODO sbarkdull scheduleCreatorDialog -> scheduleEditorDialog
-    ScheduleEditor scheduleEditor = scheduleCreatorDialog.getScheduleEditor();
+    DualModeScheduleEditor scheduleEditor = scheduleCreatorDialog.getScheduleEditor();
 
     String cronStr = scheduleEditor.getCronString();
     Date startDate = scheduleEditor.getStartDate();
@@ -434,7 +491,7 @@ public class SchedulerToolbarController {
     // TODO sbarkdull, if we want to support creation of scheduler schedules, we need to supply
  // a UI mechanism like a checkbox to allow user to identify scheduler vs subscription, 
  // and then test the value of the check box instead of the following "true".
-    ISchedulerServiceAsync schedSvc = true  
+    ISchedulerServiceAsync schedSvc = scheduleEditor.isSubscriptionSchedule()  
       ? PacServiceFactory.getSubscriptionService()
       : PacServiceFactory.getSchedulerService();
     
@@ -538,8 +595,9 @@ public class SchedulerToolbarController {
   private void initScheduleCreatorDialog( Schedule sched ) throws CronParseException {
 
     scheduleCreatorDialog.reset( new Date() );
-    ScheduleEditor scheduleEditor = scheduleCreatorDialog.getScheduleEditor();
-    
+    DualModeScheduleEditor scheduleEditor = scheduleCreatorDialog.getScheduleEditor();
+
+    scheduleEditor.setSubscriptionSchedule( sched.isSubscriptionSchedule() );
     scheduleEditor.setName( sched.getJobName() );
     scheduleEditor.setGroupName( sched.getJobGroup() );
     scheduleEditor.setDescription( sched.getDescription() );
@@ -632,7 +690,7 @@ public class SchedulerToolbarController {
     
     scheduleCreatorDialog.setOnOkHandler( new ICallback<MessageDialog>() {
       public void onHandle(MessageDialog d) {
-        localThis.updateSchedule();
+        localThis.updateScheduleWithNewScheduleType();
       }
     });
     this.scheduleCreatorDialog.setOnValidateHandler( new IResponseCallback<MessageDialog, Boolean>() {

@@ -28,8 +28,6 @@ import org.pentaho.pac.client.scheduler.view.SchedulesListCtrl;
 import org.pentaho.pac.client.scheduler.view.SolutionRepositoryItemPicker;
 
 
-
-
 public class SchedulerController {
 
   private SchedulerPanel schedulerPanel = null; // this is the view
@@ -43,19 +41,20 @@ public class SchedulerController {
     assert (null != schedulerPanel ) : "schedulerPanel cannot be null."; //$NON-NLS-1$
     
     this.schedulerPanel = schedulerPanel;
-    this.scheduleCreatorDialog = new ScheduleCreatorDialog();
-    this.scheduleCreatorDialog.setOnCancelHandler( new ICallback<BasicDialog>() {
-      public void onHandle(BasicDialog dlg) {
-        clearScheduleEditorValidationMsgs();
-        scheduleCreatorDialog.hide();
-      }
-    });
   }
   
   public void init() {
     
     if ( !isInitialized ) {
       schedulerPanel.init();
+      this.scheduleCreatorDialog = new ScheduleCreatorDialog();
+      this.scheduleCreatorDialog.setOnCancelHandler( new ICallback<BasicDialog>() {
+        public void onHandle(BasicDialog dlg) {
+          clearScheduleEditorValidationMsgs();
+          scheduleCreatorDialog.hide();
+        }
+      });
+      scheduleCreatorDialog.getScheduleEditor().setSubscriptionSchedule( true );
       SchedulerToolbar schedulerToolbar = schedulerPanel.getSchedulerToolbar();
       SchedulesListCtrl listCtrl = schedulerPanel.getSchedulesListCtrl();
       schedulesListController = new SchedulesListController( listCtrl );
