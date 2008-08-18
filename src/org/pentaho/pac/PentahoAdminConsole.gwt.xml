@@ -5,8 +5,15 @@
 	<inherits name="org.pentaho.pac.PacServiceModule"/>
 	<inherits name="org.pentaho.pac.SchedulerServiceModule"/>
 	<inherits name="org.pentaho.pac.SubscriptionServiceModule"/>
+	<inherits name="org.pentaho.pac.SolutionRepositoryServiceModule"/>
 	<inherits name="org.pentaho.gwt.widgets.Widgets"/>
+	<inherits name="org.pentaho.gwt.filechooser.FileChooser"/>
 	<inherits name="org.hanson.gwt.widgets/WidgetLibrary"/>
+
+	<set-property name="user.agent" value="ie6" />
+    <extend-property name="locale" values="en_US" />
+    	<!-- 
+	 -->
 
 	<!-- Specify the app entry point class.                   -->
 	<entry-point class="org.pentaho.pac.client.PentahoAdminConsoleEntryPoint"/>
