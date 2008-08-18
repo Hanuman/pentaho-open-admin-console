@@ -3,7 +3,7 @@ package org.pentaho.pac.client.i18n;
 
 /**
  * Interface to represent the messages contained in resource  bundle:
- * 	C:/projects/pentaho.2.trunk/pentaho-admin-console/src/org/pentaho/pac/client/i18n/PacLocalizedMessages.properties'.
+ * 	C:/projects/pentaho.2.trunk/pentaho-open-admin-console/src/org/pentaho/pac/client/i18n/PacLocalizedMessages.properties'.
  */
 public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Messages {
   
@@ -696,6 +696,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String sunday();
 
   /**
+   * Translated "Console shutdown complete".
+   * 
+   * @return translated "Console shutdown complete"
+   * @gwt.key consoleShutdownComplete
+   */
+  String consoleShutdownComplete();
+
+  /**
    * Translated "Cron String:".
    * 
    * @return translated "Cron String:"
@@ -1110,6 +1118,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key usersAndRoles
    */
   String usersAndRoles();
+
+  /**
+   * Translated "Are you sure you want to stop the console?".
+   * 
+   * @return translated "Are you sure you want to stop the console?"
+   * @gwt.key confirmStopServerMsg
+   */
+  String confirmStopServerMsg();
 
   /**
    * Translated "Schedule Creator".
@@ -1632,6 +1648,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String restoreDefaultFilePermissions();
 
   /**
+   * Translated "Console Shutdown".
+   * 
+   * @return translated "Console Shutdown"
+   * @gwt.key stoppingServerConfirmation
+   */
+  String stoppingServerConfirmation();
+
+  /**
    * Translated "Role Name".
    * 
    * @return translated "Role Name"
@@ -1752,6 +1776,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String days(String arg0);
 
   /**
+   * Translated "Update of the schedule failed. It is likely that the schedule you were trying to update has been deleted. If so, please create a new schedule.".
+   * 
+   * @return translated "Update of the schedule failed. It is likely that the schedule you were trying to update has been deleted. If so, please create a new schedule."
+   * @gwt.key updateFailedScheduleLost
+   */
+  String updateFailedScheduleLost();
+
+  /**
    * Translated "Start Date:".
    * 
    * @return translated "Start Date:"
@@ -1846,6 +1878,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key seconds
    */
   String seconds();
+
+  /**
+   * Translated "Console Shutdown".
+   * 
+   * @return translated "Console Shutdown"
+   * @gwt.key consoleShutdown
+   */
+  String consoleShutdown();
 
   /**
    * Translated "Tuesday".
@@ -2022,36 +2062,4 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key deleteSchedules
    */
   String deleteSchedules();
-
-  /**
-  * Translated "Console Shutdown".
-  * 
-  * @return translated "Console Shutdown"
-  * @gwt.key consoleShutdown
-  */
-  String consoleShutdown();
-  
-  /**
-  * Translated "Console shutdown complete".
-  * 
-  * @return translated "Console shutdown complete"
-  * @gwt.key consoleShutdownComplete
-  */
-  String consoleShutdownComplete();
-
-  /**
-  * Translated "Console Shutdown".
-  * 
-  * @return translated "Console Shutdown"
-  * @gwt.key stoppingServerConfirmation
-  */
-  String stoppingServerConfirmation();
-  
-    /**
-  * Translated "Are you sure you want to stop the console?".
-  * 
-  * @return translated "Are you sure you want to stop the console?"
-  * @gwt.key confirmStopServerMsg
-  */
-  String confirmStopServerMsg();
 }
