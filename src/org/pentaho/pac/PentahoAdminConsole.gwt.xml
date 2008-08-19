@@ -16,7 +16,7 @@
 	 -->
 
 	<!-- Specify the app entry point class.                   -->
-	<entry-point class="org.pentaho.pac.client.TestEntryPoint"/>
+	<entry-point class="org.pentaho.pac.client.PentahoAdminConsoleEntryPoint"/>
 	<servlet class="org.pentaho.pac.server.pdi.svc.PdiServiceImpl" path="/pdiservice"/> 
 	<servlet class="org.pentaho.pac.server.pdi.svc.PdiEntriesTableServiceImpl" path="/pdientries"/> 
 	<servlet class="org.pentaho.pac.server.pdi.svc.StepMetricsServiceImpl" path="/stepmetrics"/> 
