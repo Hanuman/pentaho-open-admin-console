@@ -5,7 +5,6 @@
 
 	<!-- Specify the app entry point class.                   -->
     <servlet path='/pacsvc' class='org.pentaho.pac.server.PacServiceImpl'/>  
-    <stylesheet src='PentahoAdminConsole.css'/>
     <source path="client"/>
     <source path="common"/>
 </module>
