@@ -10,8 +10,6 @@
 	<inherits name="org.pentaho.gwt.filechooser.FileChooser"/>
 	<inherits name="org.hanson.gwt.widgets/WidgetLibrary"/>
 
-	<set-property name="user.agent" value="ie6" />
-    <extend-property name="locale" values="en_US" />
     	<!-- 
 	 -->
 
