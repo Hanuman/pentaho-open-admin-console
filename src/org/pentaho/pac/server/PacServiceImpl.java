@@ -660,11 +660,6 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   }
   
 
-  public String clearMondrianDataCache() throws PacServiceException {
-    return executeXAction("admin", "", "clear_mondrian_data_cache.xaction" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-  }
-  
-
   public String clearMondrianSchemaCache() throws PacServiceException {
     return executeXAction("admin", "", "clear_mondrian_schema_cache.xaction" ); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   }
@@ -681,17 +676,17 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   
 
   public String refreshSystemSettings() throws PacServiceException {
-      return executePublishRequest("org.pentaho.core.system.SettingsPublisher" ); //$NON-NLS-1$
+      return executePublishRequest("org.pentaho.platform.engine.core.system.SettingsPublisher" ); //$NON-NLS-1$
   }
   
 
   public String executeGlobalActions() throws PacServiceException {
-    return executePublishRequest("org.pentaho.core.system.GlobalListsPublisher" ); //$NON-NLS-1$
+    return executePublishRequest("org.pentaho.platform.engine.core.system.GlobalListsPublisher" ); //$NON-NLS-1$
   }
   
 
   public String refreshReportingMetadata() throws PacServiceException {
-    return executePublishRequest("org.pentaho.plugin.mql.MetadataPublisher" ); //$NON-NLS-1$
+    return executePublishRequest("org.pentaho.platform.engine.services.metadata.MetadataPublisher" ); //$NON-NLS-1$
   }
   
   private void initFromConfiguration()

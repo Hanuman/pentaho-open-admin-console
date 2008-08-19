@@ -34,7 +34,6 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   Button refreshSolutionRepositoryBtn = new Button(MSGS.refreshSolutionRepository());
   Button cleanRepositoryBtn = new Button(MSGS.removeStaleContent());
-  Button clearMondrianDataCacheBtn = new Button(MSGS.purgeMondrianDataCache());
   Button clearMondrianSchemaCacheBtn = new Button(MSGS.purgeMondrianSchemaCache());
   Button scheduleRepositoryCleaningBtn = new Button(MSGS.scheduleDailyRepositoryCleaning());
   Button resetRepositoryBtn = new Button(MSGS.restoreDefaultFilePermissions());
@@ -48,17 +47,15 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
     
     grid.setWidget(0, 0, refreshSolutionRepositoryBtn);
     grid.setWidget(0, 1, cleanRepositoryBtn);
-    grid.setWidget(1, 0, clearMondrianDataCacheBtn);
-    grid.setWidget(1, 1, clearMondrianSchemaCacheBtn);
-    grid.setWidget(2, 0, scheduleRepositoryCleaningBtn);
-    grid.setWidget(2, 1, resetRepositoryBtn);
-    grid.setWidget(3, 0, refreshSystemSettingsBtn);
-    grid.setWidget(3, 1, executeGlobalActionsBtn);
-    grid.setWidget(4, 0, refreshReportingMetadataBtn);
+    grid.setWidget(1, 0, scheduleRepositoryCleaningBtn);
+    grid.setWidget(1, 1, resetRepositoryBtn);
+    grid.setWidget(2, 0, refreshSystemSettingsBtn);
+    grid.setWidget(2, 1, executeGlobalActionsBtn);
+    grid.setWidget(3, 0, refreshReportingMetadataBtn);
+    grid.setWidget(3, 1, clearMondrianSchemaCacheBtn);
     
     refreshSolutionRepositoryBtn.setWidth("100%"); //$NON-NLS-1$
     cleanRepositoryBtn.setWidth("100%"); //$NON-NLS-1$
-    clearMondrianDataCacheBtn.setWidth("100%"); //$NON-NLS-1$
     clearMondrianSchemaCacheBtn.setWidth("100%"); //$NON-NLS-1$
     scheduleRepositoryCleaningBtn.setWidth("100%"); //$NON-NLS-1$
     resetRepositoryBtn.setWidth("100%"); //$NON-NLS-1$
@@ -68,7 +65,6 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
     
     refreshSolutionRepositoryBtn.addClickListener(this);
     cleanRepositoryBtn.addClickListener(this);
-    clearMondrianDataCacheBtn.addClickListener(this);
     clearMondrianSchemaCacheBtn.addClickListener(this);
     scheduleRepositoryCleaningBtn.addClickListener(this);
     resetRepositoryBtn.addClickListener(this);
@@ -104,8 +100,6 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
       pacServiceAsync.refreshSolutionRepository(callback);
     } else if (sender == cleanRepositoryBtn) {
       pacServiceAsync.cleanRepository(callback);
-    } else if (sender == clearMondrianDataCacheBtn) {
-      pacServiceAsync.clearMondrianDataCache(callback);
     } else if (sender == clearMondrianSchemaCacheBtn) {
       pacServiceAsync.clearMondrianSchemaCache(callback);
     } else if (sender == scheduleRepositoryCleaningBtn) {

@@ -16,10 +16,8 @@
 
 package org.pentaho.pac.server.common;
 
+import java.util.HashMap;
 import java.util.Map;
-
-import org.pentaho.pac.common.PacServiceException;
-import org.pentaho.pac.server.common.ThreadSafeHttpClient.HttpMethodType;
 
 public class BiServerTrustedProxy extends ThreadSafeHttpClient {
 
@@ -79,6 +77,9 @@ public class BiServerTrustedProxy extends ThreadSafeHttpClient {
   public String execRemoteMethod( String serviceName, HttpMethodType methodType, String userName, Map<String,Object> params )
     throws ProxyException {
     
+    if (params == null) {
+      params = new HashMap<String, Object>();
+    }
     params.put( TRUSTED_USER_KEY, userName );
     return super.execRemoteMethod( serviceName, methodType, params );
   }

@@ -1064,14 +1064,6 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String invalidIntegerToken(String arg0);
 
   /**
-   * Translated "Purge Mondrian Data Cache".
-   * 
-   * @return translated "Purge Mondrian Data Cache"
-   * @gwt.key purgeMondrianDataCache
-   */
-  String purgeMondrianDataCache();
-
-  /**
    * Translated "Minutes".
    * 
    * @return translated "Minutes"

@@ -42,7 +42,6 @@ public interface PacService extends RemoteService {
   
   public String refreshSolutionRepository() throws PacServiceException;
   public String cleanRepository() throws PacServiceException;
-  public String clearMondrianDataCache() throws PacServiceException;
   public String clearMondrianSchemaCache() throws PacServiceException;
   public String scheduleRepositoryCleaning() throws PacServiceException;
   public String resetRepository() throws PacServiceException;

@@ -32,7 +32,6 @@ public interface PacServiceAsync {
   
   public void refreshSolutionRepository(AsyncCallback callback);
   public void cleanRepository(AsyncCallback callback);
-  public void clearMondrianDataCache(AsyncCallback callback);
   public void clearMondrianSchemaCache(AsyncCallback callback);
   public void scheduleRepositoryCleaning(AsyncCallback callback);
   public void resetRepository(AsyncCallback callback);
