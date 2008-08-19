@@ -38,6 +38,7 @@
 	<classpathentry kind="lib" path="lib/hibernate/ehcache-1.2.3.jar"/>
 	<classpathentry kind="lib" path="res/hibernate"/>
 	<classpathentry kind="lib" path="lib/jdbc/msql5/mysql-connector-java-5.1.5-bin.jar"/>
-	<classpathentry kind="lib" path="lib/pentaho/pentaho-gwt-widgets.jar"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/pentaho-gwt-filechooser"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/pentaho-gwt-widgets"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
