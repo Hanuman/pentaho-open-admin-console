@@ -6,12 +6,34 @@
 	<property file="build.properties" />
 	<property file="build-res/version.properties" />
 
+    <condition property="isMac">
+      <os family="mac"/>
+    </condition>
+
+    <condition property="isWindows">
+      <os family="windows"/>
+    </condition>
+
+    <condition property="isUnix">
+      <os family="unix"/>
+    </condition>
+
 	<path id="classpath">
 		<fileset dir="lib">
-			<include name="**/*.jar" />
+			<include name="*.jar" />
+		    <include name="gwt/**/*.jar" />
+		    <include name="gwt-core/**/*.jar" />
+		    <include name="gwt-windows/**/*.jar" if="isWindows" />
+		    <include name="gwt-mac/**/*.jar" if="isMac" />
+		    <include name="gwt-linux/**/*.jar" if="isUnix" />
+		    <include name="hibernate/**/*.jar" />
+		    <include name="jdbc/**/*.jar" />
+		    <include name="pentaho/**/*.jar" />
+		    <include name="test/**/*.jar" />
 			<include name="**/*.zip" />
 		</fileset>
 	</path>
+  
 	<!-- ===================================================================
         target: init              
        =================================================================== -->
