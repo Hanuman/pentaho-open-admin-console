@@ -194,7 +194,7 @@
 			<zipfileset dir="${build.jars.dir}" prefix="pentaho-open-admin-console/lib" />
 			<zipfileset dir="lib" excludes="**/test/*" prefix="pentaho-open-admin-console/lib" />
 			<zipfileset dir="${resource.dir}/config" prefix="pentaho-open-admin-console/resource/config" />
-			<zipfileset dir="${resource.dir}/config/hibernate" prefix="pentaho-open-admin-console/resource/config/hibernate" />
+			<zipfileset dir="${resource.dir}/hibernate" prefix="pentaho-open-admin-console/resource/hibernate" />
 			<zipfileset dir="${gwt.output.dir}" prefix="pentaho-open-admin-console/www" />
 			<zipfileset dir="build-res" includes="*.bat" prefix="pentaho-open-admin-console" />
 		</zip>
