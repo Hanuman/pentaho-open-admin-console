@@ -77,7 +77,7 @@
 				<attribute name="Implementation-Vendor" value="${impl.vendor}" />
 				<attribute name="Implementation-ProductID" value="${impl.productID}" />
 				<attribute name="Main-Class" value="org.pentaho.pac.server.JettyServer" />
-				<attribute name="Class-Path" value="../resource/config/ ../resource/config/hibernate/ ${class-path}" />
+				<attribute name="Class-Path" value="../resource/config/ ../resource/hibernate/ ${class-path}" />
 			</manifest>
 			<fileset dir="${build.classes.dir}" />
 			<fileset dir="${src.dir}" excludes="**/*.java" />
@@ -96,7 +96,7 @@
 			<fileset dir="${build.classes.dir}" />
 			<fileset dir="${src.dir}" />
 			<fileset dir="${resource.dir}/config" />
-			<fileset dir="${resource.dir}/config/hibernate" />
+			<fileset dir="${resource.dir}/hibernate" />
 		</jar>
 	</target>
 
@@ -208,7 +208,7 @@
 			<fileset dir="${build.classes.dir}" />
 			<fileset dir="${src.dir}" />
 			<fileset dir="${resource.dir}/config" />
-			<fileset dir="${resource.dir}/config/hibernate" />
+			<fileset dir="${resource.dir}/hibernate" />
 		</jar>
 	</target>
 
