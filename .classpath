@@ -23,7 +23,6 @@
 	<classpathentry kind="lib" path="lib/gwt/jetty-gwt-6.1.9.jar"/>
 	<classpathentry kind="lib" path="lib/hibernate/hibernate3.jar"/>
 	<classpathentry kind="lib" path="lib/commons-httpclient-3.1.jar" sourcepath="C:/software/commons-httpclient-3.1/src"/>
-	<classpathentry kind="lib" path="config"/>
 	<classpathentry kind="lib" path="lib/gwt/gwt-datepicker-r17.jar"/>
 	<classpathentry kind="lib" path="lib/pentaho/pentaho-bi-platform-util-2.0.jar" sourcepath="/bi-platform-util"/>
 	<classpathentry kind="lib" path="lib/pentaho/pentaho-bi-platform-api-2.0.jar"/>
@@ -32,7 +31,6 @@
 	<classpathentry kind="lib" path="lib/hibernate/ejb3-persistence.jar"/>
 	<classpathentry kind="lib" path="lib/hibernate/hibernate-commons-annotations.jar"/>
 	<classpathentry kind="lib" path="lib/hibernate/ehcache-1.2.3.jar"/>
-	<classpathentry kind="lib" path="res/hibernate"/>
 	<classpathentry kind="lib" path="lib/jdbc/msql5/mysql-connector-java-5.1.5-bin.jar"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/pentaho-gwt-filechooser"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/pentaho-gwt-widgets"/>
@@ -40,5 +38,6 @@
 	<classpathentry kind="lib" path="lib/gwt-core/gwt-servlet.jar"/>
 	<classpathentry kind="lib" path="lib/gwt-core/gwt-user.jar"/>
 	<classpathentry kind="lib" path="lib/gwt-windows/gwt-dev-windows.jar"/>
+	<classpathentry kind="lib" path="resource/config"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
