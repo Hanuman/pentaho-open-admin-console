@@ -40,9 +40,9 @@ public class JettyServer implements Halter {
 
   private String hostname;
 
-  public static final String DEFAULT_CONSOLE_PROPERTIES_FILE_NAME = "config/console.properties"; //$NON-NLS-1$
+  public static final String DEFAULT_CONSOLE_PROPERTIES_FILE_NAME = "resource/config/console.properties"; //$NON-NLS-1$
 
-  public static final String CONSOLE_PASSWORD_FILE_NAME = "config/console.pwd"; //$NON-NLS-1$
+  public static final String CONSOLE_PASSWORD_FILE_NAME = "resource/config/console.pwd"; //$NON-NLS-1$
 
   public static final String CONSOLE_PORT_NUMBER = "console.start.port.number"; //$NON-NLS-1$
 

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<console> 
+  <platform-username>joe</platform-username>  
+  <biserver-context-path>/pentaho</biserver-context-path>  
+  <biServer-base-url>http://localhost:8080/pentaho</biServer-base-url>  
+  <biServer-status-check-period>30000</biServer-status-check-period>  
+  <homepage-timeout>15000</homepage-timeout>  
+  <hibernate-config-path>hsql.hibernate.cfg.xml</hibernate-config-path>
+  <solution-path></solution-path>
+  <war-path></war-path>
+  <password-service-class>org.pentaho.platform.util.Base64PasswordService</password-service-class>  
+</console>

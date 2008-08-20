@@ -57,6 +57,7 @@ public class AppConfigProperties {
       URL url = ClassLoader.getSystemResource( pathToConfigResource );
       s = url.openStream();
     } catch (IOException e1) {
+      e1.printStackTrace();
       logger.error( Messages.getString( "PacService.OPEN_PROPS_FAILED", pathToConfigResource ) ); //$NON-NLS-1$
     }
     if ( null != s ) {

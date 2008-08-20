@@ -12,7 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import org.pentaho.pac.server.i18n.Messages;
 
 public class StopJettyServer {
-  public static final String DEFAULT_CONSOLE_PROPERTIES_FILE_NAME = "config/console.properties"; //$NON-NLS-1$
+  public static final String DEFAULT_CONSOLE_PROPERTIES_FILE_NAME = "resource/config/console.properties"; //$NON-NLS-1$
   public static final String CONSOLE_HOST_NAME = "console.hostname"; //$NON-NLS-1$
   public static final int DEFAULT_STOP_PORT_NUMBER = 8022;
   public static final String DEFAULT_HOSTNAME = "localhost"; //$NON-NLS-1$

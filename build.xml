@@ -77,7 +77,7 @@
 				<attribute name="Implementation-Vendor" value="${impl.vendor}" />
 				<attribute name="Implementation-ProductID" value="${impl.productID}" />
 				<attribute name="Main-Class" value="org.pentaho.pac.server.JettyServer" />
-				<attribute name="Class-Path" value="../config/ ../res/hibernate/ ${class-path}" />
+				<attribute name="Class-Path" value="../resource/config/ ../resource/hibernate/ ${class-path}" />
 			</manifest>
 			<fileset dir="${build.classes.dir}" />
 			<fileset dir="${src.dir}" excludes="**/*.java" />
@@ -86,19 +86,19 @@
 	</target>
 
 	<target name="jar-gwt-module" depends="clean, jar-console, jar-messages" description="create module jar">
-			<jar destfile="${dist.dir}/pentaho-open-admin-module-${impl.version}.jar">
-				<manifest>
-					<attribute name="Implementation-Title" value="${impl.title}" />
-					<attribute name="Implementation-Version" value="${impl.version}" />
-					<attribute name="Implementation-Vendor" value="${impl.vendor}" />
-					<attribute name="Implementation-ProductID" value="${impl.productID}" />
-				</manifest>
-				<fileset dir="${build.classes.dir}" />
-				<fileset dir="${src.dir}" />
-				<fileset dir="${config.dir}" />
-				<fileset dir="${res.dir}" includes="**/*.xml"/>
-			</jar>
-		</target>
+		<jar destfile="${dist.dir}/pentaho-open-admin-module-${impl.version}.jar">
+			<manifest>
+				<attribute name="Implementation-Title" value="${impl.title}" />
+				<attribute name="Implementation-Version" value="${impl.version}" />
+				<attribute name="Implementation-Vendor" value="${impl.vendor}" />
+				<attribute name="Implementation-ProductID" value="${impl.productID}" />
+			</manifest>
+			<fileset dir="${build.classes.dir}" />
+			<fileset dir="${src.dir}" />
+			<fileset dir="${resource.dir}/config" />
+			<fileset dir="${resource.dir}/hibernate" />
+		</jar>
+	</target>
 
 	<target name="copy-gwt-module">
 		<copyfile dest="../pentaho-mgmt-services/lib-ext/pentaho/pentaho-open-admin-module.jar" src="${build.jars.dir}/pentaho-open-admin-module.jar" />
@@ -187,16 +187,16 @@
 
 		 package up distribution in a zip file
 		 ================================= -->
-	<target name="dist" depends="clean, dirty-dist" description="create distribution"/>
+	<target name="dist" depends="clean, dirty-dist" description="create distribution" />
 
 	<target name="dirty-dist" depends="jar-console, jar-messages" description="create distribution">
 		<zip destfile="${dist.dir}/pentaho-open-admin-console-${impl.version}.zip">
 			<zipfileset dir="${build.jars.dir}" prefix="pentaho-open-admin-console/lib" />
 			<zipfileset dir="lib" excludes="**/test/*" prefix="pentaho-open-admin-console/lib" />
-			<zipfileset dir="config" prefix="pentaho-open-admin-console/config" />
+			<zipfileset dir="${resource.dir}/config" prefix="pentaho-open-admin-console/resource/config" />
+			<zipfileset dir="${resource.dir}/hibernate" prefix="pentaho-open-admin-console/resource/hibernate" />
 			<zipfileset dir="${gwt.output.dir}" prefix="pentaho-open-admin-console/www" />
 			<zipfileset dir="build-res" includes="*.bat" prefix="pentaho-open-admin-console" />
-			<zipfileset dir="${res.dir}" prefix="pentaho-open-admin-console/res/hibernate" />
 		</zip>
 		<jar destfile="${dist.dir}/pentaho-open-admin-module-${impl.version}.jar">
 			<manifest>
@@ -207,8 +207,8 @@
 			</manifest>
 			<fileset dir="${build.classes.dir}" />
 			<fileset dir="${src.dir}" />
-			<fileset dir="${config.dir}" />
-			<fileset dir="${res.dir}" includes="**/*.xml"/>
+			<fileset dir="${resource.dir}/config" />
+			<fileset dir="${resource.dir}/hibernate" />
 		</jar>
 	</target>
 
