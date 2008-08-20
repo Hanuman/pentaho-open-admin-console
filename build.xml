@@ -77,7 +77,7 @@
 				<attribute name="Implementation-Vendor" value="${impl.vendor}" />
 				<attribute name="Implementation-ProductID" value="${impl.productID}" />
 				<attribute name="Main-Class" value="org.pentaho.pac.server.JettyServer" />
-				<attribute name="Class-Path" value="../resource/config/ ../resource/hibernate/ ${class-path}" />
+				<attribute name="Class-Path" value="../resource/config/ ../resource/config/hibernate/ ${class-path}" />
 			</manifest>
 			<fileset dir="${build.classes.dir}" />
 			<fileset dir="${src.dir}" excludes="**/*.java" />
@@ -96,7 +96,7 @@
 			<fileset dir="${build.classes.dir}" />
 			<fileset dir="${src.dir}" />
 			<fileset dir="${resource.dir}/config" />
-			<fileset dir="${resource.dir}/hibernate" />
+			<fileset dir="${resource.dir}/config/hibernate" />
 		</jar>
 	</target>
 
@@ -194,7 +194,7 @@
 			<zipfileset dir="${build.jars.dir}" prefix="pentaho-open-admin-console/lib" />
 			<zipfileset dir="lib" excludes="**/test/*" prefix="pentaho-open-admin-console/lib" />
 			<zipfileset dir="${resource.dir}/config" prefix="pentaho-open-admin-console/resource/config" />
-			<zipfileset dir="${resource.dir}/hibernate" prefix="pentaho-open-admin-console/resource/hibernate" />
+			<zipfileset dir="${resource.dir}/config/hibernate" prefix="pentaho-open-admin-console/resource/config/hibernate" />
 			<zipfileset dir="${gwt.output.dir}" prefix="pentaho-open-admin-console/www" />
 			<zipfileset dir="build-res" includes="*.bat" prefix="pentaho-open-admin-console" />
 		</zip>
@@ -208,7 +208,7 @@
 			<fileset dir="${build.classes.dir}" />
 			<fileset dir="${src.dir}" />
 			<fileset dir="${resource.dir}/config" />
-			<fileset dir="${resource.dir}/hibernate" />
+			<fileset dir="${resource.dir}/config/hibernate" />
 		</jar>
 	</target>
 

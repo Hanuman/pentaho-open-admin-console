@@ -17,4 +17,3 @@ goto :eof
 :startjava
 echo %CLASSPATH%
 java -Djava.io.tmpdir=temp -cp %CLASSPATH% org.pentaho.pac.server.StopJettyServer
-pause
