@@ -41,7 +41,7 @@ public class SolutionRepositoryActionSequenceListEditorController {
     actionSequencePickerDialog.setOnOkHandler( new ICallback<MessageDialog>() {
       public void onHandle(MessageDialog dlg ) {
         if ( localThis.actionSequencePickerDialog.getOkBtnLabel().equals( ActionSequencePickerDialog.OPEN_LABEL )) {
-          String path = localThis.actionSequencePickerDialog.getActionSequencePicker().getFullPath();
+          String path = "/" + localThis.actionSequencePickerDialog.getActionSequencePicker().getFullPath(); //$NON-NLS-1$
           localThis.actionSequencePickerDialog.getActionSequencePicker().changeToPath( path );
           localThis.actionSequencePickerDialog.setOkBtnEnabled( false );
         } else {
@@ -53,14 +53,21 @@ public class SolutionRepositoryActionSequenceListEditorController {
     });
     
     actionSequencePickerDialog.getActionSequencePicker().addFileChooserListener( new FileChooserListener () {
+      /**
+       * called when the user picks a file by double clicking the file
+       * or clicking the ok button.
+       * solution,path, and name are NOT friendly names
+       */
       public void fileSelected(String solution, String path, String name) {
-        System.out.println( "fileSelected" );
         if ( !StringUtils.isEmpty( name ) ) {
           localThis.copyActionsFromPickerToActionSequenceEditor();
           localThis.actionSequencePickerDialog.hide();
         }
       }
-
+      /**
+       * called when the user selects a file or folder by single clicking
+       * solution,path, and name are NOT friendly names
+       */
       public void fileSelectionChanged(String solution, String path, String name) {
         if ( StringUtils.isEmpty( name ) ) {
           // they selected a folder
@@ -68,10 +75,11 @@ public class SolutionRepositoryActionSequenceListEditorController {
           localThis.actionSequencePickerDialog.setOkBtnLabel( ActionSequencePickerDialog.OPEN_LABEL );
         } else {
           // the selected a file
-          localThis.actionSequencePickerDialog.setOkBtnEnabled( true );
+          String selectedPath = createActionSequencePath( solution, path, name );
+          boolean bAlreadyContainsAction = localThis.solRepActionSequenceEditor.getActionsAsList().contains( selectedPath );
+          localThis.actionSequencePickerDialog.setOkBtnEnabled( !bAlreadyContainsAction );
           localThis.actionSequencePickerDialog.setOkBtnLabel( ActionSequencePickerDialog.SELECT_LABEL );
         }
-        System.out.println( "fileSelectionChanged" );
       }
     });
     
@@ -84,13 +92,17 @@ public class SolutionRepositoryActionSequenceListEditorController {
       }
     });
   }
-
+  
+  private static String createActionSequencePath( String solution, String path, String action ) {
+    System.out.println( solution + path + ( !StringUtils.isEmpty(action) ? "/" + action : "" ) );
+    return solution + path + ( !StringUtils.isEmpty(action) ? "/" + action : "" );
+  }
+  
   private void copyActionsFromPickerToActionSequenceEditor() {
     ActionSequencePicker actionSequencePicker = actionSequencePickerDialog.getActionSequencePicker();
     String path = actionSequencePicker.getFullPath();
     // do the copy
     String friendlyName = solutionRepositoryModel.getFriendlyNameFromName( path );
-    System.out.println( "copy: " + path + " " + friendlyName );
     solRepActionSequenceEditor.addAction( friendlyName, path );
     
   }
