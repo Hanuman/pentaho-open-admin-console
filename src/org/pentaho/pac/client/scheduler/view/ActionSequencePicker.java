@@ -6,6 +6,6 @@ import com.google.gwt.xml.client.Document;
 
 public class ActionSequencePicker extends FileChooser {
   public ActionSequencePicker() {
-    super( FileChooserMode.OPEN_READ_ONLY, "/", true );
+    super( FileChooserMode.OPEN_READ_ONLY, "/", true ); //$NON-NLS-1$
   }
 }
