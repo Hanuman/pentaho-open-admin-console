@@ -18,24 +18,19 @@ public class SolutionRepositoryActionSequenceListEditor extends VerticalPanel {
   
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   
-  private TableEditor actionsEditor = new TableEditor( "Add/Remove Action Sequences" );
+  private TableEditor actionsEditor = new TableEditor( MSGS.fileLocationLabel() );
 
-  private ErrorLabel actionsLabel = null;
   private boolean bIsSingleSelect = true;
-  //private Document solutionRepositoryDoc = null;
 
   public SolutionRepositoryActionSequenceListEditor() {
     super();
 
     setStylePrimaryName( "solRepItemPicker" ); //$NON-NLS-1$
-//    actionsTA.setWidth( "100%" ); //$NON-NLS-1$
-//    actionsTA.setHeight( "20ex" ); //$NON-NLS-1$
-    // TODO sbarkdull, remember to remove from MSGS
-//    actionsLabel = new ErrorLabel( new Label( MSGS.commaSeparatedList() ) );
-//    add( actionsLabel );
-    
-    actionsEditor.setWidth( "100%" ); // TODO sbarkdull, get in css?
+    actionsEditor.setStyleName( "actionsEditor" ); //$NON-NLS-1$
+    //actionsEditor.setWidth( "100%" ); // TODO sbarkdull, get in css? //$NON-NLS-1$
+    //actionsEditor.setHeight( "100%" ); // TODO sbarkdull, get in css? //$NON-NLS-1$
     add( actionsEditor );
+    setCellHeight( actionsEditor, "100%" );
   }
   
   public void reset() {
@@ -47,11 +42,11 @@ public class SolutionRepositoryActionSequenceListEditor extends VerticalPanel {
    * @return
    */
   public String getActionsAsString() {
-    String actionsList = "";
+    String actionsList = ""; //$NON-NLS-1$
     for ( int ii=0; ii<actionsEditor.getItemCount(); ++ii ) {
       actionsList += actionsEditor.getItemValue( ii );
       if ( ii < actionsEditor.getItemCount()-1 ) {
-        actionsList += ",";
+        actionsList += ","; //$NON-NLS-1$
       }
     }
     return actionsList;
@@ -66,7 +61,7 @@ public class SolutionRepositoryActionSequenceListEditor extends VerticalPanel {
   }
   
   public void setActionsAsList( List<String> friendlyNames, List<String> names ) {
-    assert friendlyNames.size() == names.size() : "size of lists must be identical";
+    assert friendlyNames.size() == names.size() : "size of lists must be identical"; //$NON-NLS-1$
     
     actionsEditor.removeAll();
     if ( null != friendlyNames ) {
@@ -111,12 +106,11 @@ public class SolutionRepositoryActionSequenceListEditor extends VerticalPanel {
   
   public void setFocus() {
     // TODO sbarkdull
-    System.out.println( "implement setFocus on solRepActionSequenceEditor()" );
+    System.out.println( "implement setFocus on SolutionRepositoryActionSequenceListEditor()" );
 //    actionsTA.setFocus( true );
 //    actionsTA.setSelectionRange( 0, actionsTA.getText().length() );
   }
   
-  // TODO sbarkdull, rename setOnAddClickedHandler
   public void setOnAddClickedHandler( ICallback<TableEditor> handler ) {
     actionsEditor.setOnAddClickedHandler( handler );
   }
