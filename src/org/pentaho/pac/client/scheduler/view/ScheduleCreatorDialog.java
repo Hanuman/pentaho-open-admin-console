@@ -32,7 +32,7 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
   
   public enum TabIndex {
     SCHEDULE( 0, MSGS.schedule() ),
-    SCHEDULE_ACTION( 1, MSGS.scheduledAction() );
+    SCHEDULE_ACTION( 1, MSGS.selectedFilesTabLabel() );
     
     private TabIndex( int value, String name ) {
       this.value = value;
