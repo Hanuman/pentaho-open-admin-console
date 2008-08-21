@@ -9,7 +9,7 @@ public class ExternalHyperlink extends Widget{
     super();
      
     Element a = DOM.createAnchor();
-    a.setAttribute("href", link);
+    a.setAttribute("href", link); //$NON-NLS-1$
     a.setInnerHTML(label);
     this.setElement(a);
   }
