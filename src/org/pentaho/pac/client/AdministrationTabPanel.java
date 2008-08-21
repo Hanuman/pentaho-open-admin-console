@@ -60,6 +60,8 @@ public class AdministrationTabPanel extends TabPanel {
     dataSourcesPanel.setHeight("100%"); //$NON-NLS-1$
     servicesPanel.setWidth("100%"); //$NON-NLS-1$
     servicesPanel.setHeight("100%"); //$NON-NLS-1$
+    
+    getDeckPanel().setHeight("100%"); //$NON-NLS-1$
     selectTab(AdministrationTabPanel.ADMIN_USERS_ROLES_TAB_INDEX);
   }
   
