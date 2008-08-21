@@ -29,7 +29,8 @@ public class SolutionRepositoryModel {
   private static String SOLUTION_REPOSITORY_PATH_SEPARATOR = "/";
   
   /**
-   * NOTE: path must ALWAYS have a leading "/"
+   * NOTE: path must never have a leading "/". The paths returned from the PCI
+   * will NOT have a leading slash.
    * NOTE: this method is necessary because we don't have any xpath code
    * to find the node of interest in the document.
    * 
@@ -39,8 +40,7 @@ public class SolutionRepositoryModel {
   public String getFriendlyNameFromName( String path ) {
     
     Element el = solutionRepositoryDocument.getDocumentElement();
-    
-    return SOLUTION_REPOSITORY_PATH_SEPARATOR + getFriendlyNameFromName( path, el );
+    return getFriendlyNameFromName( SOLUTION_REPOSITORY_PATH_SEPARATOR + path, el );
   }
   
   /**
@@ -67,7 +67,7 @@ public class SolutionRepositoryModel {
   
   // TODO sbarkdull, can return null, callers need to check for it
   private String getFriendlyNameFromNode( Node nd ) {
-    Node friendlyAttrNd = nd.getAttributes().getNamedItem( "localized-name" );
+    Node friendlyAttrNd = nd.getAttributes().getNamedItem( "localized-name" ); //$NON-NLS-1$
     return friendlyAttrNd.getNodeValue();
   }
   
@@ -75,7 +75,7 @@ public class SolutionRepositoryModel {
     NodeList nds = node.getChildNodes();
     for ( int ii=0; ii<nds.getLength(); ++ii ) {
       Node nd = nds.item( ii );
-      Node attrNd = nd.getAttributes().getNamedItem( "name" );
+      Node attrNd = nd.getAttributes().getNamedItem( "name" ); //$NON-NLS-1$
       if ( (null != attrNd ) && attrNd.getNodeValue().equals( nameAttributeValue ) ) {
         return nd;
       }
