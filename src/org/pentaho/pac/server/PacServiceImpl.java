@@ -421,12 +421,12 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     } catch(PasswordServiceException pse) {
       throw new PacServiceException( pse.getMessage(), pse );
     } catch (DuplicateDataSourceException dde) {
-      throw new PacServiceException(Messages.getString("PacService.ERROR_0009_DATASOURCE_ALREADY_EXIST", dataSource.getName()), dde);
+      throw new PacServiceException(Messages.getString("PacService.ERROR_0009_DATASOURCE_ALREADY_EXIST", dataSource.getName()), dde); //$NON-NLS-1$
 
     } catch (DAOException e) {
-      throw new PacServiceException(Messages.getString("PacService.ERROR_0007_DATASOURCE_CREATION_FAILED", dataSource.getName()), e);
+      throw new PacServiceException(Messages.getString("PacService.ERROR_0007_DATASOURCE_CREATION_FAILED", dataSource.getName()), e); //$NON-NLS-1$
     } catch (PentahoSecurityException pse) {
-      throw new PacServiceException(Messages.getString("PacService.ERROR_0008_NO_CREATE_DATASOURCE_PERMISSION", dataSource.getName()), pse);
+      throw new PacServiceException(Messages.getString("PacService.ERROR_0008_NO_CREATE_DATASOURCE_PERMISSION", dataSource.getName()), pse); //$NON-NLS-1$
 
     } finally {
       if (!result) {
