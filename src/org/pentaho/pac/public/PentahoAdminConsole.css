@@ -1543,6 +1543,15 @@ a:visited {
 	/*margin: 10px;*/
 }
 
+.actionsEditor {
+	width: 100%;
+	height: 100%;
+	/*
+	overflow-x: auto;
+	overflow-y: auto;
+	*/
+}
+
 .solRepItemPicker {
 	/* can't add a margin here, IE7 can't handle it */
 /*	margin: 10px;*/
