@@ -120,4 +120,16 @@ public class MessageDialog extends BasicDialog {
     this.setClientSize(width, height);
     super.setSize(width, height);
   }
+  
+  public void setOkBtnEnabled( boolean enabled ) {
+    okBtn.setEnabled( enabled );
+  }
+  
+  public void setOkBtnLabel( String newLabel ) {
+    okBtn.setText( newLabel );
+  }
+  
+  public String getOkBtnLabel() {
+    return okBtn.getText();
+  }
 }
