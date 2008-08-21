@@ -19,15 +19,15 @@ import java.util.List;
 
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
-import org.pentaho.pac.client.scheduler.view.SolutionRepositoryItemPicker;
+import org.pentaho.pac.client.scheduler.view.SolutionRepositoryActionSequenceListEditor;
 
-public class SolutionRepositoryItemPickerValidator implements IUiValidator {
+public class SolutionRepositoryActionSequenceListEditorValidator implements IUiValidator {
 
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   
-  private SolutionRepositoryItemPicker solRepPicker = null;
+  private SolutionRepositoryActionSequenceListEditor solRepPicker = null;
 
-  public SolutionRepositoryItemPickerValidator(SolutionRepositoryItemPicker solRepPicker) {
+  public SolutionRepositoryActionSequenceListEditorValidator(SolutionRepositoryActionSequenceListEditor solRepPicker) {
     this.solRepPicker = solRepPicker;
   }
 

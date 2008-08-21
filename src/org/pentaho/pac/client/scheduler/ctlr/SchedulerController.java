@@ -21,20 +21,24 @@ import org.pentaho.pac.client.common.ui.TableListCtrl;
 import org.pentaho.pac.client.common.ui.dialog.BasicDialog;
 import org.pentaho.pac.client.scheduler.model.Schedule;
 import org.pentaho.pac.client.scheduler.model.SchedulesModel;
+import org.pentaho.pac.client.scheduler.view.ActionSequencePickerDialog;
 import org.pentaho.pac.client.scheduler.view.ScheduleCreatorDialog;
 import org.pentaho.pac.client.scheduler.view.SchedulerPanel;
 import org.pentaho.pac.client.scheduler.view.SchedulerToolbar;
 import org.pentaho.pac.client.scheduler.view.SchedulesListCtrl;
-import org.pentaho.pac.client.scheduler.view.SolutionRepositoryItemPicker;
+import org.pentaho.pac.client.scheduler.view.SolutionRepositoryActionSequenceListEditor;
 
 
 public class SchedulerController {
 
   private SchedulerPanel schedulerPanel = null; // this is the view
-
-  private SchedulesListController schedulesListController = null;
-  private SchedulerToolbarController schedulerToolbarController = null;
   private ScheduleCreatorDialog scheduleCreatorDialog = null;
+
+  // sub-controllers
+  private SchedulesListController schedulesListController = null;
+  private SolutionRepositoryActionSequenceListEditorController solRepActionSequenceEditorController = null;
+  private SchedulerToolbarController schedulerToolbarController = null;
+  
   private boolean isInitialized = false;
   
   public SchedulerController( SchedulerPanel schedulerPanel ) {
@@ -43,10 +47,13 @@ public class SchedulerController {
     this.schedulerPanel = schedulerPanel;
   }
   
+  // TODO sbarkdull, refactor creation and init of controllers
   public void init() {
     
     if ( !isInitialized ) {
       schedulerPanel.init();
+      
+      // init dialog
       this.scheduleCreatorDialog = new ScheduleCreatorDialog();
       this.scheduleCreatorDialog.setOnCancelHandler( new ICallback<BasicDialog>() {
         public void onHandle(BasicDialog dlg) {
@@ -55,23 +62,34 @@ public class SchedulerController {
         }
       });
       scheduleCreatorDialog.getScheduleEditor().setSubscriptionSchedule( true );
-      SchedulerToolbar schedulerToolbar = schedulerPanel.getSchedulerToolbar();
+      
+      // init list control
       SchedulesListCtrl listCtrl = schedulerPanel.getSchedulesListCtrl();
       schedulesListController = new SchedulesListController( listCtrl );
-      schedulerToolbarController = new SchedulerToolbarController( schedulerToolbar, listCtrl );
-      schedulerToolbarController.init( scheduleCreatorDialog, schedulesListController );
-      
       listCtrl.setOnSelectHandler( new ICallback<TableListCtrl<Schedule>>() {
         public void onHandle(TableListCtrl<Schedule> pListCtrl) {
           schedulerToolbarController.enableTools();
         }
       });
+      // TODO sbarkdull, schedulesListController.init( listCtrl, schedulesModel );
       
       listCtrl.setOnSelectAllHandler( new ICallback<TableListCtrl<Schedule>>() {
         public void onHandle(TableListCtrl<Schedule> pListCtrl) {
           schedulerToolbarController.enableTools();
         }
       });
+      
+      // init item picker
+      SolutionRepositoryActionSequenceListEditor picker = scheduleCreatorDialog.getSolutionRepositoryActionSequenceEditor();
+      ActionSequencePickerDialog actionSequencePickerDialog = new ActionSequencePickerDialog();
+      solRepActionSequenceEditorController = new SolutionRepositoryActionSequenceListEditorController( picker,
+          actionSequencePickerDialog );
+      
+      // init toolbar
+      SchedulerToolbar schedulerToolbar = schedulerPanel.getSchedulerToolbar();
+      schedulerToolbarController = new SchedulerToolbarController( schedulerToolbar, listCtrl );
+      schedulerToolbarController.init( scheduleCreatorDialog, schedulesListController, solRepActionSequenceEditorController );
+      
       isInitialized = true;
     } // end isInitialized
   }
@@ -85,14 +103,14 @@ public class SchedulerController {
     scheduleCreatorDialog.clearTabError();
     
     ScheduleEditor schedEd = scheduleCreatorDialog.getScheduleEditor();
-    SolutionRepositoryItemPicker solRepPicker = scheduleCreatorDialog.getSolutionRepositoryItemPicker();
+    SolutionRepositoryActionSequenceListEditor solRepPicker = scheduleCreatorDialog.getSolutionRepositoryActionSequenceEditor();
     
     SchedulesModel schedulesModel = schedulerToolbarController.getSchedulesModel();
     ScheduleEditorValidator schedEdValidator = new ScheduleEditorValidator( 
         schedEd, schedulesModel );
     schedEdValidator.clear();
     
-    SolutionRepositoryItemPickerValidator solRepValidator = new SolutionRepositoryItemPickerValidator( solRepPicker );
+    SolutionRepositoryActionSequenceListEditorValidator solRepValidator = new SolutionRepositoryActionSequenceListEditorValidator( solRepPicker );
     solRepValidator.clear();
     
   }

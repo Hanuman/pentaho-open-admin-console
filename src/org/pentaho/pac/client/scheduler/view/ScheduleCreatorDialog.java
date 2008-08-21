@@ -60,7 +60,7 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
   }; // end enum
   
   private DualModeScheduleEditor scheduleEditor = new DualModeScheduleEditor();
-  private SolutionRepositoryItemPicker solRepItemPicker = new SolutionRepositoryItemPicker();
+  private SolutionRepositoryActionSequenceListEditor solRepItemPicker = new SolutionRepositoryActionSequenceListEditor();
   private Label scheduleTabLabel = new Label( TabIndex.SCHEDULE.toString() );
   private Label scheduleActionTabLabel = new Label( TabIndex.SCHEDULE_ACTION.toString() );
   private Map<TabIndex, Label> tabLabelMap = new HashMap<TabIndex, Label>();
@@ -123,7 +123,7 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
     return scheduleEditor;
   }
 
-  public SolutionRepositoryItemPicker getSolutionRepositoryItemPicker() {
+  public SolutionRepositoryActionSequenceListEditor getSolutionRepositoryActionSequenceEditor() {
     return solRepItemPicker;
   }
   

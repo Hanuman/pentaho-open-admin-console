@@ -40,19 +40,16 @@ import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.scheduler.model.Schedule;
 import org.pentaho.pac.client.scheduler.model.SchedulesModel;
-import org.pentaho.pac.client.scheduler.model.SolutionRepositoryModel;
 import org.pentaho.pac.client.scheduler.view.DualModeScheduleEditor;
 import org.pentaho.pac.client.scheduler.view.ScheduleCreatorDialog;
 import org.pentaho.pac.client.scheduler.view.SchedulerToolbar;
 import org.pentaho.pac.client.scheduler.view.SchedulesListCtrl;
-import org.pentaho.pac.client.scheduler.view.SolutionRepositoryItemPicker;
+import org.pentaho.pac.client.scheduler.view.SolutionRepositoryActionSequenceListEditor;
 import org.pentaho.pac.client.scheduler.view.ScheduleCreatorDialog.TabIndex;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ButtonBase;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.xml.client.Document;
-import com.google.gwt.xml.client.XMLParser;
 
 
 public class SchedulerToolbarController {
@@ -61,8 +58,8 @@ public class SchedulerToolbarController {
   private SchedulesListCtrl schedulesListCtrl;
   private ScheduleCreatorDialog scheduleCreatorDialog = null;
   private SchedulesListController schedulesListController = null;
+  private SolutionRepositoryActionSequenceListEditorController solRepActionSequenceEditorController = null;
   private SchedulesModel schedulesModel = null;
-  private SolutionRepositoryModel solutionRepositoryModel = null;
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   private static final int INVALID_SCROLL_POS = -1;
   private static final String DISABLED = "disabled"; //$NON-NLS-1$
@@ -74,11 +71,13 @@ public class SchedulerToolbarController {
   }
   
   public void init( ScheduleCreatorDialog pScheduleCreatorDialog,
-      SchedulesListController pSchedulesListController ) {
+      SchedulesListController pSchedulesListController,
+      SolutionRepositoryActionSequenceListEditorController solRepActionSequenceEditorController ) {
     
     if ( !isInitialized ) {
       this.scheduleCreatorDialog = pScheduleCreatorDialog;
       this.schedulesListController = pSchedulesListController;
+      this.solRepActionSequenceEditorController = solRepActionSequenceEditorController;
       
       final SchedulerToolbarController localThis = this;
   
@@ -121,6 +120,7 @@ public class SchedulerToolbarController {
       schedulerToolbar.setOnRefreshListener( new ICallback<Widget>() { 
         public void onHandle(Widget w) {
           loadJobsTable();
+          // TODO sbarkdull reload sol rep model/view
         }
       });
       
@@ -130,9 +130,9 @@ public class SchedulerToolbarController {
         }
       });  
       
+      loadJobsTable();  // TODO sbarkdull  belongs in SchedulesListController
       enableTools();
-      loadSolutionRepository();
-      loadJobsTable();
+      
       isInitialized = true;
     }
   }
@@ -217,7 +217,7 @@ public class SchedulerToolbarController {
             endDate,
             "0" /*repeat count*/, //$NON-NLS-1$
             "0" /*repeat time*/,  //$NON-NLS-1$
-            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getActionsAsString().trim(),
+            scheduleCreatorDialog.getSolutionRepositoryActionSequenceEditor().getActionsAsString().trim(),
             updateScheduleResponseCallback
           );
         break;
@@ -242,7 +242,7 @@ public class SchedulerToolbarController {
               endDate,
               null /*repeat count*/,
               repeatInterval.trim(), 
-              scheduleCreatorDialog.getSolutionRepositoryItemPicker().getActionsAsString().trim(),
+              scheduleCreatorDialog.getSolutionRepositoryActionSequenceEditor().getActionsAsString().trim(),
               updateScheduleResponseCallback
             );
           break;
@@ -260,7 +260,7 @@ public class SchedulerToolbarController {
             startDate,
             endDate,
             cronStr.trim(), 
-            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getActionsAsString().trim(),
+            scheduleCreatorDialog.getSolutionRepositoryActionSequenceEditor().getActionsAsString().trim(),
             updateScheduleResponseCallback
           );
         break;
@@ -357,26 +357,6 @@ public class SchedulerToolbarController {
       schedulerToolbar.addFilterItem(name );
     }
     schedulerToolbar.setFilterValue( currentFilter );
-    
-  }
-  
-  private void loadSolutionRepository() {
-
-    AsyncCallback<String> solutionRepositoryCallback = new AsyncCallback<String>() {
-      public void onSuccess( String strXml ) {
-        Document solutionRepositoryDocument = XMLParser.parse( strXml );
-        solutionRepositoryModel = new SolutionRepositoryModel( solutionRepositoryDocument );
-      } // end onSuccess
-
-      public void onFailure(Throwable caught) {
-        MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
-            caught.getMessage() );
-        messageDialog.center();
-        solutionRepositoryModel = null;
-      } // end onFailure
-    }; // end 
-      
-    PacServiceFactory.getSolutionRepositoryService().getSolutionRepositoryAsXml( solutionRepositoryCallback );
     
   }
   
@@ -505,7 +485,7 @@ public class SchedulerToolbarController {
             endDate,
             "0" /*repeat count*/, //$NON-NLS-1$
             "0" /*repeat time*/,  //$NON-NLS-1$
-            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getActionsAsString().trim(),
+            scheduleCreatorDialog.getSolutionRepositoryActionSequenceEditor().getActionsAsString().trim(),
             responseCallback
           );
         break;
@@ -527,7 +507,7 @@ public class SchedulerToolbarController {
               endDate,
               null /*repeat count*/,
               repeatInterval.trim(), 
-              scheduleCreatorDialog.getSolutionRepositoryItemPicker().getActionsAsString().trim(),
+              scheduleCreatorDialog.getSolutionRepositoryActionSequenceEditor().getActionsAsString().trim(),
               responseCallback
             );
           break;
@@ -542,7 +522,7 @@ public class SchedulerToolbarController {
             startDate,
             endDate,
             cronStr.trim(), 
-            scheduleCreatorDialog.getSolutionRepositoryItemPicker().getActionsAsString().trim(),
+            scheduleCreatorDialog.getSolutionRepositoryActionSequenceEditor().getActionsAsString().trim(),
             responseCallback
           );
         break;
@@ -595,14 +575,17 @@ public class SchedulerToolbarController {
   private void initScheduleCreatorDialog( Schedule sched ) throws CronParseException {
 
     scheduleCreatorDialog.reset( new Date() );
+    initScheduleEditor( sched );
+    initSolutionRepositoryActionSequenceEditor( sched );
+  }
+  
+  private void initScheduleEditor( Schedule sched ) throws CronParseException {
     DualModeScheduleEditor scheduleEditor = scheduleCreatorDialog.getScheduleEditor();
 
     scheduleEditor.setSubscriptionSchedule( sched.isSubscriptionSchedule() );
     scheduleEditor.setName( sched.getJobName() );
     scheduleEditor.setGroupName( sched.getJobGroup() );
     scheduleEditor.setDescription( sched.getDescription() );
-    
-    scheduleCreatorDialog.getSolutionRepositoryItemPicker().setActionsAsList( sched.getActionsList() );
     
     String repeatIntervalInMillisecs = sched.getRepeatInterval();
     if ( sched.isCronSchedule() ) {
@@ -645,6 +628,12 @@ public class SchedulerToolbarController {
     } else {
       scheduleEditor.setNoEndDate();
     }
+    
+  }
+  
+  private void initSolutionRepositoryActionSequenceEditor( Schedule sched ) {
+    solRepActionSequenceEditorController.init( sched.getActionsList() );
+    
   }
   
   private boolean isNewScheduleCreatorDialogValid() {
@@ -677,7 +666,9 @@ public class SchedulerToolbarController {
       }
     });
     // TODO sbarkdull, if we decide to create regular schedules, we'll need to do something different here
-    scheduleCreatorDialog.getSolutionRepositoryItemPicker().setSingleSelect( false );
+    scheduleCreatorDialog.getSolutionRepositoryActionSequenceEditor().setSingleSelect( false );
+    
+    solRepActionSequenceEditorController.init( null );
     scheduleCreatorDialog.center();
     scheduleCreatorDialog.getScheduleEditor().setFocus();
   }
@@ -702,7 +693,7 @@ public class SchedulerToolbarController {
     assert scheduleList.size() == 1 : "When clicking update, exactly one schedule should be selected."; //$NON-NLS-1$
     
     Schedule sched = scheduleList.get( 0 );
-    scheduleCreatorDialog.getSolutionRepositoryItemPicker().setSingleSelect( !sched.isSubscriptionSchedule() );
+    scheduleCreatorDialog.getSolutionRepositoryActionSequenceEditor().setSingleSelect( !sched.isSubscriptionSchedule() );
     try {
       initScheduleCreatorDialog( sched );
       scheduleCreatorDialog.center();
@@ -873,8 +864,8 @@ public class SchedulerToolbarController {
 
     boolean isValid = true;
 
-    SolutionRepositoryItemPicker solRepPicker = scheduleCreatorDialog.getSolutionRepositoryItemPicker();
-    SolutionRepositoryItemPickerValidator solRepValidator = new SolutionRepositoryItemPickerValidator( solRepPicker );
+    SolutionRepositoryActionSequenceListEditor solRepPicker = scheduleCreatorDialog.getSolutionRepositoryActionSequenceEditor();
+    SolutionRepositoryActionSequenceListEditorValidator solRepValidator = new SolutionRepositoryActionSequenceListEditorValidator( solRepPicker );
 
     scheduleCreatorDialog.clearTabError();
     schedEdValidator.clear();
