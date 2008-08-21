@@ -54,6 +54,9 @@ public class BasicDialog extends DialogBox {
     setWidget(rootPanel);
   }
   
+  /**
+   * Removes the interior border around the dialog's client area.
+   */
   protected void setNoBorderOnClientPanel() {
     clientPanel.setStyleName("basicDialog.clientPanelNoBorder"); //$NON-NLS-1$
   }
@@ -63,6 +66,12 @@ public class BasicDialog extends DialogBox {
     clientPanel.setHeight( height );
   }
   
+  /**
+   * Add a new button to the button panel. The new button will be the
+   * right most button in the panel.
+   * 
+   * @param btn
+   */
   protected void addButton( Button btn )
   {
     btn.addStyleName( "basicDialog.button" ); //$NON-NLS-1$
@@ -84,6 +93,9 @@ public class BasicDialog extends DialogBox {
     this.clientPanel.insert( widget, beforeRow );
   }
   
+  /**
+   * Sets the title in the dialog's title bar
+   */
   public void setTitle( String title ) {
     this.title = title;
   }
@@ -102,6 +114,9 @@ public class BasicDialog extends DialogBox {
     closeHandler = handler;
   }
   
+  /**
+   * Displays the dialog on the screen.
+   */
   public void show() {
     super.show();
 
@@ -144,6 +159,9 @@ public class BasicDialog extends DialogBox {
     }
   }
   
+  /**
+   * Sets the title in the dialog's title bar
+   */
   public void setText(String text) {
     setTitle( text );
   }
