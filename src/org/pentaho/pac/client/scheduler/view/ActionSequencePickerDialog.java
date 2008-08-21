@@ -1,12 +1,15 @@
 package org.pentaho.pac.client.scheduler.view;
 
+import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
 public class ActionSequencePickerDialog extends ConfirmDialog {
 
   private ActionSequencePicker actionSequencePicker = new ActionSequencePicker();
-  public static final String OPEN_LABEL = "Open";
-  public static final String SELECT_LABEL = "Select";
+  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
+  public static final String OPEN_LABEL = MSGS.openBtnLabel();
+  public static final String SELECT_LABEL = MSGS.selectBtnLabel();
   
   public ActionSequencePickerDialog() {
     this.setNoBorderOnClientPanel();
