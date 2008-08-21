@@ -36,7 +36,7 @@ public class TableEditor extends VerticalPanel {
     
     add( buttonPanel );
     
-    actionLb.setWidth( "100%" );  // TODO sbarkdull, move to css
+    actionLb.setWidth( "100%" ); //$NON-NLS-1$  // TODO sbarkdull, move to css
     actionLb.setVisibleItemCount( DEFAULT_NUM_VISIBLE_ITEMS );
     actionLb.setMultipleSelect( true );
     add( actionLb );
