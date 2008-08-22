@@ -692,13 +692,11 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   private void initFromConfiguration()
   {
     AppConfigProperties appCfg = AppConfigProperties.getInstance();
-    jmxHostName = StringUtils.defaultIfEmpty( appCfg.getProperty("jmxHostName"), System.getProperty("jmxHostName") ); //$NON-NLS-1$ //$NON-NLS-2$
-    jmxPortNumber = StringUtils.defaultIfEmpty( appCfg.getProperty("jmxPortNumber"), System.getProperty("jmxPortNumber") ); //$NON-NLS-1$ //$NON-NLS-2$
-    userName = StringUtils.defaultIfEmpty( appCfg.getProperty("pentaho.platform.userName"), System.getProperty("pentaho.platform.userName") ); //$NON-NLS-1$ //$NON-NLS-2$
-    pciContextPath = StringUtils.defaultIfEmpty( appCfg.getProperty("pciContextPath"), System.getProperty("pciContextPath") ); //$NON-NLS-1$ //$NON-NLS-2$
-    biServerBaseURL = StringUtils.defaultIfEmpty( appCfg.getProperty("biServerBaseURL"), System.getProperty("biServerBaseURL") ); //$NON-NLS-1$ //$NON-NLS-2$biServerBaseURL = StringUtils.defaultIfEmpty( p.getProperty("biServerBaseURL"), System.getProperty("biServerBaseURL") );
+    userName = StringUtils.defaultIfEmpty( appCfg.getPlatformUsername(), System.getProperty(AppConfigProperties.KEY_PLATFORM_USERNAME) );
+    pciContextPath = StringUtils.defaultIfEmpty( appCfg.getBiServerContextPath(), System.getProperty(AppConfigProperties.KEY_BISERVER_CONTEXT_PATH) );
+    biServerBaseURL = StringUtils.defaultIfEmpty( appCfg.getBiServerBaseUrl(), System.getProperty(AppConfigProperties.KEY_BISERVER_BASE_URL) );
     biServerProxy.setBaseUrl( biServerBaseURL );
-    String strBiServerStatusCheckPeriod = StringUtils.defaultIfEmpty( appCfg.getProperty("consoleToolBar.biServerStatusCheckPeriod"), System.getProperty("consoleToolBar.biServerStatusCheckPeriod") ); //$NON-NLS-1$ //$NON-NLS-2$
+    String strBiServerStatusCheckPeriod = StringUtils.defaultIfEmpty( appCfg.getBiServerStatusCheckPeriod(), System.getProperty(AppConfigProperties.KEY_BISERVER_STATUS_CHECK_PERIOD) ); //$NON-NLS-1$
     try {
       biServerStatusCheckPeriod = Integer.parseInt( strBiServerStatusCheckPeriod );
     } catch( NumberFormatException e ) {
@@ -707,13 +705,6 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     }
   }
 
-  public String getJmxHostName() {
-    return jmxHostName;
-  }
-
-  public String getJmxPortNumber() {
-    return jmxPortNumber;
-  }
 
   public String getUserName() {
     return userName;
@@ -924,7 +915,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     ThreadSafeHttpClient client = new ThreadSafeHttpClient( url );
 
     Map<String,Object> params = new HashMap<String,Object>();
-    String timeOut = AppConfigProperties.getInstance().getProperty( "homePage.timeout" );//$NON-NLS-1$
+    String timeOut = AppConfigProperties.getInstance().getHomepageTimeout();
     params.put( HttpMethodParams.SO_TIMEOUT, timeOut );
     
     String html = null;

@@ -2,11 +2,11 @@
 <console> 
   <platform-username>joe</platform-username>  
   <biserver-context-path>/pentaho</biserver-context-path>  
-  <biServer-base-url>http://localhost:8080/pentaho</biServer-base-url>  
-  <biServer-status-check-period>30000</biServer-status-check-period>  
+  <biserver-base-url>http://localhost:8080/pentaho</biserver-base-url>  
+  <biserver-status-check-period>30000</biserver-status-check-period>  
   <homepage-timeout>15000</homepage-timeout>  
   <hibernate-config-path>hsql.hibernate.cfg.xml</hibernate-config-path>
-  <solution-path></solution-path>
-  <war-path></war-path>
+  <solution-path>/home/mlowery/tmp/pentaho-solutions</solution-path>
+  <war-path>/home/mlowery/tmp/apache-tomcat-6.0.16/webapps/pentaho</war-path>
   <password-service-class>org.pentaho.platform.util.Base64PasswordService</password-service-class>  
 </console>

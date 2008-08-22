@@ -13,8 +13,8 @@ public class SolutionRepositoryServiceImpl extends RemoteServiceServlet implemen
   private static final long serialVersionUID = 420L;
   private static SolutionRepositoryServiceProxy solutionRepositoryProxy = null;
   static {
-    String userName = StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getProperty("pentaho.platform.userName"), System.getProperty("pentaho.platform.userName") ); //$NON-NLS-1$ //$NON-NLS-2$
-    String biServerBaseURL = AppConfigProperties.getInstance().getProperty( "biServerBaseURL" ); //$NON-NLS-1$
+    String userName = StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getPlatformUsername(), System.getProperty(AppConfigProperties.KEY_PLATFORM_USERNAME) );
+    String biServerBaseURL = AppConfigProperties.getInstance().getBiServerBaseUrl();
     solutionRepositoryProxy = new SolutionRepositoryServiceProxy( userName, biServerBaseURL );
   }
 

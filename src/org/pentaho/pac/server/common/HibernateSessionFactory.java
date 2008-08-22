@@ -32,10 +32,9 @@ public class HibernateSessionFactory {
     //private static org.hibernate.SessionFactory sessionFactory;
      
     private static Map<String,HibConfig> configs = new HashMap<String,HibConfig>();
-    private static final String HIBERNATE_CFG_PATH = "hibernate.config.path"; //$NON-NLS-1$
     private static String defaultConfigFile = null;
 	static {
-	  defaultConfigFile = AppConfigProperties.getInstance().getProperty(HIBERNATE_CFG_PATH);
+	  defaultConfigFile = AppConfigProperties.getInstance().getHibernateConfigPath();
   	  if(defaultConfigFile != null && defaultConfigFile.length() > 0) {
   	    addConfiguration(DEFAULT_CONFIG_NAME,defaultConfigFile);
   	  } else {

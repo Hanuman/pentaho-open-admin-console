@@ -25,8 +25,8 @@ public class SchedulerServiceImpl extends RemoteServiceServlet implements Schedu
   // TODO sbarkdull, damn it would be nice to inject this with Spring (and some of these other props)
   private static SchedulerAdminUIComponentProxy schedulerProxy = null;
   static {
-    String userName = StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getProperty("pentaho.platform.userName"), System.getProperty("pentaho.platform.userName") ); //$NON-NLS-1$ //$NON-NLS-2$
-    String biServerBaseURL = AppConfigProperties.getInstance().getProperty( "biServerBaseURL" ); //$NON-NLS-1$
+    String userName = StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getPlatformUsername(), System.getProperty(AppConfigProperties.KEY_PLATFORM_USERNAME) );
+    String biServerBaseURL = AppConfigProperties.getInstance().getBiServerBaseUrl();
     schedulerProxy = new SchedulerAdminUIComponentProxy( userName, biServerBaseURL );
   }
   
