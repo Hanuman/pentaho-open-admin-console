@@ -20,9 +20,13 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 public class SchedulerServiceImpl extends RemoteServiceServlet implements SchedulerService {
 
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 420L;
+
   private static final Log logger = LogFactory.getLog(SchedulerServiceImpl.class);
   
-  // TODO sbarkdull, damn it would be nice to inject this with Spring (and some of these other props)
   private static SchedulerAdminUIComponentProxy schedulerProxy = null;
   static {
     String userName = StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getPlatformUsername(), System.getProperty(AppConfigProperties.KEY_PLATFORM_USERNAME) );
