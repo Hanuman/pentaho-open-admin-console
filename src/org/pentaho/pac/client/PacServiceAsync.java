@@ -42,4 +42,7 @@ public interface PacServiceAsync {
   
   public void isBiServerAlive( AsyncCallback<Object> callback );
   public void getBiServerStatusCheckPeriod( AsyncCallback<Integer> callback );
+
+  public void getBIServerBaseUrl(AsyncCallback callback);
+  
 }

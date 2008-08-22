@@ -22,6 +22,7 @@ import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -31,7 +32,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class AdminServicesPanel extends VerticalPanel implements ClickListener {
 
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
+  protected static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   Button refreshSolutionRepositoryBtn = new Button(MSGS.refreshSolutionRepository());
   Button cleanRepositoryBtn = new Button(MSGS.removeStaleContent());
   Button clearMondrianSchemaCacheBtn = new Button(MSGS.purgeMondrianSchemaCache());
@@ -40,6 +41,9 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
   Button refreshSystemSettingsBtn = new Button(MSGS.refreshSystemSettings());
   Button executeGlobalActionsBtn = new Button(MSGS.executeGlobalActions());
   Button refreshReportingMetadataBtn = new Button(MSGS.refreshReportingMetadata());
+  Button openAuditReportBtn = new Button(MSGS.openAuditReport());
+  
+  private AsyncCallback auditCallback = new AuditCallback(openAuditReportBtn);
   
   public AdminServicesPanel() {
     Grid grid = new Grid(5, 2);
@@ -53,6 +57,8 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
     grid.setWidget(2, 1, executeGlobalActionsBtn);
     grid.setWidget(3, 0, refreshReportingMetadataBtn);
     grid.setWidget(3, 1, clearMondrianSchemaCacheBtn);
+    grid.setWidget(4, 1, openAuditReportBtn);
+    
     
     refreshSolutionRepositoryBtn.setWidth("100%"); //$NON-NLS-1$
     cleanRepositoryBtn.setWidth("100%"); //$NON-NLS-1$
@@ -62,6 +68,7 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
     refreshSystemSettingsBtn.setWidth("100%"); //$NON-NLS-1$
     executeGlobalActionsBtn.setWidth("100%"); //$NON-NLS-1$
     refreshReportingMetadataBtn.setWidth("100%"); //$NON-NLS-1$
+    openAuditReportBtn.setWidth("100%"); //$NON-NLS-1$
     
     refreshSolutionRepositoryBtn.addClickListener(this);
     cleanRepositoryBtn.addClickListener(this);
@@ -71,6 +78,7 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
     refreshSystemSettingsBtn.addClickListener(this);
     executeGlobalActionsBtn.addClickListener(this);
     refreshReportingMetadataBtn.addClickListener(this);
+    openAuditReportBtn.addClickListener(this);
     
     add(grid);
   }
@@ -112,7 +120,32 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
       pacServiceAsync.executeGlobalActions(callback);
     } else if (sender == refreshReportingMetadataBtn) {
       pacServiceAsync.refreshReportingMetadata(callback);
+    } else if (sender == openAuditReportBtn) {
+      pacServiceAsync.getBIServerBaseUrl(auditCallback);
     }
   }
   
+  private static class AuditCallback implements AsyncCallback{
+    
+    private Button auditBtn;
+    private final String AUDIT_URL = "/AuditReportList"; //$NON-NLS-1$
+    
+    private AuditCallback(Button auditBtn){
+      this.auditBtn = auditBtn;
+    }
+    
+    public void onSuccess(Object result) {
+      final String baseUrl = result.toString();
+
+      Window.open(baseUrl+AUDIT_URL, "_blank", ""); //$NON-NLS-1$  //$NON-NLS-2$
+      auditBtn.setEnabled(true);
+    }
+
+    public void onFailure(Throwable caught) {
+      MessageDialog messageDialog = new MessageDialog(MSGS.error(), 
+          caught.getMessage() );
+      messageDialog.center();
+      auditBtn.setEnabled(true);
+    }
+  }
 }

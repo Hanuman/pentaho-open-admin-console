@@ -52,4 +52,5 @@ public interface PacService extends RemoteService {
   
   public void isBiServerAlive() throws PacServiceException;
   public int getBiServerStatusCheckPeriod();
+  public String getBIServerBaseUrl();
 }
