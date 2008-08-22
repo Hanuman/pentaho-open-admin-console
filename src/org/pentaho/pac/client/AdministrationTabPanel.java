@@ -33,6 +33,10 @@ public class AdministrationTabPanel extends TabPanel {
   public AdministrationTabPanel() {
     super();
     
+    servicesPanel = createAdminServicesPanel();
+    usersAndRolesPanel = createUsersAndRolesPanel();
+    dataSourcesPanel = createDataSourcesPanel();
+    
     // Order that things are placed in the tab panel is important. There are
     // static constants defined within this class that assume a given tab position
     // for each of the panels on the tab panel.
@@ -106,4 +110,29 @@ public class AdministrationTabPanel extends TabPanel {
     UserAndRoleMgmtService.instance().refreshSecurityInfo(callback);
 
   }
+
+  protected AdminServicesPanel createAdminServicesPanel() {
+    return new AdminServicesPanel();
+  }
+  
+  protected UsersAndRolesPanel createUsersAndRolesPanel() {
+    return new UsersAndRolesPanel();
+  }
+  
+  protected DataSourcesPanel createDataSourcesPanel() {
+    return new DataSourcesPanel();
+  }
+  
+  public AdminServicesPanel getServicesPanel() {
+    return servicesPanel;
+  }
+
+  public UsersAndRolesPanel getUsersAndRolesPanel() {
+    return usersAndRolesPanel;
+  }
+
+  public DataSourcesPanel getDataSourcesPanel() {
+    return dataSourcesPanel;
+  }
+  
 }

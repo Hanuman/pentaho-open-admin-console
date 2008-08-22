@@ -26,7 +26,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -44,85 +44,75 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
   Button openAuditReportBtn = new Button(MSGS.openAuditReport());
   
   private AsyncCallback auditCallback = new AuditCallback(openAuditReportBtn);
+  FlexTable flexTable = new FlexTable();
   
   public AdminServicesPanel() {
-    Grid grid = new Grid(5, 2);
-    grid.setWidth("100%"); //$NON-NLS-1$
+    add(flexTable);
     
-    grid.setWidget(0, 0, refreshSolutionRepositoryBtn);
-    grid.setWidget(0, 1, cleanRepositoryBtn);
-    grid.setWidget(1, 0, scheduleRepositoryCleaningBtn);
-    grid.setWidget(1, 1, resetRepositoryBtn);
-    grid.setWidget(2, 0, refreshSystemSettingsBtn);
-    grid.setWidget(2, 1, executeGlobalActionsBtn);
-    grid.setWidget(3, 0, refreshReportingMetadataBtn);
-    grid.setWidget(3, 1, clearMondrianSchemaCacheBtn);
-    grid.setWidget(4, 1, openAuditReportBtn);
+    flexTable.setWidth("100%"); //$NON-NLS-1$
     
+    addServiceButton(0, 0, refreshSolutionRepositoryBtn);
+    addServiceButton(0, 1, cleanRepositoryBtn);
+    addServiceButton(1, 0, scheduleRepositoryCleaningBtn);
+    addServiceButton(1, 1, resetRepositoryBtn);
+    addServiceButton(2, 0, refreshSystemSettingsBtn);
+    addServiceButton(2, 1, executeGlobalActionsBtn);
+    addServiceButton(3, 0, refreshReportingMetadataBtn);
+    addServiceButton(3, 1, clearMondrianSchemaCacheBtn);
+    addServiceButton(4, 1, openAuditReportBtn);
     
-    refreshSolutionRepositoryBtn.setWidth("100%"); //$NON-NLS-1$
-    cleanRepositoryBtn.setWidth("100%"); //$NON-NLS-1$
-    clearMondrianSchemaCacheBtn.setWidth("100%"); //$NON-NLS-1$
-    scheduleRepositoryCleaningBtn.setWidth("100%"); //$NON-NLS-1$
-    resetRepositoryBtn.setWidth("100%"); //$NON-NLS-1$
-    refreshSystemSettingsBtn.setWidth("100%"); //$NON-NLS-1$
-    executeGlobalActionsBtn.setWidth("100%"); //$NON-NLS-1$
-    refreshReportingMetadataBtn.setWidth("100%"); //$NON-NLS-1$
-    openAuditReportBtn.setWidth("100%"); //$NON-NLS-1$
-    
-    refreshSolutionRepositoryBtn.addClickListener(this);
-    cleanRepositoryBtn.addClickListener(this);
-    clearMondrianSchemaCacheBtn.addClickListener(this);
-    scheduleRepositoryCleaningBtn.addClickListener(this);
-    resetRepositoryBtn.addClickListener(this);
-    refreshSystemSettingsBtn.addClickListener(this);
-    executeGlobalActionsBtn.addClickListener(this);
-    refreshReportingMetadataBtn.addClickListener(this);
-    openAuditReportBtn.addClickListener(this);
-    
-    add(grid);
   }
 
-  public void onClick(final Widget sender) {
+  protected void addServiceButton(int row, int column, Button serviceButton) {
+    flexTable.setWidget(row, column, serviceButton);
+    serviceButton.setWidth("100%"); //$NON-NLS-1$
+    serviceButton.addClickListener(this);
+  }
+  
+  protected void runService(final Button serviceButton) {
     AsyncCallback callback = new AsyncCallback() {
       
       public void onSuccess(Object result) {
         MessageDialog messageDialog = new MessageDialog(MSGS.services(), 
             result.toString() );
         messageDialog.center();
-        ((Button)sender).setEnabled(true);
+        serviceButton.setEnabled(true);
       }
 
       public void onFailure(Throwable caught) {
         MessageDialog messageDialog = new MessageDialog(MSGS.error(), 
             caught.getMessage() );
         messageDialog.center();
-        ((Button)sender).setEnabled(true);
+        serviceButton.setEnabled(true);
       }
     }; // end AsyncCallback
 
     PacServiceAsync pacServiceAsync = PacServiceFactory.getPacService();
     
-    ((Button)sender).setEnabled(false);
-    if (sender == refreshSolutionRepositoryBtn) {
+    serviceButton.setEnabled(false);
+    if (serviceButton == refreshSolutionRepositoryBtn) {
       pacServiceAsync.refreshSolutionRepository(callback);
-    } else if (sender == cleanRepositoryBtn) {
+    } else if (serviceButton == cleanRepositoryBtn) {
       pacServiceAsync.cleanRepository(callback);
-    } else if (sender == clearMondrianSchemaCacheBtn) {
+    } else if (serviceButton == clearMondrianSchemaCacheBtn) {
       pacServiceAsync.clearMondrianSchemaCache(callback);
-    } else if (sender == scheduleRepositoryCleaningBtn) {
+    } else if (serviceButton == scheduleRepositoryCleaningBtn) {
       pacServiceAsync.scheduleRepositoryCleaning(callback);
-    } else if (sender == resetRepositoryBtn) {
+    } else if (serviceButton == resetRepositoryBtn) {
       pacServiceAsync.resetRepository(callback);
-    } else if (sender == refreshSystemSettingsBtn) {
+    } else if (serviceButton == refreshSystemSettingsBtn) {
       pacServiceAsync.refreshSystemSettings(callback);
-    } else if (sender == executeGlobalActionsBtn) {
+    } else if (serviceButton == executeGlobalActionsBtn) {
       pacServiceAsync.executeGlobalActions(callback);
-    } else if (sender == refreshReportingMetadataBtn) {
+    } else if (serviceButton == refreshReportingMetadataBtn) {
       pacServiceAsync.refreshReportingMetadata(callback);
-    } else if (sender == openAuditReportBtn) {
+    } else if (serviceButton == openAuditReportBtn) {
       pacServiceAsync.getBIServerBaseUrl(auditCallback);
     }
+  }
+  
+  public void onClick(final Widget sender) {
+    runService((Button)sender);
   }
   
   private static class AuditCallback implements AsyncCallback{
