@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.pentaho.gwt.widgets.client.utils.TimeUtil;
+
 /**
  * 
  * @author Steven Barkdull
@@ -33,8 +35,24 @@ public class SchedulesModel {
   public SchedulesModel() {
   }
   
+  // TODO, only partially implemented
+  private boolean isValidSchedule( Schedule schedule ) {
+    try {
+      if ( null != schedule.getEndDate() ) {
+        TimeUtil.getDate( schedule.getEndDate() );
+      }
+      if ( null != schedule.getStartDate() ) {
+        TimeUtil.getDate( schedule.getStartDate() );
+      }
+      return true;
+    } catch ( IllegalArgumentException e ) {
+      return false;
+    }
+  }
+  
   public void add( List<Schedule> l ) {
     for ( Schedule schedule : l ) {
+      assert isValidSchedule( schedule ) : "Loading an invalid schedule: " + schedule.toString();
       add( schedule.getJobName(), schedule );
     }
   }
