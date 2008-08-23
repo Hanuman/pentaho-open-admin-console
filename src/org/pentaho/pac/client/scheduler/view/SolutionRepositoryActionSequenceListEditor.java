@@ -56,7 +56,7 @@ public class SolutionRepositoryActionSequenceListEditor extends VerticalPanel {
   }
   
   public void setActionsAsList( List<String> friendlyNames, List<String> names ) {
-    assert friendlyNames.size() == names.size() : "size of lists must be identical"; //$NON-NLS-1$
+    assert friendlyNames == null || friendlyNames.size() == names.size() : "size of lists must be identical"; //$NON-NLS-1$
     
     actionsEditor.removeAll();
     if ( null != friendlyNames ) {
