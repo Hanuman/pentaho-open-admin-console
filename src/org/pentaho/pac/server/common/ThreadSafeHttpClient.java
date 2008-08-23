@@ -154,6 +154,10 @@ public class ThreadSafeHttpClient {
       int httpStatus = CLIENT.executeMethod(method);
       if (httpStatus != HttpStatus.SC_OK) {
         String status = method.getStatusLine().toString();
+        String uri = method.getURI().toString();
+        String errorMsg = Messages.getErrorString( "ThreadSafeHttpClient.ERROR_0001_CLIENT_REQUEST_FAILED",
+            uri, status );
+        logger.error( errorMsg );
         throw new ProxyException(status);  // TODO
       }
       responseStrm = method.getResponseBodyAsStream();
