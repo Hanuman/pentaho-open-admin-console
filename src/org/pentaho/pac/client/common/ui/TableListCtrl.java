@@ -116,7 +116,7 @@ public class TableListCtrl<RowDataType> extends ScrollPanel {
     for ( int rowNum=FIRST_ROW; rowNum<rowCount; ++rowNum ) {
       CheckBox cb = (CheckBox)table.getWidget( rowNum, SELECT_COLUMN );
       if ( cb.isChecked() ) {
-        idxs.add( new Integer( rowNum-FIRST_ROW ) );
+        idxs.add( Integer.valueOf( rowNum-FIRST_ROW ) );
       }
     }
     
