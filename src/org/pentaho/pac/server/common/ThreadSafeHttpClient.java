@@ -33,11 +33,20 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
-import org.pentaho.pac.common.PacServiceException;
 import org.pentaho.pac.server.i18n.Messages;
 
+/**
+ * Provides a thread safe HttpClient with ability to do post and get.
+ * 
+ * Reuse notes: this class should be easily reusable in other applications. The
+ * ONLY dependency on Pentaho code is for localized messages. To minimize coupling
+ * (dependencies on other classes), and keep this code reusable by the
+ * largest number of clients, this class should never have dependencies on 
+ * other pentaho code.
+ * 
+ * @author Steven Barkdull
+ *
+ */
 public class ThreadSafeHttpClient {
   private static final Log logger = LogFactory.getLog(ThreadSafeHttpClient.class);
 
@@ -48,7 +57,7 @@ public class ThreadSafeHttpClient {
   };
 
   /*
-   * see: http://hc.apache.org/httpclient-3.x/threading.html
+   * @see: http://hc.apache.org/httpclient-3.x/threading.html
    */
   private static final HttpClient CLIENT;
   static {
@@ -75,6 +84,16 @@ public class ThreadSafeHttpClient {
     this.baseUrl = baseUrl;
   }
 
+  /**
+   * 
+   * @param serviceName
+   * @param methodType
+   * @param mapParams
+   * @return
+   * @throws ProxyException if the attempt to communicate with the server fails,
+   * if the attempt to read the response from the server fails, if the response
+   * stream is unable to be converted into a String.
+   */
   public String execRemoteMethod(String serviceName, HttpMethodType methodType, Map<String, Object> mapParams)
       throws ProxyException {
     return execRemoteMethod(serviceName, methodType, mapParams, "text/xml"); //$NON-NLS-1$
@@ -86,7 +105,9 @@ public class ThreadSafeHttpClient {
    * @param mapParams
    * @param requestedMimeType
    * @return
-   * @throws PacServiceException
+   * @throws ProxyException  ProxyException if the attempt to communicate with the server fails,
+   * if the attempt to read the response from the server fails, if the response
+   * stream is unable to be converted into a String.
    */
   public String execRemoteMethod(String serviceName, HttpMethodType methodType, Map<String, Object> mapParams,
       String requestedMimeType) throws ProxyException {
@@ -117,6 +138,16 @@ public class ThreadSafeHttpClient {
     return executeMethod( method );
   }
 
+  /**
+   * Execute the <param>method</param>, and return the server's response as a string
+   * @param method the HttpMethod specifying the server URL and parameters to be 
+   * passed to the server.
+   * @return a string containing the server's response
+   * 
+   * @throws ProxyException if the attempt to communicate with the server fails,
+   * if the attempt to read the response from the server fails, if the response
+   * stream is unable to be converted into a String.
+   */
   private String executeMethod( HttpMethod method ) throws ProxyException {
     InputStream responseStrm = null;
     try {
@@ -126,10 +157,10 @@ public class ThreadSafeHttpClient {
         throw new ProxyException(status);  // TODO
       }
       responseStrm = method.getResponseBodyAsStream();
-      // trim() is necessary because some jsp's puts \n\r at the beginning of
+      // trim() is necessary because some jsp's put \n\r at the beginning of
       // the returned text, and the xml processor chokes on \n\r at the beginning.
-      String tmp = IOUtils.toString(responseStrm).trim();
-      return tmp;
+      String response = IOUtils.toString(responseStrm).trim();
+      return response;
     } catch (IOException e) {
       throw new ProxyException(e);
     } finally {
