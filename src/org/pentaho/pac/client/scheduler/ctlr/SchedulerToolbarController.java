@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.pentaho.gwt.widgets.client.controls.ProgressPopupPanel;
 import org.pentaho.gwt.widgets.client.controls.schededitor.ScheduleEditor;
 import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.gwt.widgets.client.utils.CronParseException;
@@ -65,17 +66,17 @@ public class SchedulerToolbarController {
   private static final String DISABLED = "disabled"; //$NON-NLS-1$
   private boolean isInitialized = false;
   
-  public SchedulerToolbarController( SchedulerToolbar schedulerToolbar, SchedulesListCtrl schedulesListCtrl ) {
+  public SchedulerToolbarController( ScheduleCreatorDialog pScheduleCreatorDialog,
+      SchedulerToolbar schedulerToolbar, SchedulesListCtrl schedulesListCtrl ) {
+    this.scheduleCreatorDialog = pScheduleCreatorDialog;
     this.schedulerToolbar = schedulerToolbar;
     this.schedulesListCtrl = schedulesListCtrl;
   }
   
-  public void init( ScheduleCreatorDialog pScheduleCreatorDialog,
-      SchedulesListController pSchedulesListController,
+  public void init( SchedulesListController pSchedulesListController,
       SolutionRepositoryActionSequenceListEditorController solRepActionSequenceEditorController ) {
     
     if ( !isInitialized ) {
-      this.scheduleCreatorDialog = pScheduleCreatorDialog;
       this.schedulesListController = pSchedulesListController;
       this.solRepActionSequenceEditorController = solRepActionSequenceEditorController;
       
@@ -361,7 +362,11 @@ public class SchedulerToolbarController {
   }
   
   private void loadJobsTable() {
-    schedulesListCtrl.setStateToLoading();
+
+    final ProgressPopupPanel loadingPanel = new ProgressPopupPanel();
+    loadingPanel.setLabelText( MSGS.loading() );
+    loadingPanel.center();
+    
     final int currScrollPos = schedulesListCtrl.getScrollPosition();
     final Map<String,Schedule> schedulesMap = new HashMap<String,Schedule>();
     
@@ -376,16 +381,16 @@ public class SchedulerToolbarController {
             schedulesModel = new SchedulesModel();
             schedulesModel.add( schedulesList );
             initFilterList();
-            schedulesListCtrl.clearStateLoading();
             updateSchedulesTable();
             if ( INVALID_SCROLL_POS != currScrollPos ) { 
               schedulesListCtrl.setScrollPosition( currScrollPos );
             }
             enableTools();
+            loadingPanel.hide();
           } // end inner onSuccess
 
           public void onFailure(Throwable caught) {
-            schedulesListCtrl.clearStateLoading();
+            loadingPanel.hide();
             schedulesListCtrl.setTempMessage( MSGS.noSchedules() );
             MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
                 caught.getMessage() );
@@ -398,7 +403,7 @@ public class SchedulerToolbarController {
       } // end outer onSuccess
 
       public void onFailure(Throwable caught) {
-        schedulesListCtrl.clearStateLoading();
+        loadingPanel.hide();
         schedulesListCtrl.setTempMessage( MSGS.noSchedules() );
         MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
             caught.getMessage() );
@@ -665,11 +670,9 @@ public class SchedulerToolbarController {
         return isNewScheduleCreatorDialogValid();
       }
     });
-    // TODO sbarkdull, if we decide to create regular schedules, we'll need to do something different here
-    scheduleCreatorDialog.getSolutionRepositoryActionSequenceEditor().setSingleSelect( false );
-    
-    solRepActionSequenceEditorController.init( null );
+
     scheduleCreatorDialog.center();
+    solRepActionSequenceEditorController.init( null );
     scheduleCreatorDialog.getScheduleEditor().setFocus();
   }
   
@@ -693,10 +696,9 @@ public class SchedulerToolbarController {
     assert scheduleList.size() == 1 : "When clicking update, exactly one schedule should be selected."; //$NON-NLS-1$
     
     Schedule sched = scheduleList.get( 0 );
-    scheduleCreatorDialog.getSolutionRepositoryActionSequenceEditor().setSingleSelect( !sched.isSubscriptionSchedule() );
     try {
-      initScheduleCreatorDialog( sched );
       scheduleCreatorDialog.center();
+      initScheduleCreatorDialog( sched );
       scheduleCreatorDialog.getScheduleEditor().setFocus();
     } catch (CronParseException e) {
       final MessageDialog errorDialog = new MessageDialog( MSGS.error(),
@@ -864,8 +866,9 @@ public class SchedulerToolbarController {
 
     boolean isValid = true;
 
+    boolean isSubscriptionSched = scheduleCreatorDialog.getScheduleEditor().isSubscriptionSchedule();
     SolutionRepositoryActionSequenceListEditor solRepPicker = scheduleCreatorDialog.getSolutionRepositoryActionSequenceEditor();
-    SolutionRepositoryActionSequenceListEditorValidator solRepValidator = new SolutionRepositoryActionSequenceListEditorValidator( solRepPicker );
+    SolutionRepositoryActionSequenceListEditorValidator solRepValidator = new SolutionRepositoryActionSequenceListEditorValidator( solRepPicker, isSubscriptionSched );
 
     scheduleCreatorDialog.clearTabError();
     schedEdValidator.clear();

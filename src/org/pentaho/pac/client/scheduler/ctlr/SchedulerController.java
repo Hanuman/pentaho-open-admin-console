@@ -87,8 +87,8 @@ public class SchedulerController {
       
       // init toolbar
       SchedulerToolbar schedulerToolbar = schedulerPanel.getSchedulerToolbar();
-      schedulerToolbarController = new SchedulerToolbarController( schedulerToolbar, listCtrl );
-      schedulerToolbarController.init( scheduleCreatorDialog, schedulesListController, solRepActionSequenceEditorController );
+      schedulerToolbarController = new SchedulerToolbarController( scheduleCreatorDialog, schedulerToolbar, listCtrl );
+      schedulerToolbarController.init( schedulesListController, solRepActionSequenceEditorController );
       
       isInitialized = true;
     } // end isInitialized
@@ -110,7 +110,8 @@ public class SchedulerController {
         schedEd, schedulesModel );
     schedEdValidator.clear();
     
-    SolutionRepositoryActionSequenceListEditorValidator solRepValidator = new SolutionRepositoryActionSequenceListEditorValidator( solRepPicker );
+    SolutionRepositoryActionSequenceListEditorValidator solRepValidator = new SolutionRepositoryActionSequenceListEditorValidator( solRepPicker,
+        scheduleCreatorDialog.getScheduleEditor().isSubscriptionSchedule() );
     solRepValidator.clear();
     
   }

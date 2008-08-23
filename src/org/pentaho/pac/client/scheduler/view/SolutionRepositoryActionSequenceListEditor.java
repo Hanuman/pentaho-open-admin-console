@@ -3,16 +3,12 @@ package org.pentaho.pac.client.scheduler.view;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.pentaho.gwt.filechooser.client.FileChooser;
-import org.pentaho.gwt.widgets.client.controls.ErrorLabel;
+import org.pentaho.gwt.widgets.client.controls.TableEditor;
 import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.xml.client.Document;
 
 public class SolutionRepositoryActionSequenceListEditor extends VerticalPanel {
   
@@ -20,13 +16,12 @@ public class SolutionRepositoryActionSequenceListEditor extends VerticalPanel {
   
   private TableEditor actionsEditor = new TableEditor( MSGS.fileLocationLabel() );
 
-  private boolean bIsSingleSelect = true;
-
   public SolutionRepositoryActionSequenceListEditor() {
     super();
 
-    setStylePrimaryName( "solRepItemPicker" ); //$NON-NLS-1$
+    setStylePrimaryName( "solutionRepositoryActionSequenceListEditor" ); //$NON-NLS-1$
     actionsEditor.setStyleName( "actionsEditor" ); //$NON-NLS-1$
+    actionsEditor.setVisibleItemCount( 25 );
     //actionsEditor.setWidth( "100%" ); // TODO sbarkdull, get in css? //$NON-NLS-1$
     //actionsEditor.setHeight( "100%" ); // TODO sbarkdull, get in css? //$NON-NLS-1$
     add( actionsEditor );
@@ -95,20 +90,9 @@ public class SolutionRepositoryActionSequenceListEditor extends VerticalPanel {
   public void setActionsError( String errorMsg ) {
     actionsEditor.setErrorMsg( errorMsg );
   }
-
-  public boolean isSingleSelect() {
-    return bIsSingleSelect;
-  }
-
-  public void setSingleSelect(boolean isSingleSelect) {
-    bIsSingleSelect = isSingleSelect;
-  }
   
   public void setFocus() {
-    // TODO sbarkdull
-    System.out.println( "implement setFocus on SolutionRepositoryActionSequenceListEditor()" );
-//    actionsTA.setFocus( true );
-//    actionsTA.setSelectionRange( 0, actionsTA.getText().length() );
+    actionsEditor.setFocus();
   }
   
   public void setOnAddClickedHandler( ICallback<TableEditor> handler ) {
@@ -117,5 +101,17 @@ public class SolutionRepositoryActionSequenceListEditor extends VerticalPanel {
   
   public void setOnDeleteClickedHandler( ICallback<TableEditor> handler ) {
     actionsEditor.setOnDeleteClickedHandler( handler );
+  }
+  
+  public void setOnSelectCallback( ICallback<TableEditor> handler ) {
+    actionsEditor.setOnSelectCallback( handler );
+  }
+  
+  public void setMessage( String message ) {
+    actionsEditor.setMessage( message );
+  }
+  
+  public void clearMessage() {
+    actionsEditor.clearMessage();
   }
 }

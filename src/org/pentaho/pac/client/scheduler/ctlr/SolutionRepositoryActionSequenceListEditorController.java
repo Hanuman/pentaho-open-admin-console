@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.pentaho.gwt.filechooser.client.FileChooserListener;
+import org.pentaho.gwt.widgets.client.controls.ProgressPopupPanel;
+import org.pentaho.gwt.widgets.client.controls.TableEditor;
 import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.gwt.widgets.client.utils.StringUtils;
 import org.pentaho.pac.client.PacServiceFactory;
@@ -14,7 +16,6 @@ import org.pentaho.pac.client.scheduler.model.SolutionRepositoryModel;
 import org.pentaho.pac.client.scheduler.view.ActionSequencePicker;
 import org.pentaho.pac.client.scheduler.view.ActionSequencePickerDialog;
 import org.pentaho.pac.client.scheduler.view.SolutionRepositoryActionSequenceListEditor;
-import org.pentaho.pac.client.scheduler.view.TableEditor;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.xml.client.Document;
@@ -46,6 +47,8 @@ public class SolutionRepositoryActionSequenceListEditorController {
           localThis.actionSequencePickerDialog.setOkBtnEnabled( false );
         } else {
           // must be in select mode
+          localThis.actionSequencePickerDialog.setOkBtnEnabled( false );  // prevents double submit
+          // unselect current selection
           localThis.copyActionsFromPickerToActionSequenceEditor();
           localThis.actionSequencePickerDialog.hide();
         }
@@ -85,10 +88,13 @@ public class SolutionRepositoryActionSequenceListEditorController {
     
     solRepActionSequenceEditor.setOnAddClickedHandler( new ICallback<TableEditor>() {
       public void onHandle(TableEditor tableEditor ) {
-//        tableEditor.addItem( "doh!" );
-//        tableEditor.setValue( tableEditor.getItemCount()-1, "value" );
-        
         localThis.actionSequencePickerDialog.center();
+      }
+    });
+    
+    solRepActionSequenceEditor.setOnSelectCallback( new ICallback<TableEditor>() {
+      public void onHandle(TableEditor tableEditor ) {
+        tableEditor.setDeleteBtnEnabled( tableEditor.getNumSelectedItems() > 0 ); 
       }
     });
   }
@@ -135,13 +141,22 @@ public class SolutionRepositoryActionSequenceListEditorController {
     }
     return friendlyNames;
   }
-  
+
+  private void showLoadingMessage() {
+    solRepActionSequenceEditor.setMessage( MSGS.loading() );
+  }
+  private void hideLoadingMessage() {
+    solRepActionSequenceEditor.clearMessage();
+  }
   private void loadSolutionRepository( final List<String> actionList ) {
 
+    showLoadingMessage();
+    
     AsyncCallback<String> solutionRepositoryCallback = new AsyncCallback<String>() {
       public void onSuccess( String strXml ) {
         Document solutionRepositoryDocument = XMLParser.parse( strXml );
         solutionRepositoryModel = new SolutionRepositoryModel( solutionRepositoryDocument );
+        hideLoadingMessage();
         if ( null != actionList ) {
           loadActionListIntoItemPicker( actionList );
         }
@@ -155,6 +170,7 @@ public class SolutionRepositoryActionSequenceListEditorController {
         messageDialog.center();
         solutionRepositoryModel = null;
         isInitialized = false;
+        hideLoadingMessage();
       } // end onFailure
     }; // end 
       

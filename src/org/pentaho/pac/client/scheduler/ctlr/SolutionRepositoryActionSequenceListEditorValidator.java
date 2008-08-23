@@ -25,22 +25,25 @@ public class SolutionRepositoryActionSequenceListEditorValidator implements IUiV
 
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   
-  private SolutionRepositoryActionSequenceListEditor solRepPicker = null;
-
-  public SolutionRepositoryActionSequenceListEditorValidator(SolutionRepositoryActionSequenceListEditor solRepPicker) {
-    this.solRepPicker = solRepPicker;
+  private SolutionRepositoryActionSequenceListEditor solRepActionSequenceListEditor = null;
+  private boolean isSubscriptionSched;
+  
+  public SolutionRepositoryActionSequenceListEditorValidator(SolutionRepositoryActionSequenceListEditor solRepActionSequenceListEditor,
+      boolean isSubscriptionSched ) {
+    this.solRepActionSequenceListEditor = solRepActionSequenceListEditor;
+    this.isSubscriptionSched = isSubscriptionSched;
   }
 
   public boolean isValid() {
     boolean isValid = true;
     
-    List<String> actionList = solRepPicker.getActionsAsList();
-    if ( solRepPicker.isSingleSelect() && actionList.size() > 1 ) {
+    List<String> actionList = solRepActionSequenceListEditor.getActionsAsList();
+    if ( !isSubscriptionSched && actionList.size() > 1 ) {
       isValid = false;
-      solRepPicker.setActionsError( MSGS.onlyOneActionSequence() );
+      solRepActionSequenceListEditor.setActionsError( MSGS.onlyOneActionSequence() );
     } else if ( actionList.size() <= 0 ) {
       isValid = false;
-      solRepPicker.setActionsError( MSGS.actionSequenceCannotBeEmpty() );
+      solRepActionSequenceListEditor.setActionsError( MSGS.actionSequenceCannotBeEmpty() );
 //    } else if () {
 //      TODO sbarkdull
 //      validate that each action sequence string has 2 "/" and ends in ".xaction"
@@ -50,6 +53,6 @@ public class SolutionRepositoryActionSequenceListEditorValidator implements IUiV
   }
 
   public void clear() {
-    solRepPicker.setActionsError( null );
+    solRepActionSequenceListEditor.setActionsError( null );
   }
 }

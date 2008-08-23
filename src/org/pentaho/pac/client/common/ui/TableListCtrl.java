@@ -110,8 +110,8 @@ public class TableListCtrl<RowDataType> extends ScrollPanel {
     List<Integer> idxs = new ArrayList<Integer>();
     
     int rowCount = table.getRowCount();
-    if ( rowCount <= FIRST_ROW || !(table.getWidget( FIRST_ROW, SELECT_COLUMN ) instanceof CheckBox ) ) {
-      return idxs; // must be displaying a label (Loading... or Empty List), so nothing can be selected
+    if ( rowCount <= FIRST_ROW ) {
+      return idxs; // must be displaying an Empty List, so nothing can be selected
     }
     for ( int rowNum=FIRST_ROW; rowNum<rowCount; ++rowNum ) {
       CheckBox cb = (CheckBox)table.getWidget( rowNum, SELECT_COLUMN );
