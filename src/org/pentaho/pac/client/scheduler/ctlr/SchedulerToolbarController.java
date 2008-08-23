@@ -697,8 +697,8 @@ public class SchedulerToolbarController {
     
     Schedule sched = scheduleList.get( 0 );
     try {
-      scheduleCreatorDialog.center();
       initScheduleCreatorDialog( sched );
+      scheduleCreatorDialog.center();
       scheduleCreatorDialog.getScheduleEditor().setFocus();
     } catch (CronParseException e) {
       final MessageDialog errorDialog = new MessageDialog( MSGS.error(),
