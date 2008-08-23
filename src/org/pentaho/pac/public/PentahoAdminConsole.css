@@ -1541,6 +1541,7 @@ a:visited {
 .scheduleEditor {
 	/* can't add a margin here, IE7 can't handle it */
 	/*margin: 10px;*/
+	padding: 0px;
 }
 
 .actionsEditor {
@@ -1552,9 +1553,10 @@ a:visited {
 	*/
 }
 
-.solRepItemPicker {
+.solutionRepositoryActionSequenceListEditor {
 	/* can't add a margin here, IE7 can't handle it */
 /*	margin: 10px;*/
+	padding: 0px;
 }
 
 /* begin scheduler toolbar */
@@ -1581,6 +1583,7 @@ a:visited {
 .toolbarBtn {
 	width: 16px;
 	height: 16px;
+	cursor: pointer;
 	/*border: 1px dotted red;*/
 	/* sbarkdull: setting the padding here doesn't work properly on IE7*/
 }
@@ -1646,6 +1649,12 @@ a:visited {
 	height: 16px;
 }
 /* end scheduler toolbar */
+
+/* the DeckPanel in the TabPanel in the scheduleCreatorDialog */
+.scheduleCreatorDeckPanel {
+	height: 100%;
+	padding: 10px;
+}
 
 /* not used
 .tabLabelError-selected {
