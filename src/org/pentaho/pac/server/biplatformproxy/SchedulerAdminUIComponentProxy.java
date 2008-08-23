@@ -36,6 +36,7 @@ public class SchedulerAdminUIComponentProxy {
   private static final String SCHEDULER_SERVICE_NAME = "SchedulerAdmin"; //$NON-NLS-1$
   private static final int NUM_RETRIES = 3; // TODO is used?
   private String userName = null;
+  // matches a string that contains no commas, and exactly three substrings each separated by a "/"
   private static String RE_MATCH_ACTION_REF = "^[^,/]+/[^,/]+/[^,/]+$"; //$NON-NLS-1$
 
   private static BiServerTrustedProxy biServerProxy;
@@ -44,6 +45,9 @@ public class SchedulerAdminUIComponentProxy {
   }
   
   public SchedulerAdminUIComponentProxy( String userName, String biServerBaseURL ) {
+    assert null != userName : "userName parameter cannot be null."; //$NON-NLS-1$
+    assert null != biServerBaseURL : "biServerBaseURL parameter cannot be null."; //$NON-NLS-1$
+    
     this.userName = userName;
     biServerProxy.setBaseUrl( biServerBaseURL );
   }

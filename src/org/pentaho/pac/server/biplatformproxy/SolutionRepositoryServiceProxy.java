@@ -22,6 +22,9 @@ public class SolutionRepositoryServiceProxy {
   }
   
   public SolutionRepositoryServiceProxy( String userName, String biServerBaseURL ) {
+    assert null != userName : "userName parameter cannot be null."; //$NON-NLS-1$
+    assert null != biServerBaseURL : "biServerBaseURL parameter cannot be null."; //$NON-NLS-1$
+    
     this.userName = userName;
     biServerProxy.setBaseUrl( biServerBaseURL );
   }
