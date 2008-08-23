@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.pentaho.pac.common.SolutionRepositoryServiceException;
 import org.pentaho.pac.server.biplatformproxy.xmlserializer.SolutionRepositoryXmlSerializer;
-import org.pentaho.pac.server.biplatformproxy.xmlserializer.XmlSerializerException;
 import org.pentaho.pac.server.common.BiServerTrustedProxy;
 import org.pentaho.pac.server.common.ProxyException;
 import org.pentaho.pac.server.common.ThreadSafeHttpClient.HttpMethodType;
