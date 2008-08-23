@@ -21,8 +21,8 @@ import java.util.Map;
 
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 
+import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SourcesTabEvents;
 import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.TabPanel;
@@ -60,7 +60,7 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
   }; // end enum
   
   private DualModeScheduleEditor scheduleEditor = new DualModeScheduleEditor();
-  private SolutionRepositoryActionSequenceListEditor solRepItemPicker = new SolutionRepositoryActionSequenceListEditor();
+  private SolutionRepositoryActionSequenceListEditor actionSequenceEditor = new SolutionRepositoryActionSequenceListEditor();
   private Label scheduleTabLabel = new Label( TabIndex.SCHEDULE.toString() );
   private Label scheduleActionTabLabel = new Label( TabIndex.SCHEDULE_ACTION.toString() );
   private Map<TabIndex, Label> tabLabelMap = new HashMap<TabIndex, Label>();
@@ -72,20 +72,14 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
     setTitle( MSGS.scheduleCreator() );
     setClientSize( "475px", "450px" ); //$NON-NLS-1$ //$NON-NLS-2$
 
-    solRepItemPicker.setWidth( "100%" ); //$NON-NLS-1$
-    solRepItemPicker.setHeight( "100%" ); //$NON-NLS-1$
+    actionSequenceEditor.setWidth( "100%" ); //$NON-NLS-1$
+    actionSequenceEditor.setHeight( "100%" ); //$NON-NLS-1$
     
     tabPanel.setStylePrimaryName( "schedulerTabPanel" ); //$NON-NLS-1$
-    
-    SimplePanel p = new SimplePanel();  // Simple panel required to accomodate an IE7 defect in margin styles
-    p.setStyleName( "paddingPanel" ); //$NON-NLS-1$
-    p.add(scheduleEditor);
-    tabPanel.add( p, scheduleTabLabel );
-    
-    p = new SimplePanel();  // Simple panel required to accomodate an IE7 defect in margin styles
-    p.setStyleName( "paddingPanel" ); //$NON-NLS-1$
-    p.add(solRepItemPicker);
-    tabPanel.add( p, scheduleActionTabLabel );
+    tabPanel.add( scheduleEditor, scheduleTabLabel );
+    tabPanel.add( actionSequenceEditor, scheduleActionTabLabel );
+    DeckPanel dp = tabPanel.getDeckPanel();
+    dp.addStyleName( "scheduleCreatorDeckPanel" ); //$NON-NLS-1$
     
     scheduleTabLabel.setStylePrimaryName( "tabLabel" ); //$NON-NLS-1$
     scheduleActionTabLabel.setStylePrimaryName( "tabLabel" ); //$NON-NLS-1$
@@ -110,7 +104,7 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
             scheduleEditor.setFocus();
             break;
           case SCHEDULE_ACTION:
-            solRepItemPicker.setFocus();
+            actionSequenceEditor.setFocus();
             break;
         }
       }
@@ -124,12 +118,12 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
   }
 
   public SolutionRepositoryActionSequenceListEditor getSolutionRepositoryActionSequenceEditor() {
-    return solRepItemPicker;
+    return actionSequenceEditor;
   }
   
   public void reset( Date d ) {
     scheduleEditor.reset( d );
-    solRepItemPicker.reset();
+    actionSequenceEditor.reset();
     
     tabPanel.selectTab( TabIndex.SCHEDULE.value() );
   }
