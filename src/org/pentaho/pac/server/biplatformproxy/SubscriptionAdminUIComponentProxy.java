@@ -95,9 +95,7 @@ public class SubscriptionAdminUIComponentProxy {
     String[] actionsAr = actionsList.split( "," ); //$NON-NLS-1$
     params.put( "actionRefs", actionsAr ); //$NON-NLS-1$
 
-    String responseStrXml = executePostMethod( params );
-    // TODO sbarkdull
-
+    executePostMethod( params );
   }
   
   public void createRepeatSchedule( String jobName, String jobGroup, String description,
@@ -129,7 +127,7 @@ public class SubscriptionAdminUIComponentProxy {
     String[] actionsAr = actionsList.split( "," ); //$NON-NLS-1$
     params.put( "actionRefs", actionsAr ); //$NON-NLS-1$
 
-    String responseStrXml = executePostMethod( params );
+    executePostMethod( params );
   }
   
   public void updateCronSchedule( String oldJobName, String oldJobGroup, String schedId,
@@ -158,7 +156,7 @@ public class SubscriptionAdminUIComponentProxy {
     String[] actionsAr = actionsList.split( "," ); //$NON-NLS-1$
     params.put( "actionRefs", actionsAr ); //$NON-NLS-1$
 
-    String responseStrXml = executePostMethod( params );
+    executePostMethod( params );
   }
   
   public void updateRepeatSchedule(  String oldJobName, String oldJobGroup, String schedId,
@@ -193,7 +191,7 @@ public class SubscriptionAdminUIComponentProxy {
     String[] actionsAr = actionsList.split( "," ); //$NON-NLS-1$
     params.put( "actionRefs", actionsAr ); //$NON-NLS-1$
 
-    String responseStrXml = executePostMethod( params );
+    executePostMethod( params );
   }
   
   public void deleteJobs( List<Schedule> scheduleList ) throws SchedulerServiceException {
@@ -213,7 +211,7 @@ public class SubscriptionAdminUIComponentProxy {
       params.put( "schedulerAction", "doPauseJob" ); //$NON-NLS-1$  //$NON-NLS-2$
       params.put( "jobId", s.getJobName() ); //$NON-NLS-1$
 
-      String responseStrXml = executeGetMethod( params );
+      executeGetMethod( params );
     }
   }
   
@@ -224,7 +222,7 @@ public class SubscriptionAdminUIComponentProxy {
       params.put( "schedulerAction", "doResumeJob" ); //$NON-NLS-1$  //$NON-NLS-2$
       params.put( "jobId", s.getJobName() ); //$NON-NLS-1$
 
-      String responseStrXml = executeGetMethod( params );
+      executeGetMethod( params );
     }
   }
   
@@ -235,7 +233,7 @@ public class SubscriptionAdminUIComponentProxy {
       params.put( "schedulerAction", "doExecuteJob" ); //$NON-NLS-1$  //$NON-NLS-2$
       params.put( "jobId", s.getJobName() ); //$NON-NLS-1$
 
-      String responseStrXml = executeGetMethod( params );
+      executeGetMethod( params );
     }
   }
   
