@@ -3,7 +3,7 @@
   <platform-username>joe</platform-username>  
   <biserver-status-check-period-millis>30000</biserver-status-check-period-millis>  
   <homepage-timeout-millis>15000</homepage-timeout-millis>  
-  <solution-path>c:/code/new_build_process/pentaho-solutions</solution-path>
-  <war-path>c:/code/new_build_process/target-tomcat-preconfiguredinstall/webapps/pentaho</war-path>
-  <jdbc-drivers-path>c:/code/new_build_process/target-tomcat-preconfiguredinstall/common/lib</jdbc-drivers-path>  
+  <solution-path></solution-path>
+  <war-path></war-path>
+  <jdbc-drivers-path></jdbc-drivers-path>  
 </console>
