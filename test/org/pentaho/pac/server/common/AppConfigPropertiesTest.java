@@ -34,7 +34,7 @@ public class AppConfigPropertiesTest {
 
       public String getSystemSetting(String arg0, String arg1) {
         if (AppConfigProperties.KEY_PASSWORD_SERVICE_CLASS.equals(arg0)) {
-          return AppConfigProperties.VALUE_PASSWORD_SERVICE_CLASS;
+          return AppConfigProperties.DEFAULT_VALUE_PASSWORD_SERVICE_CLASS;
         } else {
           return "foo"; //$NON-NLS-1$
         }

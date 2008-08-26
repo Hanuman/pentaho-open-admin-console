@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.SourcesTabEvents;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class AdministrationTabPanel extends TabPanel {
+public class AdministrationTabPanel extends TabPanel implements IRefreshableAdminPage{
 
   protected static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   
@@ -74,26 +74,27 @@ public class AdministrationTabPanel extends TabPanel {
     super.onTabSelected(sender, tabIndex);
     switch (tabIndex) {
       case ADMIN_USERS_ROLES_TAB_INDEX:
-        if (!securityInfoInitialized) {
-          initializeSecurityInfo();
-        }
-        break;
-      case ADMIN_DATA_SOURCES_TAB_INDEX: 
-        if (!dataSourcesPanel.isInitialized()) {
-          dataSourcesPanel.refresh();
-        }
+        // do nothing;
+         break;
+      case ADMIN_DATA_SOURCES_TAB_INDEX:
+        // do nothing;
         break;
       case ADMIN_SERVICES_TAB_INDEX:
         // do nothing;
         break;
       case ADMIN_SCHEDULER_TAB_INDEX:
-        schedulerController.init();
+        // do nothing;
         break;
       default:
         throw new RuntimeException(MSGS.invalidTabIndex(Integer.toString(tabIndex)));
     }   
   }
   
+  public void refresh() {
+    initializeSecurityInfo();
+    dataSourcesPanel.refresh();
+    schedulerController.init();
+  }
   private void initializeSecurityInfo() {
     AsyncCallback<Object> callback = new AsyncCallback<Object>() {
       public void onSuccess(Object result) {

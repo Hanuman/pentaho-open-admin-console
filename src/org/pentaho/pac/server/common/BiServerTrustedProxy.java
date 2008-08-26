@@ -30,6 +30,10 @@ public class BiServerTrustedProxy extends ThreadSafeHttpClient {
     super();
   }
   
+  public void createNewInstance() {
+    instance = new BiServerTrustedProxy();
+  }
+  
   public static BiServerTrustedProxy getInstance() {
     return instance;
   }

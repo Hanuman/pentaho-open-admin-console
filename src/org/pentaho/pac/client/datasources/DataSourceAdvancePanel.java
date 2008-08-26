@@ -147,5 +147,9 @@ public class DataSourceAdvancePanel extends VerticalPanel implements KeyboardLis
 
   public void onKeyUp(Widget sender, char keyCode, int modifiers) {
    }
+  
+   public void refresh() {
+     
+   }
  
 }

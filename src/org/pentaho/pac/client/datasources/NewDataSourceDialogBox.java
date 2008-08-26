@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ToggleButton;
@@ -134,8 +135,8 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
     return dataSourceGeneralPanel.getDriverClass();
   }
 
-  public TextBox getDriverClassTextBox() {
-    return dataSourceGeneralPanel.getDriverClassTextBox();
+  public ListBox getDriverClassTextBox() {
+    return dataSourceGeneralPanel.getDriverClassListBox();
   }
 
   public int getIdleConnections() {
@@ -223,7 +224,7 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
   }
 
   private void setAdvanceDataSource(PentahoDataSource dataSource) {
-    dataSourceGeneralPanel.setDataSource(dataSource);
+    dataSourceAdvancePanel.setDataSource(dataSource);
   }
 
   public void setDataSource(PentahoDataSource dataSource) {
@@ -232,7 +233,7 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
   }
 
   private void setNormalDataSource(PentahoDataSource dataSource) {
-    dataSourceAdvancePanel.setDataSource(dataSource);
+    dataSourceGeneralPanel.setDataSource(dataSource);
   }
 
   private PentahoDataSource consolidateNormalAndAdvance(PentahoDataSource normalDataSource,

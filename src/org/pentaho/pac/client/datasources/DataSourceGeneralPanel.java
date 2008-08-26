@@ -1,10 +1,15 @@
 package org.pentaho.pac.client.datasources;
 
+import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.common.NameValue;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -12,17 +17,46 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class DataSourceGeneralPanel extends VerticalPanel {
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   public static final int PASSWORD_MAX_LENGTH = 50;
+  HorizontalPanel jdbcClassNamePanel = new HorizontalPanel(); 
   TextBox userNameTextBox = new TextBox();
   PasswordTextBox passwordTextBox = new PasswordTextBox();
   TextBox jndiNameTextBox = new TextBox();
-  TextBox driverClassTextBox = new TextBox();
   TextBox urlTextBox = new TextBox();
-  
+  private final ListBox driverList = new ListBox();
+  TextBox driverClassNameTextBox = new TextBox();
+  boolean driverClassListBoxHasValue = false;
   public DataSourceGeneralPanel() {
+    PacServiceFactory.getJdbcDriverDiscoveryService().getAvailableJdbcDrivers(
+        new AsyncCallback<NameValue[]>() {
+          public void onFailure(Throwable caught) {
+            jdbcClassNamePanel.add(driverClassNameTextBox);
+            driverClassNameTextBox.setWidth("100%"); //$NON-NLS-1$
+            constructDatasourcePanel();
+          }
+
+          public void onSuccess(NameValue[] result) {
+            for (NameValue res : result)
+              driverList.addItem(res.getName(), res.getValue());
+            driverClassListBoxHasValue = result != null && result.length > 0; 
+            if(driverClassListBoxHasValue) {
+              jdbcClassNamePanel.add(driverList);
+              driverList.setWidth("100%"); //$NON-NLS-1$
+              constructDatasourcePanel();
+            } else {
+              jdbcClassNamePanel.add(driverClassNameTextBox);
+              driverClassNameTextBox.setWidth("100%"); //$NON-NLS-1$
+              constructDatasourcePanel();
+            }
+          }
+        });      
+  }
+
+  private void constructDatasourcePanel() {
     add(new Label(MSGS.jndiName()));
     add(jndiNameTextBox);
     add(new Label(MSGS.jdbcDriverClass()));
-    add(driverClassTextBox);
+    add(jdbcClassNamePanel);
+    jdbcClassNamePanel.setWidth("100%");
     add(new Label(MSGS.dbUserName()));
     add(userNameTextBox);
     add(new Label(MSGS.dbPassword()));
@@ -31,10 +65,10 @@ public class DataSourceGeneralPanel extends VerticalPanel {
     add(new Label(MSGS.dbUrl()));
     add(urlTextBox);
     jndiNameTextBox.setWidth("100%"); //$NON-NLS-1$
-    driverClassTextBox.setWidth("100%"); //$NON-NLS-1$
+    driverList.setWidth("100%"); //$NON-NLS-1$
     userNameTextBox.setWidth("100%"); //$NON-NLS-1$
     passwordTextBox.setWidth("100%"); //$NON-NLS-1$
-    urlTextBox.setWidth("100%"); //$NON-NLS-1$
+    urlTextBox.setWidth("100%"); //$NON-NLS-1$    
   }
 
   public String getUserName() {
@@ -62,11 +96,28 @@ public class DataSourceGeneralPanel extends VerticalPanel {
   }
 
   public String getDriverClass() {
-    return driverClassTextBox.getText();
+    String returnValue = null;
+    if(driverClassListBoxHasValue) {
+      if((driverList.getSelectedIndex() >= 0) && (driverList.getSelectedIndex() < driverList.getItemCount())){
+        returnValue = driverList.getValue(driverList.getSelectedIndex());
+      }
+    } else {
+      returnValue = driverClassNameTextBox.getText();
+    }
+      
+    return returnValue;
   }
 
   public void setDriverClass(String className) {
-    driverClassTextBox.setText(className);
+    if(driverClassListBoxHasValue) {
+      for (int i = 0; i < driverList.getItemCount(); i++) {
+        if (driverList.getValue(i).equals(className)) {
+          driverList.setSelectedIndex(i);
+        }
+      }
+    } else {
+      driverClassNameTextBox.setText(className);
+    }
   }
   
   public String getUrl() {
@@ -89,8 +140,12 @@ public class DataSourceGeneralPanel extends VerticalPanel {
     return jndiNameTextBox;
   }
 
+  public ListBox getDriverClassListBox() {
+    return driverList;
+  }
+
   public TextBox getDriverClassTextBox() {
-    return driverClassTextBox;
+    return driverClassNameTextBox;
   }
   
   public TextBox getUrlTextBox() {
@@ -127,7 +182,34 @@ public class DataSourceGeneralPanel extends VerticalPanel {
     userNameTextBox.setEnabled(enabled);
     passwordTextBox.setEnabled(enabled);
     jndiNameTextBox.setEnabled(enabled);
-    driverClassTextBox.setEnabled(enabled);
+    driverList.setEnabled(enabled);
     urlTextBox.setEnabled(enabled);
+  }
+  
+  public void refresh() {
+    PacServiceFactory.getJdbcDriverDiscoveryService().getAvailableJdbcDrivers(
+        new AsyncCallback<NameValue[]>() {
+          public void onFailure(Throwable caught) {
+            driverList.removeFromParent();
+            jdbcClassNamePanel.add(driverClassNameTextBox);
+            driverClassNameTextBox.setWidth("100%"); //$NON-NLS-1$
+          }
+
+          public void onSuccess(NameValue[] result) {
+            for (NameValue res : result)
+              driverList.addItem(res.getName(), res.getValue());
+            driverClassListBoxHasValue = result != null && result.length > 0;
+            if(driverClassListBoxHasValue) {
+              driverClassNameTextBox.removeFromParent();
+              jdbcClassNamePanel.add(driverList);
+              driverList.setWidth("100%"); //$NON-NLS-1$
+            } else {
+              driverList.removeFromParent();
+              jdbcClassNamePanel.add(driverClassNameTextBox);
+              driverClassNameTextBox.setWidth("100%"); //$NON-NLS-1$
+            }
+          }
+        }); 
+  
   }
 }

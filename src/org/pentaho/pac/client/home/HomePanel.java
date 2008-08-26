@@ -15,6 +15,7 @@
  */
 package org.pentaho.pac.client.home;
 
+import org.pentaho.pac.client.IRefreshableAdminPage;
 import org.pentaho.pac.client.PacServiceAsync;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
@@ -30,11 +31,12 @@ import com.google.gwt.user.client.ui.SimplePanel;
  * A panel that contains HTML, and which can attach child widgets to identified
  * elements within that HTML.
  */
-public class HomePanel extends SimplePanel {
+public class HomePanel extends SimplePanel implements IRefreshableAdminPage{
 
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   private static int sUid;
   private GroupBox groupbox;
+  private String url;
   
   /**
    * A helper method for creating unique IDs for elements within dynamically-
@@ -57,24 +59,26 @@ public class HomePanel extends SimplePanel {
     groupbox = new GroupBox("Welcome"); //$NON-NLS-1$
     groupbox.setStyleName("homeGroupBox"); //$NON-NLS-1$
     this.add(groupbox);
-    
-	 PacServiceAsync pacService = PacServiceFactory.getPacService();
-	 pacService.getHomePageAsHtml(url, new AsyncCallback<String>() {
-		 public void onFailure(Throwable caught) {
-		   
-       MessageDialog messageDialog = new MessageDialog(
-           MSGS.error(),
-           MSGS.failedToLoadHome( caught.getMessage() ) );
-       messageDialog.center();
-		 }
-		 public void onSuccess(String htmlContent) {
-      SimplePanel tempPanel = new SimplePanel();
-      
-      DOM.setInnerHTML(tempPanel.getElement(), htmlContent);
-      groupbox.setContent(tempPanel);
-		 }
-	 });
-
+    this.url = url;
+  }
+  
+  public void refresh() {
+    PacServiceAsync pacService = PacServiceFactory.getPacService();
+    pacService.getHomePageAsHtml(url, new AsyncCallback<String>() {
+      public void onFailure(Throwable caught) {
+        
+        MessageDialog messageDialog = new MessageDialog(
+            MSGS.error(),
+            MSGS.failedToLoadHome( caught.getMessage() ) );
+        messageDialog.center();
+      }
+      public void onSuccess(String htmlContent) {
+       SimplePanel tempPanel = new SimplePanel();
+       
+       DOM.setInnerHTML(tempPanel.getElement(), htmlContent);
+       groupbox.setContent(tempPanel);
+      }
+    });    
   }
 
 }

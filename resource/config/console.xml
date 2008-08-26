@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <console> 
   <platform-username>joe</platform-username>  
-  <biserver-context-path>/pentaho</biserver-context-path>  
-  <biserver-base-url>http://localhost:8080/pentaho</biserver-base-url>  
-  <biserver-status-check-period>30000</biserver-status-check-period>  
-  <homepage-timeout>15000</homepage-timeout>  
-  <hibernate-config-path>hsql.hibernate.cfg.xml</hibernate-config-path>
-  <solution-path>/home/mlowery/tmp/pentaho-solutions</solution-path>
-  <war-path>/home/mlowery/tmp/apache-tomcat-6.0.16/webapps/pentaho</war-path>
-  <password-service-class>org.pentaho.platform.util.Base64PasswordService</password-service-class>  
+  <biserver-status-check-period-millis>30000</biserver-status-check-period-millis>  
+  <homepage-timeout-millis>15000</homepage-timeout-millis>  
+  <solution-path>c:/code/new_build_process/pentaho-solutions</solution-path>
+  <war-path>c:/code/new_build_process/target-tomcat-preconfiguredinstall/webapps/pentaho</war-path>
+  <jdbc-drivers-path>c:/code/new_build_process/target-tomcat-preconfiguredinstall/common/lib</jdbc-drivers-path>  
 </console>

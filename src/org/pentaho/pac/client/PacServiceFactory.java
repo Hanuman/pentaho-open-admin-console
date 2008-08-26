@@ -10,6 +10,8 @@ public class PacServiceFactory {
   private static SchedulerServiceAsync schedulerService = null;
   private static SubscriptionServiceAsync subscriptionService = null;
   private static SolutionRepositoryServiceAsync solutionRepositoryService = null;
+  private static JdbcDriverDiscoveryServiceAsync jdbcDriverDiscoveryService = null;
+  
 
   public static PacServiceAsync getPacService() {
     if (pacService == null) {
@@ -50,4 +52,15 @@ public class PacServiceFactory {
     }
     return solutionRepositoryService;
   }
+  
+  public static JdbcDriverDiscoveryServiceAsync getJdbcDriverDiscoveryService() {
+    if (jdbcDriverDiscoveryService == null) {
+      jdbcDriverDiscoveryService = (JdbcDriverDiscoveryServiceAsync) GWT.create(JdbcDriverDiscoveryService.class);
+      ServiceDefTarget endpoint = (ServiceDefTarget) jdbcDriverDiscoveryService;
+      String moduleRelativeURL = GWT.getModuleBaseURL() + "jdbcdriverdiscoverysvc"; //$NON-NLS-1$
+      endpoint.setServiceEntryPoint(moduleRelativeURL);
+    }
+    return jdbcDriverDiscoveryService;
+  }  
+  
 }

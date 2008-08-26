@@ -178,6 +178,9 @@ public class JettyServer implements Halter {
     ServletHolder solutionrepositorysvc = new ServletHolder(new org.pentaho.pac.server.SolutionRepositoryServiceImpl());
     startExecution.addServlet(solutionrepositorysvc, "/solutionrepositorysvc"); //$NON-NLS-1$
 
+    ServletHolder jdbcdriverdiscoveryservice = new ServletHolder(new org.pentaho.pac.server.common.JdbcDriverDiscoveryServiceImpl());
+    startExecution.addServlet(jdbcdriverdiscoveryservice, "/jdbcdriverdiscoverysvc"); //$NON-NLS-1$
+
     // TODO sbarkdull, can this be deleted?
     // sample
     Handler hello = new HomeHandler();

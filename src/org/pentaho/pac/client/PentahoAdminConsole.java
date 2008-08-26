@@ -7,6 +7,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
 
 public class PentahoAdminConsole extends DockPanel {
   
@@ -40,6 +41,8 @@ public class PentahoAdminConsole extends DockPanel {
     adminConsoleMasterDetailsPanel.selectPage(AdminConsolePageId.HOME_PAGE.ordinal());
     
     setStyleName("main-panel"); //$NON-NLS-1$
+
+    refresh();
   }
   
   
@@ -56,6 +59,14 @@ public class PentahoAdminConsole extends DockPanel {
 
   static public PacLocalizedMessages getLocalizedMessages() {
     return MSGS;
+  }
+  
+  public void refresh() {
+    for (Widget page : adminConsoleMasterDetailsPanel.getPages()) {
+      if (page instanceof IRefreshableAdminPage) {
+        ((IRefreshableAdminPage)page).refresh();
+      }
+    }
   }
 }
  

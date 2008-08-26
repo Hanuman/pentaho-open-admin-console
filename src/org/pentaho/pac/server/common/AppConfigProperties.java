@@ -17,12 +17,15 @@
 package org.pentaho.pac.server.common;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
+import org.dom4j.Node;
 import org.pentaho.platform.api.engine.ISystemSettings;
 import org.pentaho.platform.engine.core.system.SystemSettings;
 import org.pentaho.platform.util.xml.dom4j.XmlDom4JHelper;
@@ -41,10 +44,22 @@ public class AppConfigProperties {
 
   private static final Log logger = LogFactory.getLog(AppConfigProperties.class);
 
-  public static final String KEY_PASSWORD_SERVICE_CLASS = "password-service-class"; //$NON-NLS-1$
+  public static final String WEB_XML_PATH = "/WEB-INF/web.xml"; //$NON-NLS-1$
+  public static final String HIBERNATE_CONFIG_PATH = "hibernateConfigPath"; //$NON-NLS-1$
+  public static final String PENTAHO_OBJECTS_SPRING_XML = "pentahoObjects.spring.xml" ; //$NON-NLS-1$
+ 
+  public static final String XPATH_TO_CONTEXT_PARAM = "web-app/context-param"; //$NON-NLS-1$
+ 
+  public static final String XPATH_TO_PARAM_NAME = "param-name"; //$NON-NLS-1$
+ 
+  public static final String XPATH_TO_PARAM_VALUE = "param-value"; //$NON-NLS-1$
+ 
+  public static final String XPATH_TO_PASSWORD_SERVICE = "beans/bean/constructor-arg/list/bean[@id='pentahoObjects.passwordService']"; //$NON-NLS-1$  
 
   public static final String KEY_WAR_PATH = "war-path"; //$NON-NLS-1$
-
+ 
+  public static final String KEY_PASSWORD_SERVICE_CLASS = "password-service-class"; //$NON-NLS-1$
+ 
   public static final String KEY_SOLUTION_PATH = "solution-path"; //$NON-NLS-1$
 
   public static final String KEY_HIBERNATE_CONFIG_PATH = "hibernate-config-path"; //$NON-NLS-1$
@@ -58,11 +73,28 @@ public class AppConfigProperties {
   public static final String KEY_BISERVER_CONTEXT_PATH = "biserver-context-path"; //$NON-NLS-1$
 
   public static final String KEY_PLATFORM_USERNAME = "platform-username"; //$NON-NLS-1$
-
+  
+  public static final String KEY_JDBC_DRIVERS_PATH = "jdbc-drivers-path"; //$NON-NLS-1$
+  
   public static final String DEFAULT_PROPERTIES_FILE_NAME = "console.xml"; //$NON-NLS-1$
 
-  public static final String VALUE_PASSWORD_SERVICE_CLASS = "org.pentaho.platform.util.Base64PasswordService"; //$NON-NLS-1$
-
+  public static final String DEFAULT_VALUE_PASSWORD_SERVICE_CLASS = "org.pentaho.platform.util.Base64PasswordService"; //$NON-NLS-1$
+  
+  public static final String DEFAULT_BISERVER_BASE_URL = "http://localhost:8080/pentaho"; //$NON-NLS-1$
+  
+  public static final String DEFAULT_BISERVER_CONTEXT_PATH = "/pentaho"; //$NON-NLS-1$
+  
+  public static final String DEFAULT_PLATFORM_USERNAME = "joe"; //$NON-NLS-1$
+  
+  public static final String DEFAULT_BISERVER_STATUS_CHECK_PERIOD = "30000"; //$NON-NLS-1$
+  
+  public static final String DEFAULT_HOMEPAGE_TIMEOUT = "15000"; //$NON-NLS-1$
+  
+  public static final String DEFAULT_HIBERNATE_CONFIG_PATH = "hsql.hibernate.cfg.xml"; //$NON-NLS-1$
+    
+  private static final String BASE_URL = "base-url"; //$NON-NLS-1$
+  
+  private static String passwordServiceClass; 
   // ~ Instance fields =================================================================================================
 
   private ISystemSettings settings = new OpenAdminConsoleSettings();
@@ -104,33 +136,102 @@ public class AppConfigProperties {
   }
 
   protected static void initPasswordService() {
-    String passwordServiceClassName = instance.settings.getSystemSetting(KEY_PASSWORD_SERVICE_CLASS,
-        VALUE_PASSWORD_SERVICE_CLASS);
-    PasswordServiceFactory.init(passwordServiceClassName);
+    if(passwordServiceClass != null) {
+      PasswordServiceFactory.init(passwordServiceClass);  
+    } else  {
+      PasswordServiceFactory.init(DEFAULT_VALUE_PASSWORD_SERVICE_CLASS);
+    }
   }
 
   public String getPlatformUsername() {
-    return settings.getSystemSetting(KEY_PLATFORM_USERNAME, null);
+    return settings.getSystemSetting(KEY_PLATFORM_USERNAME, DEFAULT_PLATFORM_USERNAME);
   }
 
   public String getBiServerContextPath() {
-    return settings.getSystemSetting(KEY_BISERVER_CONTEXT_PATH, null);
+    String returnValue = null;
+    String value = getBiServerBaseUrl();
+    int start = value.lastIndexOf(":");
+    int middle = value.indexOf("/", start);
+    
+    returnValue = value.substring(middle, value.length()-1);
+    if (!(returnValue != null && returnValue.length() > 0)) {
+      returnValue = DEFAULT_BISERVER_CONTEXT_PATH;
+    }
+    
+    return returnValue;
   }
 
   public String getBiServerBaseUrl() {
-    return settings.getSystemSetting(KEY_BISERVER_BASE_URL, null);
+    String warPath = getWarPath();
+    String returnValue = null;
+    StringBuffer xmlBuffer = new StringBuffer();
+    try {
+      FileReader fileReader = new FileReader(new File(warPath + WEB_XML_PATH));
+      char[] inputString = new char[1000];
+      int numCharsRead = fileReader.read(inputString, 0, 1000);
+      while (numCharsRead >= 0) {
+        xmlBuffer.append(inputString, 0, numCharsRead);
+        numCharsRead = fileReader.read(inputString, 0, 1000);
+      }
+      Document document = XmlDom4JHelper.getDocFromString(xmlBuffer.toString(), null);
+      List<Node> nodes = document.selectNodes(XPATH_TO_CONTEXT_PARAM);
+      for (Node node : nodes) {
+        Node paramNameNode = node.selectSingleNode(XPATH_TO_PARAM_NAME);
+        
+        if(paramNameNode.getStringValue() != null && paramNameNode.getStringValue().equals(BASE_URL)) {
+          Node paramValueNode = node.selectSingleNode(XPATH_TO_PARAM_VALUE);
+          returnValue = paramValueNode.getStringValue();
+          break;
+        }
+      }
+    } catch(Exception e) {
+      // do nothing
+    }
+    if (!(returnValue != null && returnValue.length() > 0)) {
+      returnValue = DEFAULT_BISERVER_BASE_URL;
+    }
+    return returnValue.substring(0, returnValue.length()-1);
   }
 
   public String getBiServerStatusCheckPeriod() {
-    return settings.getSystemSetting(KEY_BISERVER_STATUS_CHECK_PERIOD, null);
+    return settings.getSystemSetting(KEY_BISERVER_STATUS_CHECK_PERIOD, DEFAULT_BISERVER_STATUS_CHECK_PERIOD);
   }
 
   public String getHomepageTimeout() {
-    return settings.getSystemSetting(KEY_HOMEPAGE_TIMEOUT, null);
+    return settings.getSystemSetting(KEY_HOMEPAGE_TIMEOUT, DEFAULT_HOMEPAGE_TIMEOUT);
   }
 
   public String getHibernateConfigPath() {
-    return settings.getSystemSetting(KEY_HIBERNATE_CONFIG_PATH, null);
+    String warPath = getWarPath();
+    String returnValue = null;
+    StringBuffer xmlBuffer = new StringBuffer();
+    try {
+      FileReader fileReader = new FileReader(new File(warPath + WEB_XML_PATH));
+      char[] inputString = new char[1000];
+      int numCharsRead = fileReader.read(inputString, 0, 1000);
+      while (numCharsRead >= 0) {
+        xmlBuffer.append(inputString, 0, numCharsRead);
+        numCharsRead = fileReader.read(inputString, 0, 1000);
+      }
+      Document document = XmlDom4JHelper.getDocFromString(xmlBuffer.toString(), null);
+      List<Node> nodes = document.selectNodes(XPATH_TO_CONTEXT_PARAM);
+      for (Node node : nodes) {
+        Node paramNameNode = node.selectSingleNode(XPATH_TO_PARAM_NAME);
+        
+        if(paramNameNode.getStringValue() != null && paramNameNode.getStringValue().equals(HIBERNATE_CONFIG_PATH)) {
+          Node paramValueNode = node.selectSingleNode(XPATH_TO_PARAM_VALUE);
+          returnValue = paramValueNode.getStringValue();
+          break;
+        }
+      }
+      returnValue = returnValue.substring(returnValue.lastIndexOf("/")+1, returnValue.length());
+    } catch(Exception e) {
+      
+    }
+     if (!(returnValue != null && returnValue.length() > 0)) {
+      returnValue = DEFAULT_HIBERNATE_CONFIG_PATH;
+     }
+    return returnValue;
   }
 
   public String getSolutionPath() {
@@ -142,9 +243,35 @@ public class AppConfigProperties {
   }
 
   public String getPasswordServiceClass() {
-    return settings.getSystemSetting(KEY_PASSWORD_SERVICE_CLASS, null);
+    String solutionPath = getSolutionPath();
+    String returnValue = null;
+    StringBuffer xmlBuffer = new StringBuffer();
+    try {
+      FileReader fileReader = new FileReader(new File(solutionPath + PENTAHO_OBJECTS_SPRING_XML));
+      char[] inputString = new char[1000];
+      int numCharsRead = fileReader.read(inputString, 0, 1000);
+      while (numCharsRead >= 0) {
+        xmlBuffer.append(inputString, 0, numCharsRead);
+        numCharsRead = fileReader.read(inputString, 0, 1000);
+      }
+      Document document = XmlDom4JHelper.getDocFromString(xmlBuffer.toString(), null);
+      Node node = document.selectSingleNode(XPATH_TO_PASSWORD_SERVICE);
+      if (node != null) {
+        returnValue = node.getStringValue();  
+      }
+    } catch(Exception e) {
+      // do nothing
+    }
+    if (!(returnValue != null && returnValue.length() > 0)) {
+     returnValue = DEFAULT_VALUE_PASSWORD_SERVICE_CLASS;
+    }
+    
+    return returnValue;
   }
 
+  public String getJdbcDriverPath() {
+    return settings.getSystemSetting(KEY_JDBC_DRIVERS_PATH, null);
+  }
   /**
    * Reuse of {@link SystemSettings} where settings are read from <code>resource/config/console.xml</code>.
    * 

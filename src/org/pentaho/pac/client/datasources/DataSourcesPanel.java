@@ -298,8 +298,23 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
   }
 
   public void refresh() {
-    dataSourcesList.refresh();
-    dataSourceSelectionChanged();
+    PacServiceFactory.getJdbcDriverDiscoveryService().initialize(
+        new AsyncCallback() {
+          public void onFailure(Throwable caught) {
+            dataSourcesList.refresh();
+            dataSourceGeneralPanel.refresh();
+            dataSourceAdvancePanel.refresh();
+            dataSourceSelectionChanged();            
+          }
+
+          public void onSuccess(Object result) {
+            dataSourcesList.refresh();
+            dataSourceGeneralPanel.refresh();
+            dataSourceAdvancePanel.refresh();
+            dataSourceSelectionChanged();
+          }
+        });
+
   }
 
   public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
