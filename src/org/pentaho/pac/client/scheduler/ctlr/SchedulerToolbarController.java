@@ -130,6 +130,13 @@ public class SchedulerToolbarController {
           updateSchedulesTable();
         }
       });  
+
+      ICallback<SolutionRepositoryActionSequenceListEditor> loadingCompleteHandler = new ICallback<SolutionRepositoryActionSequenceListEditor>() {
+        public void onHandle(SolutionRepositoryActionSequenceListEditor o) {
+          localThis.handleLoadingComplete();
+        }
+      };
+      scheduleCreatorDialog.getSolutionRepositoryActionSequenceEditor().setOnLoadingCompleteHandler( loadingCompleteHandler );
       
       loadJobsTable();  // TODO sbarkdull  belongs in SchedulesListController
       enableTools();
@@ -658,6 +665,7 @@ public class SchedulerToolbarController {
     
     scheduleCreatorDialog.setTitle( MSGS.scheduleCreator() );
     scheduleCreatorDialog.reset( new Date() );
+    scheduleCreatorDialog.setOkBtnEnabled( false );
     
     scheduleCreatorDialog.setOnOkHandler( new ICallback<MessageDialog>() {
       public void onHandle(MessageDialog d) {
@@ -670,7 +678,7 @@ public class SchedulerToolbarController {
         return isNewScheduleCreatorDialogValid();
       }
     });
-
+    
     scheduleCreatorDialog.center();
     solRepActionSequenceEditorController.init( null );
     scheduleCreatorDialog.getScheduleEditor().setFocus();
@@ -681,6 +689,7 @@ public class SchedulerToolbarController {
 
     scheduleCreatorDialog.setTitle( MSGS.scheduleEditor() );
     final List<Schedule> scheduleList = schedulesListCtrl.getSelectedSchedules();
+    scheduleCreatorDialog.setOkBtnEnabled( false );
     
     scheduleCreatorDialog.setOnOkHandler( new ICallback<MessageDialog>() {
       public void onHandle(MessageDialog d) {
@@ -713,6 +722,10 @@ public class SchedulerToolbarController {
     }
   }
 
+  private void handleLoadingComplete() {
+    scheduleCreatorDialog.setOkBtnEnabled( true );
+  }
+  
   private void handleDeleteSchedules() {
     final SchedulerToolbarController localThis = this;
     

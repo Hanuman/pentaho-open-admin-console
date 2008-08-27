@@ -38,15 +38,12 @@ public class SolutionRepositoryActionSequenceListEditorValidator implements IUiV
     boolean isValid = true;
     
     List<String> actionList = solRepActionSequenceListEditor.getActionsAsList();
-    if ( !isSubscriptionSched && actionList.size() > 1 ) {
+    if ( !isSubscriptionSched && actionList.size() != 1 ) {
       isValid = false;
       solRepActionSequenceListEditor.setActionsError( MSGS.onlyOneActionSequence() );
     } else if ( actionList.size() <= 0 ) {
       isValid = false;
       solRepActionSequenceListEditor.setActionsError( MSGS.actionSequenceCannotBeEmpty() );
-//    } else if () {
-//      TODO sbarkdull
-//      validate that each action sequence string has 2 "/" and ends in ".xaction"
     }
     
     return isValid;

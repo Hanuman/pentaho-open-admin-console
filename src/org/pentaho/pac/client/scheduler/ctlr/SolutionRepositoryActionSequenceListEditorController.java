@@ -101,7 +101,7 @@ public class SolutionRepositoryActionSequenceListEditorController {
       }
     });
     
-    solRepActionSequenceEditor.setOnSelectCallback( new ICallback<TableEditor>() {
+    solRepActionSequenceEditor.setOnSelectHandler( new ICallback<TableEditor>() {
       public void onHandle(TableEditor tableEditor ) {
         tableEditor.setDeleteBtnEnabled( tableEditor.getNumSelectedItems() > 0 ); 
       }
@@ -172,6 +172,7 @@ public class SolutionRepositoryActionSequenceListEditorController {
           loadActionListIntoItemPicker( actionList );
         }
         actionSequencePickerDialog.getActionSequencePicker().setSolutionRepositoryDocument( solutionRepositoryModel.getDocument() );
+        solRepActionSequenceEditor.fireLoadingComplete();
         isInitialized = true;
       } // end onSuccess
 
