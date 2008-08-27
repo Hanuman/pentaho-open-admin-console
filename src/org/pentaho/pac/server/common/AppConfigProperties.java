@@ -21,6 +21,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.Document;
@@ -100,8 +101,9 @@ public class AppConfigProperties {
   private ISystemSettings settings = new OpenAdminConsoleSettings();
 
   private static AppConfigProperties instance = new AppConfigProperties();
-
-  private boolean initialized = false;
+  static {
+    initPasswordService();
+  }
 
   // ~ Constructors ====================================================================================================
 
@@ -112,27 +114,7 @@ public class AppConfigProperties {
   // ~ Methods =========================================================================================================
 
   public static synchronized AppConfigProperties getInstance() {
-    if (!instance.initialized) {
-      init();
-    }
     return instance;
-  }
-
-  /**
-   * Can be called externally or called automatically by the getInstance method. 
-   */
-  public static synchronized void init() {
-    initPasswordService();
-    instance.initialized = true;
-  }
-
-  /**
-   * Optionally called before the first call to getInstance. 
-   */
-  public static synchronized void init(ISystemSettings settings) {
-    instance.settings = settings;
-    initPasswordService();
-    instance.initialized = true;
   }
 
   protected static void initPasswordService() {
@@ -150,8 +132,8 @@ public class AppConfigProperties {
   public String getBiServerContextPath() {
     String returnValue = null;
     String value = getBiServerBaseUrl();
-    int start = value.lastIndexOf(":");
-    int middle = value.indexOf("/", start);
+    int start = value.lastIndexOf(":"); //$NON-NLS-1$
+    int middle = value.indexOf("/", start); //$NON-NLS-1$
     
     returnValue = value.substring(middle, value.length()-1);
     if (!(returnValue != null && returnValue.length() > 0)) {
@@ -205,8 +187,9 @@ public class AppConfigProperties {
     String warPath = getWarPath();
     String returnValue = null;
     StringBuffer xmlBuffer = new StringBuffer();
+    FileReader fileReader = null;
     try {
-      FileReader fileReader = new FileReader(new File(warPath + WEB_XML_PATH));
+      fileReader = new FileReader(new File(warPath + WEB_XML_PATH));
       char[] inputString = new char[1000];
       int numCharsRead = fileReader.read(inputString, 0, 1000);
       while (numCharsRead >= 0) {
@@ -226,9 +209,17 @@ public class AppConfigProperties {
       }
       returnValue = returnValue.substring(returnValue.lastIndexOf("/")+1, returnValue.length());
     } catch(Exception e) {
-      
+      returnValue = null;
+      // TODO need to log an error message at the very least
+    } finally {
+      if ( null != fileReader ) {
+        try { fileReader.close(); }
+        catch( IOException e) {
+          logger.error( "Failed to close stream associated with: " + warPath + WEB_XML_PATH );
+        }
+      }
     }
-     if (!(returnValue != null && returnValue.length() > 0)) {
+     if ( StringUtils.isEmpty(returnValue) ) {
       returnValue = DEFAULT_HIBERNATE_CONFIG_PATH;
      }
     return returnValue;
