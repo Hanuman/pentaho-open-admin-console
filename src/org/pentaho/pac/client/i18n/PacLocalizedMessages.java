@@ -312,9 +312,9 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String fileLocationLabel();
 
   /**
-   * Translated "Type [Count]".
+   * Translated "State".
    * 
-   * @return translated "Type [Count]"
+   * @return translated "State"
    * @gwt.key state
    */
   String state();
