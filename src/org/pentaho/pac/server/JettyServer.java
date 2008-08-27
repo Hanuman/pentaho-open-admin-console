@@ -191,7 +191,7 @@ public class JettyServer implements Halter {
     resources.setWelcomeFiles(new String[] { "PentahoAdminConsole.html" }); //$NON-NLS-1$
 
     if (securityHandler != null) {
-      server.setHandlers(new Handler[] { resources, securityHandler, startExecution });
+      server.setHandlers(new Handler[] { securityHandler, resources, startExecution });
     } else {
       server.setHandlers(new Handler[] { resources, startExecution });
     }
