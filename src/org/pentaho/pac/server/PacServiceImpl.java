@@ -66,6 +66,8 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
 
   private IDataSourceMgmtService dataSourceMgmtService = new DataSourceMgmtService();
 
+  private static ThreadSafeHttpClient HTTP_CLIENT = new ThreadSafeHttpClient();
+  
   private static final Log logger = LogFactory.getLog(PacServiceImpl.class);
   private static final int DEFAULT_CHECK_PERIOD = 30000; // 30 seconds
 
@@ -894,7 +896,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     
     String html = null;
     try {
-      html = new ThreadSafeHttpClient().execRemoteMethod(url, null, HttpMethodType.GET, params, "text/html" );//$NON-NLS-1$
+      html = HTTP_CLIENT.execRemoteMethod(url, null, HttpMethodType.GET, params, "text/html" );//$NON-NLS-1$
     } catch (ProxyException e) {
       html = showStatic();
     }
@@ -923,7 +925,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   
   public void isBiServerAlive() throws PacServiceException {
     try {
-      String response = new ThreadSafeHttpClient().execRemoteMethod(getBIServerBaseUrl(), "ping/alive.gif", HttpMethodType.GET, null );//$NON-NLS-1$
+      String response = HTTP_CLIENT.execRemoteMethod(getBIServerBaseUrl(), "ping/alive.gif", HttpMethodType.GET, null );//$NON-NLS-1$
     } catch (ProxyException e) {
       throw new PacServiceException( e.getMessage(), e );
     } 
