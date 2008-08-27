@@ -13,6 +13,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class SolutionRepositoryActionSequenceListEditor extends VerticalPanel {
   
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
+
+  private ICallback<SolutionRepositoryActionSequenceListEditor> onLoadingCompleteHandler = null;
   
   private TableEditor actionsEditor = new TableEditor( MSGS.fileLocationLabel() );
 
@@ -103,8 +105,8 @@ public class SolutionRepositoryActionSequenceListEditor extends VerticalPanel {
     actionsEditor.setOnDeleteClickedHandler( handler );
   }
   
-  public void setOnSelectCallback( ICallback<TableEditor> handler ) {
-    actionsEditor.setOnSelectCallback( handler );
+  public void setOnSelectHandler( ICallback<TableEditor> handler ) {
+    actionsEditor.setOnSelectHandler( handler );
   }
   
   public void setAddBtnEnabled( boolean enabled ) {
@@ -121,5 +123,15 @@ public class SolutionRepositoryActionSequenceListEditor extends VerticalPanel {
   
   public void clearMessage() {
     actionsEditor.clearMessage();
+  }
+  
+  public void setOnLoadingCompleteHandler( ICallback<SolutionRepositoryActionSequenceListEditor> handler ) {
+    onLoadingCompleteHandler = handler;
+  }
+  
+  public void fireLoadingComplete() {
+    if ( null != onLoadingCompleteHandler ) {
+      onLoadingCompleteHandler.onHandle( this );
+    }
   }
 }
