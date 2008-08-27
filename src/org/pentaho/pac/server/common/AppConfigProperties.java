@@ -190,7 +190,7 @@ public class AppConfigProperties {
     if (!(returnValue != null && returnValue.length() > 0)) {
       returnValue = DEFAULT_BISERVER_BASE_URL;
     }
-    return returnValue.substring(0, returnValue.length()-1);
+    return returnValue;
   }
 
   public String getBiServerStatusCheckPeriod() {
