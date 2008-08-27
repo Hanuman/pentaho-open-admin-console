@@ -24,51 +24,6 @@ public class AppConfigPropertiesTest {
   }
 
   @Test
-  public void testInitSystemSettings() {
-    // create stub settings
-    ISystemSettings settings = new ISystemSettings() {
-
-      public String getSystemCfgSourceName() {
-        return null;
-      }
-
-      public String getSystemSetting(String arg0, String arg1) {
-        if (AppConfigProperties.KEY_PASSWORD_SERVICE_CLASS.equals(arg0)) {
-          return AppConfigProperties.DEFAULT_VALUE_PASSWORD_SERVICE_CLASS;
-        } else {
-          return "foo"; //$NON-NLS-1$
-        }
-      }
-
-      public String getSystemSetting(String arg0, String arg1, String arg2) {
-        return null;
-      }
-
-      public List getSystemSettings(String arg0) {
-        return null;
-      }
-
-      public List getSystemSettings(String arg0, String arg1) {
-        return null;
-      }
-
-      public Document getSystemSettingsDocument(String arg0) {
-        return null;
-      }
-
-      public Properties getSystemSettingsProperties(String arg0) {
-        return null;
-      }
-
-      public void resetSettingsCache() {
-      }
-
-    };
-    AppConfigProperties.init(settings);
-    assertNotNull(AppConfigProperties.getInstance());
-  }
-
-  @Test
   public void testGetX() {
     assertTrue(StringUtils.isNotBlank(AppConfigProperties.getInstance().getBiServerBaseUrl()));
     assertTrue(StringUtils.isNotBlank(AppConfigProperties.getInstance().getBiServerContextPath()));
