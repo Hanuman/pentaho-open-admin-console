@@ -304,17 +304,17 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String every();
 
   /**
-   * Translated "".
+   * Translated "Associate this public schedule with the selected files...".
    * 
-   * @return translated ""
+   * @return translated "Associate this public schedule with the selected files..."
    * @gwt.key fileLocationLabel
    */
   String fileLocationLabel();
 
   /**
-   * Translated "State".
+   * Translated "Type [Count]".
    * 
-   * @return translated "State"
+   * @return translated "Type [Count]"
    * @gwt.key state
    */
   String state();
@@ -416,9 +416,9 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String advance();
 
   /**
-   * Translated "# Subscribers".
+   * Translated "Type [Count]".
    * 
-   * @return translated "# Subscribers"
+   * @return translated "Type [Count]"
    * @gwt.key subscriberCount
    */
   String subscriberCount();
@@ -494,6 +494,14 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key scheduleName
    */
   String scheduleName();
+
+  /**
+   * Translated "Public".
+   * 
+   * @return translated "Public"
+   * @gwt.key publicLabel
+   */
+  String publicLabel();
 
   /**
    * Translated "No end date".
@@ -808,9 +816,9 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String biServerAlive();
 
   /**
-   * Translated "Subscription Schedule".
+   * Translated "Public Schedule - Allow users access to this schedule".
    * 
-   * @return translated "Subscription Schedule"
+   * @return translated "Public Schedule - Allow users access to this schedule"
    * @gwt.key scheduleTypeCheckboxLabel
    */
   String scheduleTypeCheckboxLabel();
@@ -870,6 +878,22 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key clickEditRoles
    */
   String clickEditRoles();
+
+  /**
+   * Translated "Select".
+   * 
+   * @return translated "Select"
+   * @gwt.key selectTitleBarLabel
+   */
+  String selectTitleBarLabel();
+
+  /**
+   * Translated "Audit Report".
+   * 
+   * @return translated "Audit Report"
+   * @gwt.key openAuditReport
+   */
+  String openAuditReport();
 
   /**
    * Translated "Role creation failed: {0}".
@@ -1088,9 +1112,9 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String nameColon();
 
   /**
-   * Translated "n/a".
+   * Translated "Private".
    * 
-   * @return translated "n/a"
+   * @return translated "Private"
    * @gwt.key notApplicable
    */
   String notApplicable();
@@ -1878,13 +1902,4 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key deleteSchedules
    */
   String deleteSchedules();
-  
-  /**
-  * Translated "Audit Report".
-  * 
-  * @return translated "Audit Report"
-  * @gwt.key openAuditReport
-  */
-  String openAuditReport();
-  
 }

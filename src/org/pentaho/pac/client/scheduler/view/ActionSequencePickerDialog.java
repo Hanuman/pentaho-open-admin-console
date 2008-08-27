@@ -11,7 +11,8 @@ public class ActionSequencePickerDialog extends ConfirmDialog {
   public static final String OPEN_LABEL = MSGS.openBtnLabel();
   public static final String SELECT_LABEL = MSGS.selectBtnLabel();
   
-  public ActionSequencePickerDialog() {
+  public ActionSequencePickerDialog( String title ) {
+    super( title );
     this.setNoBorderOnClientPanel();
     this.addWidgetToClientArea( actionSequencePicker );
     setOkBtnLabel( SELECT_LABEL );

@@ -70,7 +70,7 @@ public class SchedulesListController {
 
         // column 5
         String labelTxt = schedule.isSubscriptionSchedule()
-          ? schedule.getSubscriberCount()
+          ? MSGS.publicLabel() + "[" + schedule.getSubscriberCount() + "]"
           : MSGS.notApplicable();
         l = new Label( labelTxt );
         widgets[ 5 ] = l;
