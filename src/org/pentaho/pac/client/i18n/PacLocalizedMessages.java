@@ -366,7 +366,23 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key assignedUsers
    */
   String assignedUsers();
+  
+  /**
+   * Translated "Assign Users".
+   * 
+   * @return translated "Assign Users"
+   * @gwt.key assignUsers
+   */
+  String assignUsers();
 
+  /**
+   * Translated "Unassign Users".
+   * 
+   * @return translated "Unassign Users"
+   * @gwt.key unassignUsers
+   */
+  String unassignUsers();
+  
   /**
    * Translated "Suspend selected schedule(s)".
    * 
@@ -1078,7 +1094,24 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key assignedRoles
    */
   String assignedRoles();
+  
+  /**
+   * Translated "Assign Roles".
+   * 
+   * @return translated "Assign Roles"
+   * @gwt.key assignRoles
+   */
+  String assignRoles();
 
+  /**
+   * Translated "Unassign Roles".
+   * 
+   * @return translated "Unassign Roles"
+   * @gwt.key unassignRoles
+   */
+  String unassignRoles();
+
+  
   /**
    * Translated "Services".
    * 
@@ -1299,10 +1332,18 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * Translated "Are your sure you want to remove the selected user(s) from the selected role(s)?".
    * 
    * @return translated "Are your sure you want to remove the selected user(s) from the selected role(s)?"
-   * @gwt.key confirmRemoveRoleAssignmentMsg
+   * @gwt.key confirmUnassignUsersMsg
    */
-  String confirmRemoveRoleAssignmentMsg();
+  String confirmUnassignUsersMsg();
 
+  /**
+   * Translated "Are your sure you want to remove the selected role(s) from the selected user(s)?".
+   * 
+   * @return translated "Are your sure you want to remove the selected role(s) from the selected user(s)?"
+   * @gwt.key confirmUnassignRolesMsg
+   */
+  String confirmUnassignRolesMsg();
+  
   /**
    * Translated "Purge Mondrian Schema Cache".
    * 
@@ -1902,4 +1943,21 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key deleteSchedules
    */
   String deleteSchedules();
+
+  /**
+   * Translated "Help".
+   * 
+   * @return translated "Help"
+   * @gwt.key help
+   */
+  String help();
+  
+  /**
+   * Translated "Reset Server".
+   * 
+   * @return translated "Reset Server"
+   * @gwt.key resetServer
+   */
+  String resetServer();
+  
 }

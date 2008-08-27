@@ -149,7 +149,9 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
     dataSourcesList.setHeight("100%"); //$NON-NLS-1$
     dataSourcesList.setWidth("100%"); //$NON-NLS-1$
     addDataSourceBtn.setWidth("20px"); //$NON-NLS-1$
+    addDataSourceBtn.setTitle(MSGS.addDataSource());
     deleteDataSourceBtn.setWidth("20px"); //$NON-NLS-1$
+    deleteDataSourceBtn.setTitle(MSGS.deleteDataSources());
     addDataSourceBtn.setHeight("20px"); //$NON-NLS-1$
     deleteDataSourceBtn.setHeight("20px"); //$NON-NLS-1$
     deleteDataSourceBtn.setEnabled(false);

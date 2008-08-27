@@ -29,9 +29,7 @@ public class SchedulerServiceImpl extends RemoteServiceServlet implements Schedu
   
   private static SchedulerAdminUIComponentProxy schedulerProxy = null;
   static {
-    String userName = StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getPlatformUsername(), System.getProperty(AppConfigProperties.KEY_PLATFORM_USERNAME) );
-    String biServerBaseURL = AppConfigProperties.getInstance().getBiServerBaseUrl();
-    schedulerProxy = new SchedulerAdminUIComponentProxy( userName, biServerBaseURL );
+    schedulerProxy = new SchedulerAdminUIComponentProxy();
   }
   
   public SchedulerServiceImpl() {

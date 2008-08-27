@@ -78,14 +78,14 @@ public class BiServerTrustedProxy extends ThreadSafeHttpClient {
    * @param serviceName name of service on server, for instance: SchedulerAdmin
    * @param params params to pass with request
    */
-  public String execRemoteMethod( String serviceName, HttpMethodType methodType, String userName, Map<String,Object> params )
+  public String execRemoteMethod(String baseUrl, String serviceName, HttpMethodType methodType, String userName, Map<String,Object> params )
     throws ProxyException {
     
     if (params == null) {
       params = new HashMap<String, Object>();
     }
     params.put( TRUSTED_USER_KEY, userName );
-    return super.execRemoteMethod( serviceName, methodType, params );
+    return super.execRemoteMethod(baseUrl, serviceName, methodType, params );
   }
 }
 

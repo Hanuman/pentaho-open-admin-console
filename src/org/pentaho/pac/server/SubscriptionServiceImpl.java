@@ -4,12 +4,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 import org.pentaho.pac.client.SubscriptionService;
 import org.pentaho.pac.client.scheduler.model.Schedule;
 import org.pentaho.pac.common.SchedulerServiceException;
 import org.pentaho.pac.server.biplatformproxy.SubscriptionAdminUIComponentProxy;
-import org.pentaho.pac.server.common.AppConfigProperties;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -21,9 +19,7 @@ public class SubscriptionServiceImpl extends RemoteServiceServlet implements Sub
   private static final long serialVersionUID = 420L;
   private static SubscriptionAdminUIComponentProxy subscriptionProxy = null;
   static {
-    String userName = StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getPlatformUsername(), System.getProperty(AppConfigProperties.KEY_PLATFORM_USERNAME) );
-    String biServerBaseURL = AppConfigProperties.getInstance().getBiServerBaseUrl();
-    subscriptionProxy = new SubscriptionAdminUIComponentProxy( userName, biServerBaseURL );
+    subscriptionProxy = new SubscriptionAdminUIComponentProxy();
   }
   
   /**

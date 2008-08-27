@@ -74,10 +74,6 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     biServerProxy = BiServerTrustedProxy.getInstance();
   }
   
-  private String userName = null;
-  private String pciContextPath = null;
-  private String biServerBaseURL = null;
-  private int biServerStatusCheckPeriod = -1;
   
   public PacServiceImpl()
   {
@@ -85,7 +81,6 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
 
   public void init(ServletConfig config) throws ServletException {
     super.init( config );
-    initFromConfiguration();
   }
   
   public UserRoleSecurityInfo getUserRoleSecurityInfo() throws PacServiceException {
@@ -686,34 +681,17 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   public String refreshReportingMetadata() throws PacServiceException {
     return executePublishRequest("org.pentaho.platform.engine.services.metadata.MetadataPublisher" ); //$NON-NLS-1$
   }
-  
-  private void initFromConfiguration()
-  {
-    AppConfigProperties appCfg = AppConfigProperties.getInstance();
-    userName = StringUtils.defaultIfEmpty( appCfg.getPlatformUsername(), System.getProperty(AppConfigProperties.KEY_PLATFORM_USERNAME) );
-    pciContextPath = StringUtils.defaultIfEmpty( appCfg.getBiServerContextPath(), System.getProperty(AppConfigProperties.KEY_BISERVER_CONTEXT_PATH) );
-    biServerBaseURL = StringUtils.defaultIfEmpty( appCfg.getBiServerBaseUrl(), System.getProperty(AppConfigProperties.KEY_BISERVER_BASE_URL) );
-    biServerProxy.setBaseUrl( biServerBaseURL );
-    String strBiServerStatusCheckPeriod = StringUtils.defaultIfEmpty( appCfg.getBiServerStatusCheckPeriod(), System.getProperty(AppConfigProperties.KEY_BISERVER_STATUS_CHECK_PERIOD) );
-    try {
-      biServerStatusCheckPeriod = Integer.parseInt( strBiServerStatusCheckPeriod );
-    } catch( NumberFormatException e ) {
-      logger.error( Messages.getString( "PacService.THREAD_SCHEDULING_FAILED" ), e ); //$NON-NLS-1$
-      biServerStatusCheckPeriod = DEFAULT_CHECK_PERIOD;
-    }
-  }
-
 
   public String getUserName() {
-    return userName;
+    return StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getPlatformUsername(), System.getProperty(AppConfigProperties.KEY_PLATFORM_USERNAME) );
   }
   
   public String getPciContextPath() {
-    return pciContextPath;
+    return StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getBiServerContextPath(), System.getProperty(AppConfigProperties.KEY_BISERVER_CONTEXT_PATH) );
   }
   
   public String getBIServerBaseUrl() {
-    return biServerBaseURL;
+    return StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getBiServerBaseUrl(), System.getProperty(AppConfigProperties.KEY_BISERVER_BASE_URL) );
   }
 
   private String executeXAction(String solution, String path, String xAction ) throws PacServiceException{
@@ -725,7 +703,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     
     String strResponse;
     try {
-      strResponse = biServerProxy.execRemoteMethod( "ServiceAction", HttpMethodType.GET, userName, params );//$NON-NLS-1$
+      strResponse = biServerProxy.execRemoteMethod(getBIServerBaseUrl(), "ServiceAction", HttpMethodType.GET, getUserName(), params );//$NON-NLS-1$
     } catch (ProxyException e) {
       throw new PacServiceException( e.getMessage(), e );
     } 
@@ -752,7 +730,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     
     String strResponse;
     try {
-      strResponse = biServerProxy.execRemoteMethod( "Publish", HttpMethodType.GET, userName, params );//$NON-NLS-1$
+      strResponse = biServerProxy.execRemoteMethod(getBIServerBaseUrl(), "Publish", HttpMethodType.GET, getUserName(), params );//$NON-NLS-1$
     } catch (ProxyException e) {
       throw new PacServiceException( e.getMessage(), e );
     } 
@@ -768,7 +746,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   private String resetSolutionRepository(String userid ) throws PacServiceException {
 
     try {
-      String strResponse = biServerProxy.execRemoteMethod( "ResetRepository", HttpMethodType.GET, userName, /*params*/null );//$NON-NLS-1$
+      String strResponse = biServerProxy.execRemoteMethod(getBIServerBaseUrl(), "ResetRepository", HttpMethodType.GET, getUserName(), /*params*/null );//$NON-NLS-1$
     } catch (ProxyException e) {
       throw new PacServiceException( e.getMessage(), e );
     } 
@@ -910,15 +888,13 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   
   public String getHomePageAsHtml(String url) {
     
-    ThreadSafeHttpClient client = new ThreadSafeHttpClient( url );
-
     Map<String,Object> params = new HashMap<String,Object>();
     String timeOut = AppConfigProperties.getInstance().getHomepageTimeout();
     params.put( HttpMethodParams.SO_TIMEOUT, timeOut );
     
     String html = null;
     try {
-      html = client.execRemoteMethod( null, HttpMethodType.GET, params, "text/html" );//$NON-NLS-1$
+      html = new ThreadSafeHttpClient().execRemoteMethod(url, null, HttpMethodType.GET, params, "text/html" );//$NON-NLS-1$
     } catch (ProxyException e) {
       html = showStatic();
     }
@@ -946,15 +922,20 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   }
   
   public void isBiServerAlive() throws PacServiceException {
-    ThreadSafeHttpClient c = new ThreadSafeHttpClient( biServerBaseURL );
     try {
-      c.execRemoteMethod( "ping/alive.gif", HttpMethodType.GET, null );//$NON-NLS-1$
+      String response = new ThreadSafeHttpClient().execRemoteMethod(getBIServerBaseUrl(), "ping/alive.gif", HttpMethodType.GET, null );//$NON-NLS-1$
     } catch (ProxyException e) {
       throw new PacServiceException( e.getMessage(), e );
     } 
   }
   
   public int getBiServerStatusCheckPeriod() {
-    return biServerStatusCheckPeriod;
+    String strBiServerStatusCheckPeriod = StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getBiServerStatusCheckPeriod(), System.getProperty(AppConfigProperties.KEY_BISERVER_STATUS_CHECK_PERIOD) ); //$NON-NLS-1$
+    try {
+      return Integer.parseInt( strBiServerStatusCheckPeriod );
+    } catch( NumberFormatException e ) {
+      logger.error( Messages.getString( "PacService.THREAD_SCHEDULING_FAILED" ), e ); //$NON-NLS-1$
+      return DEFAULT_CHECK_PERIOD;
+    }
   }
 }

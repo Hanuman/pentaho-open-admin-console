@@ -3,8 +3,10 @@ package org.pentaho.pac.server.biplatformproxy;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.pentaho.pac.common.SolutionRepositoryServiceException;
 import org.pentaho.pac.server.biplatformproxy.xmlserializer.SolutionRepositoryXmlSerializer;
+import org.pentaho.pac.server.common.AppConfigProperties;
 import org.pentaho.pac.server.common.BiServerTrustedProxy;
 import org.pentaho.pac.server.common.ProxyException;
 import org.pentaho.pac.server.common.ThreadSafeHttpClient.HttpMethodType;
@@ -13,19 +15,12 @@ public class SolutionRepositoryServiceProxy {
 
   private static final String SOLUTION_REPOSITORY_SERVICE_NAME = "SolutionRepositoryService"; //$NON-NLS-1$
   
-  private String userName = null;
-
   private static BiServerTrustedProxy biServerProxy;
   static {
     biServerProxy = BiServerTrustedProxy.getInstance();
   }
   
-  public SolutionRepositoryServiceProxy( String userName, String biServerBaseURL ) {
-    assert null != userName : "userName parameter cannot be null."; //$NON-NLS-1$
-    assert null != biServerBaseURL : "biServerBaseURL parameter cannot be null."; //$NON-NLS-1$
-    
-    this.userName = userName;
-    biServerProxy.setBaseUrl( biServerBaseURL );
+  public SolutionRepositoryServiceProxy() {
   }
 
   public String getSolutionRepositoryXml() throws SolutionRepositoryServiceException {
@@ -44,7 +39,7 @@ public class SolutionRepositoryServiceProxy {
   private String executeGetMethod( Map<String, Object> params ) throws SolutionRepositoryServiceException {
     String strXmlResponse;
     try {
-      strXmlResponse = biServerProxy.execRemoteMethod( SOLUTION_REPOSITORY_SERVICE_NAME, HttpMethodType.GET, userName, params );
+      strXmlResponse = biServerProxy.execRemoteMethod(AppConfigProperties.getInstance().getBiServerBaseUrl(), SOLUTION_REPOSITORY_SERVICE_NAME, HttpMethodType.GET, StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getPlatformUsername(), System.getProperty(AppConfigProperties.KEY_PLATFORM_USERNAME) ), params );
     } catch (ProxyException e) {
       throw new SolutionRepositoryServiceException( e.getMessage(), e );
     }
@@ -56,7 +51,7 @@ public class SolutionRepositoryServiceProxy {
   private String executePostMethod(Map<String, Object> params ) throws SolutionRepositoryServiceException {
     String strXmlResponse;
     try {
-      strXmlResponse = biServerProxy.execRemoteMethod( SOLUTION_REPOSITORY_SERVICE_NAME, HttpMethodType.POST, userName, params );
+      strXmlResponse = biServerProxy.execRemoteMethod(AppConfigProperties.getInstance().getBiServerBaseUrl(), SOLUTION_REPOSITORY_SERVICE_NAME, HttpMethodType.POST, StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getPlatformUsername(), System.getProperty(AppConfigProperties.KEY_PLATFORM_USERNAME) ), params );
     } catch (ProxyException e) {
       throw new SolutionRepositoryServiceException( e.getMessage(), e );
     }

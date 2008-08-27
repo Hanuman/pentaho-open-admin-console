@@ -112,8 +112,8 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
       }
     });
     
-    confirmRemoveRoleAssignmentDialog.setText(MSGS.assignedUsers());
-    confirmRemoveRoleAssignmentDialog.setMessage(MSGS.confirmRemoveRoleAssignmentMsg());
+    confirmRemoveRoleAssignmentDialog.setText(MSGS.unassignUsers());
+    confirmRemoveRoleAssignmentDialog.setMessage(MSGS.confirmUnassignUsersMsg());
     confirmRemoveRoleAssignmentDialog.setOnOkHandler( new ICallback() {
       public void onHandle(Object o) {
         confirmRemoveRoleAssignmentDialog.hide();
@@ -166,7 +166,9 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     rolesList.setHeight("100%"); //$NON-NLS-1$
     rolesList.setWidth("100%"); //$NON-NLS-1$
     addRoleBtn.setWidth("20px"); //$NON-NLS-1$
+    addRoleBtn.setTitle(MSGS.addRole());
     deleteRoleBtn.setWidth("20px"); //$NON-NLS-1$
+    deleteRoleBtn.setTitle(MSGS.deleteRoles());
     addRoleBtn.setHeight("20px"); //$NON-NLS-1$
     deleteRoleBtn.setHeight("20px"); //$NON-NLS-1$
     filterTextBox.setWidth( "100%" ); //$NON-NLS-1$
@@ -197,8 +199,10 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     
     deleteRoleAssignmentBtn.setHeight("20px"); //$NON-NLS-1$
     deleteRoleAssignmentBtn.setWidth("20px"); //$NON-NLS-1$
+    deleteRoleAssignmentBtn.setTitle(MSGS.unassignUsers());
     addRoleAssignmentBtn.setHeight("20px"); //$NON-NLS-1$
     addRoleAssignmentBtn.setWidth("20px"); //$NON-NLS-1$
+    addRoleAssignmentBtn.setTitle(MSGS.assignUsers());
     
     assignedUsersList.addChangeListener(this);
     deleteRoleAssignmentBtn.addClickListener(this);

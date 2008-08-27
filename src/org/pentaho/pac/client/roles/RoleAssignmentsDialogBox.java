@@ -29,7 +29,7 @@ public class RoleAssignmentsDialogBox extends AccumulatorDialog {
     availableRolesList = (RolesList)getAvailableItemsListBox();
     accumulatedRolesList = (RolesList)getAccumulatedItemsListBox();
     
-    setTitle(MSGS.assignedRoles());
+    setTitle(MSGS.assignRoles());
 
     setOnOkHandler( new ICallback() {
       public void onHandle( Object o ) {

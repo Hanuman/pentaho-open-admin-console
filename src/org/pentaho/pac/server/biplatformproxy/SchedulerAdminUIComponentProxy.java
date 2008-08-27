@@ -22,10 +22,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.pentaho.pac.client.scheduler.model.Schedule;
 import org.pentaho.pac.common.SchedulerServiceException;
 import org.pentaho.pac.server.biplatformproxy.xmlserializer.SchedulerXmlSerializer;
 import org.pentaho.pac.server.biplatformproxy.xmlserializer.XmlSerializerException;
+import org.pentaho.pac.server.common.AppConfigProperties;
 import org.pentaho.pac.server.common.BiServerTrustedProxy;
 import org.pentaho.pac.server.common.ProxyException;
 import org.pentaho.pac.server.common.ThreadSafeHttpClient.HttpMethodType;
@@ -35,7 +37,6 @@ public class SchedulerAdminUIComponentProxy {
 
   private static final String SCHEDULER_SERVICE_NAME = "SchedulerAdmin"; //$NON-NLS-1$
   private static final int NUM_RETRIES = 3; // TODO is used?
-  private String userName = null;
   // matches a string that contains no commas, and exactly three substrings each separated by a "/"
   private static String RE_MATCH_ACTION_REF = "^[^,/]+/[^,/]+/[^,/]+$"; //$NON-NLS-1$
 
@@ -44,12 +45,7 @@ public class SchedulerAdminUIComponentProxy {
     biServerProxy = BiServerTrustedProxy.getInstance();
   }
   
-  public SchedulerAdminUIComponentProxy( String userName, String biServerBaseURL ) {
-    assert null != userName : "userName parameter cannot be null."; //$NON-NLS-1$
-    assert null != biServerBaseURL : "biServerBaseURL parameter cannot be null."; //$NON-NLS-1$
-    
-    this.userName = userName;
-    biServerProxy.setBaseUrl( biServerBaseURL );
+  public SchedulerAdminUIComponentProxy() {
   }
 
   /**
@@ -361,7 +357,7 @@ public class SchedulerAdminUIComponentProxy {
   private String executeGetMethod( Map<String, Object> params ) throws SchedulerServiceException {
     String strXmlResponse;
     try {
-      strXmlResponse = biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.GET, userName, params );
+      strXmlResponse = biServerProxy.execRemoteMethod(AppConfigProperties.getInstance().getBiServerBaseUrl(), SCHEDULER_SERVICE_NAME, HttpMethodType.GET, StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getPlatformUsername(), System.getProperty(AppConfigProperties.KEY_PLATFORM_USERNAME) ), params );
     } catch (ProxyException e) {
       throw new SchedulerServiceException( e.getMessage(), e );
     }
@@ -373,7 +369,7 @@ public class SchedulerAdminUIComponentProxy {
   private String executePostMethod(Map<String, Object> params ) throws SchedulerServiceException {
     String strXmlResponse;
     try {
-      strXmlResponse = biServerProxy.execRemoteMethod( SCHEDULER_SERVICE_NAME, HttpMethodType.POST, userName, params );
+      strXmlResponse = biServerProxy.execRemoteMethod(AppConfigProperties.getInstance().getBiServerBaseUrl(), SCHEDULER_SERVICE_NAME, HttpMethodType.POST, StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getPlatformUsername(), System.getProperty(AppConfigProperties.KEY_PLATFORM_USERNAME) ), params );
     } catch (ProxyException e) {
       throw new SchedulerServiceException( e.getMessage(), e );
     }

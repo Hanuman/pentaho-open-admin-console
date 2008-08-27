@@ -29,7 +29,7 @@ public class UserAssignmentsDialogBox extends AccumulatorDialog {
     availableUsersList = (UsersList)getAvailableItemsListBox();
     accumulatedUsersList = (UsersList)getAccumulatedItemsListBox();
     
-    setTitle(MSGS.assignedUsers());
+    setTitle(MSGS.assignUsers());
 
     setOnOkHandler( new ICallback() {
       public void onHandle( Object o ) {

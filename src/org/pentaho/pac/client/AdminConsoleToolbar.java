@@ -71,7 +71,9 @@ public class AdminConsoleToolbar extends HorizontalPanel {
     
     indicatorsRight.add(indicators);
     Image helpImage = PacImageBundle.getBundle().helpIcon().createImage();
+    helpImage.setTitle(PentahoAdminConsole.MSGS.help());
     Image createImage = PacImageBundle.getBundle().refreshIcon().createImage();
+    createImage.setTitle(PentahoAdminConsole.MSGS.resetServer());
     helpImage.addClickListener( new ClickListener() {
       public void onClick(Widget sender) {
       }

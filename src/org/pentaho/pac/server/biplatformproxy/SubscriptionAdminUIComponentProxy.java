@@ -6,10 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.pentaho.pac.client.scheduler.model.Schedule;
 import org.pentaho.pac.common.SchedulerServiceException;
 import org.pentaho.pac.server.biplatformproxy.xmlserializer.SubscriptionXmlSerializer;
 import org.pentaho.pac.server.biplatformproxy.xmlserializer.XmlSerializerException;
+import org.pentaho.pac.server.common.AppConfigProperties;
 import org.pentaho.pac.server.common.BiServerTrustedProxy;
 import org.pentaho.pac.server.common.ProxyException;
 import org.pentaho.pac.server.common.ThreadSafeHttpClient.HttpMethodType;
@@ -18,19 +20,13 @@ import org.pentaho.pac.server.common.util.DateUtil;
 public class SubscriptionAdminUIComponentProxy {
 
   private static final String SUBSCRIPTION_SERVICE_NAME = "SubscriptionAdmin"; //$NON-NLS-1$
-  private String userName = null;
 
   private static BiServerTrustedProxy biServerProxy;
   static {
     biServerProxy = BiServerTrustedProxy.getInstance();
   }
   
-  public SubscriptionAdminUIComponentProxy( String userName, String biServerBaseURL ) {
-    assert null != userName : "userName parameter cannot be null."; //$NON-NLS-1$
-    assert null != biServerBaseURL : "biServerBaseURL parameter cannot be null."; //$NON-NLS-1$
-    
-    this.userName = userName;
-    biServerProxy.setBaseUrl( biServerBaseURL );
+  public SubscriptionAdminUIComponentProxy() {
   }
 
   /**
@@ -240,7 +236,7 @@ public class SubscriptionAdminUIComponentProxy {
   private String executeGetMethod( Map<String, Object> params ) throws SchedulerServiceException {
     String strXmlResponse;
     try {
-      strXmlResponse = biServerProxy.execRemoteMethod( SUBSCRIPTION_SERVICE_NAME, HttpMethodType.GET, userName, params );
+      strXmlResponse = biServerProxy.execRemoteMethod(AppConfigProperties.getInstance().getBiServerBaseUrl(), SUBSCRIPTION_SERVICE_NAME, HttpMethodType.GET, StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getPlatformUsername(), System.getProperty(AppConfigProperties.KEY_PLATFORM_USERNAME) ), params );
     } catch (ProxyException e) {
       throw new SchedulerServiceException( e.getMessage(), e );
     }
@@ -253,7 +249,7 @@ public class SubscriptionAdminUIComponentProxy {
   private String executePostMethod(Map<String, Object> params ) throws SchedulerServiceException {
     String strXmlResponse;
     try {
-      strXmlResponse = biServerProxy.execRemoteMethod( SUBSCRIPTION_SERVICE_NAME, HttpMethodType.POST, userName, params );
+      strXmlResponse = biServerProxy.execRemoteMethod(AppConfigProperties.getInstance().getBiServerBaseUrl(), SUBSCRIPTION_SERVICE_NAME, HttpMethodType.POST, StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getPlatformUsername(), System.getProperty(AppConfigProperties.KEY_PLATFORM_USERNAME) ), params );
     } catch (ProxyException e) {
       throw new SchedulerServiceException( e.getMessage(), e );
     }

@@ -66,22 +66,11 @@ public class ThreadSafeHttpClient {
     CLIENT.getParams().setParameter("http.useragent", ThreadSafeHttpClient.class.getName() ); //$NON-NLS-1$
   }
 
-  private String baseUrl = null;
-
   /**
    * Base Constructor
    */
   public ThreadSafeHttpClient() {
     super();
-  }
-
-  public ThreadSafeHttpClient(String baseUrl) {
-    this();
-    setBaseUrl(baseUrl);
-  }
-
-  public void setBaseUrl(String baseUrl) {
-    this.baseUrl = baseUrl;
   }
 
   /**
@@ -94,9 +83,9 @@ public class ThreadSafeHttpClient {
    * if the attempt to read the response from the server fails, if the response
    * stream is unable to be converted into a String.
    */
-  public String execRemoteMethod(String serviceName, HttpMethodType methodType, Map<String, Object> mapParams)
+  public String execRemoteMethod(String baseUrl, String serviceName, HttpMethodType methodType, Map<String, Object> mapParams)
       throws ProxyException {
-    return execRemoteMethod(serviceName, methodType, mapParams, "text/xml"); //$NON-NLS-1$
+    return execRemoteMethod(baseUrl, serviceName, methodType, mapParams, "text/xml"); //$NON-NLS-1$
   }
 
   /**
@@ -109,7 +98,7 @@ public class ThreadSafeHttpClient {
    * if the attempt to read the response from the server fails, if the response
    * stream is unable to be converted into a String.
    */
-  public String execRemoteMethod(String serviceName, HttpMethodType methodType, Map<String, Object> mapParams,
+  public String execRemoteMethod(String baseUrl, String serviceName, HttpMethodType methodType, Map<String, Object> mapParams,
       String requestedMimeType) throws ProxyException {
 
     assert null != baseUrl : "baseUrl cannot be null"; //$NON-NLS-1$
