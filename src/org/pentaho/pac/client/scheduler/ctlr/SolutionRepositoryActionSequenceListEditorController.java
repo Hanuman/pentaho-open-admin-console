@@ -36,6 +36,9 @@ public class SolutionRepositoryActionSequenceListEditorController {
     this.solRepActionSequenceEditor = solRepActionSequenceEditor;
     this.actionSequencePickerDialog = actionSequencePickerDialog;
 
+    solRepActionSequenceEditor.setAddBtnEnabled( false );
+    solRepActionSequenceEditor.setDeleteBtnEnabled( false );
+    
     actionSequencePickerDialog.setOkBtnEnabled( false );
     // set dialog's on ok callback
     final SolutionRepositoryActionSequenceListEditorController localThis = this;
@@ -89,6 +92,12 @@ public class SolutionRepositoryActionSequenceListEditorController {
     solRepActionSequenceEditor.setOnAddClickedHandler( new ICallback<TableEditor>() {
       public void onHandle(TableEditor tableEditor ) {
         localThis.actionSequencePickerDialog.center();
+      }
+    });
+    
+    solRepActionSequenceEditor.setOnDeleteClickedHandler( new ICallback<TableEditor>() {
+      public void onHandle(TableEditor tableEditor ) {
+        tableEditor.setDeleteBtnEnabled( tableEditor.getNumSelectedItems() > 0 ); 
       }
     });
     
@@ -151,12 +160,14 @@ public class SolutionRepositoryActionSequenceListEditorController {
   private void loadSolutionRepository( final List<String> actionList ) {
 
     showLoadingMessage();
+    solRepActionSequenceEditor.setAddBtnEnabled( false );
     
     AsyncCallback<String> solutionRepositoryCallback = new AsyncCallback<String>() {
       public void onSuccess( String strXml ) {
         Document solutionRepositoryDocument = XMLParser.parse( strXml );
         solutionRepositoryModel = new SolutionRepositoryModel( solutionRepositoryDocument );
         hideLoadingMessage();
+        solRepActionSequenceEditor.setAddBtnEnabled( true );
         if ( null != actionList ) {
           loadActionListIntoItemPicker( actionList );
         }

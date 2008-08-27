@@ -107,6 +107,14 @@ public class SolutionRepositoryActionSequenceListEditor extends VerticalPanel {
     actionsEditor.setOnSelectCallback( handler );
   }
   
+  public void setAddBtnEnabled( boolean enabled ) {
+    actionsEditor.setAddBtnEnabled( enabled );
+  }
+  
+  public void setDeleteBtnEnabled( boolean enabled ) {
+    actionsEditor.setDeleteBtnEnabled( enabled );
+  }
+  
   public void setMessage( String message ) {
     actionsEditor.setMessage( message );
   }
