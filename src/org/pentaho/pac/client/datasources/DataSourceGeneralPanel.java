@@ -184,6 +184,7 @@ public class DataSourceGeneralPanel extends VerticalPanel {
     jndiNameTextBox.setEnabled(enabled);
     driverList.setEnabled(enabled);
     urlTextBox.setEnabled(enabled);
+    driverClassNameTextBox.setEnabled(enabled);
   }
   
   public void refresh() {

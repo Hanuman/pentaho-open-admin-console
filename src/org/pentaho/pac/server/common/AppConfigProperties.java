@@ -147,8 +147,9 @@ public class AppConfigProperties {
     String warPath = getWarPath();
     String returnValue = null;
     StringBuffer xmlBuffer = new StringBuffer();
+    FileReader fileReader = null;
     try {
-      FileReader fileReader = new FileReader(new File(warPath + WEB_XML_PATH));
+      fileReader = new FileReader(new File(warPath + WEB_XML_PATH));
       char[] inputString = new char[1000];
       int numCharsRead = fileReader.read(inputString, 0, 1000);
       while (numCharsRead >= 0) {
@@ -167,9 +168,16 @@ public class AppConfigProperties {
         }
       }
     } catch(Exception e) {
-      // do nothing
-    }
-    if (!(returnValue != null && returnValue.length() > 0)) {
+      logger.error("Unable to read file : " + warPath + WEB_XML_PATH);
+      returnValue = null;
+    } finally {
+      if ( null != fileReader ) {
+        try { fileReader.close(); }
+        catch( IOException e) {
+          logger.error( "Failed to close stream associated with: " + warPath + WEB_XML_PATH);
+        }
+      }
+    }    if (!(returnValue != null && returnValue.length() > 0)) {
       returnValue = DEFAULT_BISERVER_BASE_URL;
     }
     return returnValue;
@@ -209,8 +217,8 @@ public class AppConfigProperties {
       }
       returnValue = returnValue.substring(returnValue.lastIndexOf("/")+1, returnValue.length());
     } catch(Exception e) {
+      logger.error("Unable to read file : " + warPath + WEB_XML_PATH );
       returnValue = null;
-      // TODO need to log an error message at the very least
     } finally {
       if ( null != fileReader ) {
         try { fileReader.close(); }
@@ -237,8 +245,9 @@ public class AppConfigProperties {
     String solutionPath = getSolutionPath();
     String returnValue = null;
     StringBuffer xmlBuffer = new StringBuffer();
+    FileReader fileReader = null;
     try {
-      FileReader fileReader = new FileReader(new File(solutionPath + PENTAHO_OBJECTS_SPRING_XML));
+      fileReader = new FileReader(new File(solutionPath + PENTAHO_OBJECTS_SPRING_XML));
       char[] inputString = new char[1000];
       int numCharsRead = fileReader.read(inputString, 0, 1000);
       while (numCharsRead >= 0) {
@@ -251,7 +260,15 @@ public class AppConfigProperties {
         returnValue = node.getStringValue();  
       }
     } catch(Exception e) {
-      // do nothing
+      logger.error("Unable to read file : " + solutionPath + PENTAHO_OBJECTS_SPRING_XML );
+      returnValue = null;
+    } finally {
+      if ( null != fileReader ) {
+        try { fileReader.close(); }
+        catch( IOException e) {
+          logger.error( "Failed to close stream associated with: " + solutionPath + PENTAHO_OBJECTS_SPRING_XML );
+        }
+      }
     }
     if (!(returnValue != null && returnValue.length() > 0)) {
      returnValue = DEFAULT_VALUE_PASSWORD_SERVICE_CLASS;

@@ -33,7 +33,7 @@ import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
 import org.pentaho.pac.server.i18n.Messages;
 
-public class JettyServer implements Halter {
+public class JettyServer implements Halter, IJettyServer {
   protected Server server;
 
   private int portNumber;
@@ -130,11 +130,36 @@ public class JettyServer implements Halter {
     }
   }
 
-  protected void setupServer() {
-    server = new Server();
+  public String getResourceBaseName() {
+    return "www/org.pentaho.pac.PentahoAdminConsole"; //$NON-NLS-1$
+  }
+  
+  public String[] getWelcomeFiles() {
+    return new String[] { "PentahoAdminConsole.html" };
+  }
+  
+  protected Context createServletContext() {
+    ContextHandlerCollection contextHandlers = new ContextHandlerCollection();
+    Context servletContext = new Context(contextHandlers, "/", Context.SESSIONS); //$NON-NLS-1$
+    servletContext.setResourceBase( getResourceBaseName() ); //$NON-NLS-1$
+    servletContext.setWelcomeFiles( getWelcomeFiles() ); //$NON-NLS-1$
+    
+    return servletContext;
+  }
+  
+  public void configureResourceHandlers( Context servletContext, SecurityHandler securityHandler ) {
+    ResourceHandler resources = new ResourceHandler();
+    resources.setResourceBase( getResourceBaseName() );
+    resources.setWelcomeFiles( getWelcomeFiles() ); //$NON-NLS-1$
 
-    ContextHandlerCollection contexts = new ContextHandlerCollection();
+    if (securityHandler != null) {
+      server.setHandlers(new Handler[] { securityHandler, resources, servletContext });
+    } else {
+      server.setHandlers(new Handler[] { resources, servletContext });
+    }
+  }
 
+  public SecurityHandler configureSecurityHandler() {
     // configure security if necessary
     File passwdFile = new File(CONSOLE_PASSWORD_FILE_NAME); //$NON-NLS-1$
     SecurityHandler securityHandler = null;
@@ -155,46 +180,43 @@ public class JettyServer implements Halter {
         logger.error("error securing server", e); //$NON-NLS-1$
       }
     }
-
-    // Start execution
-    Context startExecution = new Context(contexts, "/", Context.SESSIONS); //$NON-NLS-1$
-    startExecution.setResourceBase("www/org.pentaho.pac.PentahoAdminConsole"); //$NON-NLS-1$
-    startExecution.setWelcomeFiles(new String[] { "PentahoAdminConsole.html" }); //$NON-NLS-1$
-
+    return securityHandler;
+  }
+  
+  public void configureServlets( Context servletContext ) {
     // add servlets
     ServletHolder defaultServlet = new ServletHolder(new DefaultConsoleServlet("/", this)); //$NON-NLS-1$
-    startExecution.addServlet(defaultServlet, "/*"); //$NON-NLS-1$
-    startExecution.addServlet(defaultServlet, "/halt"); //$NON-NLS-1$
+    servletContext.addServlet(defaultServlet, "/*"); //$NON-NLS-1$
+    servletContext.addServlet(defaultServlet, "/halt"); //$NON-NLS-1$
 
     ServletHolder pacsvc = new ServletHolder(new org.pentaho.pac.server.PacServiceImpl());
-    startExecution.addServlet(pacsvc, "/pacsvc"); //$NON-NLS-1$
+    servletContext.addServlet(pacsvc, "/pacsvc"); //$NON-NLS-1$
 
     ServletHolder schedulersvc = new ServletHolder(new org.pentaho.pac.server.SchedulerServiceImpl());
-    startExecution.addServlet(schedulersvc, "/schedulersvc"); //$NON-NLS-1$
+    servletContext.addServlet(schedulersvc, "/schedulersvc"); //$NON-NLS-1$
 
     ServletHolder subscriptionsvc = new ServletHolder(new org.pentaho.pac.server.SubscriptionServiceImpl());
-    startExecution.addServlet(subscriptionsvc, "/subscriptionsvc"); //$NON-NLS-1$
+    servletContext.addServlet(subscriptionsvc, "/subscriptionsvc"); //$NON-NLS-1$
 
     ServletHolder solutionrepositorysvc = new ServletHolder(new org.pentaho.pac.server.SolutionRepositoryServiceImpl());
-    startExecution.addServlet(solutionrepositorysvc, "/solutionrepositorysvc"); //$NON-NLS-1$
-
+    servletContext.addServlet(solutionrepositorysvc, "/solutionrepositorysvc"); //$NON-NLS-1$
+    
     ServletHolder jdbcdriverdiscoveryservice = new ServletHolder(new org.pentaho.pac.server.common.JdbcDriverDiscoveryServiceImpl());
-    startExecution.addServlet(jdbcdriverdiscoveryservice, "/jdbcdriverdiscoverysvc"); //$NON-NLS-1$
+    servletContext.addServlet(jdbcdriverdiscoveryservice, "/jdbcdriverdiscoverysvc"); //$NON-NLS-1$
 
-    // TODO sbarkdull, can this be deleted?
-    // sample
-    Handler hello = new HomeHandler();
+  }
 
-    // resource handler
-    ResourceHandler resources = new ResourceHandler();
-    resources.setResourceBase("www/org.pentaho.pac.PentahoAdminConsole"); //$NON-NLS-1$
-    resources.setWelcomeFiles(new String[] { "PentahoAdminConsole.html" }); //$NON-NLS-1$
-
-    if (securityHandler != null) {
-      server.setHandlers(new Handler[] { securityHandler, resources, startExecution });
-    } else {
-      server.setHandlers(new Handler[] { resources, startExecution });
-    }
+  public void configureEventListeners( Context servletContext ) {
+    // no-op for now
+  }
+  
+  protected final void setupServer() {
+    server = new Server();
+    SecurityHandler securityHandler = configureSecurityHandler();
+    Context servletContext = createServletContext();
+    configureServlets( servletContext );
+    configureEventListeners( servletContext );
+    configureResourceHandlers( servletContext, securityHandler );
   }
 
   public int getPortNumber() {
