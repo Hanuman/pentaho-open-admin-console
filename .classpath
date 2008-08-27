@@ -32,8 +32,6 @@
 	<classpathentry kind="lib" path="lib/hibernate/hibernate-commons-annotations.jar"/>
 	<classpathentry kind="lib" path="lib/hibernate/ehcache-1.2.3.jar"/>
 	<classpathentry kind="lib" path="lib/jdbc/msql5/mysql-connector-java-5.1.5-bin.jar"/>
-	<classpathentry kind="lib" path="lib/pentaho/pentaho-gwt-widgets.jar"/>
-	<classpathentry kind="lib" path="lib/pentaho/pentaho-gwt-filechooser.jar"/>
 	<classpathentry kind="lib" path="lib/gwt-core/gwt-benchmark-viewer.jar"/>
 	<classpathentry kind="lib" path="lib/gwt-core/gwt-servlet.jar"/>
 	<classpathentry kind="lib" path="lib/gwt-core/gwt-user.jar"/>
@@ -41,6 +39,8 @@
 	<classpathentry kind="lib" path="lib/jaxen-1.1.jar"/>
 	<classpathentry kind="lib" path="resource/config"/>
 	<classpathentry kind="lib" path="resource/hibernate"/>
-	<classpathentry kind="lib" path="lib/gwt-linux/gwt-dev-linux.jar"/>
+	<classpathentry kind="lib" path="lib/gwt-windows/gwt-dev-windows.jar"/>
+	<classpathentry kind="lib" path="lib/pentaho/pentaho-gwt-filechooser-1.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/pentaho/pentaho-gwt-widgets-1.0-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
