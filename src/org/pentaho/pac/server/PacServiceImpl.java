@@ -74,8 +74,6 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     biServerProxy = BiServerTrustedProxy.getInstance();
   }
   
-  private String jmxHostName = null;
-  private String jmxPortNumber = null;
   private String userName = null;
   private String pciContextPath = null;
   private String biServerBaseURL = null;
@@ -192,7 +190,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   }
 
   public ProxyPentahoUser[] getUsers() throws PacServiceException {
-    ProxyPentahoUser[] proxyUsers = new ProxyPentahoUser[0];
+    ProxyPentahoUser[] proxyUsers;
     try {
       List<IPentahoUser> users = userRoleMgmtService.getUsers();
       proxyUsers = new ProxyPentahoUser[users.size()];
@@ -455,9 +453,9 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
           + " " + neds.getMessage(); //$NON-NLS-1$
       throw new PacServiceException(msg, neds);
     } catch (DAOException e) {
-      throw new PacServiceException(Messages.getString("PacService.DATASOURCE_DELETION_FAILED", persistedDataSources.getName()), e);
+      throw new PacServiceException(Messages.getString("PacService.DATASOURCE_DELETION_FAILED", persistedDataSources.getName()), e); //$NON-NLS-1$
     } catch (PentahoSecurityException pse) {
-      throw new PacServiceException(Messages.getString("PacService.DATASOURCE_DELETION_FAILED_NO_PERMISSION", persistedDataSources.getName()), pse);
+      throw new PacServiceException(Messages.getString("PacService.DATASOURCE_DELETION_FAILED_NO_PERMISSION", persistedDataSources.getName()), pse); //$NON-NLS-1$
     } finally {
       if (!result) {
         rollbackTransaction();
@@ -696,7 +694,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     pciContextPath = StringUtils.defaultIfEmpty( appCfg.getBiServerContextPath(), System.getProperty(AppConfigProperties.KEY_BISERVER_CONTEXT_PATH) );
     biServerBaseURL = StringUtils.defaultIfEmpty( appCfg.getBiServerBaseUrl(), System.getProperty(AppConfigProperties.KEY_BISERVER_BASE_URL) );
     biServerProxy.setBaseUrl( biServerBaseURL );
-    String strBiServerStatusCheckPeriod = StringUtils.defaultIfEmpty( appCfg.getBiServerStatusCheckPeriod(), System.getProperty(AppConfigProperties.KEY_BISERVER_STATUS_CHECK_PERIOD) ); //$NON-NLS-1$
+    String strBiServerStatusCheckPeriod = StringUtils.defaultIfEmpty( appCfg.getBiServerStatusCheckPeriod(), System.getProperty(AppConfigProperties.KEY_BISERVER_STATUS_CHECK_PERIOD) );
     try {
       biServerStatusCheckPeriod = Integer.parseInt( strBiServerStatusCheckPeriod );
     } catch( NumberFormatException e ) {
@@ -856,7 +854,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   }
   
   public ProxyPentahoRole[] getRoles() throws PacServiceException {
-    ProxyPentahoRole[] proxyRoles = new ProxyPentahoRole[0];
+    ProxyPentahoRole[] proxyRoles;
     try {
       List<IPentahoRole> roles = userRoleMgmtService.getRoles();
       proxyRoles = new ProxyPentahoRole[roles.size()];
@@ -950,7 +948,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   public void isBiServerAlive() throws PacServiceException {
     ThreadSafeHttpClient c = new ThreadSafeHttpClient( biServerBaseURL );
     try {
-      String response = c.execRemoteMethod( "ping/alive.gif", HttpMethodType.GET, null );//$NON-NLS-1$
+      c.execRemoteMethod( "ping/alive.gif", HttpMethodType.GET, null );//$NON-NLS-1$
     } catch (ProxyException e) {
       throw new PacServiceException( e.getMessage(), e );
     } 
