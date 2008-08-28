@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0">
+    <info organisation="pentaho" module="pentaho-open-admin-console" revision="${project.revision}" />
+    
+    <configurations>
+        <conf name="default"/>
+        <conf name="test" visibility="private"/>
+    </configurations>
+    
+    <dependencies defaultconf="default->default">
+        <!--  external dependencies -->
+        <dependency org="commons-httpclient"  name="commons-httpclient"  rev="3.0.1" transitive="false"/>
+        <dependency org="commons-codec"       name="commons-codec"       rev="1.3"/>
+        <dependency org="commons-collections" name="commons-collections" rev="3.2"/>
+        <dependency org="commons-io"          name="commons-io"          rev="1.4"/>
+        <dependency org="commons-lang"        name="commons-lang"        rev="2.2"/>
+        <dependency org="commons-logging"     name="commons-logging"     rev="1.1"   transitive="false"/>
+        <dependency org="dom4j"               name="dom4j"               rev="1.6.1" transitive="false"/>
+        <dependency org="jaxen"               name="jaxen"               rev="1.1"   transitive="false"/>
+        
+        <!--  we were using servlet-api 2.5, is 2.4 sufficient? -->
+        <dependency org="javax.servlet" name="servlet-api" rev="2.4" />
+
+        <!-- hibernate related dependencies -->
+        <dependency org="org.hibernate" name="hibernate" rev="3.2.4.sp1">
+            <exclude org="commons-logging" name="commons-logging" />
+            <exclude org="commons-collections" name="commons-collections" />
+            <exclude org="dom4j" name="dom4j" />
+        </dependency>
+
+        <dependency org="org.hibernate" name="hibernate-annotations" rev="3.3.1.GA">
+            <exclude org="commons-logging" name="commons-logging" />
+            <exclude org="org.hibernate" name="hibernate" />
+        </dependency>
+        
+        <dependency org="org.hibernate" name="ejb3-persistence" rev="1.0.1.GA"/>
+
+        <dependency org="hsqldb"              name="hsqldb"              rev="1.8.0.7"/>
+
+        <!--  todo: -->
+        <!--  gwt -->
+        <!--  mysql -->
+        <!--  javaassist.jar (not a  direct dependency) -->
+        <!--  jetty-6.1.2rc1.jar -->
+        <!--  jetty-util-6.1.2rc1.jar -->
+        
+        <!--  internal dependencies -->
+        <!--  2.0.0-SNAPSHOT -->
+        <dependency org="pentaho" name="pentaho-bi-platform-api" rev="${dependency.bi-platform.revision}" changing="true" />
+        <dependency org="pentaho" name="pentaho-bi-platform-util" rev="${dependency.bi-platform.revision}" changing="true" />
+        <dependency org="pentaho" name="pentaho-bi-platform-engine-core" rev="${dependency.bi-platform.revision}" changing="true" />
+        <!--  1.0-SNAPSHOT -->
+        <dependency org="pentaho" name="pentaho-gwt-filechooser" rev="${dependency.pentaho-gwt-filechooser.revision}" changing="true"/>
+        <!--  1.0-SNAPSHOT -->        
+        <dependency org="pentaho" name="pentaho-gwt-widgets" rev="${dependency.pentaho-gwt-widgets.revision}" changing="true"/>        
+        
+    </dependencies>
+</ivy-module>
