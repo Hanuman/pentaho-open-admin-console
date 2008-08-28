@@ -16,6 +16,6 @@
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.GWTShell"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-out www org.pentaho.pac.PentahoAdminConsole/PentahoAdminConsole.html"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="pentaho-admin-console"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="pentaho-open-admin-console"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx128M"/>
 </launchConfiguration>
