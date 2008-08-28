@@ -95,20 +95,16 @@ public class AppConfigProperties {
     
   private static final String BASE_URL = "base-url"; //$NON-NLS-1$
   
-  private static String passwordServiceClass; 
   // ~ Instance fields =================================================================================================
 
   private ISystemSettings settings = new OpenAdminConsoleSettings();
 
   private static AppConfigProperties instance = new AppConfigProperties();
-  static {
-    initPasswordService();
-  }
 
   // ~ Constructors ====================================================================================================
 
   protected AppConfigProperties() {
-
+    initPasswordService();
   }
 
   // ~ Methods =========================================================================================================
@@ -117,7 +113,8 @@ public class AppConfigProperties {
     return instance;
   }
 
-  protected static void initPasswordService() {
+  protected void initPasswordService() {
+    String passwordServiceClass = getPasswordServiceClass();
     if(passwordServiceClass != null) {
       PasswordServiceFactory.init(passwordServiceClass);  
     } else  {
