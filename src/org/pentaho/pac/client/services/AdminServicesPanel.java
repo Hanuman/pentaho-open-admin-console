@@ -16,17 +16,20 @@
 
 package org.pentaho.pac.client.services;
 
+import java.util.HashMap;
+
 import org.pentaho.pac.client.PacServiceAsync;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
+import org.pentaho.pac.client.common.ui.GroupBox;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -41,32 +44,58 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
   Button refreshSystemSettingsBtn = new Button(MSGS.refreshSystemSettings());
   Button executeGlobalActionsBtn = new Button(MSGS.executeGlobalActions());
   Button refreshReportingMetadataBtn = new Button(MSGS.refreshReportingMetadata());
-  Button openAuditReportBtn = new Button(MSGS.openAuditReport());
-  
-  private AsyncCallback auditCallback = new AuditCallback(openAuditReportBtn);
   FlexTable flexTable = new FlexTable();
   
+  HashMap<Integer, FlexTable> groupMap = new HashMap<Integer, FlexTable>();
+  
   public AdminServicesPanel() {
+    flexTable.setCellSpacing(10);
     add(flexTable);
     
-    flexTable.setWidth("100%"); //$NON-NLS-1$
+    addGroupBox(0, 0, 0, MSGS.contentRepositoryCleaning());
+    addGroupBox(1, 0, 1, MSGS.solutionRepository());
+    addGroupBox(2, 1, 0, MSGS.refreshBiServer());
     
-    addServiceButton(0, 0, refreshSolutionRepositoryBtn);
-    addServiceButton(0, 1, cleanRepositoryBtn);
-    addServiceButton(1, 0, scheduleRepositoryCleaningBtn);
-    addServiceButton(1, 1, resetRepositoryBtn);
-    addServiceButton(2, 0, refreshSystemSettingsBtn);
-    addServiceButton(2, 1, executeGlobalActionsBtn);
-    addServiceButton(3, 0, refreshReportingMetadataBtn);
-    addServiceButton(3, 1, clearMondrianSchemaCacheBtn);
-    addServiceButton(4, 1, openAuditReportBtn);
+    flexTable.getColumnFormatter().setWidth(0, "50%");
+    flexTable.getColumnFormatter().setWidth(1, "50%");
+    
+    addServiceButton(0, 0, 1, cleanRepositoryBtn);
+    addServiceButton(0, 0, 0, scheduleRepositoryCleaningBtn);
+    
+    addServiceButton(1, 0, 0, refreshSolutionRepositoryBtn);
+    addServiceButton(1, 0, 1, resetRepositoryBtn);
+    
+    addServiceButton(2, 0, 0, refreshSystemSettingsBtn);
+    addServiceButton(2, 0, 1, executeGlobalActionsBtn);
+    addServiceButton(2, 1, 0, refreshReportingMetadataBtn);
+    addServiceButton(2, 1, 1, clearMondrianSchemaCacheBtn);
     
   }
 
-  protected void addServiceButton(int row, int column, Button serviceButton) {
-    flexTable.setWidget(row, column, serviceButton);
-    serviceButton.setWidth("100%"); //$NON-NLS-1$
-    serviceButton.addClickListener(this);
+  protected void addGroupBox(int groupId, int row, int column, String title) {
+    FlexTable groupFlexTable = new FlexTable();
+    groupFlexTable.setWidth("100%"); //$NON-NLS-1$   
+    groupFlexTable.setCellSpacing(5);
+    
+    GroupBox groupBox = new GroupBox(title);
+    groupBox.setContent(groupFlexTable);
+    groupBox.setWidth("100%"); //$NON-NLS-1$   
+    groupBox.setHeight("100%"); //$NON-NLS-1$
+    
+    flexTable.getCellFormatter().setHeight(row, column, "100%");
+    flexTable.setWidget(row, column, groupBox);
+    
+    groupBox.setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
+    groupMap.put(new Integer(groupId), groupFlexTable);
+  }
+  
+  protected void addServiceButton(int parentGroupId, int rowWithinGroup, int columnWithinGroup, Button serviceButton) {
+    FlexTable groupFlexTable = groupMap.get(new Integer(parentGroupId));
+    if (groupFlexTable != null) {
+      groupFlexTable.setWidget(rowWithinGroup, columnWithinGroup, serviceButton);
+      serviceButton.setWidth("100%"); //$NON-NLS-1$
+      serviceButton.addClickListener(this);
+    }
   }
   
   protected void runService(final Button serviceButton) {
@@ -106,8 +135,6 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
       pacServiceAsync.executeGlobalActions(callback);
     } else if (serviceButton == refreshReportingMetadataBtn) {
       pacServiceAsync.refreshReportingMetadata(callback);
-    } else if (serviceButton == openAuditReportBtn) {
-      pacServiceAsync.getBIServerBaseUrl(auditCallback);
     }
   }
   
@@ -115,27 +142,4 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
     runService((Button)sender);
   }
   
-  private static class AuditCallback implements AsyncCallback{
-    
-    private Button auditBtn;
-    private final String AUDIT_URL = "/AuditReportList"; //$NON-NLS-1$
-    
-    private AuditCallback(Button auditBtn){
-      this.auditBtn = auditBtn;
-    }
-    
-    public void onSuccess(Object result) {
-      final String baseUrl = result.toString();
-
-      Window.open(baseUrl+AUDIT_URL, "_blank", ""); //$NON-NLS-1$  //$NON-NLS-2$
-      auditBtn.setEnabled(true);
-    }
-
-    public void onFailure(Throwable caught) {
-      MessageDialog messageDialog = new MessageDialog(MSGS.error(), 
-          caught.getMessage() );
-      messageDialog.center();
-      auditBtn.setEnabled(true);
-    }
-  }
 }

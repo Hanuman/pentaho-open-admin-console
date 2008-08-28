@@ -2,6 +2,7 @@ package org.pentaho.pac.client.common.ui;
 
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -58,6 +59,14 @@ public class GroupBox extends DockPanel{
   
   public void setContent(Widget widget){
     grid.setWidget(1,1, widget);
+  }
+  
+  public void setHorizontalAlignment(HorizontalAlignmentConstant alignment) {
+    grid.getCellFormatter().setHorizontalAlignment(1, 1, alignment);
+  }
+  
+  public void setVerticalAlignment(VerticalAlignmentConstant alignment) {
+    grid.getCellFormatter().setVerticalAlignment(1, 1, alignment);
   }
 }
 

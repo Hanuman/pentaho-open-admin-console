@@ -1960,4 +1960,27 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    */
   String resetServer();
   
+  /**
+   * Translated "Content Repository (Remove old files)".
+   * 
+   * @return translated "Content Repository (Remove old files)"
+   * @gwt.key contentRepositoryCleaning
+   */
+  String contentRepositoryCleaning();
+  
+  /**
+   * Translated "Solution Repository".
+   * 
+   * @return translated "Solution Repository"
+   * @gwt.key solutionRepository
+   */
+  String solutionRepository();
+  
+  /**
+   * Translated "Refresh BI Server".
+   * 
+   * @return translated "Refresh BI Server"
+   * @gwt.key refreshBiServer
+   */
+  String refreshBiServer();
 }
