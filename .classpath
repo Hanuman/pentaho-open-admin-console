@@ -4,43 +4,8 @@
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="lib/antlr-2.7.6.jar"/>
-	<classpathentry kind="lib" path="lib/asm.jar"/>
-	<classpathentry kind="lib" path="lib/asm-attrs.jar"/>
-	<classpathentry kind="lib" path="lib/cglib-2.1.3.jar"/>
-	<classpathentry kind="lib" path="lib/commons-codec-1.3.jar"/>
-	<classpathentry kind="lib" path="lib/dom4j-1.6.1.jar"/>
-	<classpathentry kind="lib" path="lib/javassist.jar"/>
-	<classpathentry kind="lib" path="lib/jta.jar"/>
-	<classpathentry kind="lib" path="lib/commons-lang-2.2.jar"/>
-	<classpathentry kind="lib" path="lib/commons-logging-1.1.jar"/>
-	<classpathentry kind="lib" path="lib/jdbc/hsql/hsqldb.jar"/>
-	<classpathentry kind="lib" path="lib/commons-io-1.3.2.jar"/>
-	<classpathentry kind="lib" path="lib/commons-collections-3.2.jar"/>
-	<classpathentry kind="lib" path="lib/jetty-6.1.2rc1.jar"/>
-	<classpathentry kind="lib" path="lib/jetty-util-6.1.2rc1.jar"/>
-	<classpathentry kind="lib" path="lib/servlet-api-2.5-6.0.2.jar"/>
-	<classpathentry kind="lib" path="lib/gwt/jetty-gwt-6.1.9.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate/hibernate3.jar"/>
-	<classpathentry kind="lib" path="lib/commons-httpclient-3.1.jar"/>
-	<classpathentry kind="lib" path="lib/gwt/gwt-datepicker-r17.jar"/>
-	<classpathentry kind="lib" path="lib/pentaho/pentaho-bi-platform-util-2.0.jar"/>
-	<classpathentry kind="lib" path="lib/pentaho/pentaho-bi-platform-api-2.0.jar"/>
-	<classpathentry kind="lib" path="lib/gwt/gwt-widgets-0.0.1.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate/hibernate-annotations.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate/ejb3-persistence.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate/hibernate-commons-annotations.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate/ehcache-1.2.3.jar"/>
-	<classpathentry kind="lib" path="lib/jdbc/msql5/mysql-connector-java-5.1.5-bin.jar"/>
-	<classpathentry kind="lib" path="lib/pentaho/pentaho-gwt-widgets.jar"/>
-	<classpathentry kind="lib" path="lib/pentaho/pentaho-gwt-filechooser.jar"/>
-	<classpathentry kind="lib" path="lib/gwt-core/gwt-benchmark-viewer.jar"/>
-	<classpathentry kind="lib" path="lib/gwt-core/gwt-servlet.jar"/>
-	<classpathentry kind="lib" path="lib/gwt-core/gwt-user.jar"/>
-	<classpathentry kind="lib" path="lib/gwt-windows/gwt-dev-windows.jar"/>
-	<classpathentry kind="lib" path="lib/pentaho/pentaho-bi-platform-engine-core-2.0.jar"/>
-	<classpathentry kind="lib" path="lib/jaxen-1.1.jar"/>
 	<classpathentry kind="lib" path="resource/config"/>
 	<classpathentry kind="lib" path="resource/hibernate"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?ivyXmlPath=ivy.xml&amp;confs=dev%2Cdev-linux&amp;ivySettingsPath=file%3A.%2Fivysettings.xml&amp;buildPropertyFiles=build.properties&amp;acceptedTypes=jar&amp;sourceTypes=source&amp;javadocTypes=javadoc&amp;sourceSuffixes=-source%2C-sources%2C-src&amp;javadocSuffixes=-javadoc%2C-javadocs%2C-doc%2C-docs&amp;doRetrieve=false&amp;retrievePattern=lib%2F%5Bconf%5D%2F%5Bartifact%5D.%5Bext%5D&amp;alphaOrder=true"/>
+	<classpathentry kind="output" path="eclipse-bin"/>
 </classpath>
