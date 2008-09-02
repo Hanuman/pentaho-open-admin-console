@@ -27,6 +27,7 @@ import org.apache.commons.logging.LogFactory;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Node;
+import org.pentaho.pac.server.config.HibernateSettingsXml;
 import org.pentaho.platform.api.engine.ISystemSettings;
 import org.pentaho.platform.engine.core.system.SystemSettings;
 import org.pentaho.platform.util.xml.dom4j.XmlDom4JHelper;
@@ -46,11 +47,12 @@ public class AppConfigProperties {
   private static final Log logger = LogFactory.getLog(AppConfigProperties.class);
 
   public static final String WEB_XML_PATH = "/WEB-INF/web.xml"; //$NON-NLS-1$
+  public static final String HIBERNATE_MANAGED_XML_PATH = "/system/hibernate/hibernate-settings.xml"; //$NON-NLS-1$
   public static final String HIBERNATE_CONFIG_PATH = "hibernateConfigPath"; //$NON-NLS-1$
   public static final String PENTAHO_OBJECTS_SPRING_XML = "pentahoObjects.spring.xml" ; //$NON-NLS-1$
  
   public static final String XPATH_TO_CONTEXT_PARAM = "web-app/context-param"; //$NON-NLS-1$
- 
+  public static final String XPATH_TO_HIBERNATE_CFG_FILE = "settings/config-file"; //$NON-NLS-1$
   public static final String XPATH_TO_PARAM_NAME = "param-name"; //$NON-NLS-1$
  
   public static final String XPATH_TO_PARAM_VALUE = "param-value"; //$NON-NLS-1$
@@ -189,42 +191,19 @@ public class AppConfigProperties {
   }
 
   public String getHibernateConfigPath() {
-    String warPath = getWarPath();
+    String solutionPath = getSolutionPath();
     String returnValue = null;
-    StringBuffer xmlBuffer = new StringBuffer();
-    FileReader fileReader = null;
     try {
-      fileReader = new FileReader(new File(warPath + WEB_XML_PATH));
-      char[] inputString = new char[1000];
-      int numCharsRead = fileReader.read(inputString, 0, 1000);
-      while (numCharsRead >= 0) {
-        xmlBuffer.append(inputString, 0, numCharsRead);
-        numCharsRead = fileReader.read(inputString, 0, 1000);
+      HibernateSettingsXml hibernateSettingXml = new HibernateSettingsXml(new File(solutionPath + HIBERNATE_MANAGED_XML_PATH));
+      String hibernateConfigFile = hibernateSettingXml.getHibernateConfigFile();
+      if(hibernateConfigFile != null && hibernateConfigFile.length() > 0) {
+        returnValue = hibernateConfigFile.substring(hibernateConfigFile.lastIndexOf("/")+1, hibernateConfigFile.length());  
       }
-      Document document = XmlDom4JHelper.getDocFromString(xmlBuffer.toString(), null);
-      List<Node> nodes = document.selectNodes(XPATH_TO_CONTEXT_PARAM);
-      for (Node node : nodes) {
-        Node paramNameNode = node.selectSingleNode(XPATH_TO_PARAM_NAME);
-        
-        if(paramNameNode.getStringValue() != null && paramNameNode.getStringValue().equals(HIBERNATE_CONFIG_PATH)) {
-          Node paramValueNode = node.selectSingleNode(XPATH_TO_PARAM_VALUE);
-          returnValue = paramValueNode.getStringValue();
-          break;
-        }
-      }
-      returnValue = returnValue.substring(returnValue.lastIndexOf("/")+1, returnValue.length());
     } catch(Exception e) {
-      logger.error("Unable to read file : " + warPath + WEB_XML_PATH );
+      logger.error("Unable to read file : " + solutionPath + XPATH_TO_HIBERNATE_CFG_FILE );
       returnValue = null;
-    } finally {
-      if ( null != fileReader ) {
-        try { fileReader.close(); }
-        catch( IOException e) {
-          logger.error( "Failed to close stream associated with: " + warPath + WEB_XML_PATH );
-        }
-      }
-    }
-     if ( StringUtils.isEmpty(returnValue) ) {
+    } 
+    if ( StringUtils.isEmpty(returnValue) ) {
       returnValue = DEFAULT_HIBERNATE_CONFIG_PATH;
      }
     return returnValue;
