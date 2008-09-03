@@ -65,7 +65,7 @@ public class SchedulerToolbarController {
   private static final int INVALID_SCROLL_POS = -1;
   private static final String DISABLED = "disabled"; //$NON-NLS-1$
   private boolean isInitialized = false;
-  
+  private boolean loadingInitialized = false;
   public SchedulerToolbarController( ScheduleCreatorDialog pScheduleCreatorDialog,
       SchedulerToolbar schedulerToolbar, SchedulesListCtrl schedulesListCtrl ) {
     this.scheduleCreatorDialog = pScheduleCreatorDialog;
@@ -665,8 +665,9 @@ public class SchedulerToolbarController {
     
     scheduleCreatorDialog.setTitle( MSGS.scheduleCreator() );
     scheduleCreatorDialog.reset( new Date() );
-    scheduleCreatorDialog.setOkBtnEnabled( false );
-    
+    if(!loadingInitialized) {
+      scheduleCreatorDialog.setOkBtnEnabled( false );  
+    }
     scheduleCreatorDialog.setOnOkHandler( new ICallback<MessageDialog>() {
       public void onHandle(MessageDialog d) {
         localThis.createSchedule();
@@ -689,8 +690,9 @@ public class SchedulerToolbarController {
 
     scheduleCreatorDialog.setTitle( MSGS.scheduleEditor() );
     final List<Schedule> scheduleList = schedulesListCtrl.getSelectedSchedules();
-    scheduleCreatorDialog.setOkBtnEnabled( false );
-    
+    if(!loadingInitialized) {
+      scheduleCreatorDialog.setOkBtnEnabled( false );  
+    }
     scheduleCreatorDialog.setOnOkHandler( new ICallback<MessageDialog>() {
       public void onHandle(MessageDialog d) {
         localThis.updateScheduleWithNewScheduleType();
@@ -724,6 +726,7 @@ public class SchedulerToolbarController {
 
   private void handleLoadingComplete() {
     scheduleCreatorDialog.setOkBtnEnabled( true );
+    loadingInitialized = true;
   }
   
   private void handleDeleteSchedules() {
