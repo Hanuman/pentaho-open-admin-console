@@ -9,4 +9,5 @@ public interface JdbcDriverDiscoveryService extends RemoteService {
   public void initialize();
   public NameValue[] getAvailableJdbcDrivers() throws JdbcDriverDiscoveryServiceException;
   public NameValue[] getAvailableJdbcDrivers(String location) throws JdbcDriverDiscoveryServiceException;
+  public NameValue[] getRelativeAvailableJdbcDrivers(String location) throws JdbcDriverDiscoveryServiceException;
 }
