@@ -1,9 +1,11 @@
 package org.pentaho.pac.client;
 
+import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.home.HomePanel;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -41,8 +43,18 @@ public class PentahoAdminConsole extends DockPanel {
     adminConsoleMasterDetailsPanel.selectPage(AdminConsolePageId.HOME_PAGE.ordinal());
     
     setStyleName("main-panel"); //$NON-NLS-1$
-
-    refresh();
+    AsyncCallback callback = new AsyncCallback() {
+          public void onSuccess(Object result) {
+            refresh();
+          }
+          public void onFailure(Throwable caught) {
+            MessageDialog errorDialog = new MessageDialog(PentahoAdminConsole.MSGS.error());
+            errorDialog.setText(MSGS.errorInitializingPacService());
+            errorDialog.setMessage(caught.getLocalizedMessage());
+            errorDialog.center();
+          }
+    };
+    PacServiceFactory.getPacService().initialze(callback);
   }
   
   

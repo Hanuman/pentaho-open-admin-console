@@ -26,6 +26,7 @@ import org.apache.commons.logging.LogFactory;
 import org.pentaho.pac.client.PacService;
 import org.pentaho.pac.common.PacServiceException;
 import org.pentaho.pac.common.PentahoSecurityException;
+import org.pentaho.pac.common.ServiceInitializationException;
 import org.pentaho.pac.common.UserRoleSecurityInfo;
 import org.pentaho.pac.common.UserToRoleAssignment;
 import org.pentaho.pac.common.datasources.DataSourceManagementException;
@@ -43,6 +44,7 @@ import org.pentaho.pac.server.biplatformproxy.xmlserializer.XmlSerializerExcepti
 import org.pentaho.pac.server.common.AppConfigProperties;
 import org.pentaho.pac.server.common.BiServerTrustedProxy;
 import org.pentaho.pac.server.common.DAOException;
+import org.pentaho.pac.server.common.HibernateSessionFactory;
 import org.pentaho.pac.server.common.PasswordServiceFactory;
 import org.pentaho.pac.server.common.ProxyException;
 import org.pentaho.pac.server.common.ThreadSafeHttpClient;
@@ -939,5 +941,10 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       logger.error( Messages.getString( "PacService.THREAD_SCHEDULING_FAILED" ), e ); //$NON-NLS-1$
       return DEFAULT_CHECK_PERIOD;
     }
+  }
+
+
+  public void initialze() throws ServiceInitializationException {
+      HibernateSessionFactory.addDefaultConfiguration();  
   }
 }

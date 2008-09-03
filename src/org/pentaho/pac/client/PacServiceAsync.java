@@ -8,7 +8,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface PacServiceAsync {
   public void getUserRoleSecurityInfo(AsyncCallback callback);
-  
+  public void initialze(AsyncCallback callback);
   public void createUser(ProxyPentahoUser user, AsyncCallback<Boolean> callback);
   public void deleteUsers(ProxyPentahoUser[] users, AsyncCallback<Boolean> callback);
   public void updateUser(ProxyPentahoUser user, AsyncCallback<Boolean> callback);

@@ -17,8 +17,8 @@ import org.hibernate.cfg.Configuration;
  */
 public class HibernateSessionFactory {
 
-    private static final String DEFAULT_CONFIG_NAME = "$$DEFAULT_CONFIG";
-    private static String DEFAULT_CONFIG_FILE_LOCATION = "hsql.hibernate.cfg.xml"; //$NON-NLS-1$
+    public static final String DEFAULT_CONFIG_NAME = "$$DEFAULT_CONFIG";
+    public static String DEFAULT_CONFIG_FILE_LOCATION = "hsql.hibernate.cfg.xml"; //$NON-NLS-1$
 	/** 
      * Location of hibernate.cfg.xml file.
      * Location should be on the classpath as Hibernate uses  
@@ -33,24 +33,23 @@ public class HibernateSessionFactory {
      
     private static Map<String,HibConfig> configs = new HashMap<String,HibConfig>();
     private static String defaultConfigFile = null;
-	static {
-	  defaultConfigFile = AppConfigProperties.getInstance().getHibernateConfigPath();
-  	  if(defaultConfigFile != null && defaultConfigFile.length() > 0) {
-  	    addConfiguration(DEFAULT_CONFIG_NAME,defaultConfigFile);
-  	  } else {
-  	    defaultConfigFile = DEFAULT_CONFIG_FILE_LOCATION;
-  	    addConfiguration(DEFAULT_CONFIG_NAME,defaultConfigFile);
-  	  }
-    }
-	
+
     private HibernateSessionFactory() {
     }
     
+    public static void addDefaultConfiguration() {
+      defaultConfigFile = AppConfigProperties.getInstance().getHibernateConfigPath();
+      if(defaultConfigFile != null && defaultConfigFile.length() > 0) {
+        addConfiguration(DEFAULT_CONFIG_NAME,defaultConfigFile);
+      } else {
+        defaultConfigFile = DEFAULT_CONFIG_FILE_LOCATION;
+        addConfiguration(DEFAULT_CONFIG_NAME,defaultConfigFile);
+      }
+      
+    }
     public static void addConfiguration(String name,String configFile)
     {
-    	if (configs.containsKey(name))
-    		throw new HibernateException("Configuration " + name + " already exists!");
-    	
+    	if (!configs.containsKey(name))
     	addOrUpdateConfiguration(name,configFile);
     }
     
@@ -171,7 +170,8 @@ public class HibernateSessionFactory {
 	public static Configuration getConfiguration() {
 		return getConfiguration(defaultConfigFile);
 	}
-	
+
+
 	/**
      *  return hibernate configuration
      *
