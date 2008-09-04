@@ -25,8 +25,6 @@
     <dependency org="commons-logging"     name="commons-logging" rev="1.1" transitive="false" />
     <dependency org="dom4j"               name="dom4j" rev="1.6.1" transitive="false" />
     <dependency org="jaxen"               name="jaxen" rev="1.1" transitive="false" />
-    <!--  we were using servlet-api 2.5, is 2.4 sufficient? -->
-    <dependency org="javax.servlet"       name="servlet-api" rev="2.4" />
 
     <!-- hibernate related dependencies -->
     <dependency org="org.hibernate"       name="hibernate" rev="3.2.4.sp1">
@@ -48,8 +46,12 @@
     <dependency org="org.mortbay.jetty"   name="jetty" rev="6.1.2" />
     <dependency org="org.mortbay.jetty"   name="jetty-util" rev="6.1.2" />
     
-    <!--    gwt-user needs to be excluded from the open-admin web assembly-->
-    <dependency org="com.google.gwt"      name="gwt-user" rev="1.5.2" />
+    
+<!--=======================================================================
+      Compile-only dependencies (not included in distribution)
+    ====================================================================-->
+    <!--    gwt-user needs to be excluded from the open-admin web assembly.  It is pulled transitively.-->
+<!--    <dependency org="com.google.gwt" name="gwt-user" rev="1.5.2" conf="compile-tools->default" />-->
     
     
 <!--=======================================================================
@@ -72,6 +74,7 @@
     ====================================================================-->
     <dependency org="com.google.gwt"      name="gwt-servlet" rev="1.5.2" conf="runtime->default"/>
     <dependency org="hsqldb"              name="hsqldb" rev="1.8.0.7"  conf="runtime->default"/>
+    <dependency org="mysql"               name="mysql-connector-java" rev="5.1.5"  conf="runtime->default"/>
 <!--    6.1.2 is found in ibiblio, but not 6.1.9, so it is deployed to pentaho repository-->
     <dependency org="org.mortbay.jetty"   name="jetty-gwt" rev="6.1.9" conf="runtime->default" >  
           <exclude org="org.mortbay.jetty" name="jetty-util" />
