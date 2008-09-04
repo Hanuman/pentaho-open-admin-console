@@ -90,7 +90,7 @@
   </target>
 
   <target name="dist" depends="jar-console, jar-messages" description="create distribution">
-    <zip destfile="${dist.dir}/pentaho-open-admin-console-web-${project.revision}.zip">
+    <zip destfile="${dist.dir}/pentaho-open-admin-console-${project.revision}.zip">
       <zipfileset dir="${build.jars.dir}" prefix="pentaho-open-admin-console/lib" />
       <zipfileset dir="lib" excludes="**/test/*" prefix="pentaho-open-admin-console/lib" />
       <zipfileset dir="${res.dir}/config" prefix="pentaho-open-admin-console/resource/config" />
