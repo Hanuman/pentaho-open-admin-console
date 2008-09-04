@@ -83,6 +83,7 @@ public class JdbcDriverDiscoveryServiceImpl extends RemoteServiceServlet impleme
       if (location != null && location.length() > 0) {
     	ci.lastCall = timeMil;
         File parent = relative?new File(getServletContext().getRealPath(location)):new File(location);
+        System.out.println("THE PATH IS " + parent.getPath());
         FilenameFilter libs = new FilenameFilter() {
 
           public boolean accept(File dir, String pathname) {
