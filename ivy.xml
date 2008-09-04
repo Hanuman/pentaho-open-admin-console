@@ -48,6 +48,7 @@
     <dependency org="org.mortbay.jetty"   name="jetty" rev="6.1.2" />
     <dependency org="org.mortbay.jetty"   name="jetty-util" rev="6.1.2" />
     
+    <!--    gwt-user needs to be excluded from the open-admin web assembly-->
     <dependency org="com.google.gwt"      name="gwt-user" rev="1.5.2" />
     
     
@@ -67,7 +68,7 @@
     <dependency org="pentaho"         name="pentaho-gwt-widgets" rev="${dependency.pentaho-gwt-widgets.revision}" conf="codegen,runtime->default" changing="true" />
     
 <!--=======================================================================
-      Runtime dependencies
+      Runtime dependencies - need to verify that all of these are actually needed
     ====================================================================-->
     <dependency org="com.google.gwt"      name="gwt-servlet" rev="1.5.2" conf="runtime->default"/>
     <dependency org="hsqldb"              name="hsqldb" rev="1.8.0.7"  conf="runtime->default"/>
@@ -76,6 +77,11 @@
           <exclude org="org.mortbay.jetty" name="jetty-util" />
     </dependency>  
     <dependency org="jboss"               name="javassist" rev="3.4.ga" conf="runtime->default" />    
+    <dependency org="antlr"               name="antlr" rev="2.7.6" conf="runtime->default" />    
+    <dependency org="asm"                 name="asm" rev="1.5.3" conf="runtime->default" />    
+    <dependency org="asm"                 name="asm-attrs" rev="1.5.3" conf="runtime->default" />    
+    <dependency org="pentaho"             name="pentaho-messages" rev="1.6.1" conf="runtime->default" />    
+    <dependency org="javax.transaction"   name="jta" rev="1.0.1B" conf="runtime->default" />    
     
 <!--=======================================================================
       Test dependencies
