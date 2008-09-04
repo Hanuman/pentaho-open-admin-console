@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Pentaho Admin Console" default="dist" basedir=".">
+	<description>Pentaho Administration Console build process..</description>
+	<property file="override.properties" />
+	<property file="version.properties" />
+	<property file="build.properties" />
+	<property file="build-res/version.properties" />
+
+    <condition property="isMac">
+      <os family="mac"/>
+    </condition>
+
+    <condition property="isWindows">
+      <os family="windows"/>
+    </condition>
+
+    <condition property="isUnix">
+      <os family="unix"/>
+    </condition>
+
+	<path id="classpath">
+		<fileset dir="lib">
+			<include name="*.jar" />
+		    <include name="gwt/**/*.jar" />
+		    <include name="gwt-core/**/*.jar" />
+		    <include name="gwt-windows/**/*.jar" if="isWindows" />
+		    <include name="gwt-mac/**/*.jar" if="isMac" />
+		    <include name="gwt-linux/**/*.jar" if="isUnix" />
+		    <include name="hibernate/**/*.jar" />
+		    <include name="jdbc/**/*.jar" />
+		    <include name="pentaho/**/*.jar" />
+		    <include name="test/**/*.jar" />
+			<include name="**/*.zip" />
+		</fileset>
+	</path>
+  
+	<!-- ===================================================================
+        target: init              
+       =================================================================== -->
+	<target name="init">
+		<mkdir dir="bin" />
+		<mkdir dir="${build.classes.dir}" />
+		<mkdir dir="${build.wars.dir}" />
+		<mkdir dir="${build.jars.dir}" />
+		<mkdir dir="${dist.dir}" />
+	</target>
+
+	<!-- ===================================================================
+        target: clean              
+    =================================================================== -->
+
+	<target name="clean" depends="clean-test" description="deletes all generated files">
+		<delete dir=".gwt-cache" />
+		<delete dir="${build.dir}" />
+		<delete dir="${dist.dir}" />
+		<delete dir="tomcat" />
+	</target>
+	<!-- ===================================================================
+        target: clean-test              
+    =================================================================== -->
+
+	<target name="clean-test" description="deletes all generated test files">
+		<delete dir="${test.reports.dir}" />
+	</target>
+	<!-- ===================================================================
+        target: compile              
+    =================================================================== -->
+
+	<target name="compile" depends="init" description="compiles Java source files to bytecode">
+		<javac srcdir="${src.dir}" destdir="${build.classes.dir}" debug="${debug}" optimize="${optimize}" deprecation="${deprecation}" compiler="modern" source="1.5" target="1.5" fork="true" classpathref="classpath">
+		</javac>
+	</target>
+	<!-- ===================================================================
+        target: compile-pac
+       =================================================================== -->
+	<target name="compile-pac" depends="compile">
+		<java classname="com.google.gwt.dev.GWTCompiler" fork="true" maxmemory="512M">
+			<classpath>
+				<path refid="classpath" />
+				<pathelement location="src" />
+			</classpath>
+			<arg value="-out" />
+			<arg value="${gwt.output.dir}" />
+			<arg value="%*" />
+			<arg value="${pac.app}" />
+		</java>
+	</target>
+
+	<!-- =================================
+          target: jar-console
+
+          Jar the org/pentaho/pac package.
+         ================================= -->
+	<target name="jar-console" depends="init,compile-pac">
+		<jar destfile="${build.jars.dir}/pentaho-open-admin-console.jar">
+			<manifest>
+				<attribute name="Implementation-Title" value="${impl.title}" />
+				<attribute name="Implementation-Version" value="${impl.version}" />
+				<attribute name="Implementation-Vendor" value="${impl.vendor}" />
+				<attribute name="Implementation-ProductID" value="${impl.productID}" />
+				<attribute name="Main-Class" value="org.pentaho.pac.server.JettyServer" />
+				<attribute name="Class-Path" value="../resource/config/ ../resource/hibernate/ ${class-path}" />
+			</manifest>
+			<fileset dir="${build.classes.dir}" />
+			<fileset dir="${src.dir}" excludes="**/*.java" />
+			<fileset dir="${gwt.output.dir}" />
+		</jar>
+	</target>
+
+	<target name="jar-gwt-module" depends="clean, jar-console, jar-messages" description="create module jar">
+		<jar destfile="${dist.dir}/pentaho-open-admin-module-${impl.version}.jar">
+			<manifest>
+				<attribute name="Implementation-Title" value="${impl.title}" />
+				<attribute name="Implementation-Version" value="${impl.version}" />
+				<attribute name="Implementation-Vendor" value="${impl.vendor}" />
+				<attribute name="Implementation-ProductID" value="${impl.productID}" />
+			</manifest>
+			<fileset dir="${build.classes.dir}" />
+			<fileset dir="${src.dir}" />
+			<fileset dir="${resource.dir}/config" />
+			<fileset dir="${resource.dir}/hibernate" />
+		</jar>
+	</target>
+
+	<target name="copy-gwt-module">
+		<copyfile dest="../pentaho-mgmt-services/lib-ext/pentaho/pentaho-open-admin-module.jar" src="${build.jars.dir}/pentaho-open-admin-module.jar" />
+	</target>
+
+	<path id="class.path">
+		<fileset dir="lib">
+			<exclude name="**/test/*" />
+		</fileset>
+	</path>
+
+	<pathconvert property="class-path" pathsep=" " dirsep="/">
+		<path refid="class.path">
+		</path>
+		<map from="${basedir}${file.separator}lib/" to="" />
+	</pathconvert>
+
+
+	<!-- =================================
+		 target: jar-messages
+
+		 Jar the org/pentaho/pac/messages package.
+		 ================================= -->
+	<target name="jar-messages" depends="init, compile-pac">
+		<jar destfile="${build.jars.dir}/pentaho-open-admin-console-messages.jar">
+			<manifest>
+				<attribute name="Implementation-Title" value="${impl.title}" />
+				<attribute name="Implementation-Version" value="${impl.version}" />
+				<attribute name="Implementation-Vendor" value="${impl.vendor}" />
+				<attribute name="Implementation-ProductID" value="${impl.productID}" />
+			</manifest>
+			<fileset dir="${build.classes.dir}">
+				<include name="**/i18n/**" />
+			</fileset>
+			<fileset dir="${src.dir}">
+				<include name="**/i18n/*.properties" />
+			</fileset>
+		</jar>
+	</target>
+	<!-- =================================
+		 target: hosted
+
+		 Runs application in a hosted mode
+		 ================================= -->
+
+	<target name="hosted" depends="compile" description="runs the application in hosted mode">
+		<java classname="com.google.gwt.dev.GWTShell" classpathref="classpath" fork="true">
+			<!-- next line is only for Mac OS X -->
+			<jvmarg value="-XstartOnFirstThread" />
+			<arg line="-out ./www" />
+			<arg line="${pac.app}/$PentahoAdminConsole.html" />
+		</java>
+	</target>
+
+	<!-- =================================
+		 target: test
+
+		 Runs JUnit Test
+		 ================================= -->
+
+	<target name="test" depends="clean-test,compile" description="runs all JUnit tests">
+		<mkdir dir="${test.reports.dir}" />
+		<junit fork="yes" printsummary="yes">
+			<!-- next line is only for Mac OS X -->
+			<jvmarg value="-XstartOnFirstThread" />
+			<classpath refid="classpath" />
+			<batchtest todir="${test.reports.dir}">
+				<fileset dir="src" includes="**/*Test.java" />
+			</batchtest>
+			<formatter type="xml" />
+		</junit>
+		<junitreport toDir="${test.reports.dir}">
+			<fileset dir="${test.reports.dir}" />
+			<report format="frames" todir="${test.reports.dir}" />
+		</junitreport>
+		<exec os="Windows" executable="cmd.exe">
+			<arg line="/c start test/reports/index.html" />
+		</exec>
+		<exec os="Mac OS X" executable="open">
+			<arg line="-a /Applications/Safari.app test/reports/index.html" />
+		</exec>
+	</target>
+
+	<!-- =================================
+		 target: dist
+
+		 package up distribution in a zip file
+		 ================================= -->
+	<target name="dist" depends="clean, dirty-dist" description="create distribution" />
+
+	<target name="dirty-dist" depends="jar-console, jar-messages" description="create distribution">
+		<zip destfile="${dist.dir}/pentaho-open-admin-console-${impl.version}.zip">
+			<zipfileset dir="${build.jars.dir}" prefix="pentaho-open-admin-console/lib" />
+			<zipfileset dir="lib" excludes="**/test/*" prefix="pentaho-open-admin-console/lib" />
+			<zipfileset dir="${resource.dir}/config" prefix="pentaho-open-admin-console/resource/config" />
+			<zipfileset dir="${resource.dir}/hibernate" prefix="pentaho-open-admin-console/resource/hibernate" />
+			<zipfileset dir="${gwt.output.dir}" prefix="pentaho-open-admin-console/www" />
+			<zipfileset dir="build-res" includes="*.bat" prefix="pentaho-open-admin-console" />
+		</zip>
+		<jar destfile="${dist.dir}/pentaho-open-admin-module-${impl.version}.jar">
+			<manifest>
+				<attribute name="Implementation-Title" value="${impl.title}" />
+				<attribute name="Implementation-Version" value="${impl.version}" />
+				<attribute name="Implementation-Vendor" value="${impl.vendor}" />
+				<attribute name="Implementation-ProductID" value="${impl.productID}" />
+			</manifest>
+			<fileset dir="${build.classes.dir}" />
+			<fileset dir="${src.dir}" />
+			<fileset dir="${resource.dir}/config" />
+			<fileset dir="${resource.dir}/hibernate" />
+		</jar>
+	</target>
+
+
+	<!-- =================================
+		 target: run
+
+		 Runs Unzips dist output and executes console
+		 ================================= -->
+
+	<target name="run" description="Executes the console" depends="unpackConsole">
+
+		<java classname="org.pentaho.pac.server.JettyServer" fork="true" dir="${dist.dir}/exploded/pentaho-open-admin-console">
+			<classpath>
+				<fileset dir="${dist.dir}/exploded/pentaho-open-admin-console/lib/" includes="**/*.jar" />
+			</classpath>
+		</java>
+	</target>
+
+	<target name="unpackConsole" description="unzip the distribution">
+		<unzip src="${dist.dir}/pentaho-open-admin-console.zip" dest="${dist.dir}/exploded/" />
+	</target>
+
+</project>
