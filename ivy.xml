@@ -41,10 +41,7 @@
     <dependency org="org.hibernate"       name="ejb3-persistence" rev="1.0.1.GA">
       <artifact                           name="ejb3-persistence" type="jar" />
     </dependency>
-    
-    <!--  javaassist.jar (not a  direct dependency) -->
-    <dependency org="org.mortbay.jetty"   name="jetty" rev="6.1.2" />
-    <dependency org="org.mortbay.jetty"   name="jetty-util" rev="6.1.2" />
+
     
     
 <!--=======================================================================
@@ -81,9 +78,16 @@
     <dependency org="com.google.gwt"      name="gwt-servlet" rev="1.5.2" conf="runtime->default"/>
     <dependency org="hsqldb"              name="hsqldb" rev="1.8.0.7"  conf="runtime->default"/>
     <dependency org="mysql"               name="mysql-connector-java" rev="5.1.5"  conf="runtime->default"/>
+    
+<!--    exclude jetty's version of servlet api. it's checksum fails-->
+    <dependency org="org.mortbay.jetty"   name="jetty" rev="6.1.2" transitive="true" conf="runtime->default">
+        <exclude org="org.mortbay.jetty" name="servlet-api-2.5" />
+    </dependency>
+    <dependency org="org.mortbay.jetty"   name="jetty-util" rev="6.1.2" />
 <!--    6.1.2 is found in ibiblio, but not 6.1.9, so it is deployed to pentaho repository-->
     <dependency org="org.mortbay.jetty"   name="jetty-gwt" rev="6.1.9" conf="runtime->default" >  
           <exclude org="org.mortbay.jetty" name="jetty-util" />
+          <exclude org="javax.servlet" name="servlet-api" />
     </dependency>  
     <dependency org="jboss"               name="javassist" rev="3.4.ga" conf="runtime->default" />    
     <dependency org="antlr"               name="antlr" rev="2.7.6" conf="runtime->default" />    
@@ -91,6 +95,7 @@
     <dependency org="asm"                 name="asm-attrs" rev="1.5.3" conf="runtime->default" />    
     <dependency org="pentaho"             name="pentaho-messages" rev="1.6.1" conf="runtime->default" />    
     <dependency org="javax.transaction"   name="jta" rev="1.0.1B" conf="runtime->default" />    
+    <dependency org="javax.servlet"       name="servlet-api" rev="2.5" conf="runtime->default" />    
     
 <!--=======================================================================
       Test dependencies
