@@ -63,6 +63,9 @@
     <dependency org="org.zenica"      name="gwt-datepicker" rev="r17" conf="codegen,runtime->default" />
     <!-- gwt-widgets has been moved to sourceforge, we need to update this very old version -->
     <dependency org="org.hanson"      name="gwt-widgets" rev="0.0.1" conf="codegen,runtime->default" />
+    <!--    need to check if this is actually used anywhere-->
+    <dependency org="com.google.gwt"  name="gwt-benchmark-viewer" rev="1.5.1" conf="codegen,runtime->default" />
+    
     <dependency org="pentaho"         name="pentaho-bi-platform-api" rev="${dependency.bi-platform.revision}" conf="codegen,runtime->default" changing="true" >
         <exclude org="org.acegisecurity" name="acegi-security" />
         <exclude org="org.springframework" name="spring" />
