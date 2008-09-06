@@ -42,26 +42,34 @@
     </fileset>
   </path>
 
-  <target name="resolve" depends="resolve-codegen,resolve-runtime">
+  <target name="resolve" depends="resolve-codegen,resolve-debugtools,resolve-runtime">
     <ant antfile="${common.build.file}" target="resolve" />
   </target>
 
   <target name="resolve-codegen" depends="resolve-codegen-linux,resolve-codegen-mac,resolve-codegen-windows">
     <ivy:retrieve conf="codegen" pattern="${lib.dir}/[module]-[revision].[ext]" />
   </target>
-
   <target name="resolve-codegen-linux" if="isLinux" depends="resolve-init">
     <ivy:retrieve conf="codegen-linux" pattern="${lib.dir}/[module]-[revision].[ext]" />
   </target>
-
   <target name="resolve-codegen-mac" if="isMac" depends="resolve-init">
     <ivy:retrieve conf="codegen-mac" pattern="${lib.dir}/[module]-[revision].[ext]" />
   </target>
-
   <target name="resolve-codegen-windows" if="isWindows" depends="resolve-init">
     <ivy:retrieve conf="codegen-windows" pattern="${lib.dir}/[module]-[revision].[ext]" />
   </target>
-
+  
+  <target name="resolve-debugtools" depends="resolve-debugtools-linux,resolve-debugtools-mac,resolve-debugtools-windows"/>
+  <target name="resolve-debugtools-linux" if="isLinux" depends="resolve-init">
+    <ivy:retrieve conf="debugtools-linux" pattern="${lib.dir}/[module]-[revision].[ext]" />
+  </target>
+  <target name="resolve-debugtools-mac" if="isMac" depends="resolve-init">
+    <ivy:retrieve conf="debugtools-mac" pattern="${lib.dir}/[module]-[revision].[ext]" />
+  </target>
+  <target name="resolve-debugtools-windows" if="isWindows" depends="resolve-init">
+    <ivy:retrieve conf="debugtools-windows" pattern="${lib.dir}/[module]-[revision].[ext]" />
+  </target>
+  
   <target name="resolve-runtime" depends="resolve-init">
     <ivy:retrieve conf="runtime" pattern="${lib.dir}/[module]-[revision].[ext]" />
   </target>
@@ -167,6 +175,36 @@
       <fileset dir="${res.dir}/hibernate" />
     </jar>
   </target>
+  
+  <!--=======================================================================
+	    gwt-dev.install
+	    
+	    Downloads and installs gwt-dev jars and native libraries
+	    ====================================================================-->
+  <target name="install-gwt-dev" depends="gwt-dev.download" description="Installs gwt-dev jar and native libraries">
+    <path id="cobertura.classpath">
+      <fileset dir="${cobertura.build.cache.dir}">
+        <include name="*.jar" />
+      </fileset>
+    </path>
+    <taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
+  </target>
+
+
+  <!--=======================================================================
+	    cobertura.download
+	    
+	    Retrieves Cobertura jar via IVY
+	    ====================================================================-->
+  <target name="gwt-dev.download" depends="install-ivy" >
+    
+    <get src="http://repo1.maven.org/maven2/com/google/gwt/gwt-dev/1.5.2/gwt-dev-1.5.2-linux-libs.zip"
+             dest="${devlib.dir}/gwt-dev.zip"
+             usetimestamp="true" />
+        <unzip src="${devlib.dir}/gwt-dev.zip" dest="${devlib.dir}"/>
+  </target>
+
+
 
 
 </project>
