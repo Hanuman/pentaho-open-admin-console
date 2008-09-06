@@ -9,6 +9,9 @@
     <conf name="codegen-linux" visibility="private" />
     <conf name="codegen-mac" visibility="private" />
     <conf name="codegen-win" visibility="private" />
+    <conf name="debugtools-linux" visibility="private" />
+    <conf name="debugtools-mac" visibility="private" />
+    <conf name="debugtools-win" visibility="private" />
   </configurations>
   
   <dependencies defaultconf="default->default">
@@ -58,9 +61,9 @@
     <dependency org="com.google.gwt"  name="gwt-dev" rev="1.5.2" m:classifier="windows" conf="codegen-win->default" />
     <dependency org="com.google.gwt"  name="gwt-dev" rev="1.5.2" m:classifier="linux" conf="codegen-linux->default" />
     <dependency org="org.zenica"      name="gwt-datepicker" rev="r17" conf="codegen,runtime->default" />
-    <!-- gwt-widgets has been moved to sourceforge, we need to update this very old version -->
+<!--     gwt-widgets has been moved to sourceforge, we need to update this very old version -->
     <dependency org="org.hanson"      name="gwt-widgets" rev="0.0.1" conf="codegen,runtime->default" />
-    <!--    need to check if this is actually used anywhere-->
+<!--        need to check if this is actually used anywhere-->
     <dependency org="com.google.gwt"  name="gwt-benchmark-viewer" rev="1.5.1" conf="codegen,runtime->default" />
     
     <dependency org="pentaho"         name="pentaho-bi-platform-api" rev="${dependency.bi-platform.revision}" conf="codegen,runtime->default" changing="true" >
@@ -72,6 +75,10 @@
     <dependency org="pentaho"         name="pentaho-gwt-filechooser" rev="${dependency.pentaho-gwt-filechooser.revision}" conf="codegen,runtime->default" changing="true" />
     <dependency org="pentaho"         name="pentaho-gwt-widgets" rev="${dependency.pentaho-gwt-widgets.revision}" conf="codegen,runtime->default" changing="true" />
     
+    <dependency org="com.google.gwt" name="gwt-dev" rev="1.5.2" m:classifier="linux-libs" conf="debugtools-linux->default">
+      <artifact name="gwt-dev" type="zip" />
+    </dependency>
+    
 <!--=======================================================================
       Runtime dependencies - need to verify that all of these are actually needed
     ====================================================================-->
@@ -80,10 +87,11 @@
     <dependency org="mysql"               name="mysql-connector-java" rev="5.1.5"  conf="runtime->default"/>
     
 <!--    exclude jetty's version of servlet api. it's checksum fails-->
-    <dependency org="org.mortbay.jetty"   name="jetty" rev="6.1.2" transitive="true" conf="runtime->default">
+    <dependency org="org.mortbay.jetty"   name="jetty" rev="6.1.2" conf="runtime->default">
         <exclude org="org.mortbay.jetty" name="servlet-api-2.5" />
     </dependency>
-    <dependency org="org.mortbay.jetty"   name="jetty-util" rev="6.1.2" />
+    
+<!--    Why are we using two different versions of jetty libs, 6.1.2 and 6.1.9?-->
 <!--    6.1.2 is found in ibiblio, but not 6.1.9, so it is deployed to pentaho repository-->
     <dependency org="org.mortbay.jetty"   name="jetty-gwt" rev="6.1.9" conf="runtime->default" >  
           <exclude org="org.mortbay.jetty" name="jetty-util" />
