@@ -58,8 +58,9 @@
   <target name="resolve-codegen-windows" if="isWindows" depends="resolve-init">
     <ivy:retrieve conf="codegen-windows" pattern="${lib.dir}/[module]-[revision].[ext]" />
   </target>
-  
-  <target name="resolve-debugtools" depends="resolve-debugtools-linux,resolve-debugtools-mac,resolve-debugtools-windows"/>
+
+  <target name="resolve-debugtools"
+          depends="resolve-debugtools-linux,resolve-debugtools-mac,resolve-debugtools-windows" />
   <target name="resolve-debugtools-linux" if="isLinux" depends="resolve-init">
     <ivy:retrieve conf="debugtools-linux" pattern="${lib.dir}/[module]-[revision].[ext]" />
   </target>
@@ -69,7 +70,7 @@
   <target name="resolve-debugtools-windows" if="isWindows" depends="resolve-init">
     <ivy:retrieve conf="debugtools-windows" pattern="${lib.dir}/[module]-[revision].[ext]" />
   </target>
-  
+
   <target name="resolve-runtime" depends="resolve-init">
     <ivy:retrieve conf="runtime" pattern="${lib.dir}/[module]-[revision].[ext]" />
   </target>
@@ -175,36 +176,48 @@
       <fileset dir="${res.dir}/hibernate" />
     </jar>
   </target>
-  
+
   <!--=======================================================================
 	    gwt-dev.install
 	    
 	    Downloads and installs gwt-dev jars and native libraries
 	    ====================================================================-->
   <target name="install-gwt-dev" depends="gwt-dev.download" description="Installs gwt-dev jar and native libraries">
-    <path id="cobertura.classpath">
-      <fileset dir="${cobertura.build.cache.dir}">
-        <include name="*.jar" />
-      </fileset>
-    </path>
-    <taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
+    <unzip src="${gwt-dev.zipfile}" dest="${devlib.dir}" />
+    <delete file="${gwt-dev.zipfile}" />
+
+    <echo>
+      *************************************************************************************************
+      ** Gwt dev files have been installed to ${devlib.dir}.
+      ** Make sure ${gwt-dev.jarfile} 
+      ** appears before other jars in your IDE's classpath, 
+      ** otherwise running in hosted mode may fail.
+      *************************************************************************************************
+    </echo>
   </target>
 
+  <target name="gwt-dev.download" depends="install-ivy">
 
-  <!--=======================================================================
-	    cobertura.download
-	    
-	    Retrieves Cobertura jar via IVY
-	    ====================================================================-->
-  <target name="gwt-dev.download" depends="install-ivy" >
-    
-    <get src="http://repo1.maven.org/maven2/com/google/gwt/gwt-dev/1.5.2/gwt-dev-1.5.2-linux-libs.zip"
-             dest="${devlib.dir}/gwt-dev.zip"
-             usetimestamp="true" />
-        <unzip src="${devlib.dir}/gwt-dev.zip" dest="${devlib.dir}"/>
+    <property name="gwt-dev.classifier" value="windows" />
+
+    <condition property="gwt-dev.classifier" value="windows">
+      <os family="windows" />
+    </condition>
+    <condition property="gwt-dev.classifier" value="mac">
+      <os family="mac" />
+    </condition>
+    <condition property="gwt-dev.classifier" value="linux">
+      <os family="unix" />
+    </condition>
+
+    <property name="gwt-dev.revision" value="1.5.2" />
+    <property name="gwt-dev.zipfile" value="${devlib.dir}/gwt-dev-libs.zip" />
+    <property name="gwt-dev.jarfile" value="${devlib.dir}/gwt-dev-${gwt-dev.revision}.jar" />
+
+    <get src="http://repo1.maven.org/maven2/com/google/gwt/gwt-dev/1.5.2/gwt-dev-${gwt-dev.revision}-${gwt-dev.classifier}-libs.zip"
+         dest="${gwt-dev.zipfile}" />
+    <get src="http://repo1.maven.org/maven2/com/google/gwt/gwt-dev/1.5.2/gwt-dev-${gwt-dev.revision}-${gwt-dev.classifier}.jar"
+         dest="${gwt-dev.jarfile}" />
   </target>
-
-
-
 
 </project>
