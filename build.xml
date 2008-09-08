@@ -1,5 +1,5 @@
 <!--===========================================================================
-  This is the build file for the Pentaho BI Platform Engine Services project.
+  This is the build file for the Pentaho BI Platform Engine Core project.
   
   This build file will use the common_build.xml file as the default build
   process and should only override the tasks that need to differ from
@@ -7,30 +7,21 @@
   
   See common_build.xml for more details
 ============================================================================-->
-<project name="Pentaho Admin Console" basedir="." default="jar" xmlns:ivy="antlib:org.apache.ivy.ant">
-
-  <description>
-	  This build file is used to create the Engine Services project
-		and works with the common_build.xml file.
-	</description>
+<project name="Pentaho Open Admin Console" basedir="." default="jar" xmlns:ivy="antlib:org.apache.ivy.ant">
 
   <!-- Define the default location of the common build file -->
-  <property name="common.build.file"
-            value="./common_build.xml"
-            description="This is the location of the standardized common_build.xml file" />
+  <property name="gwt.common.build.file"
+            value="./gwt_common_build.xml"
+            description="This is the location of the standardized gwt_common_build.xml file" />
 
-  <!-- Import the common_build.xml file which contains all the default tasks -->
-  <import file="${common.build.file}" />
+  <!-- Import the gwt_common_build.xml file which contains all the default tasks -->
+  <import file="${gwt.common.build.file}" />
 
   <!--
       AS STATED ABOVE, THE ONLY TASKS THAT SHOULD EXIST IN THIS BUILD FILE ARE
       THE TASKS THAT NEED TO DIFFER FROM THE DEFAULT IMPLEMENTATION OF THE TASKS
       FOUND IN common_build.xml.
     -->
-
-  <property name="gwt.output.dir"
-            value="${bin.dir}/gwt/output"
-            description="Base directory that holds all gwt generated files" />
 
   <property name="build.jars.dir"
             value="${bin.dir}/jar-tmp"
@@ -42,52 +33,13 @@
     </fileset>
   </path>
 
-  <target name="resolve" depends="resolve-codegen,resolve-runtime">
-    <ant antfile="${common.build.file}" target="resolve" />
-  </target>
-
-  <target name="resolve-codegen" depends="resolve-codegen-linux,resolve-codegen-mac,resolve-codegen-win">
-    <ivy:retrieve conf="codegen" pattern="${lib.dir}/[module]-[revision].[ext]" />
-  </target>
-  <target name="resolve-codegen-linux" if="isLinux" depends="resolve-init">
-    <ivy:retrieve conf="codegen-linux" pattern="${lib.dir}/[module]-[revision].[ext]" />
-  </target>
-  <target name="resolve-codegen-mac" if="isMac" depends="resolve-init">
-    <ivy:retrieve conf="codegen-mac" pattern="${lib.dir}/[module]-[revision].[ext]" />
-  </target>
-  <target name="resolve-codegen-win" if="isWindows" depends="resolve-init">
-    <ivy:retrieve conf="codegen-win" pattern="${lib.dir}/[module]-[revision].[ext]" />
-  </target>
-
-  <target name="resolve-runtime" depends="resolve-init">
-    <ivy:retrieve conf="runtime" pattern="${lib.dir}/[module]-[revision].[ext]" />
-  </target>
-
   <target name="init">
     <mkdir dir="${build.jars.dir}" />
-    <ant antfile="${common.build.file}" target="init" />
+    <ant antfile="${gwt.common.build.file}" target="init" />
   </target>
 
-  <!--=======================================================================
-    Compiles Java source down to JavaScript
-    ====================================================================-->
-  <target name="compile-pac" description="GWTcompilation tasks">
-    <java classname="com.google.gwt.dev.GWTCompiler" fork="true" maxmemory="512M">
-      <classpath>
-        <path refid="classpath" />
-        <pathelement path="${src.dir}" />
-      </classpath>
-      <arg value="-out" />
-      <arg value="${gwt.output.dir}" />
-      <arg value="%*" />
-      <arg value="org.pentaho.pac.PentahoAdminConsole" />
-      <arg value="-logLevel" />
-      <arg value="TRACE" />
-    </java>
-  </target>
-
-  <target name="dist" depends="jar-console, jar-messages" description="create distribution">
-    <zip destfile="${dist.dir}/pentaho-open-admin-console-${project.revision}.zip">
+  <target name="gwt-package" depends="gwt-compile">
+    <zip destfile="${dist.dir}/${gwt.artifact.id}-${project.revision}.zip">
       <zipfileset dir="${build.jars.dir}" prefix="pentaho-open-admin-console/lib" />
       <zipfileset dir="lib" excludes="**/test/*" prefix="pentaho-open-admin-console/lib" />
       <zipfileset dir="${res.dir}/config" prefix="pentaho-open-admin-console/resource/config" />
@@ -98,12 +50,16 @@
     </zip>
   </target>
 
+  <target name="jar" depends="jar-console, jar-messages" description="Jars up the bin directory after a compile">
+    <ant antfile="${gwt.common.build.file}" target="jar" />
+  </target>
+
   <!-- =================================
         target: jar-console
 
         Jar the org/pentaho/pac package.
        ================================= -->
-  <target name="jar-console" depends="init,compile,compile-pac">
+  <target name="jar-console" depends="init,compile">
     <pathconvert property="class-path" pathsep=" " dirsep="/">
       <path refid="class.path">
       </path>
@@ -121,16 +77,15 @@
       </manifest>
       <fileset dir="${classes.dir}" />
       <fileset dir="${src.dir}" excludes="**/*.java" />
-      <fileset dir="${gwt.output.dir}" />
     </jar>
   </target>
 
 
   <!-- =================================
-		 target: jar-messages
+     target: jar-messages
 
-		 Jar the org/pentaho/pac/messages package.
-		 ================================= -->
+     Jar the org/pentaho/pac/messages package.
+     ================================= -->
   <target name="jar-messages" depends="init">
     <jar destfile="${build.jars.dir}/pentaho-open-admin-console-messages.jar">
       <manifest>
@@ -146,66 +101,6 @@
         <include name="**/i18n/*.properties" />
       </fileset>
     </jar>
-  </target>
-
-
-
-  <target name="jar-gwt-module" depends="jar-console, jar-messages" description="create module jar">
-    <jar destfile="${dist.dir}/pentaho-open-admin-module-${impl.version}.jar">
-      <manifest>
-        <attribute name="Implementation-Title" value="pentaho-open-admin-module" />
-        <attribute name="Implementation-Version" value="${project.revision}" />
-        <attribute name="Implementation-Vendor" value="${impl.vendor}" />
-        <attribute name="Implementation-ProductID" value="${impl.productID}" />
-      </manifest>
-      <fileset dir="${classes.dir}" />
-      <fileset dir="${src.dir}" />
-      <fileset dir="${res.dir}/config" />
-      <fileset dir="${res.dir}/hibernate" />
-    </jar>
-  </target>
-
-  <!--=======================================================================
-	    gwt-dev.install
-	    
-	    Downloads and installs gwt-dev jars and native libraries
-	    ====================================================================-->
-  <target name="install-gwt-dev" depends="gwt-dev.download" description="Installs gwt-dev jar and native libraries">
-    <unzip src="${gwt-dev.zipfile}" dest="${devlib.dir}" />
-    <delete file="${gwt-dev.zipfile}" />
-
-    <echo>
-      *************************************************************************************************
-      ** Gwt dev files have been installed to ${devlib.dir}.
-      ** Make sure ${gwt-dev.jarfile} 
-      ** appears before other jars in your IDE's classpath, 
-      ** otherwise running in hosted mode may fail.
-      *************************************************************************************************
-    </echo>
-  </target>
-
-  <target name="gwt-dev.download" depends="install-ivy">
-
-    <property name="gwt-dev.classifier" value="windows" />
-
-    <condition property="gwt-dev.classifier" value="windows">
-      <os family="windows" />
-    </condition>
-    <condition property="gwt-dev.classifier" value="mac">
-      <os family="mac" />
-    </condition>
-    <condition property="gwt-dev.classifier" value="linux">
-      <os family="unix" />
-    </condition>
-
-    <property name="gwt-dev.revision" value="1.5.2" />
-    <property name="gwt-dev.zipfile" value="${devlib.dir}/gwt-dev-libs.zip" />
-    <property name="gwt-dev.jarfile" value="${devlib.dir}/gwt-dev-${gwt-dev.revision}.jar" />
-
-    <get src="http://repo1.maven.org/maven2/com/google/gwt/gwt-dev/1.5.2/gwt-dev-${gwt-dev.revision}-${gwt-dev.classifier}-libs.zip"
-         dest="${gwt-dev.zipfile}" />
-    <get src="http://repo1.maven.org/maven2/com/google/gwt/gwt-dev/1.5.2/gwt-dev-${gwt-dev.revision}-${gwt-dev.classifier}.jar"
-         dest="${gwt-dev.jarfile}" />
   </target>
 
 </project>
