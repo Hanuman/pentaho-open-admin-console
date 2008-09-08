@@ -24,27 +24,43 @@
   <property name="gwt.output.dir"
             value="${bin.dir}/gwt/output"
             description="Base directory that holds all gwt generated files" />
+  <property name="gwt-dev.revision" value="1.5.2" description="The release of GWT-dev to download and install" />
+  <property name="gwt-dev.zipfile"
+            value="${devlib.dir}/gwt-dev-libs.zip"
+            description="The download location of the GWT-dev zip file" />
+  <property name="gwt-dev.jarfile"
+            value="${devlib.dir}/gwt-dev-${gwt-dev.revision}.jar"
+            description="The download location of the GWT-dev jar file" />
+  <property name="gwt.artifact.id" value="${ivy.artifact.id}" description="The name of the GWT package artifact" />
 
-  <property name="gwt-dev.revision" value="1.5.2" />
-  <property name="gwt-dev.zipfile" value="${devlib.dir}/gwt-dev-libs.zip" />
-  <property name="gwt-dev.jarfile" value="${devlib.dir}/gwt-dev-${gwt-dev.revision}.jar" />
-  
-  <property name="gwt.artifact.id" value="${ivy.artifact.id}" />
 
-  <target name="resolve" depends="resolve-codegen,resolve-runtime">
+  <!--=======================================================================
+      resolve (override)
+      
+      Override to include resolution of IVY codegen and runtime configurations
+      ====================================================================-->
+  <target name="resolve" depends="resolve-codegen,resolve-runtime" description="Resolves all IVY configurations">
     <ant antfile="${common.build.file}" target="resolve" />
   </target>
 
-  <target name="resolve-codegen" depends="resolve-init">
+
+  <!--=======================================================================
+      resolve-codgen (override)
+      
+      Override to use OS-specific IVY configurations
+      ====================================================================-->
+  <target name="resolve-codegen" depends="resolve-init" description="Resolves all OS-specific codegen configurations">
     <ivy:resolve file="ivy.xml" conf="codegen-${os.classifier}" />
     <ivy:retrieve conf="codegen-${os.classifier}" pattern="${lib.dir}/[module]-[revision].[ext]" />
   </target>
 
 
   <!--=======================================================================
-    Compiles Java source down to JavaScript
-    ====================================================================-->
-  <target name="gwt-compile" description="GWTcompilation tasks">
+      gwt-compile
+      
+      Performs GWT Compile which generates JavaScript
+      ====================================================================-->
+  <target name="gwt-compile" description="Perform GWT Compile">
     <java classname="com.google.gwt.dev.GWTCompiler" fork="true" maxmemory="512M">
       <classpath>
         <path refid="classpath" />
@@ -59,9 +75,21 @@
     </java>
   </target>
 
-  <target name="dist" depends="jar, gwt-package" />
 
-  <target name="gwt-package" depends="gwt-compile">
+  <!--=======================================================================
+      gwt-compile (override)
+      
+      Override to perform packaging of the GWT output
+      ====================================================================-->
+  <target name="dist" depends="jar, gwt-package" description="Creates distribution including GWT output" />
+
+
+  <!--=======================================================================
+      gwt-package
+      
+      Packages the GWT output
+      ====================================================================-->
+  <target name="gwt-package" depends="gwt-compile" description="Packages the GWT output">
     <zip destfile="${dist.dir}/${gwt.artifact.id}-${project.revision}.zip">
       <fileset dir="${gwt.output.dir}" excludes=".gwt-tmp" />
     </zip>
@@ -87,6 +115,12 @@
     </echo>
   </target>
 
+
+  <!--=======================================================================
+      gwt-dev.download
+      
+      Downloads GWT dev libraries if they don't already exist
+      ====================================================================-->
   <target name="gwt-dev.download" depends="install-ivy">
     <get src="http://repo1.maven.org/maven2/com/google/gwt/gwt-dev/1.5.2/gwt-dev-${gwt-dev.revision}-${os.classifier}-libs.zip"
          dest="${gwt-dev.zipfile}" />
