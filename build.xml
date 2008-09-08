@@ -46,7 +46,7 @@
     <ant antfile="${common.build.file}" target="resolve" />
   </target>
 
-  <target name="resolve-codegen" depends="resolve-codegen-linux,resolve-codegen-mac,resolve-codegen-windows">
+  <target name="resolve-codegen" depends="resolve-codegen-linux,resolve-codegen-mac,resolve-codegen-win">
     <ivy:retrieve conf="codegen" pattern="${lib.dir}/[module]-[revision].[ext]" />
   </target>
   <target name="resolve-codegen-linux" if="isLinux" depends="resolve-init">
@@ -55,8 +55,8 @@
   <target name="resolve-codegen-mac" if="isMac" depends="resolve-init">
     <ivy:retrieve conf="codegen-mac" pattern="${lib.dir}/[module]-[revision].[ext]" />
   </target>
-  <target name="resolve-codegen-windows" if="isWindows" depends="resolve-init">
-    <ivy:retrieve conf="codegen-windows" pattern="${lib.dir}/[module]-[revision].[ext]" />
+  <target name="resolve-codegen-win" if="isWindows" depends="resolve-init">
+    <ivy:retrieve conf="codegen-win" pattern="${lib.dir}/[module]-[revision].[ext]" />
   </target>
 
   <target name="resolve-debugtools"
