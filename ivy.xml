@@ -72,7 +72,6 @@
     </dependency>
     <dependency org="pentaho"         name="pentaho-bi-platform-util" rev="${dependency.bi-platform.revision}" conf="codegen,runtime->default" transitive="false" changing="true" />
     <dependency org="pentaho"         name="pentaho-bi-platform-engine-core" rev="${dependency.bi-platform.revision}" conf="codegen,runtime->default" transitive="false" changing="true" />
-    <dependency org="pentaho"         name="pentaho-gwt-filechooser" rev="${dependency.pentaho-gwt-filechooser.revision}" conf="codegen,runtime->default" changing="true" />
     <dependency org="pentaho"         name="pentaho-gwt-widgets" rev="${dependency.pentaho-gwt-widgets.revision}" conf="codegen,runtime->default" changing="true" />
     
     <dependency org="com.google.gwt" name="gwt-dev" rev="1.5.2" m:classifier="linux-libs" conf="debugtools-linux->default">
