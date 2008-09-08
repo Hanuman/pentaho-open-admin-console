@@ -1,0 +1,97 @@
+<!--===========================================================================
+  This is the build file for the Pentaho BI Platform Engine Services project.
+  
+  This build file will use the common_build.xml file as the default build
+  process and should only override the tasks that need to differ from
+  the common build file.
+  
+  See common_build.xml for more details
+============================================================================-->
+<project name="Pentaho GWT Common Build" basedir="." default="jar" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+  <description>
+    This is the common build for Pentaho GWT projects
+  </description>
+
+  <!-- Define the default location of the common build file -->
+  <property name="common.build.file"
+            value="./common_build.xml"
+            description="This is the location of the standardized common_build.xml file" />
+
+  <!-- Import the common_build.xml file which contains all the default tasks -->
+  <import file="${common.build.file}" />
+
+  <property name="gwt.output.dir"
+            value="${bin.dir}/gwt/output"
+            description="Base directory that holds all gwt generated files" />
+
+  <property name="gwt-dev.revision" value="1.5.2" />
+  <property name="gwt-dev.zipfile" value="${devlib.dir}/gwt-dev-libs.zip" />
+  <property name="gwt-dev.jarfile" value="${devlib.dir}/gwt-dev-${gwt-dev.revision}.jar" />
+  
+  <property name="gwt.artifact.id" value="${ivy.artifact.id}" />
+
+  <target name="resolve" depends="resolve-codegen,resolve-runtime">
+    <ant antfile="${common.build.file}" target="resolve" />
+  </target>
+
+  <target name="resolve-codegen" depends="resolve-init">
+    <ivy:resolve file="ivy.xml" conf="codegen-${os.classifier}" />
+    <ivy:retrieve conf="codegen-${os.classifier}" pattern="${lib.dir}/[module]-[revision].[ext]" />
+  </target>
+
+
+  <!--=======================================================================
+    Compiles Java source down to JavaScript
+    ====================================================================-->
+  <target name="gwt-compile" description="GWTcompilation tasks">
+    <java classname="com.google.gwt.dev.GWTCompiler" fork="true" maxmemory="512M">
+      <classpath>
+        <path refid="classpath" />
+        <pathelement path="${src.dir}" />
+      </classpath>
+      <arg value="-out" />
+      <arg value="${gwt.output.dir}" />
+      <arg value="%*" />
+      <arg value="${gwt-module.path}" />
+      <arg value="-logLevel" />
+      <arg value="TRACE" />
+    </java>
+  </target>
+
+  <target name="dist" depends="jar, gwt-package" />
+
+  <target name="gwt-package" depends="gwt-compile">
+    <zip destfile="${dist.dir}/${gwt.artifact.id}-${project.revision}.zip">
+      <fileset dir="${gwt.output.dir}" excludes=".gwt-tmp" />
+    </zip>
+  </target>
+
+
+  <!--=======================================================================
+      install-gwt-dev
+      
+      Downloads and installs gwt-dev jars and native libraries
+      ====================================================================-->
+  <target name="install-gwt-dev" depends="gwt-dev.download" description="Installs gwt-dev jar and native libraries">
+    <unzip src="${gwt-dev.zipfile}" dest="${devlib.dir}" />
+    <delete file="${gwt-dev.zipfile}" />
+
+    <echo>
+      *************************************************************************************************
+      ** Gwt dev files have been installed to ${devlib.dir}.
+      ** Make sure ${gwt-dev.jarfile} 
+      ** appears before other jars in your IDE's classpath, 
+      ** otherwise running in hosted mode may fail.
+      *************************************************************************************************
+    </echo>
+  </target>
+
+  <target name="gwt-dev.download" depends="install-ivy">
+    <get src="http://repo1.maven.org/maven2/com/google/gwt/gwt-dev/1.5.2/gwt-dev-${gwt-dev.revision}-${os.classifier}-libs.zip"
+         dest="${gwt-dev.zipfile}" />
+    <get src="http://repo1.maven.org/maven2/com/google/gwt/gwt-dev/1.5.2/gwt-dev-${gwt-dev.revision}-${os.classifier}.jar"
+         dest="${gwt-dev.jarfile}" />
+  </target>
+
+</project>
