@@ -186,6 +186,17 @@
   <condition property="isMac">
     <os family="mac" />
   </condition>
+  
+  <condition property="os.classifier" value="win">
+    <os family="windows" />
+  </condition>
+  <condition property="os.classifier" value="mac">
+    <os family="mac" />
+  </condition>
+  <condition property="os.classifier" value="linux">
+    <os family="unix" />
+  </condition>
+  <property name="os.classifier" value="unsupported"/>
 
   <!-- Setup the compile classpath -->
   <path id="classpath">
@@ -368,6 +379,16 @@
   <target name="resolve-test" depends="resolve-init" description="Retrieves test configuration dependencies">
     <ivy:resolve file="ivy.xml" conf="test" />
     <ivy:retrieve conf="test" pattern="${testlib.dir}/[module]-[revision].[ext]" />
+  </target>
+
+  <target name="resolve-codegen" depends="resolve-init">
+    <ivy:resolve file="ivy.xml" conf="codegen" />
+    <ivy:retrieve conf="codegen" pattern="${lib.dir}/[module]-[revision].[ext]" />
+  </target>
+
+  <target name="resolve-runtime" depends="resolve-init">
+    <ivy:resolve file="ivy.xml" conf="runtime" />
+    <ivy:retrieve conf="runtime" pattern="${lib.dir}/[module]-[revision].[ext]" />
   </target>
 
 
@@ -885,8 +906,8 @@
   <target name="continuous"
           depends="clean-all,resolve,cobertura,dist-javadoc,dist-source,dist"
           description="Runs a typical continuous integration build" />
-  
-  
+
+
   <!--=======================================================================
 	    continuous-testless
 	    
