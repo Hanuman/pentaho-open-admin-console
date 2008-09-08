@@ -1,6 +1,6 @@
 package org.pentaho.pac.client.scheduler.view;
 
-import org.pentaho.gwt.filechooser.client.FileChooser;
+import org.pentaho.gwt.widgets.client.filechooser.FileChooser;
 
 import com.google.gwt.xml.client.Document;
 

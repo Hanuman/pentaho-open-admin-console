@@ -3,9 +3,8 @@ package org.pentaho.pac.client.scheduler.ctlr;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.pentaho.gwt.filechooser.client.FileChooserListener;
-import org.pentaho.gwt.widgets.client.controls.ProgressPopupPanel;
 import org.pentaho.gwt.widgets.client.controls.TableEditor;
+import org.pentaho.gwt.widgets.client.filechooser.FileChooserListener;
 import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.gwt.widgets.client.utils.StringUtils;
 import org.pentaho.pac.client.PacServiceFactory;
