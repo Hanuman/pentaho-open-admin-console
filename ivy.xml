@@ -6,9 +6,9 @@
     <conf name="runtime" visibility="public"/>
     <conf name="test" visibility="private" />
     <conf name="codegen" visibility="private" />
-    <conf name="codegen-linux" visibility="private" />
-    <conf name="codegen-mac" visibility="private" />
-    <conf name="codegen-win" visibility="private" />
+    <conf name="codegen-linux" extends="codegen" visibility="private" />
+    <conf name="codegen-mac" extends="codegen" visibility="private" />
+    <conf name="codegen-win" extends="codegen" visibility="private" />
   </configurations>
   
   <dependencies defaultconf="default->default">
