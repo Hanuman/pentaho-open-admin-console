@@ -42,7 +42,7 @@
     </fileset>
   </path>
 
-  <target name="resolve" depends="resolve-codegen,resolve-debugtools,resolve-runtime">
+  <target name="resolve" depends="resolve-codegen,resolve-runtime">
     <ant antfile="${common.build.file}" target="resolve" />
   </target>
 
@@ -57,18 +57,6 @@
   </target>
   <target name="resolve-codegen-win" if="isWindows" depends="resolve-init">
     <ivy:retrieve conf="codegen-win" pattern="${lib.dir}/[module]-[revision].[ext]" />
-  </target>
-
-  <target name="resolve-debugtools"
-          depends="resolve-debugtools-linux,resolve-debugtools-mac,resolve-debugtools-windows" />
-  <target name="resolve-debugtools-linux" if="isLinux" depends="resolve-init">
-    <ivy:retrieve conf="debugtools-linux" pattern="${lib.dir}/[module]-[revision].[ext]" />
-  </target>
-  <target name="resolve-debugtools-mac" if="isMac" depends="resolve-init">
-    <ivy:retrieve conf="debugtools-mac" pattern="${lib.dir}/[module]-[revision].[ext]" />
-  </target>
-  <target name="resolve-debugtools-windows" if="isWindows" depends="resolve-init">
-    <ivy:retrieve conf="debugtools-windows" pattern="${lib.dir}/[module]-[revision].[ext]" />
   </target>
 
   <target name="resolve-runtime" depends="resolve-init">
