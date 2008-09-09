@@ -22,6 +22,7 @@
             value="${bin.dir}/gwt/output"
             description="Base directory that holds all gwt generated files" />
   <property name="gwt-dev.revision" value="1.5.2" description="The release of GWT-dev to download and install" />
+	<property name="gwt-log-level" value="INFO" description="The log level for GWT Compile"/>
   <property name="gwt-dev.zipfile"
             value="${devlib.dir}/gwt-dev-libs.zip"
             description="The download location of the GWT-dev zip file" />
@@ -68,15 +69,15 @@
       <arg value="%*" />
       <arg value="${gwt-module.path}" />
       <arg value="-logLevel" />
-      <arg value="TRACE" />
+      <arg value="${gwt-log-level}" />
     </java>
   </target>
 
 
   <!--=======================================================================
-      gwt-compile (override)
+      dist
       
-      Override to perform packaging of the GWT output
+      Defines the default distribution process
       ====================================================================-->
   <target name="dist" depends="jar, gwt-package" description="Creates distribution including GWT output" />
 
@@ -87,8 +88,9 @@
       Packages the GWT output
       ====================================================================-->
   <target name="gwt-package" depends="gwt-compile" description="Packages the GWT output">
-    <zip destfile="${dist.dir}/${gwt.artifact.id}-${project.revision}.zip">
-      <fileset dir="${gwt.output.dir}" excludes=".gwt-tmp" />
+    <zip destfile="${dist.dir}/${gwt.artifact.id}-${project.revision}.zip" basedir="${gwt.output.dir}" compress="true">
+    	<exclude name=".gwt-tmp/"/>
+    	<exclude name="*-aux/"/>
     </zip>
   </target>
 
