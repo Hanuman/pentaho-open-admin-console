@@ -132,7 +132,7 @@
 	    Publishes jar and gwt zip package locally
 	    ====================================================================-->
   <target name="publish-local-nojar" depends="install-ivy" description="Publishes the jar file to the local repository">
-    <!--ant antfile="${common.build.file}" target="publish-local-nojar" /-->
+    <ant antfile="${common.build.file}" target="publish-local-nojar" />
     <ivy:resolve file="${gwt.package.artifact.ivyfile}" />
     <ivy:publish resolver="local" pubrevision="${project.revision}" overwrite="true" forcedeliver="true">
       <artifacts pattern="${dist.dir}/[artifact]-[revision].[ext]" />
