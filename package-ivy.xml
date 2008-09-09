@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ivy-module version="2.0" xmlns:m="http://ant.apache.org/ivy/maven">
-  <info organisation="pentaho" module="${gwt.artifact.id}-package" revision="${project.revision}" />
+  <info organisation="pentaho" module="${gwt.package.artifact.id}-package" revision="${project.revision}" />
   <configurations>
     <conf name="default" />
     <conf name="runtime" visibility="public" />
@@ -12,7 +12,7 @@
   </configurations>
   
   <publications>
-    <artifact name="${gwt.artifact.id}-package" type="zip" />
+    <artifact name="${gwt.package.artifact.id}-package" type="zip" />
   </publications>
   
   <dependencies defaultconf="default->default">

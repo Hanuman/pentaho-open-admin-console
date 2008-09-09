@@ -39,7 +39,7 @@
   </target>
 
   <target name="gwt-package" depends="gwt-compile">
-    <zip destfile="${gwt.package.zipfile}">
+    <zip destfile="${gwt.package.zipfile}" compress="true">
       <zipfileset dir="${build.jars.dir}" prefix="pentaho-open-admin-console/lib" />
       <zipfileset file="${dist.dir}/${ivy.artifact.id}-${project.revision}.jar"
                   prefix="pentaho-open-admin-console/lib" />
