@@ -22,7 +22,7 @@
             value="${bin.dir}/gwt/output"
             description="Base directory that holds all gwt generated files" />
   <property name="gwt-dev.revision" value="1.5.2" description="The release of GWT-dev to download and install" />
-	<property name="gwt-log-level" value="INFO" description="The log level for GWT Compile"/>
+  <property name="gwt-log-level" value="INFO" description="The log level for GWT Compile" />
   <property name="gwt-dev.zipfile"
             value="${devlib.dir}/gwt-dev-libs.zip"
             description="The download location of the GWT-dev zip file" />
@@ -89,8 +89,8 @@
       ====================================================================-->
   <target name="gwt-package" depends="gwt-compile" description="Packages the GWT output">
     <zip destfile="${dist.dir}/${gwt.artifact.id}-${project.revision}.zip" basedir="${gwt.output.dir}" compress="true">
-    	<exclude name=".gwt-tmp/"/>
-    	<exclude name="*-aux/"/>
+      <exclude name=".gwt-tmp/" />
+      <exclude name="*-aux/" />
     </zip>
   </target>
 
@@ -121,9 +121,19 @@
       Downloads GWT dev libraries if they don't already exist
       ====================================================================-->
   <target name="gwt-dev.download" depends="install-ivy">
-    <get src="http://repo1.maven.org/maven2/com/google/gwt/gwt-dev/1.5.2/gwt-dev-${gwt-dev.revision}-${os.classifier}-libs.zip"
+    <condition property="maven.classifier" value="windows">
+      <isset property="isWindows" />
+    </condition>
+    <condition property="maven.classifier" value="linux">
+      <isset property="isLinux" />
+    </condition>
+    <condition property="maven.classifier" value="mac">
+      <isset property="isMac" />
+    </condition>
+
+    <get src="http://repo1.maven.org/maven2/com/google/gwt/gwt-dev/1.5.2/gwt-dev-${gwt-dev.revision}-${maven.classifier}-libs.zip"
          dest="${gwt-dev.zipfile}" />
-    <get src="http://repo1.maven.org/maven2/com/google/gwt/gwt-dev/1.5.2/gwt-dev-${gwt-dev.revision}-${os.classifier}.jar"
+    <get src="http://repo1.maven.org/maven2/com/google/gwt/gwt-dev/1.5.2/gwt-dev-${gwt-dev.revision}-${maven.classifier}.jar"
          dest="${gwt-dev.jarfile}" />
   </target>
 
