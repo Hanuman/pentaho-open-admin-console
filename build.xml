@@ -41,11 +41,15 @@
   <target name="gwt-package" depends="gwt-compile">
     <zip destfile="${dist.dir}/${gwt.artifact.id}-${project.revision}.zip">
       <zipfileset dir="${build.jars.dir}" prefix="pentaho-open-admin-console/lib" />
-      <zipfileset file="${dist.dir}/${ivy.artifact.id}-${project.revision}.jar" prefix="pentaho-open-admin-console/lib" />
+      <zipfileset file="${dist.dir}/${ivy.artifact.id}-${project.revision}.jar"
+                  prefix="pentaho-open-admin-console/lib" />
       <zipfileset dir="lib" excludes="**/test/*" prefix="pentaho-open-admin-console/lib" />
       <zipfileset dir="${res.dir}/config" prefix="pentaho-open-admin-console/resource/config" />
       <zipfileset dir="${res.dir}/hibernate" prefix="pentaho-open-admin-console/resource/hibernate" />
-      <zipfileset dir="${gwt.output.dir}" prefix="pentaho-open-admin-console/www" />
+      <zipfileset dir="${gwt.output.dir}" prefix="pentaho-open-admin-console/www">
+        <exclude name=".gwt-tmp/" />
+        <exclude name="*-aux/" />
+      </zipfileset>
       <zipfileset dir="build-res" includes="*.bat" prefix="pentaho-open-admin-console" />
       <zipfileset dir="build-res" includes="*.sh" prefix="pentaho-open-admin-console" />
     </zip>
