@@ -30,6 +30,9 @@
             value="${devlib.dir}/gwt-dev-${gwt-dev.revision}.jar"
             description="The download location of the GWT-dev jar file" />
   <property name="gwt.artifact.id" value="${ivy.artifact.id}" description="The name of the GWT package artifact" />
+  <property name="package.artifact.ivypathname" value="${basedir}/package-ivy.xml" />
+  <property name="package.artifact.pompathname" value="${dist.dir}/package-pom.xml" />
+  <property name="gwt.package.zipfile" value="${dist.dir}/${gwt.artifact.id}-${project.revision}-package.zip" />
 
 
   <!--=======================================================================
@@ -83,12 +86,53 @@
 
 
   <!--=======================================================================
+	    create-pom
+	    
+	    Creates the POM file for publishing the jar file to a Maven2 repository.
+	    ====================================================================-->
+  <target name="create-pom" depends="install-ivy" description="Creates a POM file based on the ivy dependencies">
+    <ant antfile="${common.build.file}" target="create-pom" />
+    <antcall target="create-package-pom" />
+  </target>
+
+
+  <!--=======================================================================
+	    create-package-pom
+	    
+	    Creates a POM file based on the ivy dependencies for a separate package
+	    ====================================================================-->
+  <target name="create-package-pom"
+          depends="install-ivy"
+          description="Creates a POM file based on the ivy dependencies for a separate package">
+    <ivy:makepom ivyfile="${package.artifact.ivypathname}" pomfile="${package.artifact.pompathname}" />
+    <replace file="${package.artifact.pompathname}" token="jar" value="zip" />
+  </target>
+
+
+  <!--=======================================================================
+	    publish-pentaho-nojar
+	    
+	    Publishes the jar file for this project to a Maven2 repository.
+	    ====================================================================-->
+  <target name="publish-pentaho-nojar"
+          depends="install-antcontrib,create-pom,ivy.deliver"
+          description="Publishes the jar file to a Maven2 repository">
+    <ant antfile="${common.build.file}" target="publish-pentaho-nojar" />
+
+    <antcall target="maven-publish-artifact">
+      <param name="publish.pomFile" value="${ivy.artifact.pomfile}" />
+      <param name="publish.file" value="${gwt.package.zipfile}" />
+    </antcall>
+  </target>
+
+
+  <!--=======================================================================
       gwt-package
       
       Packages the GWT output
       ====================================================================-->
   <target name="gwt-package" depends="gwt-compile" description="Packages the GWT output">
-    <zip destfile="${dist.dir}/${gwt.artifact.id}-${project.revision}.zip" basedir="${gwt.output.dir}" compress="true">
+    <zip destfile="${gwt.package.zipfile}" basedir="${gwt.output.dir}" compress="true">
       <exclude name=".gwt-tmp/" />
       <exclude name="*-aux/" />
     </zip>

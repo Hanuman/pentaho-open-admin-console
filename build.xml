@@ -39,7 +39,7 @@
   </target>
 
   <target name="gwt-package" depends="gwt-compile">
-    <zip destfile="${dist.dir}/${gwt.artifact.id}-${project.revision}.zip">
+    <zip destfile="${gwt.package.zipfile}">
       <zipfileset dir="${build.jars.dir}" prefix="pentaho-open-admin-console/lib" />
       <zipfileset file="${dist.dir}/${ivy.artifact.id}-${project.revision}.jar"
                   prefix="pentaho-open-admin-console/lib" />
@@ -55,10 +55,17 @@
     </zip>
   </target>
 
+  
+  <!-- =================================
+        jar (override)
+
+        creates all OAC jars
+       ================================= -->
   <target name="jar" depends="jar-console, jar-messages" description="Jars up the bin directory after a compile">
     <ant antfile="${gwt.common.build.file}" target="jar" />
   </target>
 
+  
   <!-- =================================
         target: jar-console
 
