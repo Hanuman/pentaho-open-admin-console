@@ -29,10 +29,10 @@
   <property name="gwt-dev.jarfile"
             value="${devlib.dir}/gwt-dev-${gwt-dev.revision}.jar"
             description="The download location of the GWT-dev jar file" />
-  <property name="gwt.artifact.id" value="${ivy.artifact.id}" description="The name of the GWT package artifact" />
+  <property name="gwt.artifact.id" value="${ivy.artifact.id}-package" description="The name of the GWT package artifact" />
   <property name="package.artifact.ivypathname" value="${basedir}/package-ivy.xml" />
   <property name="package.artifact.pompathname" value="${dist.dir}/package-pom.xml" />
-  <property name="gwt.package.zipfile" value="${dist.dir}/${gwt.artifact.id}-${project.revision}-package.zip" />
+  <property name="gwt.package.zipfile" value="${dist.dir}/${gwt.artifact.id}-${project.revision}.zip" />
 
 
   <!--=======================================================================
