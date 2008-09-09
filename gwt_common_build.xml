@@ -120,7 +120,7 @@
       
       Downloads GWT dev libraries if they don't already exist
       ====================================================================-->
-  <target name="gwt-dev.download" depends="install-ivy">
+  <target name="gwt-dev.download" depends="install-ivy,init">
     <condition property="maven.classifier" value="windows">
       <isset property="isWindows" />
     </condition>
