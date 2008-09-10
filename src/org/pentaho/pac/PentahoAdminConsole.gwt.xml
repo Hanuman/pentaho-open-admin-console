@@ -7,7 +7,6 @@
 	<inherits name="org.pentaho.pac.SubscriptionServiceModule"/>
 	<inherits name="org.pentaho.pac.SolutionRepositoryServiceModule"/>
 	<inherits name="org.pentaho.gwt.widgets.Widgets"/>
-	<inherits name="org.pentaho.gwt.filechooser.FileChooser"/>
 	<inherits name="org.hanson.gwt.widgets/WidgetLibrary"/>
 
     	<!-- 
