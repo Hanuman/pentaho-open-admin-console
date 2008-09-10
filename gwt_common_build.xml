@@ -93,7 +93,7 @@
           depends="gwt-compile.check"
           unless="gwtBuild.notRequired"
           description="Perform GWT Compile">
-    <java classname="com.google.gwt.dev.GWTCompiler" fork="true" maxmemory="512M">
+    <java classname="com.google.gwt.dev.GWTCompiler" fork="true" failonerror="true" maxmemory="512M">
       <classpath>
         <path refid="classpath" />
         <pathelement path="${src.dir}" />
