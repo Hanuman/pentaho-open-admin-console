@@ -29,10 +29,38 @@
   <property name="gwt-dev.jarfile"
             value="${devlib.dir}/gwt-dev-${gwt-dev.revision}.jar"
             description="The download location of the GWT-dev jar file" />
-  <property name="gwt.package.artifact.id" value="${ivy.artifact.id}-package" description="The name of the GWT package artifact" />
+  <property name="gwt.package.artifact.id"
+            value="${ivy.artifact.id}-package"
+            description="The name of the GWT package artifact" />
   <property name="gwt.package.artifact.ivyfile" value="${basedir}/package-ivy.xml" />
   <property name="gwt.package.artifact.pomfile" value="${dist.dir}/package-pom.xml" />
   <property name="gwt.package.zipfile" value="${dist.dir}/${gwt.package.artifact.id}-${project.revision}.zip" />
+  <property name="codegenlib.dir"
+            value="${basedir}/codegen-lib"
+            description="Location of the libraries needed for code generation" />
+
+
+  <!--=======================================================================
+	    init (override)
+	    
+	    ====================================================================-->
+  <target name="init" description="Initializes the build process">
+    <mkdir dir="${codegenlib.dir}" />
+    <ant antfile="${common.build.file}" target="init" />
+  </target>
+
+
+
+  <!--=======================================================================
+	    clean (override)
+	    
+	    Removes all the files generated from the build process.
+	    ====================================================================-->
+  <target name="clean"
+          description="Cleans all the files generated from a build with the exception of IVY-downloaded jars (see clean-all)">
+    <ant antfile="${common.build.file}" target="clean" />
+    <delete file=".gwtBuild" />
+  </target>
 
 
   <!--=======================================================================
@@ -52,7 +80,7 @@
       ====================================================================-->
   <target name="resolve-codegen" depends="resolve-init" description="Resolves all OS-specific codegen configurations">
     <ivy:resolve file="ivy.xml" conf="codegen-${os.classifier}" />
-    <ivy:retrieve conf="codegen-${os.classifier}" pattern="${lib.dir}/[module]-[revision].[ext]" />
+    <ivy:retrieve conf="codegen-${os.classifier}" pattern="${codegenlib.dir}/[module]-[revision].[ext]" />
   </target>
 
 
@@ -61,7 +89,10 @@
       
       Performs GWT Compile which generates JavaScript
       ====================================================================-->
-  <target name="gwt-compile" description="Perform GWT Compile">
+  <target name="gwt-compile"
+          depends="gwt-compile.check"
+          unless="gwtBuild.notRequired"
+          description="Perform GWT Compile">
     <java classname="com.google.gwt.dev.GWTCompiler" fork="true" maxmemory="512M">
       <classpath>
         <path refid="classpath" />
@@ -74,6 +105,20 @@
       <arg value="-logLevel" />
       <arg value="${gwt-log-level}" />
     </java>
+    <touch file=".gwtBuild" />
+  </target>
+
+  
+  <!--=======================================================================
+      gwt-compile.check
+      
+      Detects changes in source since the last gwt-compile and sets a flag
+      so gwt-compile can skip when nothing has changed
+      ====================================================================-->
+  <target name="gwt-compile.check">
+    <uptodate property="gwtBuild.notRequired" targetfile=".gwtBuild">
+      <srcfiles dir="${src.dir}" />
+    </uptodate>
   </target>
 
 
@@ -125,7 +170,7 @@
     </antcall>
   </target>
 
-  
+
   <!--=======================================================================
 	    publish-local-nojar (override)
 	    
