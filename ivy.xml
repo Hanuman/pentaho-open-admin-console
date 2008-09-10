@@ -91,7 +91,8 @@
     <dependency org="org.mortbay.jetty"   name="jetty-gwt" rev="6.1.9" conf="runtime->default" >  
           <exclude org="org.mortbay.jetty" name="jetty-util" />
           <exclude org="javax.servlet" name="servlet-api" />
-          <exclude org="com.google.gwt" />
+<!--          jetty is getting older versions of gwt jars-->
+          <exclude org="com.google.gwt" /> 
     </dependency>  
     <dependency org="jboss"               name="javassist" rev="3.4.ga" conf="runtime->default" />    
     <dependency org="antlr"               name="antlr" rev="2.7.6" conf="runtime->default" />    
