@@ -59,7 +59,7 @@
   <target name="clean"
           description="Cleans all the files generated from a build with the exception of IVY-downloaded jars (see clean-all)">
     <ant antfile="${common.build.file}" target="clean" />
-    <delete file=".gwtBuild" />
+    <delete file="${bin.dir}/.gwtBuild*" />
   </target>
 
 
@@ -105,7 +105,7 @@
       <arg value="-logLevel" />
       <arg value="${gwt-log-level}" />
     </java>
-    <touch file=".gwtBuild" />
+    <touch file="${bin.dir}/.gwtBuild-${gwt-module.path}" />
   </target>
 
   
@@ -116,7 +116,7 @@
       so gwt-compile can skip when nothing has changed
       ====================================================================-->
   <target name="gwt-compile.check">
-    <uptodate property="gwtBuild.notRequired" targetfile=".gwtBuild">
+    <uptodate property="gwtBuild.notRequired" targetfile="${bin.dir}/.gwtBuild-${gwt-module.path}">
       <srcfiles dir="${src.dir}" />
     </uptodate>
   </target>
