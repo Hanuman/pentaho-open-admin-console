@@ -43,7 +43,11 @@
       <zipfileset dir="${build.jars.dir}" prefix="pentaho-open-admin-console/lib" />
       <zipfileset file="${dist.dir}/${ivy.artifact.id}-${project.revision}.jar"
                   prefix="pentaho-open-admin-console/lib" />
-      <zipfileset dir="lib" excludes="**/test/*" prefix="pentaho-open-admin-console/lib" />
+      <zipfileset dir="lib" excludes="**/test/*" prefix="pentaho-open-admin-console/lib">
+        <!-- temporary fix to exclude jar slipping through the cracks and making it this far that shouldn't -->
+        <exclude name="**/gwt-user*.jar" />
+        <exclude name="**/gwt-dev*.jar" />
+      </zipfileset>
       <zipfileset dir="${res.dir}/config" prefix="pentaho-open-admin-console/resource/config" />
       <zipfileset dir="${res.dir}/hibernate" prefix="pentaho-open-admin-console/resource/hibernate" />
       <zipfileset dir="${gwt.output.dir}" prefix="pentaho-open-admin-console/www">
@@ -55,7 +59,7 @@
     </zip>
   </target>
 
-  
+
   <!-- =================================
         jar (override)
 
@@ -65,7 +69,7 @@
     <ant antfile="${gwt.common.build.file}" target="jar" />
   </target>
 
-  
+
   <!-- =================================
         target: jar-console
 
