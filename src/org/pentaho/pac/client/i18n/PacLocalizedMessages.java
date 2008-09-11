@@ -1990,4 +1990,12 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key errorInitializingPacService
    */  
   String errorInitializingPacService();
+  
+  /**
+   * Translated "Could not add default roles.".
+   * 
+   * @return translated "Could not add default roles"
+   * @gwt.key addDefaultRolesFailed
+   */  
+  String addDefaultRolesFailed();
 }

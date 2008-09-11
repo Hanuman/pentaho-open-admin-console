@@ -19,7 +19,10 @@ package org.pentaho.pac.server.common;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -64,6 +67,8 @@ public class AppConfigProperties {
   public static final String KEY_PASSWORD_SERVICE_CLASS = "password-service-class"; //$NON-NLS-1$
  
   public static final String KEY_SOLUTION_PATH = "solution-path"; //$NON-NLS-1$
+  
+  public static final String KEY_DEFAULT_ROLES = "default-roles"; //$NON-NLS-1$
 
   public static final String KEY_HIBERNATE_CONFIG_PATH = "hibernate-config-path"; //$NON-NLS-1$
 
@@ -186,6 +191,29 @@ public class AppConfigProperties {
     return settings.getSystemSetting(KEY_BISERVER_STATUS_CHECK_PERIOD, DEFAULT_BISERVER_STATUS_CHECK_PERIOD);
   }
 
+  /**
+   * Returns a comma-separated list of roles to apply to newly created users.
+   */
+  public String getDefaultRolesString() {
+    return settings.getSystemSetting(KEY_DEFAULT_ROLES, null);
+  }
+  
+  /**
+   * Convenience wrapper around getDefaultRolesString that parses the default roles string into individual roles.
+   */
+  public List<String> getDefaultRoles() {
+    List<String> defaultRoles = new ArrayList<String>();
+    String defaultRolesString = getDefaultRolesString();
+    if (defaultRolesString == null) {
+      return Collections.emptyList();
+    }
+    StringTokenizer tokenizer = new StringTokenizer(defaultRolesString, ","); //$NON-NLS-1$
+    while (tokenizer.hasMoreTokens()) {
+      defaultRoles.add(tokenizer.nextToken());
+    }
+    return defaultRoles;
+  }
+  
   public String getHomepageTimeout() {
     return settings.getSystemSetting(KEY_HOMEPAGE_TIMEOUT, DEFAULT_HOMEPAGE_TIMEOUT);
   }

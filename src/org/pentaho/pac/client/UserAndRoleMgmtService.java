@@ -302,4 +302,12 @@ public class UserAndRoleMgmtService {
     };
     PacServiceFactory.getPacService().setRoles(user, assignedRoles, innerCallback);
   }
+  
+  public ProxyPentahoRole[] getDefaultRoles() {
+    ProxyPentahoRole[] roles = new ProxyPentahoRole[0];
+    if (userRoleSecurityInfo != null) {
+      return userRoleSecurityInfo.getDefaultRoles().toArray(new ProxyPentahoRole[0]);
+    }
+    return roles;
+  }
 }

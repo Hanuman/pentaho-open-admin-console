@@ -35,6 +35,8 @@ public class UserRoleSecurityInfo implements Serializable {
   
   List<UserToRoleAssignment> assignments = new ArrayList<UserToRoleAssignment>();
   
+  List<ProxyPentahoRole> defaultRoles = new ArrayList<ProxyPentahoRole>();
+  
   public UserRoleSecurityInfo() {
     
   }
@@ -49,5 +51,9 @@ public class UserRoleSecurityInfo implements Serializable {
   
   public List<UserToRoleAssignment> getAssignments() {
     return assignments;
+  }
+  
+  public List<ProxyPentahoRole> getDefaultRoles() {
+    return defaultRoles;
   }
 }

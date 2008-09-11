@@ -6,4 +6,6 @@
   <solution-path></solution-path>
   <war-path></war-path>
   <jdbc-drivers-path></jdbc-drivers-path>  
+  <!-- comma separated list of roles (no spaces) -->  
+  <default-roles>Authenticated</default-roles>
 </console>

@@ -410,6 +410,10 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
       usersList.addObject(newUser);
       usersList.setSelectedObject(newUser);
       userSelectionChanged();
+      // default roles might have been added; update assigned roles list
+      List<ProxyPentahoRole> roleList = Arrays.asList(UserAndRoleMgmtService.instance().getRoles(newUser));
+      assignedRolesList.setObjects(roleList);
+      assignedRoleSelectionChanged();
     } else if ((sender == roleAssignmentsDialog) && roleAssignmentsDialog.getRoleAssignmentsModified()) {
       List<ProxyPentahoRole>roleList = Arrays.asList(UserAndRoleMgmtService.instance().getRoles(roleAssignmentsDialog.getUser()));
       assignedRolesList.setObjects(roleList);

@@ -105,6 +105,15 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
         }
       }
       userRoleSecurityInfo.getRoles().addAll(Arrays.asList(getRoles()));
+      
+      // add default roles
+      List<ProxyPentahoRole> defaultRoles = new ArrayList<ProxyPentahoRole>();
+      List<String> defaultRoleStrings = AppConfigProperties.getInstance().getDefaultRoles();
+      for (String defaultRoleString : defaultRoleStrings) {
+        defaultRoles.add(new ProxyPentahoRole(defaultRoleString));
+      }
+      userRoleSecurityInfo.getDefaultRoles().addAll(defaultRoles);
+      
     } catch (DAOException e) {
       throw new PacServiceException(
           Messages.getString("PacService.FAILED_TO_GET_USER_NAME" ), e ); //$NON-NLS-1$

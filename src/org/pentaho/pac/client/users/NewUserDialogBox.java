@@ -5,6 +5,7 @@ import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.common.PentahoSecurityException;
+import org.pentaho.pac.common.roles.ProxyPentahoRole;
 import org.pentaho.pac.common.users.DuplicateUserException;
 import org.pentaho.pac.common.users.ProxyPentahoUser;
 
@@ -91,14 +92,30 @@ public class NewUserDialogBox extends ConfirmDialog {
       messageDialog.setMessage(MSGS.passwordConfirmationFailed());
       messageDialog.center();
     } else {
-      ProxyPentahoUser user = getUser();
+      final ProxyPentahoUser user = getUser();
       if (user != null) {
         AsyncCallback callback = new AsyncCallback() {
           public void onSuccess(Object result) {
             okBtn.setEnabled(true);
             cancelBtn.setEnabled(true);
             userCreated = true;
-            hide();
+            
+            // begin default roles
+            ProxyPentahoRole[] defaultRoles = UserAndRoleMgmtService.instance().getDefaultRoles();
+            UserAndRoleMgmtService.instance().setRoles(user, defaultRoles, new AsyncCallback<Object>() {
+
+              public void onSuccess(Object result) {
+                hide();
+              }
+              
+              public void onFailure(Throwable caught) {
+                messageDialog.setMessage(MSGS.addDefaultRolesFailed());
+                messageDialog.center();
+              }
+            });
+            
+            // end default roles
+          
           }
 
           public void onFailure(Throwable caught) {
