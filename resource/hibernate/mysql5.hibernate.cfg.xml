@@ -19,6 +19,6 @@
     <property name="connection.pool_size">10</property>
     <property name="show_sql">true</property>
     <property name="hibernate.jdbc.use_streams_for_binary">true</property>
-    <mapping resource="mysql5.hbm.xml" />    
+    <mapping resource="hibernate/mysql5.hbm.xml" />    
   </session-factory>
 </hibernate-configuration>
