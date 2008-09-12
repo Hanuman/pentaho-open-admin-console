@@ -26,6 +26,9 @@
   <property name="build.jars.dir"
             value="${bin.dir}/jar-tmp"
             description="Temp directory to hold jars originating from the build" />
+	<property name="admin-console.name"
+						value="administration-console"
+						description="The name of the administration console's directory"/>
 
   <path id="oac.classpath">
     <fileset dir="lib">
@@ -40,22 +43,22 @@
 
   <target name="gwt-package" depends="gwt-compile">
     <zip destfile="${gwt.package.zipfile}" compress="true">
-      <zipfileset dir="${build.jars.dir}" prefix="pentaho-open-admin-console/lib" />
+      <zipfileset dir="${build.jars.dir}" prefix="${admin-console.name}/lib" />
       <zipfileset file="${dist.dir}/${ivy.artifact.id}-${project.revision}.jar"
-                  prefix="pentaho-open-admin-console/lib" />
-      <zipfileset dir="lib" excludes="**/test/*" prefix="pentaho-open-admin-console/lib">
+                  prefix="${admin-console.name}/lib" />
+      <zipfileset dir="lib" excludes="**/test/*" prefix="${admin-console.name}/lib">
         <!-- temporary fix to exclude jar slipping through the cracks and making it this far that shouldn't -->
         <exclude name="**/gwt-user*.jar" />
         <exclude name="**/gwt-dev*.jar" />
       </zipfileset>
-      <zipfileset dir="${res.dir}/config" prefix="pentaho-open-admin-console/resource/config" />
-      <zipfileset dir="${res.dir}/hibernate" prefix="pentaho-open-admin-console/resource/hibernate" />
-      <zipfileset dir="${gwt.output.dir}" prefix="pentaho-open-admin-console/www">
+      <zipfileset dir="${res.dir}/config" prefix="${admin-console.name}/resource/config" />
+      <zipfileset dir="${res.dir}/hibernate" prefix="${admin-console.name}/resource/hibernate" />
+      <zipfileset dir="${gwt.output.dir}" prefix="${admin-console.name}/www">
         <exclude name=".gwt-tmp/" />
         <exclude name="*-aux/" />
       </zipfileset>
-      <zipfileset dir="build-res" includes="*.bat" prefix="pentaho-open-admin-console" />
-      <zipfileset dir="build-res" includes="*.sh" prefix="pentaho-open-admin-console" />
+      <zipfileset dir="build-res" includes="*.bat" prefix="${admin-console.name}" />
+      <zipfileset dir="build-res" includes="*.sh" prefix="${admin-console.name}" />
     </zip>
   </target>
 
