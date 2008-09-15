@@ -58,12 +58,12 @@
 
 <!--        need to check if this is actually used anywhere-->
     <dependency org="com.google.gwt"  name="gwt-benchmark-viewer" rev="1.5.1" conf="codegen,runtime->default" />
-    <dependency org="pentaho"         name="pentaho-bi-platform-api" rev="${dependency.bi-platform.revision}" conf="codegen,runtime->default" changing="true" >
+    <dependency org="pentaho"         name="pentaho-bi-platform-api" rev="${project.revision}" conf="codegen,runtime->default" changing="true" >
         <exclude org="org.acegisecurity" name="acegi-security" />
         <exclude org="org.springframework" name="spring" />
     </dependency>
-    <dependency org="pentaho"         name="pentaho-bi-platform-util" rev="${dependency.bi-platform.revision}" conf="codegen,runtime->default" transitive="false" changing="true" />
-    <dependency org="pentaho"         name="pentaho-bi-platform-engine-core" rev="${dependency.bi-platform.revision}" conf="codegen,runtime->default" transitive="false" changing="true" />
+    <dependency org="pentaho"         name="pentaho-bi-platform-util" rev="${project.revision}" conf="codegen,runtime->default" transitive="false" changing="true" />
+    <dependency org="pentaho"         name="pentaho-bi-platform-engine-core" rev="${project.revision}" conf="codegen,runtime->default" transitive="false" changing="true" />
     <dependency org="pentaho"         name="pentaho-gwt-widgets" rev="${dependency.pentaho-gwt-widgets.revision}" conf="codegen,runtime->default" changing="true" >
     <!--    we don't want gwt-user included in our distribution so exclude it here-->
       <exclude org="com.google.gwt" name="gwt-user" />
