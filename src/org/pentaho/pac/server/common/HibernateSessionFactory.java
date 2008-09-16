@@ -17,7 +17,6 @@ import org.hibernate.cfg.Configuration;
  */
 public class HibernateSessionFactory {
 
-    private static final String HIBERNATE_DIR = "hibernate/";
 	public static final String DEFAULT_CONFIG_NAME = "$$DEFAULT_CONFIG";
     public static String DEFAULT_CONFIG_FILE_LOCATION = "hsql.hibernate.cfg.xml"; //$NON-NLS-1$
 	/** 
@@ -40,9 +39,6 @@ public class HibernateSessionFactory {
     
     public static void addDefaultConfiguration() {
       defaultConfigFile = AppConfigProperties.getInstance().getHibernateConfigPath();
-      if (!defaultConfigFile.startsWith(HIBERNATE_DIR))
-    	  defaultConfigFile=HIBERNATE_DIR+defaultConfigFile;
-      
       if(defaultConfigFile != null && defaultConfigFile.length() > 0) {
         addConfiguration(DEFAULT_CONFIG_NAME,defaultConfigFile);
       } else {
