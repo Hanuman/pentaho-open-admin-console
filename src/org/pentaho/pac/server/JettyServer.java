@@ -53,6 +53,7 @@ public class JettyServer implements Halter, IJettyServer {
   public static final int DEFAULT_PORT_NUMBER = 8099;
   public static final int DEFAULT_SSL_PORT_NUMBER = 8043;
   public static final int DEFAULT_STOP_PORT_NUMBER = 8011;
+  public static final String DEFAULT_DELIMETER = ","; //$NON-NLS-1$
   public static final String DEFAULT_HOSTNAME = "localhost"; //$NON-NLS-1$
   public static final String CURRENT_DIR = "."; //$NON-NLS-1$
   public static final String JETTY_HOME = "jetty.home"; //$NON-NLS-1$
@@ -328,7 +329,13 @@ public class JettyServer implements Halter, IJettyServer {
       }
       
       roles = ConsoleProperties.getInstance().getProperty(ConsoleProperties.CONSOLE_SECURITY_ROLES_ALLOWED);
-      delimeter = ConsoleProperties.getInstance().getProperty(ConsoleProperties.CONSOLE_SECURITY_ROLE_DELIMETER);
+      String delimeterValue = ConsoleProperties.getInstance().getProperty(ConsoleProperties.CONSOLE_SECURITY_ROLE_DELIMETER);
+
+      if (delimeterValue != null && delimeterValue.length() > 0) {
+        this.delimeter = delimeterValue;
+      } else {
+        this.delimeter = DEFAULT_DELIMETER;
+      }
       
       authLoginConfigPath = ConsoleProperties.getInstance().getProperty(ConsoleProperties.CONSOLE_SECURITY_AUTH_CONFIG_PATH);
       realmName = ConsoleProperties.getInstance().getProperty(ConsoleProperties.CONSOLE_SECURITY_REALM_NAME);
