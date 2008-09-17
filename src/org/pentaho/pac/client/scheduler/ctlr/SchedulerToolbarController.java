@@ -423,13 +423,31 @@ public class SchedulerToolbarController {
   }
   
   public void enableTools() {
-    int numSelectedItems = schedulesListCtrl.getNumSelections();
+    List<Schedule> scheduleList = schedulesListCtrl.getSelectedSchedules();
+    
+    boolean suspendEnabled = false, resumeEnabled = false;
+    
+    boolean resolvedSuspended = false, resolvedEnabled = false;
+    
+    for (Schedule schedule:scheduleList) {
+    	if (!resolvedSuspended && !schedule.getTriggerState().equalsIgnoreCase("suspended")){
+    		suspendEnabled = true;
+    		resolvedSuspended = true;
+		}
+    	
+    	if (!resolvedEnabled && !schedule.getTriggerState().equalsIgnoreCase("normal")){
+    		resumeEnabled = true;
+    		resolvedEnabled = true;
+		}
+    }
 
+    int numSelectedItems = scheduleList.size();
+    
     enableWidget( schedulerToolbar.getCreateBtn(), true );
     enableWidget( schedulerToolbar.getUpdateBtn(), 1 == numSelectedItems );
     enableWidget( schedulerToolbar.getDeleteBtn(), numSelectedItems > 0 );
-    enableWidget( schedulerToolbar.getSuspendBtn(),  numSelectedItems > 0 );
-    enableWidget( schedulerToolbar.getResumeBtn(), numSelectedItems > 0 );
+    enableWidget( schedulerToolbar.getSuspendBtn(),  suspendEnabled );
+    enableWidget( schedulerToolbar.getResumeBtn(), resumeEnabled );
     enableWidget( schedulerToolbar.getRunNowBtn(), numSelectedItems > 0 );
     enableWidget( schedulerToolbar.getSuspendSchedulerBtn(), false );
     enableWidget( schedulerToolbar.getResumeSchedulerBtn(), false );
