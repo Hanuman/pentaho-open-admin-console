@@ -14,4 +14,4 @@ if [ $S1=$S2 ]; then
 fi
 
 echo "JAVA is $JAVA"
-$JAVA -jar lib/pentaho-open-admin-console.jar
+$JAVA -DCONSOLE_HOME=. -jar lib/pentaho-open-admin-console.jar

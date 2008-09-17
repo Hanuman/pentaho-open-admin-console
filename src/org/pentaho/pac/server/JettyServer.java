@@ -1,14 +1,12 @@
 package org.pentaho.pac.server;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Properties;
+import java.util.StringTokenizer;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -25,44 +23,47 @@ import org.mortbay.jetty.bio.SocketConnector;
 import org.mortbay.jetty.handler.AbstractHandler;
 import org.mortbay.jetty.handler.ContextHandlerCollection;
 import org.mortbay.jetty.handler.ResourceHandler;
+import org.mortbay.jetty.plus.jaas.JAASUserRealm;
 import org.mortbay.jetty.security.Constraint;
 import org.mortbay.jetty.security.ConstraintMapping;
-import org.mortbay.jetty.security.HashUserRealm;
 import org.mortbay.jetty.security.SecurityHandler;
+import org.mortbay.jetty.security.SslSocketConnector;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
+import org.pentaho.pac.server.common.ConsoleProperties;
 import org.pentaho.pac.server.i18n.Messages;
 
 public class JettyServer implements Halter, IJettyServer {
   protected Server server;
-
+  String delimeter = null;
+  String consoleHome = null;
+  boolean securityEnabled = false;
   private int portNumber;
-
+  String roles = null;
+  String authLoginConfigPath = null;
+  String realmName = null;
+  String loginModuleName = null;
+  String securitEnabledValue = null;
   private String hostname;
-
-  public static final String DEFAULT_CONSOLE_PROPERTIES_FILE_NAME = "resource/config/console.properties"; //$NON-NLS-1$
-
-  public static final String CONSOLE_PASSWORD_FILE_NAME = "resource/config/console.pwd"; //$NON-NLS-1$
-
-  public static final String CONSOLE_PORT_NUMBER = "console.start.port.number"; //$NON-NLS-1$
-
-  public static final String CONSOLE_HOST_NAME = "console.hostname"; //$NON-NLS-1$
-
-  public static final int DEFAULT_PORT_NUMBER = 8099;
-  public static final int DEFAULT_STOP_PORT_NUMBER = 8011;
-
-  public static final String DEFAULT_HOSTNAME = "localhost"; //$NON-NLS-1$
-
   private static final Log logger = LogFactory.getLog(JettyServer.class);
-  
-  public static final String STOP_ARG = "-STOP"; //$NON-NLS-1$
-  public static final String STOP_PORT = "console.stop.port.number";//$NON-NLS-1$
   public int stopPort = 0;
   private boolean running = false;
-
   public static JettyServer jettyServer;
+  
+  public static final int DEFAULT_PORT_NUMBER = 8099;
+  public static final int DEFAULT_SSL_PORT_NUMBER = 8043;
+  public static final int DEFAULT_STOP_PORT_NUMBER = 8011;
+  public static final String DEFAULT_HOSTNAME = "localhost"; //$NON-NLS-1$
+  public static final String CURRENT_DIR = "."; //$NON-NLS-1$
+  public static final String JETTY_HOME = "jetty.home"; //$NON-NLS-1$
+  public static final String AUTH_LOGIN_CONFIG_ENV_VAR = "java.security.auth.login.config"; //$NON-NLS-1$
+
 
   public JettyServer() {
+    // Get the CONSOLE_HOME Environment variable. This is required as it is needed to cofigure Jetty
+    consoleHome = System.getProperty("CONSOLE_HOME", CURRENT_DIR);
+    // Set the jetty.home to PEHTAHO_HOME
+    System.setProperty(JETTY_HOME, consoleHome);
     readConfiguration();
     server = new Server();
     setupServer();
@@ -71,6 +72,11 @@ public class JettyServer implements Halter, IJettyServer {
   }
 
   public JettyServer(String hostname, int port, int stop) {
+    // Get the CONSOLE_HOME Environment variable. This is required as it is needed to cofigure Jetty
+    consoleHome = System.getProperty("CONSOLE_HOME", CURRENT_DIR);
+    // Set the jetty.home to PEHTAHO_HOME
+    System.setProperty(JETTY_HOME, consoleHome);
+    readConfiguration();
     this.portNumber = port;
     this.hostname = hostname;
     stopPort = stop;
@@ -108,10 +114,20 @@ public class JettyServer implements Halter, IJettyServer {
   }
 
   private void startServer() {
-    SocketConnector connector = new SocketConnector();
-    connector.setPort(portNumber);
+    Connector connector = null;
+    // Check whether ssl needs to be enabled or not
+    String value = ConsoleProperties.getInstance().getProperty(ConsoleProperties.SSLENABLED);
+    boolean sslEnable =  (value != null && value.length() > 0) ? Boolean.parseBoolean(value) : false;
+    SslParameters sslParameters = new SslParameters(ConsoleProperties.getInstance());
+    if(sslEnable) {
+      connector = setupSslConnector(sslParameters);
+      connector.setPort(sslParameters.getSslPort());
+    }  else {
+      connector = new SocketConnector();
+      connector.setPort(portNumber);
+    }
+
     connector.setHost(hostname);
-    connector.setName("Pentaho Console HTTP listener for [" + hostname + ":" + portNumber + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     logger.info("starting " + connector.getName()); //$NON-NLS-1$
     server.setConnectors(new Connector[] { connector });
     server.setStopAtShutdown(true);
@@ -160,25 +176,33 @@ public class JettyServer implements Halter, IJettyServer {
   }
 
   public SecurityHandler configureSecurityHandler() {
-    // configure security if necessary
-    File passwdFile = new File(CONSOLE_PASSWORD_FILE_NAME); //$NON-NLS-1$
     SecurityHandler securityHandler = null;
-    if (passwdFile.exists()) {
-      try {
+    // This is required for the jetty security to locate the security configuration file
+    System.setProperty(AUTH_LOGIN_CONFIG_ENV_VAR, authLoginConfigPath); 
+    
+    // configure security if necessary
+    if (securityEnabled) {
         Constraint constraint = new Constraint();
         constraint.setName(Constraint.__BASIC_AUTH);
-        constraint.setRoles(new String[] { "admin" });
+
+        // Creating the roles list
+        StringTokenizer token = new StringTokenizer(roles, delimeter);
+        String[] rolesList = new String[token.countTokens()];
+        int i =0; 
+        while(token.hasMoreTokens()) {
+          rolesList[i++] = token.nextToken();
+        }
+        
+        constraint.setRoles(rolesList);
         constraint.setAuthenticate(true);
         ConstraintMapping constraintMapping = new ConstraintMapping();
         constraintMapping.setConstraint(constraint);
         constraintMapping.setPathSpec("/*"); //$NON-NLS-1$
-
+        JAASUserRealm realm = new JAASUserRealm(realmName);
+        realm.setLoginModuleName(loginModuleName);
         securityHandler = new SecurityHandler();
-        securityHandler.setUserRealm(new HashUserRealm("Pentaho", CONSOLE_PASSWORD_FILE_NAME)); //$NON-NLS-1$ //$NON-NLS-2$
+        securityHandler.setUserRealm(realm); //$NON-NLS-1$ //$NON-NLS-2$        
         securityHandler.setConstraintMappings(new ConstraintMapping[] { constraintMapping });
-      } catch (IOException e) {
-        logger.error("error securing server", e); //$NON-NLS-1$
-      }
     }
     return securityHandler;
   }
@@ -280,26 +304,9 @@ public class JettyServer implements Halter, IJettyServer {
   }
   
   public void readConfiguration() {
-    FileInputStream fis = null;
-    Properties properties = null;
-    try {
-      File file = new File(DEFAULT_CONSOLE_PROPERTIES_FILE_NAME);
-      fis = new FileInputStream(file);
-    } catch (IOException e1) {
-      logger.error(Messages.getString("PacService.OPEN_PROPS_FAILED", DEFAULT_CONSOLE_PROPERTIES_FILE_NAME)); //$NON-NLS-1$
-    }
-    if (null != fis) {
-      properties = new Properties();
-      try {
-        properties.load(fis);
-      } catch (IOException e) {
-        logger.error(Messages.getString("PacService.LOAD_PROPS_FAILED", DEFAULT_CONSOLE_PROPERTIES_FILE_NAME)); //$NON-NLS-1$
-      }
-    }
-    if (properties != null) {
-      String port = properties.getProperty(CONSOLE_PORT_NUMBER, null);
-      String hostname = properties.getProperty(CONSOLE_HOST_NAME, null);
-      String stopPortNumber = properties.getProperty(STOP_PORT, null);
+      String port = ConsoleProperties.getInstance().getProperty(ConsoleProperties.CONSOLE_PORT_NUMBER);
+      String hostname = ConsoleProperties.getInstance().getProperty(ConsoleProperties.CONSOLE_HOST_NAME);
+      String stopPortNumber = ConsoleProperties.getInstance().getProperty(ConsoleProperties.STOP_PORT);
 
       if (port != null && port.length() > 0) {
         this.portNumber = Integer.parseInt(port);
@@ -319,11 +326,17 @@ public class JettyServer implements Halter, IJettyServer {
       } else {
         this.hostname = DEFAULT_HOSTNAME;
       }
-    } else {
-      this.hostname = DEFAULT_HOSTNAME;
-      this.portNumber = DEFAULT_PORT_NUMBER;
-      stopPort = DEFAULT_STOP_PORT_NUMBER;
-    }
+      
+      roles = ConsoleProperties.getInstance().getProperty(ConsoleProperties.CONSOLE_SECURITY_ROLES_ALLOWED);
+      delimeter = ConsoleProperties.getInstance().getProperty(ConsoleProperties.CONSOLE_SECURITY_ROLE_DELIMETER);
+      
+      authLoginConfigPath = ConsoleProperties.getInstance().getProperty(ConsoleProperties.CONSOLE_SECURITY_AUTH_CONFIG_PATH);
+      realmName = ConsoleProperties.getInstance().getProperty(ConsoleProperties.CONSOLE_SECURITY_REALM_NAME);
+      loginModuleName = ConsoleProperties.getInstance().getProperty(ConsoleProperties.CONSOLE_SECURITY_LOGIN_MODULE_NAME);
+      String securitEnabledValue = ConsoleProperties.getInstance().getProperty(ConsoleProperties.CONSOLE_SECURITY_ENABLED);
+      if(securitEnabledValue != null && securitEnabledValue.length() > 0) {
+        securityEnabled =  Boolean.parseBoolean(securitEnabledValue);
+      }
   }
   public void stopHandler(JettyServer jServer, int stopPort) {
     ServerSocket server = null;
@@ -340,6 +353,46 @@ public class JettyServer implements Halter, IJettyServer {
       System.out.println("IO Error: " + e.getLocalizedMessage());//$NON-NLS-1$
     }
   }
+  
+  private Connector setupSslConnector(SslParameters ssl)  {
+    Connector connector;
+    String keyStore = ssl.getKeyStore();
+    if (keyStore == null) {
+        keyStore = System.getProperty("javax.net.ssl.keyStore", "");
+        if (keyStore == null) {
+            throw new IllegalArgumentException(
+                           "keyStore or system property javax.net.ssl.keyStore must be set");
+        }
+    }
+
+    String keyStorePassword = ssl.getKeyStorePassword();
+    if (keyStorePassword == null) {
+        keyStorePassword = System.getProperty("javax.net.ssl.keyStorePassword");
+        if (keyStorePassword == null) {
+            throw new IllegalArgumentException(
+                "keyStorePassword or system property javax.net.ssl.keyStorePassword must be set");
+        }
+    }
+    SslSocketConnector sslConnector = new SslSocketConnector();
+    sslConnector.setConfidentialPort(ssl.getSslPort());
+    sslConnector.setPassword(ssl.getKeyStorePassword());
+    sslConnector.setKeyPassword(ssl.getKeyPassword() != null ? ssl.getKeyPassword() : keyStorePassword);
+    sslConnector.setKeystore(keyStore);
+    sslConnector.setKeystoreType(ssl.getKeyStoreType());
+    sslConnector.setNeedClientAuth(ssl.isNeedClientAuth());
+    sslConnector.setWantClientAuth(ssl.isWantClientAuth());
+    // important to set this values for selfsigned keys
+    // otherwise the standard truststore of the jre is used
+    sslConnector.setTruststore(ssl.getTrustStore());
+    if (ssl.getTrustStorePassword() != null) {
+        // check is necessary because if a null password is set
+        // jetty would ask for a password on the comandline
+        sslConnector.setTrustPassword(ssl.getTrustStorePassword());
+    }
+    sslConnector.setTruststoreType(ssl.getTrustStoreType());
+    connector = sslConnector;
+    return connector;
+}
   private class RequestHandler implements Runnable {
     // This method is called when the thread runs
 
@@ -359,7 +412,7 @@ public class JettyServer implements Halter, IJettyServer {
         while ((inputLine = in.readLine()) != null) {
           if (inputLine != null && inputLine.length() > 0) {
             inputLine = inputLine.trim();
-            if (inputLine.equalsIgnoreCase(STOP_ARG)) {
+            if (inputLine.equalsIgnoreCase(ConsoleProperties.STOP_ARG)) {
               System.out.println("Waiting to halt console"); //$NON-NLS-1$
               try {
                 Thread.sleep(3000);

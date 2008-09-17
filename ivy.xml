@@ -77,6 +77,7 @@
     <dependency org="mysql"               name="mysql-connector-java" rev="5.1.5"  conf="runtime->default"/>
     
 <!--    exclude jetty's version of servlet api. it's checksum fails-->
+    <dependency org="org.mortbay.jetty"   name="jetty-plus" rev="6.1.2" conf="runtime->default" transitive="false"/>
     <dependency org="org.mortbay.jetty"   name="jetty" rev="6.1.2" conf="runtime->default">
         <exclude org="org.mortbay.jetty" name="servlet-api-2.5" />
     </dependency>

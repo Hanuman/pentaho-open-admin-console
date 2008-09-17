@@ -3,9 +3,9 @@
   <platform-username>joe</platform-username>  
   <biserver-status-check-period-millis>30000</biserver-status-check-period-millis>  
   <homepage-timeout-millis>15000</homepage-timeout-millis>  
-  <solution-path></solution-path>
-  <war-path></war-path>
-  <jdbc-drivers-path></jdbc-drivers-path>  
+  <solution-path>c:/build/biserver-ee/pentaho-solutions</solution-path>
+  <war-path>c:/build/biserver-ee/tomcat/webapps/pentaho</war-path>
+  <jdbc-drivers-path>c:/build/biserver-ee/tomcat/common/lib</jdbc-drivers-path>  
   <!-- comma separated list of roles (no spaces) -->  
   <default-roles>Authenticated</default-roles>
 </console>

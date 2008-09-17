@@ -106,14 +106,15 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 
     generalButton.setStylePrimaryName("generalToggleBtn"); //$NON-NLS-1$
     advanceButton.setStylePrimaryName("advanceToggleBtn"); //$NON-NLS-1$
+    deckPanel.add(dataSourceGeneralPanel);
+    deckPanel.add(dataSourceAdvancePanel);
+    
     dataSourceGeneralPanel.setWidth("100%"); //$NON-NLS-1$
     dataSourceGeneralPanel.setHeight("100%"); //$NON-NLS-1$
     dataSourceAdvancePanel.setWidth("100%"); //$NON-NLS-1$
     dataSourceAdvancePanel.setHeight("100%"); //$NON-NLS-1$
-    deckPanel.add(dataSourceGeneralPanel);
-    deckPanel.add(dataSourceAdvancePanel);
-    dockPanel.add(deckPanel, DockPanel.CENTER);
 
+    dockPanel.add(deckPanel, DockPanel.CENTER);
     dockPanel.setCellWidth(deckPanel, "100%"); //$NON-NLS-1$
     dockPanel.setCellHeight(deckPanel, "100%"); //$NON-NLS-1$
 
