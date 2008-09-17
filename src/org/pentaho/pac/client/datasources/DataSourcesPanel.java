@@ -275,20 +275,44 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 
   private void testDataSourceConnection() {
     final PentahoDataSource dataSource = getDataSource();
-    AsyncCallback callback = new AsyncCallback() {
-      public void onSuccess(Object result) {
-        messageDialog.setText(MSGS.testConnection());
-        messageDialog.setMessage(MSGS.connectionTestSuccessful());
-        messageDialog.center();
+    
+    final AsyncCallback<Boolean> validationUrlCallback = new AsyncCallback<Boolean>() {
+        public void onSuccess(Boolean result) {
+          messageDialog.setText(MSGS.testConnection());
+          messageDialog.setMessage(MSGS.connectionTestSuccessful());
+          messageDialog.center();
+        }
+
+        public void onFailure(Throwable caught) {
+          messageDialog.setText(MSGS.testValidationQuery());
+          messageDialog.setMessage(caught.getMessage());
+          messageDialog.center();
+        }
+      };
+      
+    AsyncCallback<Boolean> connTestCallback = new AsyncCallback<Boolean>() {
+      public void onSuccess(Boolean result) {
+        if (dataSource.getQuery()!=null && !dataSource.getQuery().trim().equals("")) {
+        	PacServiceFactory.getPacService().testDataSourceValidationQuery(dataSource, validationUrlCallback);
+        }
+        else{
+        	messageDialog.setText(MSGS.testConnection());
+            messageDialog.setMessage(MSGS.connectionTestSuccessful());
+            messageDialog.center();
+        }
       }
 
       public void onFailure(Throwable caught) {
-        messageDialog.setText(MSGS.testConnection());
+        messageDialog.setText(MSGS.testValidationQuery());
         messageDialog.setMessage(caught.getMessage());
         messageDialog.center();
       }
     };
-    PacServiceFactory.getPacService().testDataSourceConnection(dataSource, callback);
+    
+    
+      
+      
+    PacServiceFactory.getPacService().testDataSourceConnection(dataSource, connTestCallback);
 
   }
 

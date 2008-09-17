@@ -614,6 +614,11 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key testConnection
    */
   String testConnection();
+  
+  
+  String testValidationQuery();
+  
+  String validationQuerySuccessful();
 
   /**
    * Translated "Number of {0} to repeat.".

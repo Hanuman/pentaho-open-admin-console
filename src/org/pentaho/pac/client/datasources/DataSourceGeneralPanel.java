@@ -35,8 +35,11 @@ public class DataSourceGeneralPanel extends VerticalPanel {
           }
 
           public void onSuccess(NameValue[] result) {
-            for (NameValue res : result)
-              driverList.addItem(res.getName(), res.getValue());
+        	  if (result!=null) {
+	            for (NameValue res : result)
+	              driverList.addItem(res.getName(), res.getValue());
+    		  }
+            
             driverClassListBoxHasValue = result != null && result.length > 0; 
             if(driverClassListBoxHasValue) {
               jdbcClassNamePanel.add(driverList);
