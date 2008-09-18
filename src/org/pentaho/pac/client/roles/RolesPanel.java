@@ -174,7 +174,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     roleListPanel.setCellWidth(rolesList, "100%"); //$NON-NLS-1$
     roleListPanel.setHeight("100%"); //$NON-NLS-1$
     roleListPanel.setWidth("100%"); //$NON-NLS-1$
-    rolesList.setHeight("440px"); //$NON-NLS-1$
+    rolesList.setHeight("100%"); //$NON-NLS-1$
     rolesList.setWidth("100%"); //$NON-NLS-1$
     addRoleBtn.setWidth("20px"); //$NON-NLS-1$
     addRoleBtn.setTitle(MSGS.addRole());
