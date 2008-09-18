@@ -24,7 +24,6 @@ import org.mortbay.jetty.handler.AbstractHandler;
 import org.mortbay.jetty.handler.ContextHandlerCollection;
 import org.mortbay.jetty.handler.ResourceHandler;
 import org.mortbay.jetty.plus.jaas.JAASUserRealm;
-import org.mortbay.jetty.plus.jaas.callback.DefaultCallbackHandler;
 import org.mortbay.jetty.security.Constraint;
 import org.mortbay.jetty.security.ConstraintMapping;
 import org.mortbay.jetty.security.SecurityHandler;
@@ -332,7 +331,7 @@ public class JettyServer implements Halter, IJettyServer {
       }
       
       roles = ConsoleProperties.getInstance().getProperty(ConsoleProperties.CONSOLE_SECURITY_ROLES_ALLOWED);
-      String delimeterValue = ConsoleProperties.getInstance().getProperty(ConsoleProperties.CONSOLE_SECURITY_ROLE_DELIMETER);
+      String delimeterValue = ConsoleProperties.getInstance().getProperty(ConsoleProperties.CONSOLE_SECURITY_ROLE_DELIMITER);
 
       if (delimeterValue != null && delimeterValue.length() > 0) {
         this.delimeter = delimeterValue;
