@@ -65,8 +65,14 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
     footerPanel.add(updateDataSourceBtn);
     DockPanel dataSourcesListPanel = buildDataSourcesListPanel();
     DockPanel dataSourceDetailsDockPanel = buildDataSourceDetailsDockPanel();
+
+    dataSourcesListPanel.setStyleName("borderPane"); //$NON-NLS-1$
+    dataSourceDetailsDockPanel.setStyleName("borderPane"); //$NON-NLS-1$
+    
     add(dataSourcesListPanel, DockPanel.WEST);
     add(dataSourceDetailsDockPanel, DockPanel.CENTER);
+    
+    
     add(footerPanel, DockPanel.SOUTH);
     setCellHorizontalAlignment(footerPanel, HasHorizontalAlignment.ALIGN_RIGHT);
     setSpacing(10);

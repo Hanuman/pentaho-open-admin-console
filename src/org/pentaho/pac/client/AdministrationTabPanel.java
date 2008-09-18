@@ -59,11 +59,11 @@ public class AdministrationTabPanel extends TabPanel implements IRefreshableAdmi
     schedulerController = new SchedulerController( schedulerPanel );
     
     usersAndRolesPanel.setWidth("100%"); //$NON-NLS-1$
-    usersAndRolesPanel.setHeight("100%"); //$NON-NLS-1$
+    usersAndRolesPanel.setHeight("565px"); //$NON-NLS-1$
     dataSourcesPanel.setWidth("100%"); //$NON-NLS-1$
-    dataSourcesPanel.setHeight("100%"); //$NON-NLS-1$
+    dataSourcesPanel.setHeight("565px"); //$NON-NLS-1$
     servicesPanel.setWidth("100%"); //$NON-NLS-1$
-    servicesPanel.setHeight("100%"); //$NON-NLS-1$
+    servicesPanel.setHeight("565px"); //$NON-NLS-1$
     
     getDeckPanel().setHeight("100%"); //$NON-NLS-1$
     selectTab(AdministrationTabPanel.ADMIN_USERS_ROLES_TAB_INDEX);

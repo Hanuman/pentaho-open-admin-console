@@ -30,6 +30,7 @@ import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -78,8 +79,10 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
   
 	public RolesPanel() {
 	  DockPanel roleListPanel = buildRolesListPanel();
+	  roleListPanel.setStyleName("borderPane"); //$NON-NLS-1$
 	  
 	  DockPanel roleDetailsDockPanel = buildRoleDetailsPanel();
+	  roleDetailsDockPanel.setStyleName("borderPane"); //$NON-NLS-1$
     add(roleListPanel, DockPanel.WEST);
     add(roleDetailsDockPanel, DockPanel.CENTER);
     
@@ -128,8 +131,15 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     DockPanel assignedRolesPanel = buildAssignedUsersPanel();
     
 	  DockPanel dockPanel = new DockPanel();
+	  dockPanel.add(new Label(MSGS.userDetails()), DockPanel.NORTH);
 	  dockPanel.add(roleDetailsPanel, DockPanel.NORTH);
     dockPanel.add(updateRoleBtn, DockPanel.NORTH);
+    
+    SimplePanel spacerPanel = new SimplePanel();
+    spacerPanel.add(new Label(" ")); //$NON-NLS-1$
+    dockPanel.add(spacerPanel, DockPanel.NORTH);
+    dockPanel.setCellHeight(spacerPanel, "10px"); //$NON-NLS-1$
+    
 	  dockPanel.add(assignedRolesPanel, DockPanel.CENTER);
 	  
 	  dockPanel.setCellHorizontalAlignment(updateRoleBtn, HasHorizontalAlignment.ALIGN_RIGHT);
@@ -149,6 +159,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 	public DockPanel buildRolesListPanel() {
 	  DockPanel headerDockPanel = new DockPanel();
     headerDockPanel.add(deleteRoleBtn, DockPanel.EAST);
+    
 	  headerDockPanel.add(addRoleBtn, DockPanel.EAST);
     Label label = new Label(MSGS.roles());
 	  headerDockPanel.add(label, DockPanel.WEST);
@@ -163,7 +174,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     roleListPanel.setCellWidth(rolesList, "100%"); //$NON-NLS-1$
     roleListPanel.setHeight("100%"); //$NON-NLS-1$
     roleListPanel.setWidth("100%"); //$NON-NLS-1$
-    rolesList.setHeight("100%"); //$NON-NLS-1$
+    rolesList.setHeight("440px"); //$NON-NLS-1$
     rolesList.setWidth("100%"); //$NON-NLS-1$
     addRoleBtn.setWidth("20px"); //$NON-NLS-1$
     addRoleBtn.setTitle(MSGS.addRole());
@@ -184,6 +195,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 	public DockPanel buildAssignedUsersPanel() {
     DockPanel headerDockPanel = new DockPanel();
     headerDockPanel.add(deleteRoleAssignmentBtn, DockPanel.EAST);
+    
     headerDockPanel.add(addRoleAssignmentBtn, DockPanel.EAST);
     Label label = new Label(MSGS.assignedUsers());
     headerDockPanel.add(label, DockPanel.WEST);

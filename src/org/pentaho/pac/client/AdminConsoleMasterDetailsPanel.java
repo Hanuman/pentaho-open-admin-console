@@ -124,7 +124,7 @@ public class AdminConsoleMasterDetailsPanel extends DockPanel  implements ClickL
     leftPanel.addButton(toggleButton);
     
     page.setWidth("100%"); //$NON-NLS-1$
-    page.setHeight("100%"); //$NON-NLS-1$
+    page.setHeight("610px"); //$NON-NLS-1$
     rightPanel.addPage(page);
   }
   

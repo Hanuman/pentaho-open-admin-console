@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.pentaho.gwt.widgets.client.containers.SimpleGroupBox;
 import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
@@ -27,15 +26,17 @@ import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class UsersPanel extends DockPanel implements ClickListener, ChangeListener, PopupListener, KeyboardListener {
+public class UsersPanel extends HorizontalPanel implements ClickListener, ChangeListener, PopupListener, KeyboardListener {
 
   
   class UserNameFilter implements IListBoxFilter {
@@ -79,16 +80,18 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
   RoleAssignmentsDialogBox roleAssignmentsDialog = new RoleAssignmentsDialogBox();
   
 	public UsersPanel() {
-	  DockPanel userListPanel = buildUsersListPanel();
+	  //User List Panel
+	  VerticalPanel userListPanel = buildUsersListPanel();
 	  userListPanel.setStyleName("borderPane"); //$NON-NLS-1$
-	  userListPanel.setSpacing(4);
+	  // CSS this userListPanel.setSpacing(4);
 	  
+	  //User Details Panel
 	  VerticalPanel userDetailsDockPanel = buildUserDetailsDockPanel();
-
 	  userDetailsDockPanel.setStyleName("borderPane"); //$NON-NLS-1$
-    userDetailsDockPanel.setSpacing(4);
-    add(userListPanel, DockPanel.WEST);
-    add(userDetailsDockPanel, DockPanel.CENTER);
+    // CSS this userDetailsDockPanel.setSpacing(4);
+    
+    add(userListPanel);
+    add(userDetailsDockPanel);
     
     setSpacing(10);
     
@@ -96,6 +99,7 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     setCellWidth(userDetailsDockPanel, "70%"); //$NON-NLS-1$
     setCellHeight(userListPanel, "100%"); //$NON-NLS-1$
     setCellHeight(userDetailsDockPanel, "100%"); //$NON-NLS-1$
+    
     userListPanel.setWidth("100%"); //$NON-NLS-1$
     userListPanel.setHeight("100%"); //$NON-NLS-1$
     userDetailsDockPanel.setWidth("100%"); //$NON-NLS-1$
@@ -132,7 +136,7 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 
 	public VerticalPanel buildUserDetailsDockPanel() {
 	  
-	  SimpleGroupBox assignedRolesPanel = buildAssignedRolesPanel();
+	  VerticalPanel assignedRolesPanel = buildAssignedRolesPanel();
     
     VerticalPanel mainUserDetailsPanel = new VerticalPanel();
     
@@ -145,11 +149,20 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     
     userPanelFieldsetContent.setCellHorizontalAlignment(updateUserBtn, VerticalPanel.ALIGN_RIGHT);
     
-    SimpleGroupBox fieldsetPanel = new SimpleGroupBox(MSGS.userDetails());
+    VerticalPanel fieldsetPanel = new VerticalPanel();
+    fieldsetPanel.add(new Label(MSGS.userDetails()));
     fieldsetPanel.add(userPanelFieldsetContent);
     userPanelFieldsetContent.setWidth("100%"); //$NON-NLS-1$
+
+    fieldsetPanel.setWidth("100%"); //$NON-NLS-1$
     
-    mainUserDetailsPanel.add(fieldsetPanel);
+    mainUserDetailsPanel.add(fieldsetPanel);  
+    mainUserDetailsPanel.setCellWidth(fieldsetPanel, "100%"); //$NON-NLS-1$
+    SimplePanel spacerPanel = new SimplePanel();
+    spacerPanel.add(new Label(" ")); //$NON-NLS-1$
+    mainUserDetailsPanel.add(spacerPanel);
+    mainUserDetailsPanel.setCellHeight(spacerPanel, "10px");  //$NON-NLS-1$
+    
     mainUserDetailsPanel.add(assignedRolesPanel);
 	  
     mainUserDetailsPanel.setCellHorizontalAlignment(updateUserBtn, HasHorizontalAlignment.ALIGN_RIGHT);
@@ -165,18 +178,18 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
 	  return mainUserDetailsPanel;
 	}
 	
-	public DockPanel buildUsersListPanel() {
+	public VerticalPanel buildUsersListPanel() {
 	  DockPanel headerDockPanel = new DockPanel();
     headerDockPanel.add(deleteUserBtn, DockPanel.EAST);
 	  headerDockPanel.add(addUserBtn, DockPanel.EAST);
     Label label = new Label("Users"); //$NON-NLS-1$
 	  headerDockPanel.add(label, DockPanel.WEST);
 	  headerDockPanel.setCellWidth(label, "100%"); //$NON-NLS-1$
-    DockPanel userListPanel = new DockPanel();
-    userListPanel.add(headerDockPanel, DockPanel.NORTH);
-    userListPanel.add(usersList, DockPanel.CENTER);    
-    userListPanel.add(filterTextBox, DockPanel.SOUTH  );
-    userListPanel.add(new Label(MSGS.filter()), DockPanel.SOUTH );
+	  VerticalPanel userListPanel = new VerticalPanel();
+    userListPanel.add(headerDockPanel);
+    userListPanel.add(usersList);    
+    userListPanel.add(new Label(MSGS.filter()));
+    userListPanel.add(filterTextBox);
     
     userListPanel.setCellHeight(usersList, "100%"); //$NON-NLS-1$
     userListPanel.setCellWidth(usersList, "100%"); //$NON-NLS-1$
@@ -200,16 +213,23 @@ public class UsersPanel extends DockPanel implements ClickListener, ChangeListen
     return userListPanel;
 	}
 	
-	public SimpleGroupBox buildAssignedRolesPanel() {
+	public VerticalPanel buildAssignedRolesPanel() {
     DockPanel headerDockPanel = new DockPanel();
     
-    SimpleGroupBox fieldsetPanel = new SimpleGroupBox(MSGS.assignedRoles());
+    VerticalPanel fieldsetPanel = new VerticalPanel();
     
+    Label label = new Label(MSGS.assignedRoles());
+    Label spacer = new Label(""); //$NON-NLS-1$
+    
+    
+    headerDockPanel.add(label, DockPanel.WEST);
+    headerDockPanel.setCellWidth(label, "100%");  //$NON-NLS-1$
     headerDockPanel.add(deleteRoleAssignmentBtn, DockPanel.EAST);
     headerDockPanel.add(addRoleAssignmentBtn, DockPanel.EAST);
-    Label spacer = new Label(""); //$NON-NLS-1$
+    
     headerDockPanel.add(spacer, DockPanel.WEST);
     headerDockPanel.setCellWidth(spacer, "100%"); //$NON-NLS-1$
+    
     
 	  DockPanel assignedRolesPanel = new DockPanel();
 	  assignedRolesPanel.add(headerDockPanel, DockPanel.NORTH);

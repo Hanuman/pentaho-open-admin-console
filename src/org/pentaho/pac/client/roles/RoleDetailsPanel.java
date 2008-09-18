@@ -20,6 +20,7 @@ public class RoleDetailsPanel extends VerticalPanel {
     add(descriptionTextBox);
     roleNameTextBox.setWidth("100%"); //$NON-NLS-1$
     descriptionTextBox.setWidth("100%"); //$NON-NLS-1$
+    setSpacing(4);
   }
 
   public String getRoleName() {

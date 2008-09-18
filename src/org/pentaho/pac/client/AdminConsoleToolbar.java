@@ -25,22 +25,22 @@ public class AdminConsoleToolbar extends HorizontalPanel {
   public AdminConsoleToolbar(){
     super();
 
-    setStyleName("toolbar"); //$NON-NLS-1$
+    setStyleName("adminconsole-toolbar"); //$NON-NLS-1$
     
     //Left end-cap
     SimplePanel leftCap = new SimplePanel();
-    leftCap.setStyleName("toolbar_left"); //$NON-NLS-1$
+    leftCap.setStyleName("adminconsole-toolbar_left"); //$NON-NLS-1$
     add(leftCap);
     this.setCellWidth(leftCap, "5px"); //$NON-NLS-1$
     
     //the body of the toolbar
     HorizontalPanel centerPanel = new HorizontalPanel();
-    centerPanel.setStyleName("toolbar_center"); //$NON-NLS-1$
+    centerPanel.setStyleName("adminconsole-toolbar_center"); //$NON-NLS-1$
     add(centerPanel);
     
     //Right end-cap
     SimplePanel rightCap = new SimplePanel();
-    rightCap.setStyleName("toolbar_right"); //$NON-NLS-1$
+    rightCap.setStyleName("adminconsole-toolbar_right"); //$NON-NLS-1$
     add(rightCap);
     this.setCellWidth(rightCap, "6px"); //$NON-NLS-1$
     
