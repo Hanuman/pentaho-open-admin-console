@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><module>
 
+<!-- Do not place optimizations (such as user.agent) in this file. This is the production version. -->
+
 	<!-- Inherit the core Web Toolkit stuff.                  -->
 	<inherits name="com.google.gwt.user.User"/>
 	<inherits name="org.pentaho.pac.PacServiceModule"/>
