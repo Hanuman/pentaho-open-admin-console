@@ -24,6 +24,7 @@ import org.mortbay.jetty.handler.AbstractHandler;
 import org.mortbay.jetty.handler.ContextHandlerCollection;
 import org.mortbay.jetty.handler.ResourceHandler;
 import org.mortbay.jetty.plus.jaas.JAASUserRealm;
+import org.mortbay.jetty.plus.jaas.callback.DefaultCallbackHandler;
 import org.mortbay.jetty.security.Constraint;
 import org.mortbay.jetty.security.ConstraintMapping;
 import org.mortbay.jetty.security.SecurityHandler;
@@ -37,6 +38,7 @@ public class JettyServer implements Halter, IJettyServer {
   protected Server server;
   String delimeter = null;
   String consoleHome = null;
+  String callbackHandler = null;
   boolean securityEnabled = false;
   private int portNumber;
   String roles = null;
@@ -58,7 +60,7 @@ public class JettyServer implements Halter, IJettyServer {
   public static final String CURRENT_DIR = "."; //$NON-NLS-1$
   public static final String JETTY_HOME = "jetty.home"; //$NON-NLS-1$
   public static final String AUTH_LOGIN_CONFIG_ENV_VAR = "java.security.auth.login.config"; //$NON-NLS-1$
-
+  public static final String DEFAULT_CALLBACK_HANDLER = "org.mortbay.jetty.plus.jaas.callback.DefaultCallbackHandler"; //$NON-NLS-1$
 
   public JettyServer() {
     // Get the CONSOLE_HOME Environment variable. This is required as it is needed to cofigure Jetty
@@ -201,6 +203,7 @@ public class JettyServer implements Halter, IJettyServer {
         constraintMapping.setPathSpec("/*"); //$NON-NLS-1$
         JAASUserRealm realm = new JAASUserRealm(realmName);
         realm.setLoginModuleName(loginModuleName);
+        realm.setCallbackHandlerClass(callbackHandler);
         securityHandler = new SecurityHandler();
         securityHandler.setUserRealm(realm); //$NON-NLS-1$ //$NON-NLS-2$        
         securityHandler.setConstraintMappings(new ConstraintMapping[] { constraintMapping });
@@ -344,6 +347,13 @@ public class JettyServer implements Halter, IJettyServer {
       if(securitEnabledValue != null && securitEnabledValue.length() > 0) {
         securityEnabled =  Boolean.parseBoolean(securitEnabledValue);
       }
+      String callbackHandlerValue = ConsoleProperties.getInstance().getProperty(ConsoleProperties.CONSOLE_SECURITY_CALLBACK_HANDLER);
+      if(callbackHandlerValue != null && callbackHandlerValue.length() > 0) {
+        callbackHandler =  callbackHandlerValue;
+      } else  {
+        callbackHandler =  DEFAULT_CALLBACK_HANDLER;
+      }
+      
   }
   public void stopHandler(JettyServer jServer, int stopPort) {
     ServerSocket server = null;

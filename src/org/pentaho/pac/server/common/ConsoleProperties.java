@@ -57,6 +57,7 @@ public class ConsoleProperties {
   public static final String STOP_ARG = "-STOP"; //$NON-NLS-1$
   public static final String STOP_PORT = "console.stop.port.number";//$NON-NLS-1$
   public static final String CONSOLE_SECURITY_ROLE_DELIMETER = "console.security.roles.delimeter"; //$NON-NLS-1$
+  public static final String CONSOLE_SECURITY_CALLBACK_HANDLER = "console.security.callback.handler"; //$NON-NLS-1$
   
   private static final Log logger = LogFactory.getLog(ConsoleProperties.class);
   private Properties properties = null;

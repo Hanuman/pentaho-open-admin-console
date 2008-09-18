@@ -30,6 +30,7 @@ import org.apache.commons.logging.LogFactory;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Node;
+import org.pentaho.messages.Messages;
 import org.pentaho.pac.server.config.HibernateSettingsXml;
 import org.pentaho.platform.api.engine.ISystemSettings;
 import org.pentaho.platform.engine.core.system.SystemSettings;
@@ -52,8 +53,10 @@ public class AppConfigProperties {
   public static final String WEB_XML_PATH = "/WEB-INF/web.xml"; //$NON-NLS-1$
   public static final String HIBERNATE_MANAGED_XML_PATH = "/system/hibernate/hibernate-settings.xml"; //$NON-NLS-1$
   public static final String HIBERNATE_CONFIG_PATH = "hibernateConfigPath"; //$NON-NLS-1$
-  public static final String PENTAHO_OBJECTS_SPRING_XML = "pentahoObjects.spring.xml" ; //$NON-NLS-1$
- 
+  public static final String PENTAHO_OBJECTS_SPRING_XML = "/system/pentahoObjects.spring.xml" ; //$NON-NLS-1$
+  public static final String SLASH = "/" ; //$NON-NLS-1$
+  public static final String COLON = ":" ; //$NON-NLS-1$
+  public static final String COMMA = "," ; //$NON-NLS-1$
   public static final String XPATH_TO_CONTEXT_PARAM = "web-app/context-param"; //$NON-NLS-1$
   public static final String XPATH_TO_HIBERNATE_CFG_FILE = "settings/config-file"; //$NON-NLS-1$
   public static final String XPATH_TO_PARAM_NAME = "param-name"; //$NON-NLS-1$
@@ -136,8 +139,8 @@ public class AppConfigProperties {
   public String getBiServerContextPath() {
     String returnValue = null;
     String value = getBiServerBaseUrl();
-    int start = value.lastIndexOf(":"); //$NON-NLS-1$
-    int middle = value.indexOf("/", start); //$NON-NLS-1$
+    int start = value.lastIndexOf(COLON); //$NON-NLS-1$
+    int middle = value.indexOf(SLASH, start); //$NON-NLS-1$
     
     returnValue = value.substring(middle, value.length()-1);
     if (!(returnValue != null && returnValue.length() > 0)) {
@@ -172,13 +175,13 @@ public class AppConfigProperties {
         }
       }
     } catch(Exception e) {
-      logger.error("Unable to read file : " + warPath + WEB_XML_PATH);
+      logger.error(Messages.getString("AppConfigProperties.INCORRECT_WAR_PATH", warPath, WEB_XML_PATH), e); //$NON-NLS-1$
       returnValue = null;
     } finally {
       if ( null != fileReader ) {
         try { fileReader.close(); }
         catch( IOException e) {
-          logger.error( "Failed to close stream associated with: " + warPath + WEB_XML_PATH);
+          logger.error(Messages.getString("AppConfigProperties.FAILED_TO_CLOSE_STREAM", warPath, WEB_XML_PATH), e); //$NON-NLS-1$
         }
       }
     }    if (!(returnValue != null && returnValue.length() > 0)) {
@@ -207,7 +210,7 @@ public class AppConfigProperties {
     if (defaultRolesString == null) {
       return Collections.emptyList();
     }
-    StringTokenizer tokenizer = new StringTokenizer(defaultRolesString, ","); //$NON-NLS-1$
+    StringTokenizer tokenizer = new StringTokenizer(defaultRolesString, COMMA); //$NON-NLS-1$
     while (tokenizer.hasMoreTokens()) {
       defaultRoles.add(tokenizer.nextToken());
     }
@@ -225,10 +228,10 @@ public class AppConfigProperties {
       HibernateSettingsXml hibernateSettingXml = new HibernateSettingsXml(new File(solutionPath + HIBERNATE_MANAGED_XML_PATH));
       String hibernateConfigFile = hibernateSettingXml.getHibernateConfigFile();
       if(hibernateConfigFile != null && hibernateConfigFile.length() > 0) {
-        returnValue = hibernateConfigFile.substring(hibernateConfigFile.lastIndexOf("/")+1, hibernateConfigFile.length());  
+        returnValue = hibernateConfigFile.substring(hibernateConfigFile.lastIndexOf(SLASH)+1, hibernateConfigFile.length());  
       }
     } catch(Exception e) {
-      logger.error("Unable to read file : " + solutionPath + XPATH_TO_HIBERNATE_CFG_FILE );
+      logger.error(Messages.getString("AppConfigProperties.INCORRECT_SOLUTION_PATH", solutionPath, HIBERNATE_MANAGED_XML_PATH), e); //$NON-NLS-1$
       returnValue = null;
     } 
     if ( StringUtils.isEmpty(returnValue) ) {
@@ -264,13 +267,13 @@ public class AppConfigProperties {
         returnValue = node.getStringValue();  
       }
     } catch(Exception e) {
-      logger.error("Unable to read file : " + solutionPath + PENTAHO_OBJECTS_SPRING_XML );
+      logger.error(Messages.getString("AppConfigProperties.INCORRECT_SOLUTION_PATH", solutionPath, PENTAHO_OBJECTS_SPRING_XML), e); //$NON-NLS-1$
       returnValue = null;
     } finally {
       if ( null != fileReader ) {
         try { fileReader.close(); }
         catch( IOException e) {
-          logger.error( "Failed to close stream associated with: " + solutionPath + PENTAHO_OBJECTS_SPRING_XML );
+          logger.error(Messages.getString("AppConfigProperties.FAILED_TO_CLOSE_STREAM", solutionPath, PENTAHO_OBJECTS_SPRING_XML), e); //$NON-NLS-1$ 
         }
       }
     }
