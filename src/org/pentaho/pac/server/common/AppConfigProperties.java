@@ -30,7 +30,6 @@ import org.apache.commons.logging.LogFactory;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Node;
-import org.pentaho.messages.Messages;
 import org.pentaho.pac.server.config.HibernateSettingsXml;
 import org.pentaho.platform.api.engine.ISystemSettings;
 import org.pentaho.platform.engine.core.system.SystemSettings;
@@ -175,13 +174,13 @@ public class AppConfigProperties {
         }
       }
     } catch(Exception e) {
-      logger.error(Messages.getString("AppConfigProperties.INCORRECT_WAR_PATH", warPath, WEB_XML_PATH), e); //$NON-NLS-1$
+      logger.error("Unable to read file : " + warPath + WEB_XML_PATH); //$NON-NLS-1$
       returnValue = null;
     } finally {
       if ( null != fileReader ) {
         try { fileReader.close(); }
         catch( IOException e) {
-          logger.error(Messages.getString("AppConfigProperties.FAILED_TO_CLOSE_STREAM", warPath, WEB_XML_PATH), e); //$NON-NLS-1$
+          logger.error("Failed to close stream associated with : " + warPath + WEB_XML_PATH); //$NON-NLS-1$
         }
       }
     }    if (!(returnValue != null && returnValue.length() > 0)) {
@@ -231,7 +230,7 @@ public class AppConfigProperties {
         returnValue = hibernateConfigFile.substring(hibernateConfigFile.lastIndexOf(SLASH)+1, hibernateConfigFile.length());  
       }
     } catch(Exception e) {
-      logger.error(Messages.getString("AppConfigProperties.INCORRECT_SOLUTION_PATH", solutionPath, HIBERNATE_MANAGED_XML_PATH), e); //$NON-NLS-1$
+      logger.error("Unable to read file : " +solutionPath + HIBERNATE_MANAGED_XML_PATH); //$NON-NLS-1$
       returnValue = null;
     } 
     if ( StringUtils.isEmpty(returnValue) ) {
@@ -267,13 +266,13 @@ public class AppConfigProperties {
         returnValue = node.getStringValue();  
       }
     } catch(Exception e) {
-      logger.error(Messages.getString("AppConfigProperties.INCORRECT_SOLUTION_PATH", solutionPath, PENTAHO_OBJECTS_SPRING_XML), e); //$NON-NLS-1$
+      logger.error("Unable to read file : " + solutionPath + PENTAHO_OBJECTS_SPRING_XML); //$NON-NLS-1$
       returnValue = null;
     } finally {
       if ( null != fileReader ) {
         try { fileReader.close(); }
         catch( IOException e) {
-          logger.error(Messages.getString("AppConfigProperties.FAILED_TO_CLOSE_STREAM", solutionPath, PENTAHO_OBJECTS_SPRING_XML), e); //$NON-NLS-1$ 
+          logger.error("Failed to close stream associated with : " + solutionPath + PENTAHO_OBJECTS_SPRING_XML); //$NON-NLS-1$ 
         }
       }
     }
