@@ -15,7 +15,6 @@ public class AdminConsoleToolbar extends HorizontalPanel {
   private Label statusLabel;
   private Timer statusTimer = null;
   private SimplePanel serverIcon = new SimplePanel();
-  private Image statusIcon = PacImageBundle.getBundle().statusWorkingIcon().createImage();
   HorizontalPanel buttonsPanel = new HorizontalPanel();
   
   public void addImageButton(Image image) {
@@ -67,7 +66,6 @@ public class AdminConsoleToolbar extends HorizontalPanel {
     
     indicators.add(statusLabel);
     indicators.add(serverIcon);
-    indicators.add(statusIcon);
     
     indicatorsRight.add(indicators);
     Image helpImage = PacImageBundle.getBundle().helpIcon().createImage();
