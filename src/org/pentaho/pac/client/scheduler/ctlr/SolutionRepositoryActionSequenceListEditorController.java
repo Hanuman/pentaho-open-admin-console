@@ -63,7 +63,7 @@ public class SolutionRepositoryActionSequenceListEditorController {
        * or clicking the ok button.
        * solution,path, and name are NOT friendly names
        */
-      public void fileSelected(String solution, String path, String name) {
+      public void fileSelected(String solution, String path, String name, String localizedName) {
         if ( !StringUtils.isEmpty( name ) ) {
           localThis.copyActionsFromPickerToActionSequenceEditor();
           localThis.actionSequencePickerDialog.hide();
