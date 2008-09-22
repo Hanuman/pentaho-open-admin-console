@@ -2003,4 +2003,12 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @gwt.key addDefaultRolesFailed
    */  
   String addDefaultRolesFailed();
+  
+  /**
+   * Translated "Administration Console Help"
+   * 
+   * @return translated "Administration Console Help"
+   * @get.key helpWindowTitle
+   */
+  String helpWindowTitle();
 }

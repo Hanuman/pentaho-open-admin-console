@@ -3,6 +3,7 @@ package org.pentaho.pac.client;
 import org.pentaho.pac.client.utils.PacImageBundle;
 
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -74,6 +75,7 @@ public class AdminConsoleToolbar extends HorizontalPanel {
     createImage.setTitle(PentahoAdminConsole.MSGS.resetServer());
     helpImage.addClickListener( new ClickListener() {
       public void onClick(Widget sender) {
+        Window.open("./doc/userguide.pdf", "UserGuide", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
       }
     });
 
