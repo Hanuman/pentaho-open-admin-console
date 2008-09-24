@@ -765,7 +765,11 @@ public class SchedulerToolbarController {
     List<Schedule> schedList = schedulesListCtrl.getSelectedSchedules();
     int numSubscribers = 0;
     for ( Schedule sched: schedList ) {
-      numSubscribers += Integer.parseInt( sched.getSubscriberCount() );
+      try {
+        numSubscribers += Integer.parseInt( sched.getSubscriberCount() );
+      } catch (NumberFormatException ex) {
+        // Do nothing, we'll return 0.
+      }
     }
     return numSubscribers;
   }
