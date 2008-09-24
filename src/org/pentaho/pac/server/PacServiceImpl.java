@@ -96,7 +96,11 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
         proxyPentahoUser.setName(user.getName());
         proxyPentahoUser.setDescription(user.getDescription());
         proxyPentahoUser.setEnabled(user.getEnabled());
-        proxyPentahoUser.setPassword(user.getPassword());
+        try {
+          proxyPentahoUser.setPassword(PasswordServiceFactory.getPasswordService().decrypt(user.getPassword()));
+        } catch (PasswordServiceException e1) {
+          throw new PacServiceException(e1);
+        }
         userRoleSecurityInfo.getUsers().add(proxyPentahoUser);
 
         Set<IPentahoRole> roles = user.getRoles();
@@ -129,7 +133,11 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     boolean result = false;
     IPentahoUser user = new PentahoUser(proxyUser.getName());
     user.setDescription(proxyUser.getDescription());
-    user.setPassword(proxyUser.getPassword());
+    try {
+      user.setPassword(PasswordServiceFactory.getPasswordService().encrypt(proxyUser.getPassword()));
+    } catch (PasswordServiceException e1) {
+      throw new PacServiceException(e1);
+    }
     user.setEnabled(proxyUser.getEnabled());
     try {
       userRoleMgmtService.beginTransaction();
@@ -187,7 +195,12 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
         proxyPentahoUser.setName(user.getName());
         proxyPentahoUser.setDescription(user.getDescription());
         proxyPentahoUser.setEnabled(user.getEnabled());
-        proxyPentahoUser.setPassword(user.getPassword());
+        try {
+          proxyPentahoUser.setPassword(PasswordServiceFactory.getPasswordService().decrypt(user.getPassword()));
+        } catch (PasswordServiceException e1) {
+          throw new PacServiceException(e1);
+        }
+
       }
     } catch (DAOException e) {
       throw new PacServiceException(Messages.getString("PacService.FAILED_TO_FIND_USER", pUserName), e); //$NON-NLS-1$
@@ -208,7 +221,12 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
         proxyPentahoUser.setName(user.getName());
         proxyPentahoUser.setDescription(user.getDescription());
         proxyPentahoUser.setEnabled(user.getEnabled());
-        proxyPentahoUser.setPassword(user.getPassword());
+        try {
+          proxyPentahoUser.setPassword(PasswordServiceFactory.getPasswordService().decrypt(user.getPassword()));
+        } catch (PasswordServiceException e1) {
+          throw new PacServiceException(e1);
+        }
+
         proxyUsers[i++] = proxyPentahoUser;
       }
     } catch (DAOException e) {
@@ -229,7 +247,12 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
           proxyPentahoUser.setName(user.getName());
           proxyPentahoUser.setDescription(user.getDescription());
           proxyPentahoUser.setEnabled(user.getEnabled());
-          proxyPentahoUser.setPassword(user.getPassword());
+          try {
+            proxyPentahoUser.setPassword(PasswordServiceFactory.getPasswordService().decrypt(user.getPassword()));
+          } catch (PasswordServiceException e1) {
+            throw new PacServiceException(e1);
+          }
+
           users.add(proxyPentahoUser);
         }
       } else {
@@ -252,7 +275,11 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
         throw new NonExistingUserException(proxyUser.getName());
       }
       userRoleMgmtService.beginTransaction();
-      user.setPassword(proxyUser.getPassword());
+      try {
+        user.setPassword(PasswordServiceFactory.getPasswordService().encrypt(proxyUser.getPassword()));
+      } catch (PasswordServiceException e1) {
+        throw new PacServiceException(e1);
+      }
       user.setEnabled(proxyUser.getEnabled());
       user.setDescription(proxyUser.getDescription());
       userRoleMgmtService.updateUser(user);
