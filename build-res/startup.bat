@@ -2,7 +2,7 @@
 REM ***************************************
 REM   BATCH SCRIPT TO START ADMIN CONSOLE
 REM ***************************************
-set CLASSPATH=resource\config
+set CLASSPATH=.;resource\config
 
 FOR %%F IN (lib\*.jar) DO call :updateClassPath %%F
 FOR %%F IN (jdbc\*.jar) DO call :updateClassPath %%F
