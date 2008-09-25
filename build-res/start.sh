@@ -13,7 +13,7 @@ fi
 
 CLASSPATH=resource/config
 
-files=$(ls ./lib/*.jar)
+files=$(ls ./jdbc/*.jar ./lib/*.jar)
 
 for i in $files
 do
