@@ -77,7 +77,17 @@ public class SubscriptionAdminUIComponentProxy {
       ? dateTimeFormatter.format( endDate )
       : null;
     Map<String, Object> params = new HashMap<String, Object>();
-    params.put( "schedulerAction", "doAddScheduleAndContent" ); //$NON-NLS-1$  //$NON-NLS-2$
+    // If the action sequence list is null then we will only create a schedule without
+    // a content otherwise schedule with content will be created
+    if(actionsList != null && actionsList.length() > 0) {
+      params.put( "schedulerAction", "doAddScheduleAndContent" ); //$NON-NLS-1$  //$NON-NLS-2$
+        String[] actionsAr = actionsList.split( "," ); //$NON-NLS-1$
+        params.put( "actionRefs", actionsAr ); //$NON-NLS-1$
+    } else {
+      params.put( "schedulerAction", "doAddScheduleWithoutContent" ); //$NON-NLS-1$  //$NON-NLS-2$  
+    }
+
+    
     // TODO sbarkdull, this may not be right (using jobName for title)
     params.put( "title", jobName ); //$NON-NLS-1$
     params.put( "schedRef", jobName ); //$NON-NLS-1$
@@ -88,8 +98,6 @@ public class SubscriptionAdminUIComponentProxy {
     }
     params.put( "cron", cronString ); //$NON-NLS-1$
     params.put( "group", jobGroup ); //$NON-NLS-1$
-    String[] actionsAr = actionsList.split( "," ); //$NON-NLS-1$
-    params.put( "actionRefs", actionsAr ); //$NON-NLS-1$
 
     executePostMethod( params );
   }
@@ -105,7 +113,16 @@ public class SubscriptionAdminUIComponentProxy {
       ? dateTimeFormatter.format( endDate )
       : null;
     Map<String, Object> params = new HashMap<String, Object>();
-    params.put( "schedulerAction", "doAddScheduleAndContent" ); //$NON-NLS-1$  //$NON-NLS-2$
+    // If the action sequence list is null then we will only create a schedule without
+    // a content otherwise schedule with content will be created
+    if(actionsList != null && actionsList.length() > 0) {
+    	params.put( "schedulerAction", "doAddScheduleAndContent" ); //$NON-NLS-1$  //$NON-NLS-2$
+        String[] actionsAr = actionsList.split( "," ); //$NON-NLS-1$
+        params.put( "actionRefs", actionsAr ); //$NON-NLS-1$
+    } else {
+    	params.put( "schedulerAction", "doAddScheduleWithoutContent" ); //$NON-NLS-1$  //$NON-NLS-2$	
+    }
+    
     // TODO sbarkdull, this may not be right (using jobName for title)
     params.put( "title", jobName ); //$NON-NLS-1$
     params.put( "schedRef", jobName ); //$NON-NLS-1$
@@ -120,8 +137,6 @@ public class SubscriptionAdminUIComponentProxy {
     assert Integer.parseInt( repeatInterval ) >= 0 : "Invalid repeat interval"; //$NON-NLS-1$
     params.put( "repeat-time-millisecs", repeatInterval ); //$NON-NLS-1$
     params.put( "group", jobGroup ); //$NON-NLS-1$
-    String[] actionsAr = actionsList.split( "," ); //$NON-NLS-1$
-    params.put( "actionRefs", actionsAr ); //$NON-NLS-1$
 
     executePostMethod( params );
   }
@@ -137,7 +152,16 @@ public class SubscriptionAdminUIComponentProxy {
       ? dateTimeFormatter.format( endDate )
       : null;
     Map<String, Object> params = new HashMap<String, Object>();
-    params.put( "schedulerAction", "doEditScheduleAndContent" ); //$NON-NLS-1$  //$NON-NLS-2$
+    // If the action sequence list is null then we will only create a schedule without
+    // a content otherwise schedule with content will be created
+    if(actionsList != null && actionsList.length() > 0) {
+      params.put( "schedulerAction", "doEditScheduleAndContent" ); //$NON-NLS-1$  //$NON-NLS-2$
+        String[] actionsAr = actionsList.split( "," ); //$NON-NLS-1$
+        params.put( "actionRefs", actionsAr ); //$NON-NLS-1$
+    } else {
+      params.put( "schedulerAction", "doEditScheduleWithoutContent" ); //$NON-NLS-1$  //$NON-NLS-2$ 
+    }
+    
     params.put( "schedId", schedId ); //$NON-NLS-1$
     params.put( "schedRef", jobName ); //$NON-NLS-1$
     params.put( "group", jobGroup ); //$NON-NLS-1$
@@ -149,8 +173,6 @@ public class SubscriptionAdminUIComponentProxy {
       params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
     }
     params.put( "cron", cronString ); //$NON-NLS-1$S
-    String[] actionsAr = actionsList.split( "," ); //$NON-NLS-1$
-    params.put( "actionRefs", actionsAr ); //$NON-NLS-1$
 
     executePostMethod( params );
   }
@@ -168,7 +190,15 @@ public class SubscriptionAdminUIComponentProxy {
       : null;
     Map<String, Object> params = new HashMap<String, Object>();
     // TODO sbarkdull, some of these params may not be used, clean up
-    params.put( "schedulerAction", "doEditScheduleAndContent" ); //$NON-NLS-1$  //$NON-NLS-2$
+    // If the action sequence list is null then we will only create a schedule without
+    // a content otherwise schedule with content will be created
+    if(actionsList != null && actionsList.length() > 0) {
+    	params.put( "schedulerAction", "doEditScheduleAndContent" ); //$NON-NLS-1$  //$NON-NLS-2$
+        String[] actionsAr = actionsList.split( "," ); //$NON-NLS-1$
+        params.put( "actionRefs", actionsAr ); //$NON-NLS-1$
+    } else {
+    	params.put( "schedulerAction", "doEditScheduleWithoutContent" ); //$NON-NLS-1$  //$NON-NLS-2$	
+    }
     params.put( "schedId", schedId ); //$NON-NLS-1$
     params.put( "schedRef", jobName ); //$NON-NLS-1$
     params.put( "group", jobGroup ); //$NON-NLS-1$
@@ -184,8 +214,6 @@ public class SubscriptionAdminUIComponentProxy {
     }
     assert Integer.parseInt( repeatInterval ) >= 0 : "Invalid repeat interval"; //$NON-NLS-1$
     params.put( "repeat-time-millisecs", repeatInterval ); //$NON-NLS-1$
-    String[] actionsAr = actionsList.split( "," ); //$NON-NLS-1$
-    params.put( "actionRefs", actionsAr ); //$NON-NLS-1$
 
     executePostMethod( params );
   }

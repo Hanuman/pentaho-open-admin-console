@@ -36,16 +36,16 @@ public class SolutionRepositoryActionSequenceListEditorValidator implements IUiV
 
   public boolean isValid() {
     boolean isValid = true;
-    
-    List<String> actionList = solRepActionSequenceListEditor.getActionsAsList();
-    if ( !isSubscriptionSched && actionList.size() != 1 ) {
-      isValid = false;
-      solRepActionSequenceListEditor.setActionsError( MSGS.onlyOneActionSequence() );
-    } else if ( actionList.size() <= 0 ) {
-      isValid = false;
-      solRepActionSequenceListEditor.setActionsError( MSGS.actionSequenceCannotBeEmpty() );
+    if(!isSubscriptionSched) {
+      List<String> actionList = solRepActionSequenceListEditor.getActionsAsList();
+      if (actionList.size() != 1 ) {
+        isValid = false;
+        solRepActionSequenceListEditor.setActionsError( MSGS.onlyOneActionSequence() );
+      } else if ( actionList.size() <= 0 ) {
+        isValid = false;
+        solRepActionSequenceListEditor.setActionsError( MSGS.actionSequenceCannotBeEmpty() );
+      }
     }
-    
     return isValid;
   }
 

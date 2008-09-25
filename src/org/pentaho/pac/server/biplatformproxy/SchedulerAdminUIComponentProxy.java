@@ -233,9 +233,9 @@ public class SchedulerAdminUIComponentProxy {
       Date startDate, Date endDate,
       String cronString,
       String actionRef ) throws SchedulerServiceException {
-    
-    assert actionRef.matches( RE_MATCH_ACTION_REF ) : "Invalid actionRef " + actionRef; //$NON-NLS-1$
-    
+    if(actionRef != null && actionRef.length() > 0) {
+    	assert actionRef.matches( RE_MATCH_ACTION_REF ) : "Invalid actionRef " + actionRef; //$NON-NLS-1$	
+    }
     DateFormat dateTimeFormatter = DateUtil.getDateTimeFormatter();
     String strStartDate = dateTimeFormatter.format( startDate );
     String strEndDate = null != endDate
@@ -252,7 +252,9 @@ public class SchedulerAdminUIComponentProxy {
       params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
     }
     params.put( "cron-string", cronString ); //$NON-NLS-1$
-    params.put( "actionRef", actionRef ); //$NON-NLS-1$
+    if(actionRef != null && actionRef.length() > 0) {
+    	params.put( "actionRef", actionRef ); //$NON-NLS-1$	
+    }
 
     String responseStrXml = executePostMethod( params );
   }
@@ -261,10 +263,11 @@ public class SchedulerAdminUIComponentProxy {
       Date startDate, Date endDate,
       String strRepeatCount, String repeatInterval,
       String actionRef ) throws SchedulerServiceException {
+	if(actionRef != null && actionRef.length() > 0) {
+		assert actionRef.matches( RE_MATCH_ACTION_REF ) : "Invalid actionRef " + actionRef; //$NON-NLS-1$	
+	}
 
-    assert actionRef.matches( RE_MATCH_ACTION_REF ) : "Invalid actionRef " + actionRef; //$NON-NLS-1$
-    
-    DateFormat dateTimeFormatter = DateUtil.getDateTimeFormatter();
+	DateFormat dateTimeFormatter = DateUtil.getDateTimeFormatter();
     String strStartDate = dateTimeFormatter.format( startDate );
     String strEndDate = null != endDate
       ? dateTimeFormatter.format( endDate )
@@ -283,8 +286,9 @@ public class SchedulerAdminUIComponentProxy {
       params.put( "repeat-count", strRepeatCount ); //$NON-NLS-1$
     }
     params.put( "repeat-time-millisecs", repeatInterval ); //$NON-NLS-1$
-    params.put( "actionRef", actionRef ); //$NON-NLS-1$
-
+    if(actionRef != null && actionRef.length() > 0) {
+    	params.put( "actionRef", actionRef ); //$NON-NLS-1$	
+    }
     String responseStrXml = executePostMethod( params );
   }
   
@@ -313,8 +317,9 @@ public class SchedulerAdminUIComponentProxy {
       params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
     }
     params.put( "cron-string", cronString ); //$NON-NLS-1$
-    params.put( "actionRef", actionRef ); //$NON-NLS-1$
-
+    if(actionRef != null && actionRef.length() > 0) {
+    	params.put( "actionRef", actionRef ); //$NON-NLS-1$	
+    }
     String responseStrXml = executePostMethod( params );
   }
   
@@ -347,8 +352,9 @@ public class SchedulerAdminUIComponentProxy {
       params.put( "repeat-count", strRepeatCount ); //$NON-NLS-1$
     }
     params.put( "repeat-time-millisecs", repeatInterval ); //$NON-NLS-1$
-    params.put( "actionRef", actionRef ); //$NON-NLS-1$
-
+    if(actionRef != null && actionRef.length() > 0) {
+    	params.put( "actionRef", actionRef ); //$NON-NLS-1$	
+    }
     String responseStrXml = executePostMethod( params );
   }
   
