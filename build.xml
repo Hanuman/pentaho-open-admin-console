@@ -43,6 +43,12 @@
 				<!-- temporary fix to exclude jar slipping through the cracks and making it this far that shouldn't -->
 				<exclude name="**/gwt-user*.jar" />
 				<exclude name="**/gwt-dev*.jar" />
+				<exclude name="**/hsqldb*.jar" />
+				<exclude name="**/mysql*.jar" />
+			</zipfileset>
+			<zipfileset dir="lib" prefix="${admin-console.name}/jdbc">
+				<include name="hsqldb*.jar"/>
+				<include name="mysql*.jar"/>
 			</zipfileset>
 			<zipfileset dir="${basedir}/resource/config" prefix="${admin-console.name}/resource/config" />
 			<zipfileset dir="${basedir}/resource/hibernate" prefix="${admin-console.name}/resource/hibernate" />
@@ -84,8 +90,6 @@
 				<attribute name="Implementation-Version" value="${project.revision}" />
 				<attribute name="Implementation-Vendor" value="${impl.vendor}" />
 				<attribute name="Implementation-ProductID" value="${impl.productID}" />
-				<attribute name="Main-Class" value="org.pentaho.pac.server.JettyServer" />
-				<attribute name="Class-Path" value="../resource/hibernate/ ${class-path}" />
 			</manifest>
 			<fileset dir="${classes.dir}"/>
 		</jar>
