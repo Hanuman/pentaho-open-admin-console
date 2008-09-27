@@ -983,4 +983,8 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   public void initialze() throws ServiceInitializationException {
       HibernateSessionFactory.addDefaultConfiguration();  
   }
+  
+  public String getHelpUrl(){
+    return AppConfigProperties.getInstance().getHelpUrl(); 
+  }
 }

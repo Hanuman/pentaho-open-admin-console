@@ -45,4 +45,6 @@ public interface PacServiceAsync extends PentahoAsyncService{
 
   public void getBIServerBaseUrl(AsyncCallback callback);
   
+  public void getHelpUrl(AsyncCallback callback);
+  
 }

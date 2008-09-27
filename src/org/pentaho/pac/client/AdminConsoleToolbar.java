@@ -75,7 +75,16 @@ public class AdminConsoleToolbar extends HorizontalPanel {
     createImage.setTitle(PentahoAdminConsole.MSGS.resetServer());
     helpImage.addClickListener( new ClickListener() {
       public void onClick(Widget sender) {
-        Window.open("./doc/userguide.pdf", "UserGuide", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        PacServiceFactory.getPacService().getHelpUrl(new AsyncCallback<String>(){
+
+          public void onFailure(Throwable arg0) {
+            // TODO Add message indicating failure to find help doc
+          }
+
+          public void onSuccess(String helpUrl) {
+            Window.open(helpUrl, "UserGuide", ""); //$NON-NLS-1$ //$NON-NLS-2$
+          }          
+        });
       }
     });
 

@@ -86,6 +86,8 @@ public class AppConfigProperties {
   
   public static final String KEY_JDBC_DRIVERS_PATH = "jdbc-drivers-path"; //$NON-NLS-1$
   
+  public static final String KEY_HELP_URL = "help-url"; //$NON-NLS-1$
+  
   public static final String DEFAULT_PROPERTIES_FILE_NAME = "console.xml"; //$NON-NLS-1$
 
   public static final String DEFAULT_VALUE_PASSWORD_SERVICE_CLASS = "org.pentaho.platform.util.Base64PasswordService"; //$NON-NLS-1$
@@ -101,6 +103,8 @@ public class AppConfigProperties {
   public static final String DEFAULT_HOMEPAGE_TIMEOUT = "15000"; //$NON-NLS-1$
   
   public static final String DEFAULT_HIBERNATE_CONFIG_PATH = "hsql.hibernate.cfg.xml"; //$NON-NLS-1$
+  
+  public static final String DEFAULT_HELP_URL = "http://wiki.pentaho.com/display/PentahoDoc/01.The+Pentaho+Administration+Console"; //$NON-NLS-1$
     
   private static final String BASE_URL = "base-url"; //$NON-NLS-1$
   
@@ -286,6 +290,11 @@ public class AppConfigProperties {
   public String getJdbcDriverPath() {
     return settings.getSystemSetting(KEY_JDBC_DRIVERS_PATH, null);
   }
+  
+  public String getHelpUrl(){
+    return settings.getSystemSetting(KEY_HELP_URL, DEFAULT_HELP_URL);
+  }
+  
   /**
    * Reuse of {@link SystemSettings} where settings are read from <code>resource/config/console.xml</code>.
    * 
