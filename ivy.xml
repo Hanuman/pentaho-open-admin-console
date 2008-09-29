@@ -65,7 +65,8 @@
     <dependency org="pentaho"         name="pentaho-bi-platform-util" rev="${project.revision}" conf="codegen,runtime->default" transitive="false" changing="true" />
     <dependency org="pentaho"         name="pentaho-bi-platform-engine-core" rev="${project.revision}" conf="codegen,runtime->default" transitive="false" changing="true" />
     
-    <dependency org="${ivy.artifact.group}" name="pentaho-gwt-widgets" rev="${dependency.pentaho-gwt-widgets.revision}" conf="codegen,runtime->default" changing="true">
+    <!-- The organization of GWT Widgets can not be varied since we do not create optimized versions of the GWT Widgets -->
+    <dependency org="pentaho" name="pentaho-gwt-widgets" rev="${dependency.pentaho-gwt-widgets.revision}" conf="codegen,runtime->default" changing="true">
       <artifact name="pentaho-gwt-widgets"/>
       <artifact name="pentaho-gwt-widgets" type="source" ext="jar" m:classifier="sources"/>
       <!--    we don't want gwt-user included in our distribution so exclude it here-->
