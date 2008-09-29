@@ -80,7 +80,7 @@
       ====================================================================-->
   <target name="resolve-codegen" depends="resolve-init" description="Resolves all OS-specific codegen configurations">
     <ivy:resolve file="ivy.xml" conf="codegen-${os.classifier}" />
-    <ivy:retrieve conf="codegen-${os.classifier}" pattern="${codegenlib.dir}/[module]-[revision].[ext]" />
+    <ivy:retrieve conf="codegen-${os.classifier}" pattern="${codegenlib.dir}/[module]-[revision](-[classifier]).[ext]" />
   </target>
 
 
