@@ -1487,12 +1487,6 @@ a:visited {
 	margin-right:8px;
 }
 
-/* begin */
-.filterPanel {
-	border: 1px dotted purple;
-}
-/* end */
-
 .datepicker {
 	background-color: #AAAAFF;
 }
@@ -1561,7 +1555,7 @@ a:visited {
 
 /* begin scheduler toolbar */
 .schedToolbar {
-	border: 1px dotted #999999;
+	border: 1px solid #999999;
 	width:100%;
 	background-color: #DDDDDD;
 }
