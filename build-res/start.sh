@@ -11,8 +11,7 @@ if [ $S1=$S2 ]; then
   fi
 fi
 
-CLASSPATH=.:resource/config
-
+CLASSPATH=.:resource/config:resource/hibernate
 files=$(ls ./jdbc/*.jar ./lib/*.jar)
 
 for i in $files

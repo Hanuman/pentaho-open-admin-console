@@ -23,7 +23,8 @@
 
 	<property name="build.jars.dir" value="${bin.dir}/jar-tmp" description="Temp directory to hold jars originating from the build" />
 	<property name="admin-console.name" value="administration-console" description="The name of the administration console's directory" />
-
+	<property name="package.resdir" value="${basedir}/package-res" />
+	
 	<path id="oac.classpath">
 		<fileset dir="lib">
 			<exclude name="**/test/*" />
@@ -50,8 +51,7 @@
 				<include name="hsqldb*.jar"/>
 				<include name="mysql*.jar"/>
 			</zipfileset>
-			<zipfileset dir="${basedir}/resource/config" prefix="${admin-console.name}/resource/config" />
-			<zipfileset dir="${basedir}/resource/hibernate" prefix="${admin-console.name}/resource/hibernate" />
+			<zipfileset dir="${package.resdir}" prefix="${admin-console.name}" />
 			<zipfileset dir="${gwt.output.dir}" prefix="${admin-console.name}/www">
 				<exclude name=".gwt-tmp/" />
 				<exclude name="*-aux/" />
