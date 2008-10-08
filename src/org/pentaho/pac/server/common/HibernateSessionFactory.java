@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.Environment;
 
 
 /**
@@ -33,7 +34,9 @@ public class HibernateSessionFactory {
      
     private static Map<String,HibConfig> configs = new HashMap<String,HibConfig>();
     private static String defaultConfigFile = null;
-
+    private static boolean isHibernateManaged = false;
+    private static String factoryJndiName;
+    
     private HibernateSessionFactory() {
     }
     
@@ -61,8 +64,18 @@ public class HibernateSessionFactory {
     	
     	try {
 			configuration.configure(configFile);
-			SessionFactory sessionFactory = configuration.buildSessionFactory();
-			configs.put(name,new HibConfig(sessionFactory,configuration,configFile));
+			isHibernateManaged = AppConfigProperties.getInstance().isHibernateManaged();
+			if(!isHibernateManaged) {
+	      SessionFactory sessionFactory = configuration.buildSessionFactory();
+	      configs.put(name,new HibConfig(sessionFactory,configuration,configFile));			  
+			} else {
+        factoryJndiName = configuration.getProperty(Environment.SESSION_FACTORY_NAME);
+        if (factoryJndiName != null && factoryJndiName.length() > 0) {
+          configuration.buildSessionFactory(); // Let hibernate Bind it to JNDI...  
+        } else {
+          throw new HibernateException("Hibernate is configured to be managed and" + Environment.SESSION_FACTORY_NAME.toString()+ " is missing or null.");
+        }
+			}
 		} catch (Exception e) {
 			System.err
 					.println("%%%% Error Creating SessionFactory %%%%");

@@ -3,13 +3,10 @@
   PUBLIC "-//Hibernate/Hibernate Configuration DTD//EN"
   "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
-  <session-factory name="java:Pentaho/SessionFactory" >
-  
+  <session-factory>
   	<property name="cache.provider_class">org.hibernate.cache.EhCacheProvider</property>
-
     <property name="hibernate.generate_statistics">true</property>
     <property name="hibernate.cache.use_query_cache">true</property>
-      
     <property name="connection.driver_class">org.hsqldb.jdbcDriver</property>
     <property name="connection.url">jdbc:hsqldb:hsql://localhost:9001/hibernate</property>
     <property name="connection.username">hibuser</property>

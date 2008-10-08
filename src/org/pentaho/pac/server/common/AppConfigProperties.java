@@ -242,7 +242,21 @@ public class AppConfigProperties {
      }
     return returnValue;
   }
+  public boolean isHibernateManaged() {
+    String solutionPath = getSolutionPath();
+    boolean returnValue = false;
+    try {
+      HibernateSettingsXml hibernateSettingXml = new HibernateSettingsXml(new File(solutionPath + HIBERNATE_MANAGED_XML_PATH));
+      String hibernateManaged = hibernateSettingXml.getHibernateManaged();
+      if(hibernateManaged != null && hibernateManaged.length() > 0) {
+        returnValue = Boolean.parseBoolean(hibernateManaged);  
+      } 
+    } catch(Exception e) {
+      logger.error("Unable to read file : " +solutionPath + HIBERNATE_MANAGED_XML_PATH); //$NON-NLS-1$
+    } 
 
+    return returnValue;
+  }
   public String getSolutionPath() {
     return settings.getSystemSetting(KEY_SOLUTION_PATH, null);
   }
