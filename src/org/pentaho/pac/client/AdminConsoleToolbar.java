@@ -71,8 +71,6 @@ public class AdminConsoleToolbar extends HorizontalPanel {
     indicatorsRight.add(indicators);
     Image helpImage = PacImageBundle.getBundle().helpIcon().createImage();
     helpImage.setTitle(PentahoAdminConsole.MSGS.help());
-    Image createImage = PacImageBundle.getBundle().refreshIcon().createImage();
-    createImage.setTitle(PentahoAdminConsole.MSGS.resetServer());
     helpImage.addClickListener( new ClickListener() {
       public void onClick(Widget sender) {
         PacServiceFactory.getPacService().getHelpUrl(new AsyncCallback<String>(){
@@ -87,8 +85,25 @@ public class AdminConsoleToolbar extends HorizontalPanel {
         });
       }
     });
+    
+    Image refreshSettingsImage = PacImageBundle.getBundle().refreshIcon().createImage();
+    refreshSettingsImage.setTitle(PentahoAdminConsole.MSGS.resetServer());
+    refreshSettingsImage.addClickListener( new ClickListener() {
+      public void onClick(Widget sender) {
+        PacServiceFactory.getPacService().getHelpUrl(new AsyncCallback<String>(){
 
-    addImageButton(createImage);
+          public void onFailure(Throwable arg0) {
+            // TODO Add message indicating failure to find help doc
+          }
+
+          public void onSuccess(String helpUrl) {
+            Window.open(helpUrl, "UserGuide", ""); //$NON-NLS-1$ //$NON-NLS-2$
+          }          
+        });
+      }
+    });
+
+    addImageButton(refreshSettingsImage);
     addImageButton(helpImage);
     
     centerPanel.add(buttonsPanel);
