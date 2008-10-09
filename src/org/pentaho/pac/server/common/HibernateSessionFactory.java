@@ -3,6 +3,10 @@ package org.pentaho.pac.server.common;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -36,6 +40,7 @@ public class HibernateSessionFactory {
     private static String defaultConfigFile = null;
     private static boolean isHibernateManaged = false;
     private static String factoryJndiName;
+    private static Context initialContext;
     
     private HibernateSessionFactory() {
     }
@@ -64,6 +69,7 @@ public class HibernateSessionFactory {
     	
     	try {
 			configuration.configure(configFile);
+			// If Hibernate is running in a managed environment
 			isHibernateManaged = AppConfigProperties.getInstance().isHibernateManaged();
 			if(!isHibernateManaged) {
 	      SessionFactory sessionFactory = configuration.buildSessionFactory();
@@ -169,11 +175,37 @@ public class HibernateSessionFactory {
 	}
 	
 	public static org.hibernate.SessionFactory getSessionFactory(String configName) {
-		HibConfig cfg = configs.get(configName);
-    	if (cfg==null)
-    		throw new HibernateException("Unknown configuration: " + configName);
-    	
-    	return cfg.sessionFactory;
+	  isHibernateManaged = AppConfigProperties.getInstance().isHibernateManaged();
+    // If Hibernate is managed than get the session factory from Jndi otherwise return the session factory from the map
+	  if (!isHibernateManaged) {
+      HibConfig cfg = configs.get(configName);
+      if (cfg==null)
+        throw new HibernateException("Unknown configuration: " + configName);
+      
+      return cfg.sessionFactory;
+    } else {
+      SessionFactory sf = null;
+      try {
+        if (initialContext == null) {
+          initialContext = new InitialContext();
+        }
+        String jndiName = factoryJndiName;
+        try {
+          sf = (SessionFactory) initialContext.lookup(jndiName);
+        } catch (Exception ignored) {
+        }
+        if (sf == null) {
+          try {
+            sf = (SessionFactory) initialContext.lookup("java:" + jndiName); //$NON-NLS-1$
+          } catch (Exception ignored) {
+            ignored.printStackTrace();
+          }
+        }
+      } catch (NamingException ignored) {
+      }
+      return sf;
+      
+    }
 	}
 
 	/**
