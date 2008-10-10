@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.BindException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.StringTokenizer;
 
 import javax.servlet.ServletException;
@@ -45,9 +47,8 @@ public class JettyServer implements Halter, IJettyServer {
   String realmName = null;
   String loginModuleName = null;
   String securitEnabledValue = null;
-  private String hostname;
   private static final Log logger = LogFactory.getLog(JettyServer.class);
-  public int stopPort = 0;
+  private static int stopPort = 0;
   private boolean running = false;
   public static JettyServer jettyServer;
   
@@ -67,21 +68,6 @@ public class JettyServer implements Halter, IJettyServer {
     // Set the jetty.home to PEHTAHO_HOME
     System.setProperty(JETTY_HOME, consoleHome);
     readConfiguration();
-    server = new Server();
-    setupServer();
-    startServer();
-    stopHandler(this, stopPort);
-  }
-
-  public JettyServer(String hostname, int port, int stop) {
-    // Get the CONSOLE_HOME Environment variable. This is required as it is needed to cofigure Jetty
-    consoleHome = System.getProperty("CONSOLE_HOME", CURRENT_DIR);
-    // Set the jetty.home to PEHTAHO_HOME
-    System.setProperty(JETTY_HOME, consoleHome);
-    readConfiguration();
-    this.portNumber = port;
-    this.hostname = hostname;
-    stopPort = stop;
     server = new Server();
     setupServer();
     startServer();
@@ -128,8 +114,20 @@ public class JettyServer implements Halter, IJettyServer {
       connector = new SocketConnector();
       connector.setPort(portNumber);
     }
+    String hostIP;
+    String hostName;
+    try {
+      hostIP = InetAddress.getLocalHost().getHostAddress();
+      hostName = InetAddress.getLocalHost().getHostName();
+    } catch (UnknownHostException e) {
+      hostIP = DEFAULT_HOSTNAME;
+      hostName = DEFAULT_HOSTNAME;
+    }
+    
+    if(connector instanceof SocketConnector) {
+      ((SocketConnector) connector).setResolveNames(true);  
+    }
 
-    connector.setHost(hostname);
     logger.info("starting " + connector.getName()); //$NON-NLS-1$
     server.setConnectors(new Connector[] { connector });
     server.setStopAtShutdown(true);
@@ -137,6 +135,11 @@ public class JettyServer implements Halter, IJettyServer {
 
     try {
       server.start();
+      logger.info("Administration console is now started. Console can be accessed " +//$NON-NLS-1$
+      		" using " + ((sslEnable) ? "https" : "http")//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      		  + "://" + hostName + ":" + connector.getPort() + " or " + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+      		    ((sslEnable) ? "https" : "http") //$NON-NLS-1$ //$NON-NLS-2$
+      		      + "://" + hostIP + ":" + connector.getPort()); //$NON-NLS-1$ //$NON-NLS-2$
     } catch (BindException e) {
       haltNow();
     } catch (RuntimeException e) {
@@ -256,16 +259,6 @@ public class JettyServer implements Halter, IJettyServer {
     this.portNumber = portNumber;
   }
 
-  public String getHostname() {
-
-    return hostname;
-  }
-
-  public void setHostname(String hostname) {
-
-    this.hostname = hostname;
-  }
-
   public static void main(String[] args) {
     jettyServer = new JettyServer();
   }
@@ -295,20 +288,19 @@ public class JettyServer implements Halter, IJettyServer {
     }
 
     public void run() {
-      System.out.println(Messages.getString("CONSOLE.WAITING_TO_HALT")); //$NON-NLS-1$
+      logger.info(Messages.getString("CONSOLE.WAITING_TO_HALT")); //$NON-NLS-1$
       try {
         Thread.sleep(3000);
       } catch (Exception e) {
         // ignore this
       }
-      System.out.println(Messages.getString("CONSOLE.HALTING")); //$NON-NLS-1$
+      logger.info(Messages.getString("CONSOLE.HALTING")); //$NON-NLS-1$
       jettyServer.haltNow();
     }
   }
   
   public void readConfiguration() {
       String port = ConsoleProperties.getInstance().getProperty(ConsoleProperties.CONSOLE_PORT_NUMBER);
-      String hostname = ConsoleProperties.getInstance().getProperty(ConsoleProperties.CONSOLE_HOST_NAME);
       String stopPortNumber = ConsoleProperties.getInstance().getProperty(ConsoleProperties.STOP_PORT);
 
       if (port != null && port.length() > 0) {
@@ -323,13 +315,6 @@ public class JettyServer implements Halter, IJettyServer {
         stopPort = DEFAULT_STOP_PORT_NUMBER;
       }
 
-      
-      if (hostname != null && hostname.length() > 0) {
-        this.hostname = hostname;
-      } else {
-        this.hostname = DEFAULT_HOSTNAME;
-      }
-      
       roles = ConsoleProperties.getInstance().getProperty(ConsoleProperties.CONSOLE_SECURITY_ROLES_ALLOWED);
       String delimeterValue = ConsoleProperties.getInstance().getProperty(ConsoleProperties.CONSOLE_SECURITY_ROLE_DELIMITER);
 
@@ -359,14 +344,14 @@ public class JettyServer implements Halter, IJettyServer {
     try {
       server = new ServerSocket(stopPort);
     } catch (IOException ioe) {
-      System.out.println("IO Error: " + ioe.getLocalizedMessage());//$NON-NLS-1$
+      logger.error("IO Error:" + ioe.getLocalizedMessage()); //$NON-NLS-1$
     }
     try {
       Socket s = server.accept();
       Thread t = new Thread(new RequestHandler(jServer, s));
       t.start();
     } catch (Exception e) {
-      System.out.println("IO Error: " + e.getLocalizedMessage());//$NON-NLS-1$
+      logger.error("IO Error:" + e.getLocalizedMessage()); //$NON-NLS-1$
     }
   }
   
@@ -406,6 +391,7 @@ public class JettyServer implements Halter, IJettyServer {
         sslConnector.setTrustPassword(ssl.getTrustStorePassword());
     }
     sslConnector.setTruststoreType(ssl.getTrustStoreType());
+    sslConnector.setResolveNames(true);
     connector = sslConnector;
     return connector;
 }
@@ -429,19 +415,19 @@ public class JettyServer implements Halter, IJettyServer {
           if (inputLine != null && inputLine.length() > 0) {
             inputLine = inputLine.trim();
             if (inputLine.equalsIgnoreCase(ConsoleProperties.STOP_ARG)) {
-              System.out.println("Waiting to halt console"); //$NON-NLS-1$
+              logger.info("Waiting to halt console"); //$NON-NLS-1$
               try {
                 Thread.sleep(3000);
               } catch (Exception e) {
                 // ignore this
               }
-              System.out.println("Console is halting"); //$NON-NLS-1$
+              logger.info("Console is halting"); //$NON-NLS-1$
               jettyServer.haltNow();
             }
           }
         }
       } catch (IOException ioe) {
-        System.out.println("IO Error: " + ioe.getLocalizedMessage());//$NON-NLS-1$
+        logger.error("IO Error:" + ioe.getLocalizedMessage()); //$NON-NLS-1$
       }
     }
   }

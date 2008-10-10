@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -20,7 +22,6 @@ public class StopJettyServer {
   public static final String STOP_PORT = "console.stop.port.number";//$NON-NLS-1$
   private static final Log logger = LogFactory.getLog(StopJettyServer.class);
   public static int stopPort = 0;
-  private static String host;
 
   public static void main(String[] args) {
     FileInputStream fis = null;
@@ -40,7 +41,6 @@ public class StopJettyServer {
       }
     }
     if (properties != null) {
-      String hostname = properties.getProperty(CONSOLE_HOST_NAME, null);
       String stopPortNumber = properties.getProperty(STOP_PORT, null);
 
       if (stopPortNumber != null && stopPortNumber.length() > 0) {
@@ -48,24 +48,30 @@ public class StopJettyServer {
       } else {
         stopPort = DEFAULT_STOP_PORT_NUMBER;
       }
-
-      if (hostname != null && hostname.length() > 0) {
-        host = hostname;
-      } else {
-        host = DEFAULT_HOSTNAME;
-      }
     } else {
-      host = DEFAULT_HOSTNAME;
       stopPort = DEFAULT_STOP_PORT_NUMBER;
     }
-
+    InetAddress host = null;
+    String hostName = null;;
     try {
-      Socket clientSocket = new Socket(host, stopPort);
+      host = InetAddress.getLocalHost();
+    } catch (UnknownHostException e) {
+      hostName = DEFAULT_HOSTNAME;
+    }
+    
+    try {
+      Socket clientSocket = null;
+      // If you were not able to find the host name we will default to localhost
+      if(hostName != null && hostName.length() > 0) {
+        clientSocket = new Socket(hostName, stopPort);
+      } else {
+        clientSocket = new Socket(host, stopPort);
+      }
       PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
       out.println(STOP_ARG);
       out.flush();
     } catch (Exception e) {
-      System.out.println("Unknown host"); //$NON-NLS-1$
+      logger.error(Messages.getString("PacService.UNKNOWN_HOST", host.getHostName())); //$NON-NLS-1$
     }
 
   }
