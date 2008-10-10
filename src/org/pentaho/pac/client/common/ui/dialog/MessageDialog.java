@@ -8,6 +8,7 @@ import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -18,6 +19,9 @@ import com.google.gwt.user.client.ui.Widget;
  *
  */
 public class MessageDialog extends BasicDialog {
+  
+  private static final String DEFAULT_WIDTH = "240px"; //$NON-NLS-1$
+  private static final String DEFAULT_HEIGHT = "120px"; //$NON-NLS-1$
 
   protected static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   protected Label msgLabel = null;
@@ -30,7 +34,12 @@ public class MessageDialog extends BasicDialog {
   private IResponseCallback<MessageDialog, Boolean> validateHandler = null;
   
   public MessageDialog( String title, String msg ) {
-    super( title );
+    super( title, false );
+    
+    setNoBorderOnClientPanel();
+    setButtonPanelAlign(HasHorizontalAlignment.ALIGN_CENTER, null);
+    
+    setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     
     msgLabel = new Label();
     setMessage( msg );

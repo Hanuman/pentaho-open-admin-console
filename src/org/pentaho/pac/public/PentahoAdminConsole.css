@@ -277,11 +277,11 @@ a:visited {
 	border-style:solid;
 	border-color:#000000;
 	border-width:1px;
-	margin: 0px 3px;	/* top right bottom left*/
+	margin: 0px 0px 0px 10px;	/* top right bottom left*/
 }
 
 .gwt-Button:hover {
-	margin: 0px 0px 0px 0px;	/* top right bottom left*/
+	margin: 0px 0px 0px 10px;	/* top right bottom left*/
 	height:22px;
 	background-image:url(buttonhoverbg.gif);
 	background-image: expression('url(buttonhoverbg.gif)');
@@ -294,7 +294,7 @@ a:visited {
 }
 
 .gwt-Button:disabled {
-	margin: 0px 0px 0px 10px;	/* top right bottom left*/
+   margin: 0px 0px 0px 10px;	/* top right bottom left*/
    height:22px;
    background-image:url(buttonbg.gif);
    background-image: expression('url(buttonbg.gif)');
@@ -342,10 +342,11 @@ a:visited {
 }
 
 .gwt-DialogBox .Caption {
-  background-color: #87944c;
-  color: #ffffff;
+  background-color: #C2CFA2;
+  background-image: none;
+  color: #000000;
   cursor: move;
-  /*border-bottom: 2px solid #777777;*/
+  border-bottom: 1px solid #777777;
   text-align: left;
   padding: 2px 5px 2px 5px; /* top right bottom left */
 }
@@ -1208,30 +1209,30 @@ a:visited {
 
 /* begin styles for BasicDialog, also see: ".gwt-DialogBox" and ".gwt-DialogBox .Caption" */
 .basicDialog\.rootPanel {
-	margin: 20px 20px 10px 20px;	/* top right bottom left*/
-	background-color: #EDEDED;
+	margin: 0px 0px 0px 0px;	/* top right bottom left*/
+	background-color: #ECECEC;
 	padding: 0px;
 }
 
 .basicDialog\.clientPanel {
 	border: 1px solid #95A22C;
-	margin-bottom: 10px;
+	margin: 10px 10px 15px 10px;
 	vertical-align: top;
-	padding: 10px;
+	padding: 0px;
 }
 
 .basicDialog\.clientPanelNoBorder {
+	margin: 10px 10px 15px 10px;
 	margin-bottom: 10px;
 	vertical-align: top;
 }
 
 .basicDialog\.buttonPanel {
-	/*background-color: red;*/
-	padding: 0px;
+	border-top: 1px solid #95A22C;
+	padding: 6px 10px 6px 0px;
 }
 
 .basicDialog\.button {
-	/*background-color: red;*/
 	padding: 0px;
 	margin: 0px 0px 0px 10px;	/* top right bottom left*/
 }

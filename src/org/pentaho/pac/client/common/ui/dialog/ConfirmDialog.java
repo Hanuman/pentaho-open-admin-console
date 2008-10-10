@@ -4,6 +4,7 @@ import org.pentaho.gwt.widgets.client.ui.ICallback;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -22,6 +23,9 @@ public class ConfirmDialog extends MessageDialog {
   
   public ConfirmDialog( String title, String msg ) {
     super( title, msg );
+    
+    setButtonPanelAlign(HasHorizontalAlignment.ALIGN_RIGHT, null);
+    
     final ConfirmDialog localThis = this;
     cancelBtn = new Button(MSGS.cancel(), new ClickListener() {
       public void onClick(Widget sender) {
