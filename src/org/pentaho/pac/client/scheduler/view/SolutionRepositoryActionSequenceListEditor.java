@@ -8,9 +8,10 @@ import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class SolutionRepositoryActionSequenceListEditor extends VerticalPanel {
+public class SolutionRepositoryActionSequenceListEditor extends SimplePanel {
   
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
 
@@ -23,11 +24,8 @@ public class SolutionRepositoryActionSequenceListEditor extends VerticalPanel {
 
     setStylePrimaryName( "solutionRepositoryActionSequenceListEditor" ); //$NON-NLS-1$
     actionsEditor.setStyleName( "actionsEditor" ); //$NON-NLS-1$
-    actionsEditor.setVisibleItemCount( 25 );
-    //actionsEditor.setWidth( "100%" ); // TODO sbarkdull, get in css? //$NON-NLS-1$
-    //actionsEditor.setHeight( "100%" ); // TODO sbarkdull, get in css? //$NON-NLS-1$
+    actionsEditor.setHeight("100%"); //$NON-NLS-1$
     add( actionsEditor );
-    setCellHeight( actionsEditor, "100%" );
   }
   
   public void reset() {

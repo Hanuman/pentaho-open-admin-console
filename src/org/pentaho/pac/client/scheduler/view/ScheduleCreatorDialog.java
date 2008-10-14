@@ -30,6 +30,9 @@ import com.google.gwt.user.client.ui.TabPanel;
 public class ScheduleCreatorDialog extends ConfirmDialog {
   private static final String SELECTED = "selected"; //$NON-NLS-1$
   
+  private static final String DEFAULT_WIDTH = "475px"; //$NON-NLS-1$
+  private static final String DEFAULT_HEIGHT = "400px"; //$NON-NLS-1$
+  
   public enum TabIndex {
     SCHEDULE( 0, MSGS.schedule() ),
     SCHEDULE_ACTION( 1, MSGS.selectedFilesTabLabel() );
@@ -70,16 +73,20 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
     super();
     this.setNoBorderOnClientPanel();
     setTitle( MSGS.scheduleCreator() );
-    setClientSize( "475px", "450px" ); //$NON-NLS-1$ //$NON-NLS-2$
-
+    setSize( DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    
+    tabPanel.setSize("100%", "100%");
+    
     actionSequenceEditor.setWidth( "100%" ); //$NON-NLS-1$
     actionSequenceEditor.setHeight( "100%" ); //$NON-NLS-1$
     
-    tabPanel.setStylePrimaryName( "schedulerTabPanel" ); //$NON-NLS-1$
+    // tabPanel.setStylePrimaryName( "schedulerTabPanel" ); //$NON-NLS-1$
     tabPanel.add( scheduleEditor, scheduleTabLabel );
     tabPanel.add( actionSequenceEditor, scheduleActionTabLabel );
     DeckPanel dp = tabPanel.getDeckPanel();
-    dp.addStyleName( "scheduleCreatorDeckPanel" ); //$NON-NLS-1$
+    dp.setStyleName( "scheduleCreatorDeckPanel" ); //$NON-NLS-1$
+    dp.addStyleName("gwt-TabPanelBottom");
+    dp.setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     
     scheduleTabLabel.setStylePrimaryName( "tabLabel" ); //$NON-NLS-1$
     scheduleActionTabLabel.setStylePrimaryName( "tabLabel" ); //$NON-NLS-1$
@@ -111,6 +118,13 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
     });
     
     addWidgetToClientArea( tabPanel );
+  }
+  
+  public void setPanelSize(String width, String height){
+    setSize(width, height);
+    
+    DeckPanel dp = tabPanel.getDeckPanel();
+    dp.setSize(width, height);    
   }
 
   public DualModeScheduleEditor getScheduleEditor() {
