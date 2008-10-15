@@ -9,7 +9,14 @@
     <conf name="codegen-linux" extends="codegen" visibility="private" />
     <conf name="codegen-mac" extends="codegen" visibility="private" />
     <conf name="codegen-win" extends="codegen" visibility="private" />
+    <conf name="source" />
   </configurations>
+  
+  <publications>
+    <artifact name="${ivy.artifact.id}" type="jar" conf="default"/>
+    <artifact name="${ivy.artifact.id}" m:classifier="sources" type="source" ext="jar" conf="source"/>
+  </publications>
+  
   
   <dependencies defaultconf="default->default">
   
