@@ -12,12 +12,21 @@ public class NonExistingUserException extends CheckedException implements Serial
    */
   private static final long serialVersionUID = 1L;
 
-  public NonExistingUserException() {
-    super();
+
+  public NonExistingUserException(String msg) {
+    super(msg);
   }
   
-  public NonExistingUserException(String msg) {
-   super( msg ); 
+  public NonExistingUserException(Throwable cause) {
+    super(cause);
+  }
+
+  public NonExistingUserException(String message, Throwable cause) {
+    super(message, cause);
+  }
+  
+  public NonExistingUserException() {
+    super();
   }
 
 }

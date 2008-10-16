@@ -13,13 +13,18 @@
 
     <!--  Oracle 10g Configuration -->
     <property name="connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
-    <property name="connection.url">jdbc:oracle:thin:@localhost:1521:pentaho</property>
+    <property name="connection.url">jdbc:oracle:thin:@localhost:1521:xe</property>
     <property name="dialect">org.hibernate.dialect.Oracle10gDialect</property>
     <property name="connection.username">hibuser</property>
     <property name="connection.password">password</property>
     <property name="connection.pool_size">10</property>
     <property name="show_sql">false</property>
     <property name="hibernate.jdbc.use_streams_for_binary">true</property>
-    <mapping resource="oracle10g.hbm.xml" />        
+    <!-- replaces DefinitionVersionManager -->
+    <property name="hibernate.hbm2ddl.auto">update</property>
+    <mapping resource="oracle10g.hbm.xml" />
+    <!-- load mappings from pentaho-bi-platform-security-userroledao-x.jar -->
+    <mapping resource="PentahoUser.hbm.xml" />
+    <mapping resource="PentahoRole.hbm.xml" />       
   </session-factory>
 </hibernate-configuration>

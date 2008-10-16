@@ -8,6 +8,8 @@ import org.pentaho.pac.common.roles.NonExistingRoleException;
 import org.pentaho.pac.common.users.DuplicateUserException;
 import org.pentaho.pac.common.users.NonExistingUserException;
 import org.pentaho.pac.server.common.DAOException;
+import org.pentaho.platform.engine.security.userroledao.IPentahoRole;
+import org.pentaho.platform.engine.security.userroledao.IPentahoUser;
 
 /*package private */ interface IUserRoleMgmtService {
 
@@ -34,12 +36,5 @@ import org.pentaho.pac.server.common.DAOException;
   public void updateRole(IPentahoRole role) throws NonExistingRoleException, DAOException, PentahoSecurityException;
 
   public void updateUser(IPentahoUser user) throws NonExistingUserException, DAOException, PentahoSecurityException;
-  
-  public void beginTransaction() throws DAOException;
-    
-  public void commitTransaction() throws DAOException;
-  
-  public void rollbackTransaction() throws DAOException;
-  
-  public void closeSession();
+
 }

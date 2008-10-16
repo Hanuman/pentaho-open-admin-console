@@ -31,36 +31,4 @@
         <column name="WAIT"  not-null="true" />
       </property>      
     </class>
-        <class name="org.pentaho.pac.server.PentahoRole" table="AUTHORITIES">
-        <id name="name" type="java.lang.String">
-            <column name="AUTHORITY" />
-            <generator class="assigned" />
-        </id>
-        <property name="description" type="java.lang.String">
-            <column name="DESCRIPTION" length="100" />
-        </property>
-        <set name="assignedUsers" table="GRANTED_AUTHORITIES">
-        	<key column="AUTHORITY"/>
-        	<many-to-many column="USERNAME" class="org.pentaho.pac.server.PentahoUser"/>
-        </set>
-    </class>
-    <class name="org.pentaho.pac.server.PentahoUser" table="USERS">
-        <id name="name" type="java.lang.String">
-            <column name="USERNAME" />
-            <generator class="assigned" />
-        </id>
-        <property name="password" type="java.lang.String">
-            <column name="PASSWORD" length="50" not-null="true" />
-        </property>
-        <property name="description" type="java.lang.String">
-            <column name="DESCRIPTION" length="128" not-null="true" />
-        </property>
-        <property name="enabled">
-            <column name="ENABLED" not-null="true" />
-        </property>
-        <set name="assignedRoles" table="GRANTED_AUTHORITIES" inverse="true">
-        	<key column="USERNAME"/>
-        	<many-to-many column="AUTHORITY" class="org.pentaho.pac.server.PentahoRole"/>
-        </set>
-    </class>    
 </hibernate-mapping>

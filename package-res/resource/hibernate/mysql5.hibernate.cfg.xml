@@ -19,6 +19,11 @@
     <property name="connection.pool_size">10</property>
     <property name="show_sql">false</property>
     <property name="hibernate.jdbc.use_streams_for_binary">true</property>
-    <mapping resource="mysql5.hbm.xml" />    
+    <!-- replaces DefinitionVersionManager -->
+    <property name="hibernate.hbm2ddl.auto">update</property>
+    <mapping resource="mysql5.hbm.xml" />
+    <!-- load mappings from pentaho-bi-platform-security-userroledao-x.jar -->
+    <mapping resource="PentahoUser.hbm.xml" />
+    <mapping resource="PentahoRole.hbm.xml" />    
   </session-factory>
 </hibernate-configuration>
