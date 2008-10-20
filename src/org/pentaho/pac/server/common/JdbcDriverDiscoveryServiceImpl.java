@@ -30,7 +30,8 @@ public class JdbcDriverDiscoveryServiceImpl extends RemoteServiceServlet impleme
   private static final long interval = 300000; // every five mins
 
   private final HashMap<String,CacheInfo> cache = new HashMap<String,CacheInfo>();
-  private static final String DEFAULT_JDBC_PATH = "./lib";
+  private static final String DEFAULT_JDBC_PATH_1 = "./lib";
+  private static final String DEFAULT_JDBC_PATH_2 = "./lib-ext/jdbc";
 
   private static String jdbcDriverPath;
 
@@ -48,7 +49,9 @@ public class JdbcDriverDiscoveryServiceImpl extends RemoteServiceServlet impleme
     AppConfigProperties appCfg = AppConfigProperties.getInstance();
     jdbcDriverPath = StringUtils.defaultIfEmpty(appCfg.getJdbcDriverPath(), System.getProperty("jdbc.drivers.path")); //$NON-NLS-1$ //$NON-NLS-2$
     if(!isExist(jdbcDriverPath)) {
-      jdbcDriverPath = DEFAULT_JDBC_PATH;
+      jdbcDriverPath = DEFAULT_JDBC_PATH_1;
+    } else if(!isExist(jdbcDriverPath)){
+      jdbcDriverPath = DEFAULT_JDBC_PATH_2;
     }
     cache.clear();
   }
@@ -64,28 +67,27 @@ public class JdbcDriverDiscoveryServiceImpl extends RemoteServiceServlet impleme
   }
 
   public NameValue[] getAvailableJdbcDrivers(String location) throws JdbcDriverDiscoveryServiceException {
-	  return getDrivers(location,false);
+    try {
+      return getDrivers(location,false); 
+    } catch(JdbcDriverDiscoveryServiceException jdse) {
+      jdbcDriverPath = DEFAULT_JDBC_PATH_2;
+      return getDrivers(location,false);
+    }
   }
   
   private NameValue[] getDrivers(String location,boolean relative) throws JdbcDriverDiscoveryServiceException {
-	  CacheInfo ci = cache.get(location);
-	  try {
-		 long timeMil = System.currentTimeMillis();
-	        
+    CacheInfo ci = cache.get(location);
+    try {
+     long timeMil = System.currentTimeMillis();
+          
       if (ci!=null){
         long inte =  timeMil - ci.lastCall;
         if (inte < interval) {
           return ci.cachedObj;
         }
       }
-      else {
-    	 ci = new CacheInfo();
-    	 ci.lastCall = timeMil;
-    	 cache.put(location, ci);
-      }
-      
+     
       if (location != null && location.length() > 0) {
-    	ci.lastCall = timeMil;
         File parent = relative?new File(getServletContext().getRealPath(location)):new File(location);
         FilenameFilter libs = new FilenameFilter() {
 
@@ -112,9 +114,21 @@ public class JdbcDriverDiscoveryServiceImpl extends RemoteServiceServlet impleme
           for (Class<? extends Driver> cd : resolver.getClasses())
             drivers.add(new NameValue(cd.getName(), cd.getName()));
 
-          ci.cachedObj = drivers.toArray(new NameValue[drivers.size()]);
+          if(drivers.size() > 0) {
+            if(ci == null) {
+              ci = new CacheInfo();
+              ci.lastCall = timeMil;
+              cache.put(location, ci);
+            }
+            ci.cachedObj = drivers.toArray(new NameValue[drivers.size()]);  
+          } else {
+            throw new JdbcDriverDiscoveryServiceException(Messages
+                .getString("JdbcDriverDiscoveryService.NO_DRIVERS_FOUND_IN_JDBC_DRIVER_PATH"));
+          }
+          
         } else {
-          ci.cachedObj = new NameValue[0];
+          throw new JdbcDriverDiscoveryServiceException(Messages
+              .getString("JdbcDriverDiscoveryService.NO_DRIVERS_FOUND_IN_JDBC_DRIVER_PATH"));
         }
       } else {
         throw new JdbcDriverDiscoveryServiceException(Messages
@@ -133,8 +147,8 @@ public class JdbcDriverDiscoveryServiceImpl extends RemoteServiceServlet impleme
   
   private class CacheInfo
   {
-	  private long lastCall;
-	  private NameValue[] cachedObj;
+    private long lastCall;
+    private NameValue[] cachedObj;
   }
   
   private boolean isExist(String location) {

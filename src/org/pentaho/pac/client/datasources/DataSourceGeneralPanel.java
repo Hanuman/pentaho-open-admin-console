@@ -1,12 +1,10 @@
 package org.pentaho.pac.client.datasources;
 
-import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.common.NameValue;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
@@ -26,32 +24,9 @@ public class DataSourceGeneralPanel extends VerticalPanel {
   TextBox driverClassNameTextBox = new TextBox();
   boolean driverClassListBoxHasValue = false;
   public DataSourceGeneralPanel() {
-    PacServiceFactory.getJdbcDriverDiscoveryService().getAvailableJdbcDrivers(
-        new AsyncCallback<NameValue[]>() {
-          public void onFailure(Throwable caught) {
-            jdbcClassNamePanel.add(driverClassNameTextBox);
-            driverClassNameTextBox.setWidth("100%"); //$NON-NLS-1$
-            constructDatasourcePanel();
-          }
-
-          public void onSuccess(NameValue[] result) {
-        	  if (result!=null) {
-	            for (NameValue res : result)
-	              driverList.addItem(res.getName(), res.getValue());
-    		  }
-            
-            driverClassListBoxHasValue = result != null && result.length > 0; 
-            if(driverClassListBoxHasValue) {
-              jdbcClassNamePanel.add(driverList);
-              driverList.setWidth("100%"); //$NON-NLS-1$
-              constructDatasourcePanel();
-            } else {
-              jdbcClassNamePanel.add(driverClassNameTextBox);
-              driverClassNameTextBox.setWidth("100%"); //$NON-NLS-1$
-              constructDatasourcePanel();
-            }
-          }
-        });      
+    jdbcClassNamePanel.add(driverClassNameTextBox);
+    driverClassNameTextBox.setWidth("100%"); //$NON-NLS-1$
+    constructDatasourcePanel();
   }
 
   private void constructDatasourcePanel() {
@@ -189,35 +164,29 @@ public class DataSourceGeneralPanel extends VerticalPanel {
     urlTextBox.setEnabled(enabled);
     driverClassNameTextBox.setEnabled(enabled);
   }
-  
-  public void refresh() {
+
+  public void refresh(NameValue[] drivers) {
     // First remove all the item in the list and then add the latest ones
     for(int i=0; i< driverList.getItemCount();i++) {
       driverList.removeItem(i);
     }
-    PacServiceFactory.getJdbcDriverDiscoveryService().getAvailableJdbcDrivers(
-        new AsyncCallback<NameValue[]>() {
-          public void onFailure(Throwable caught) {
-            driverList.removeFromParent();
-            jdbcClassNamePanel.add(driverClassNameTextBox);
-            driverClassNameTextBox.setWidth("100%"); //$NON-NLS-1$
-          }
-
-          public void onSuccess(NameValue[] result) {
-            for (NameValue res : result)
-              driverList.addItem(res.getName(), res.getValue());
-            driverClassListBoxHasValue = result != null && result.length > 0;
-            if(driverClassListBoxHasValue) {
-              driverClassNameTextBox.removeFromParent();
-              jdbcClassNamePanel.add(driverList);
-              driverList.setWidth("100%"); //$NON-NLS-1$
-            } else {
-              driverList.removeFromParent();
-              jdbcClassNamePanel.add(driverClassNameTextBox);
-              driverClassNameTextBox.setWidth("100%"); //$NON-NLS-1$
-            }
-          }
-        }); 
-  
+    if(drivers != null && drivers.length >  0) {
+      for (NameValue res : drivers)
+        driverList.addItem(res.getName(), res.getValue());
+      driverClassListBoxHasValue = drivers != null && drivers.length > 0;
+      if(driverClassListBoxHasValue) {
+        driverClassNameTextBox.removeFromParent();
+        jdbcClassNamePanel.add(driverList);
+        driverList.setWidth("100%"); //$NON-NLS-1$
+      } else {
+        driverList.removeFromParent();
+        jdbcClassNamePanel.add(driverClassNameTextBox);
+        driverClassNameTextBox.setWidth("100%"); //$NON-NLS-1$
+      }
+    } else {
+      driverList.removeFromParent();
+      jdbcClassNamePanel.add(driverClassNameTextBox);
+      driverClassNameTextBox.setWidth("100%"); //$NON-NLS-1$
+    }
   }
 }

@@ -4,6 +4,7 @@ import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
+import org.pentaho.pac.common.NameValue;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -336,8 +337,7 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
 
   }
   
-  public void refreshDriversList() {
-    dataSourceGeneralPanel.refresh();
+  public void refresh(NameValue[] drivers) {
+    dataSourceGeneralPanel.refresh(drivers);
   }
-
 }

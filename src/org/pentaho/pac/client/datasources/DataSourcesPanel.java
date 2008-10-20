@@ -6,6 +6,7 @@ import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.common.NameValue;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -197,7 +198,6 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
   }
 
   private void addNewDataSource() {
-    newDataSourceDialogBox.refreshDriversList();
     newDataSourceDialogBox.setDataSource(null);
     newDataSourceDialogBox.center();
   }
@@ -300,10 +300,10 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
     AsyncCallback<Boolean> connTestCallback = new AsyncCallback<Boolean>() {
       public void onSuccess(Boolean result) {
         if (dataSource.getQuery()!=null && !dataSource.getQuery().trim().equals("")) {
-        	PacServiceFactory.getPacService().testDataSourceValidationQuery(dataSource, validationUrlCallback);
+          PacServiceFactory.getPacService().testDataSourceValidationQuery(dataSource, validationUrlCallback);
         }
         else{
-        	messageDialog.setText(MSGS.testConnection());
+          messageDialog.setText(MSGS.testConnection());
             messageDialog.setMessage(MSGS.connectionTestSuccessful());
             messageDialog.center();
         }
@@ -336,16 +336,30 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
         new AsyncCallback() {
           public void onFailure(Throwable caught) {
             dataSourcesList.refresh();
-            dataSourceGeneralPanel.refresh();
+            dataSourceGeneralPanel.refresh(null);
             dataSourceAdvancePanel.refresh();
             dataSourceSelectionChanged();            
           }
 
           public void onSuccess(Object result) {
-            dataSourcesList.refresh();
-            dataSourceGeneralPanel.refresh();
-            dataSourceAdvancePanel.refresh();
-            dataSourceSelectionChanged();
+            PacServiceFactory.getJdbcDriverDiscoveryService().getAvailableJdbcDrivers(
+                new AsyncCallback<NameValue[]>() {
+                  public void onFailure(Throwable caught) {
+                    dataSourcesList.refresh();
+                    dataSourceGeneralPanel.refresh(null);
+                    dataSourceAdvancePanel.refresh();
+                    newDataSourceDialogBox.refresh(null);
+                    dataSourceSelectionChanged();
+                  }
+
+                  public void onSuccess(NameValue[] result) {
+                    dataSourcesList.refresh();
+                    dataSourceGeneralPanel.refresh(result);
+                    newDataSourceDialogBox.refresh(result);
+                    dataSourceAdvancePanel.refresh();
+                    dataSourceSelectionChanged();
+                  }
+                }); 
           }
         });
 
