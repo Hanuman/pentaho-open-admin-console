@@ -191,6 +191,10 @@ public class DataSourceGeneralPanel extends VerticalPanel {
   }
   
   public void refresh() {
+    // First remove all the item in the list and then add the latest ones
+    for(int i=0; i< driverList.getItemCount();i++) {
+      driverList.removeItem(i);
+    }
     PacServiceFactory.getJdbcDriverDiscoveryService().getAvailableJdbcDrivers(
         new AsyncCallback<NameValue[]>() {
           public void onFailure(Throwable caught) {

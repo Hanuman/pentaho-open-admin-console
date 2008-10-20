@@ -42,6 +42,7 @@ import org.pentaho.pac.common.users.NonExistingUserException;
 import org.pentaho.pac.common.users.ProxyPentahoUser;
 import org.pentaho.pac.server.biplatformproxy.xmlserializer.XActionXmlSerializer;
 import org.pentaho.pac.server.biplatformproxy.xmlserializer.XmlSerializerException;
+import org.pentaho.pac.server.common.AppConfigException;
 import org.pentaho.pac.server.common.AppConfigProperties;
 import org.pentaho.pac.server.common.BiServerTrustedProxy;
 import org.pentaho.pac.server.common.DAOException;
@@ -684,12 +685,12 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getPlatformUsername(), System.getProperty(AppConfigProperties.KEY_PLATFORM_USERNAME) );
   }
   
-  public String getPciContextPath() {
-    return StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getBiServerContextPath(), System.getProperty(AppConfigProperties.KEY_BISERVER_CONTEXT_PATH) );
+  public String getPciContextPath() throws PacServiceException{
+    return StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getBiServerContextPath(), System.getProperty(AppConfigProperties.KEY_BISERVER_CONTEXT_PATH) );      
   }
   
   public String getBIServerBaseUrl() {
-    return StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getBiServerBaseUrl(), System.getProperty(AppConfigProperties.KEY_BISERVER_BASE_URL) );
+    return StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getBiServerBaseUrl(), System.getProperty(AppConfigProperties.KEY_BISERVER_BASE_URL) );      
   }
 
   private String executeXAction(String solution, String path, String xAction ) throws PacServiceException{
@@ -789,7 +790,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   public void isBiServerAlive() throws PacServiceException {
     try {
       String response = HTTP_CLIENT.execRemoteMethod(getBIServerBaseUrl(), "ping/alive.gif", HttpMethodType.GET, null );//$NON-NLS-1$
-    } catch (ProxyException e) {
+    } catch (Exception e) {
       throw new PacServiceException( e.getMessage(), e );
     } 
   }
@@ -797,7 +798,11 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   public int getBiServerStatusCheckPeriod() {
     String strBiServerStatusCheckPeriod = StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getBiServerStatusCheckPeriod(), System.getProperty(AppConfigProperties.KEY_BISERVER_STATUS_CHECK_PERIOD) ); //$NON-NLS-1$
     try {
-      return Integer.parseInt( strBiServerStatusCheckPeriod );
+      if(strBiServerStatusCheckPeriod != null && strBiServerStatusCheckPeriod.length() > 0) {
+        return Integer.parseInt( strBiServerStatusCheckPeriod );  
+      } else  {
+        return DEFAULT_CHECK_PERIOD;
+      }
     } catch( NumberFormatException e ) {
       logger.error( Messages.getString( "PacService.THREAD_SCHEDULING_FAILED" ), e ); //$NON-NLS-1$
       return DEFAULT_CHECK_PERIOD;
@@ -806,10 +811,15 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
 
 
   public void initialze() throws ServiceInitializationException {
+    try{
+      AppConfigProperties.getInstance().initialize();      
+    } catch(AppConfigException ace) {
+      logger.error( Messages.getString( "PacService.SERVICE_INITIALIZATION_FAILED",ace.getLocalizedMessage())); //$NON-NLS-1$
+      throw new ServiceInitializationException(Messages.getString( "PacService.SERVICE_INITIALIZATION_FAILED",ace.getLocalizedMessage()), ace);
+    }
     HibernateSessionFactory.addDefaultConfiguration();
     userRoleMgmtService = new UserRoleMgmtService();
     dataSourceMgmtService = new DataSourceMgmtService();
-
   }
   
   public String getHelpUrl(){

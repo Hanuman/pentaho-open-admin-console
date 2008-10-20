@@ -109,7 +109,6 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
         createDataSource();
       }
     });
-
   }
 
   public boolean isDataSourceCreated() {
@@ -335,6 +334,10 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
     };
     PacServiceFactory.getPacService().testDataSourceConnection(dataSource, callback);
 
+  }
+  
+  public void refreshDriversList() {
+    dataSourceGeneralPanel.refresh();
   }
 
 }

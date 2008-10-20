@@ -30,8 +30,9 @@ public class JdbcDriverDiscoveryServiceImpl extends RemoteServiceServlet impleme
   private static final long interval = 300000; // every five mins
 
   private final HashMap<String,CacheInfo> cache = new HashMap<String,CacheInfo>();
+  private static final String DEFAULT_JDBC_PATH = "./lib";
 
-  private String jdbcDriverPath;
+  private static String jdbcDriverPath;
 
   public JdbcDriverDiscoveryServiceImpl() {
   }
@@ -46,6 +47,9 @@ public class JdbcDriverDiscoveryServiceImpl extends RemoteServiceServlet impleme
   private void initFromConfiguration() {
     AppConfigProperties appCfg = AppConfigProperties.getInstance();
     jdbcDriverPath = StringUtils.defaultIfEmpty(appCfg.getJdbcDriverPath(), System.getProperty("jdbc.drivers.path")); //$NON-NLS-1$ //$NON-NLS-2$
+    if(!isExist(jdbcDriverPath)) {
+      jdbcDriverPath = DEFAULT_JDBC_PATH;
+    }
     cache.clear();
   }
 
@@ -83,7 +87,6 @@ public class JdbcDriverDiscoveryServiceImpl extends RemoteServiceServlet impleme
       if (location != null && location.length() > 0) {
     	ci.lastCall = timeMil;
         File parent = relative?new File(getServletContext().getRealPath(location)):new File(location);
-        System.out.println("THE PATH IS " + parent.getPath());
         FilenameFilter libs = new FilenameFilter() {
 
           public boolean accept(File dir, String pathname) {
@@ -132,5 +135,10 @@ public class JdbcDriverDiscoveryServiceImpl extends RemoteServiceServlet impleme
   {
 	  private long lastCall;
 	  private NameValue[] cachedObj;
+  }
+  
+  private boolean isExist(String location) {
+    File file = new File(location);
+    return (file != null && file.isDirectory());     
   }
 }

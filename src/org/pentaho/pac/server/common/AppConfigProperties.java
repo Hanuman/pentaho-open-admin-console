@@ -17,8 +17,9 @@
 package org.pentaho.pac.server.common;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,8 +30,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
-import org.dom4j.Node;
 import org.pentaho.pac.server.config.HibernateSettingsXml;
+import org.pentaho.pac.server.config.PentahoObjectsConfig;
+import org.pentaho.pac.server.config.WebXml;
+import org.pentaho.pac.server.i18n.Messages;
 import org.pentaho.platform.api.engine.ISystemSettings;
 import org.pentaho.platform.engine.core.system.SystemSettings;
 import org.pentaho.platform.util.xml.dom4j.XmlDom4JHelper;
@@ -59,11 +62,8 @@ public class AppConfigProperties {
   public static final String XPATH_TO_CONTEXT_PARAM = "web-app/context-param"; //$NON-NLS-1$
   public static final String XPATH_TO_HIBERNATE_CFG_FILE = "settings/config-file"; //$NON-NLS-1$
   public static final String XPATH_TO_PARAM_NAME = "param-name"; //$NON-NLS-1$
+  public static final String JDBC_DRIVER_PATH = "./jdbc"; //$NON-NLS-1$
  
-  public static final String XPATH_TO_PARAM_VALUE = "param-value"; //$NON-NLS-1$
- 
-  public static final String XPATH_TO_PASSWORD_SERVICE = "beans/bean/constructor-arg/list/bean[@id='pentahoObjects.passwordService']"; //$NON-NLS-1$  
-
   public static final String KEY_WAR_PATH = "war-path"; //$NON-NLS-1$
  
   public static final String KEY_PASSWORD_SERVICE_CLASS = "password-service-class"; //$NON-NLS-1$
@@ -106,18 +106,34 @@ public class AppConfigProperties {
   
   public static final String DEFAULT_HELP_URL = "http://wiki.pentaho.com/display/PentahoDoc/01.The+Pentaho+Administration+Console"; //$NON-NLS-1$
     
-  private static final String BASE_URL = "base-url"; //$NON-NLS-1$
+  public static final String DEFAULT_SOLUTION_PATH = "./../pentaho-solutions"; //$NON-NLS-1$ 
+  
+  public static final String DEFAULT_WAR_PATH = "./../tomcat/webapps/pentaho"; //$NON-NLS-1$
+  
+  public static final String DEFAULT_JDBC_DRIVER_PATH = "./../tomcat/webapps/pentaho/WEB-INF/lib"; //$NON-NLS-1$
+  
+  private static String baseUrl;
+  private static String passwordServiceClass;
+  private static String hibernateConfigPath;
+  private static boolean hibernateManaged;
+  private static String biserverStatusCheckPeriod;
+  private static String platformUsername;
+  private static String biserverContextPath;
+  private static String homepageTimeout;
+  private static String helpUrl;
+  private static String solutionPath;
+  private static String warPath;
+  private static String jdbcDriverPath;
+  private static List<String> defaultRoles = new ArrayList<String>();
+  private static String defaultRolesString;
+
   
   // ~ Instance fields =================================================================================================
-
-  private ISystemSettings settings = new OpenAdminConsoleSettings();
-
   private static AppConfigProperties instance = new AppConfigProperties();
 
   // ~ Constructors ====================================================================================================
 
   protected AppConfigProperties() {
-    initPasswordService();
   }
 
   // ~ Methods =========================================================================================================
@@ -126,187 +142,64 @@ public class AppConfigProperties {
     return instance;
   }
 
-  protected void initPasswordService() {
-    String passwordServiceClass = getPasswordServiceClass();
-    if(passwordServiceClass != null) {
-      PasswordServiceFactory.init(passwordServiceClass);  
-    } else  {
-      PasswordServiceFactory.init(DEFAULT_VALUE_PASSWORD_SERVICE_CLASS);
-    }
-  }
-
   public String getPlatformUsername() {
-    return settings.getSystemSetting(KEY_PLATFORM_USERNAME, DEFAULT_PLATFORM_USERNAME);
+    return platformUsername;
   }
 
   public String getBiServerContextPath() {
-    String returnValue = null;
-    String value = getBiServerBaseUrl();
-    int start = value.lastIndexOf(COLON); //$NON-NLS-1$
-    int middle = value.indexOf(SLASH, start); //$NON-NLS-1$
-    
-    returnValue = value.substring(middle, value.length()-1);
-    if (!(returnValue != null && returnValue.length() > 0)) {
-      returnValue = DEFAULT_BISERVER_CONTEXT_PATH;
-    }
-    
-    return returnValue;
+    return biserverContextPath;
   }
 
-  public String getBiServerBaseUrl() {
-    String warPath = getWarPath();
-    String returnValue = null;
-    StringBuffer xmlBuffer = new StringBuffer();
-    FileReader fileReader = null;
-    try {
-      fileReader = new FileReader(new File(warPath + WEB_XML_PATH));
-      char[] inputString = new char[1000];
-      int numCharsRead = fileReader.read(inputString, 0, 1000);
-      while (numCharsRead >= 0) {
-        xmlBuffer.append(inputString, 0, numCharsRead);
-        numCharsRead = fileReader.read(inputString, 0, 1000);
-      }
-      Document document = XmlDom4JHelper.getDocFromString(xmlBuffer.toString(), null);
-      List<Node> nodes = document.selectNodes(XPATH_TO_CONTEXT_PARAM);
-      for (Node node : nodes) {
-        Node paramNameNode = node.selectSingleNode(XPATH_TO_PARAM_NAME);
-        
-        if(paramNameNode.getStringValue() != null && paramNameNode.getStringValue().equals(BASE_URL)) {
-          Node paramValueNode = node.selectSingleNode(XPATH_TO_PARAM_VALUE);
-          returnValue = paramValueNode.getStringValue();
-          break;
-        }
-      }
-    } catch(Exception e) {
-      logger.error("Unable to read file : " + warPath + WEB_XML_PATH); //$NON-NLS-1$
-      returnValue = null;
-    } finally {
-      if ( null != fileReader ) {
-        try { fileReader.close(); }
-        catch( IOException e) {
-          logger.error("Failed to close stream associated with : " + warPath + WEB_XML_PATH); //$NON-NLS-1$
-        }
-      }
-    }    if (!(returnValue != null && returnValue.length() > 0)) {
-      returnValue = DEFAULT_BISERVER_BASE_URL;
-    }
-    return returnValue;
+  public String getBiServerBaseUrl(){
+    return baseUrl;
   }
 
   public String getBiServerStatusCheckPeriod() {
-    return settings.getSystemSetting(KEY_BISERVER_STATUS_CHECK_PERIOD, DEFAULT_BISERVER_STATUS_CHECK_PERIOD);
+    return biserverStatusCheckPeriod;
   }
 
   /**
    * Returns a comma-separated list of roles to apply to newly created users.
    */
   public String getDefaultRolesString() {
-    return settings.getSystemSetting(KEY_DEFAULT_ROLES, null);
+    return defaultRolesString;
   }
   
   /**
    * Convenience wrapper around getDefaultRolesString that parses the default roles string into individual roles.
    */
   public List<String> getDefaultRoles() {
-    List<String> defaultRoles = new ArrayList<String>();
-    String defaultRolesString = getDefaultRolesString();
-    if (defaultRolesString == null) {
-      return Collections.emptyList();
-    }
-    StringTokenizer tokenizer = new StringTokenizer(defaultRolesString, COMMA); //$NON-NLS-1$
-    while (tokenizer.hasMoreTokens()) {
-      defaultRoles.add(tokenizer.nextToken());
-    }
     return defaultRoles;
   }
   
   public String getHomepageTimeout() {
-    return settings.getSystemSetting(KEY_HOMEPAGE_TIMEOUT, DEFAULT_HOMEPAGE_TIMEOUT);
+    return homepageTimeout;
   }
 
-  public String getHibernateConfigPath() {
-    String solutionPath = getSolutionPath();
-    String returnValue = null;
-    try {
-      HibernateSettingsXml hibernateSettingXml = new HibernateSettingsXml(new File(solutionPath + HIBERNATE_MANAGED_XML_PATH));
-      String hibernateConfigFile = hibernateSettingXml.getHibernateConfigFile();
-      if(hibernateConfigFile != null && hibernateConfigFile.length() > 0) {
-        returnValue = hibernateConfigFile.substring(hibernateConfigFile.lastIndexOf(SLASH)+1, hibernateConfigFile.length());  
-      }
-    } catch(Exception e) {
-      logger.error("Unable to read file : " +solutionPath + HIBERNATE_MANAGED_XML_PATH); //$NON-NLS-1$
-      returnValue = null;
-    } 
-    if ( StringUtils.isEmpty(returnValue) ) {
-      returnValue = DEFAULT_HIBERNATE_CONFIG_PATH;
-     }
-    return returnValue;
+  public String getHibernateConfigPath(){
+    return hibernateConfigPath;
   }
-  public boolean isHibernateManaged() {
-    String solutionPath = getSolutionPath();
-    boolean returnValue = false;
-    try {
-      HibernateSettingsXml hibernateSettingXml = new HibernateSettingsXml(new File(solutionPath + HIBERNATE_MANAGED_XML_PATH));
-      String hibernateManaged = hibernateSettingXml.getHibernateManaged();
-      if(hibernateManaged != null && hibernateManaged.length() > 0) {
-        returnValue = Boolean.parseBoolean(hibernateManaged);  
-      } 
-    } catch(Exception e) {
-      logger.error("Unable to read file : " +solutionPath + HIBERNATE_MANAGED_XML_PATH); //$NON-NLS-1$
-    } 
-
-    return returnValue;
+  public boolean isHibernateManaged(){
+    return hibernateManaged;
   }
   public String getSolutionPath() {
-    return settings.getSystemSetting(KEY_SOLUTION_PATH, null);
+    return solutionPath;
   }
 
   public String getWarPath() {
-    return settings.getSystemSetting(KEY_WAR_PATH, null);
+    return warPath;
   }
 
-  public String getPasswordServiceClass() {
-    String solutionPath = getSolutionPath();
-    String returnValue = null;
-    StringBuffer xmlBuffer = new StringBuffer();
-    FileReader fileReader = null;
-    try {
-      fileReader = new FileReader(new File(solutionPath + PENTAHO_OBJECTS_SPRING_XML));
-      char[] inputString = new char[1000];
-      int numCharsRead = fileReader.read(inputString, 0, 1000);
-      while (numCharsRead >= 0) {
-        xmlBuffer.append(inputString, 0, numCharsRead);
-        numCharsRead = fileReader.read(inputString, 0, 1000);
-      }
-      Document document = XmlDom4JHelper.getDocFromString(xmlBuffer.toString(), null);
-      Node node = document.selectSingleNode(XPATH_TO_PASSWORD_SERVICE);
-      if (node != null) {
-        returnValue = node.getStringValue();  
-      }
-    } catch(Exception e) {
-      logger.error("Unable to read file : " + solutionPath + PENTAHO_OBJECTS_SPRING_XML); //$NON-NLS-1$
-      returnValue = null;
-    } finally {
-      if ( null != fileReader ) {
-        try { fileReader.close(); }
-        catch( IOException e) {
-          logger.error("Failed to close stream associated with : " + solutionPath + PENTAHO_OBJECTS_SPRING_XML); //$NON-NLS-1$ 
-        }
-      }
-    }
-    if (!(returnValue != null && returnValue.length() > 0)) {
-     returnValue = DEFAULT_VALUE_PASSWORD_SERVICE_CLASS;
-    }
-    
-    return returnValue;
+  public String getPasswordServiceClass(){
+    return passwordServiceClass;
   }
 
   public String getJdbcDriverPath() {
-    return settings.getSystemSetting(KEY_JDBC_DRIVERS_PATH, null);
+    return JDBC_DRIVER_PATH;
   }
   
   public String getHelpUrl(){
-    return settings.getSystemSetting(KEY_HELP_URL, DEFAULT_HELP_URL);
+    return helpUrl;
   }
   
   /**
@@ -327,7 +220,13 @@ public class AppConfigProperties {
      */
     @Override
     protected String getAbsolutePath(String path) {
-      return "resource/config/" + path; //$NON-NLS-1$
+      try {
+        File file = new File(ClassLoader.getSystemResource(path).toURI());
+        return file.getAbsolutePath();
+      } catch(Exception e) {
+        logger.info( Messages.getString("AppConfigProperties.UNABLE_TO_GET_ABSOLUTE_PATH", path, e.getLocalizedMessage())); //$NON-NLS-1$
+        return "resource/config/" + path; //$NON-NLS-1$  
+      }
     }
 
     /**
@@ -344,6 +243,7 @@ public class AppConfigProperties {
      */
     @Override
     public Document getSystemSettingsDocument(final String actionPath) {
+      
       File f = new File(getAbsolutePath(actionPath));
       if (!f.exists()) {
         return null;
@@ -362,5 +262,164 @@ public class AppConfigProperties {
     }
 
   }
+  
+  
+  public void initialize() throws AppConfigException{
+    // War path
+    ISystemSettings settings = new OpenAdminConsoleSettings();
+    warPath = settings.getSystemSetting(KEY_WAR_PATH, null);
+    if(!validateWarPath(warPath)) {
+      throw new AppConfigException(Messages.getString("AppConfigProperties.WAR_PATH_NOT_CONFIGURED", warPath)); 
+    }
+    // Soluiton path
+    solutionPath = settings.getSystemSetting(KEY_SOLUTION_PATH, null);
 
+    if(!validateSolutionPath(solutionPath)) {
+      throw new AppConfigException(Messages.getString("AppConfigProperties.SOLUTION_PATH_NOT_CONFIGURED", solutionPath)); 
+    }
+    
+    // Help url
+    helpUrl = settings.getSystemSetting(KEY_HELP_URL, DEFAULT_HELP_URL);
+    // Homepage timeout    
+    homepageTimeout = settings.getSystemSetting(KEY_HOMEPAGE_TIMEOUT, DEFAULT_HOMEPAGE_TIMEOUT);
+    // default roles as string
+    defaultRolesString = settings.getSystemSetting(KEY_DEFAULT_ROLES, null);
+    // BI server status check period
+    biserverStatusCheckPeriod = settings.getSystemSetting(KEY_BISERVER_STATUS_CHECK_PERIOD, DEFAULT_BISERVER_STATUS_CHECK_PERIOD);
+    // Platform username
+    platformUsername = settings.getSystemSetting(KEY_PLATFORM_USERNAME, DEFAULT_PLATFORM_USERNAME);
+
+    // Initializing DefaultRoles
+    
+    if (defaultRolesString == null || defaultRolesString.length() == 0) {
+      defaultRoles = Collections.emptyList();
+    } else {
+      StringTokenizer tokenizer = new StringTokenizer(defaultRolesString, COMMA); //$NON-NLS-1$
+      while (tokenizer.hasMoreTokens()) {
+        defaultRoles.add(tokenizer.nextToken());
+      }
+    }
+
+    try {
+      PentahoObjectsConfig pentahoObjectsConfig = new PentahoObjectsConfig(new File(solutionPath + PENTAHO_OBJECTS_SPRING_XML));
+      passwordServiceClass = pentahoObjectsConfig.getPasswordService();
+      if (StringUtils.isEmpty(passwordServiceClass)) {
+        passwordServiceClass = DEFAULT_VALUE_PASSWORD_SERVICE_CLASS;
+      }
+      PasswordServiceFactory.init(passwordServiceClass);
+
+    } catch(Exception e) {
+      logger.error( Messages.getString("AppConfigProperties.UNABLE_TO_READ_FILE", solutionPath + PENTAHO_OBJECTS_SPRING_XML)); //$NON-NLS-1$
+      throw new AppConfigException(Messages.getString("AppConfigProperties.UNABLE_TO_READ_FILE", solutionPath + PENTAHO_OBJECTS_SPRING_XML), e);
+    }
+    
+    // Initializing isHibernateManaged & HibernateConfigPath
+    try {
+      HibernateSettingsXml hibernateSettingXml = new HibernateSettingsXml(new File(solutionPath + HIBERNATE_MANAGED_XML_PATH));
+      String hibernateConfigFile = hibernateSettingXml.getHibernateConfigFile();
+      if(hibernateConfigFile != null && hibernateConfigFile.length() > 0) {
+        hibernateConfigPath = hibernateConfigFile.substring(hibernateConfigFile.lastIndexOf(SLASH)+1, hibernateConfigFile.length());
+        if (StringUtils.isEmpty(hibernateConfigPath) ) {
+          hibernateConfigPath = DEFAULT_HIBERNATE_CONFIG_PATH;
+         }
+      }
+      String isHibernateManaged = hibernateSettingXml.getHibernateManaged();
+      if(isHibernateManaged != null && isHibernateManaged.length() > 0) {
+        hibernateManaged = Boolean.parseBoolean(isHibernateManaged);  
+      } 
+
+    } catch(Exception e) {
+      logger.error( Messages.getString("AppConfigProperties.UNABLE_TO_READ_FILE", solutionPath + HIBERNATE_MANAGED_XML_PATH)); //$NON-NLS-1$
+      throw new AppConfigException(Messages.getString("AppConfigProperties.UNABLE_TO_READ_FILE", solutionPath + HIBERNATE_MANAGED_XML_PATH), e);
+    } 
+
+    // Initializing Base URL
+    try {
+      WebXml webXml = new WebXml(new File(warPath + WEB_XML_PATH));
+      baseUrl = webXml.getBaseUrl();
+      if (!(baseUrl != null && baseUrl.length() > 0)) {
+        baseUrl = DEFAULT_BISERVER_BASE_URL;
+      }
+    } catch(Exception e) {
+      logger.error( Messages.getString("AppConfigProperties.UNABLE_TO_READ_FILE", warPath + WEB_XML_PATH)); //$NON-NLS-1$
+      throw new AppConfigException(Messages.getString("AppConfigProperties.UNABLE_TO_READ_FILE",warPath + WEB_XML_PATH), e);
+    }
+    // Initializing BiServer Context Path
+    int start = baseUrl.lastIndexOf(COLON); //$NON-NLS-1$
+    int middle = baseUrl.indexOf(SLASH, start); //$NON-NLS-1$
+
+    // Initializing BiServer context path
+    biserverContextPath = baseUrl.substring(middle, baseUrl.length()-1);
+    if (!(biserverContextPath != null && biserverContextPath.length() > 0)) {
+      biserverContextPath = DEFAULT_BISERVER_CONTEXT_PATH;
+    }
+  }
+  
+  private boolean validateWarPath(String pentahoWarPath) {
+    try {
+      if(pentahoWarPath != null && pentahoWarPath.length() > 0) {
+        File file = new File(pentahoWarPath + WEB_XML_PATH);
+        if(file.exists()) {
+          return true;
+        } else {
+          pentahoWarPath = DEFAULT_WAR_PATH;
+          File webXmlFile = new File(pentahoWarPath + WEB_XML_PATH);
+          if(webXmlFile.exists()) {
+            warPath = DEFAULT_WAR_PATH;
+            logger.info( Messages.getString("AppConfigProperties.USING_DEFAULT_WAR_PATH", warPath)); //$NON-NLS-1$
+            return true;
+          } else {
+            return false;
+          }
+        }
+      } else {
+        pentahoWarPath = DEFAULT_WAR_PATH;
+        File webXmlFile = new File(pentahoWarPath + WEB_XML_PATH);
+        if(webXmlFile.exists()) {
+          warPath = DEFAULT_WAR_PATH;
+          logger.info( Messages.getString("AppConfigProperties.USING_DEFAULT_WAR_PATH", warPath)); //$NON-NLS-1$          
+          return true;
+        } else {
+          return false;
+        }
+      }
+    } catch(Exception e) {
+      logger.error( Messages.getString("AppConfigProperties.WAR_PATH_NOT_CONFIGURED", warPath)); //$NON-NLS-1$
+      return false;
+    }
+  }
+
+  private boolean validateSolutionPath(String pentahoSolutionPath) {
+    try {
+      if(pentahoSolutionPath != null && pentahoSolutionPath.length() > 0) {
+        File file = new File(pentahoSolutionPath + HIBERNATE_MANAGED_XML_PATH);
+        if(file.exists()) {
+          return true;
+        } else {
+          pentahoSolutionPath = DEFAULT_SOLUTION_PATH;
+          File webXmlFile = new File(pentahoSolutionPath + HIBERNATE_MANAGED_XML_PATH);
+          if(webXmlFile.exists()) {
+            solutionPath = DEFAULT_SOLUTION_PATH;
+            logger.info( Messages.getString("AppConfigProperties.USING_DEFAULT_SOLUTION_PATH", solutionPath)); //$NON-NLS-1$
+            return true;
+          } else {
+            return false;
+          }
+        }
+      } else {
+        pentahoSolutionPath = DEFAULT_SOLUTION_PATH;
+        File webXmlFile = new File(pentahoSolutionPath + HIBERNATE_MANAGED_XML_PATH);
+        if(webXmlFile.exists()) {
+          solutionPath = DEFAULT_SOLUTION_PATH;
+          logger.info( Messages.getString("AppConfigProperties.USING_DEFAULT_SOLUTION_PATH", solutionPath)); //$NON-NLS-1$
+          return true;
+        } else {
+          return false;
+        }
+      }
+    } catch(Exception e) {
+      logger.error( Messages.getString("AppConfigProperties.SOLUTION_PATH_NOT_CONFIGURED", solutionPath)); //$NON-NLS-1$
+      return false;
+    }
+  }
 }

@@ -7,12 +7,15 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
+import org.pentaho.platform.util.messages.Messages;
 
 
 /**
@@ -23,7 +26,8 @@ import org.hibernate.cfg.Environment;
 public class HibernateSessionFactory {
 
 	public static final String DEFAULT_CONFIG_NAME = "$$DEFAULT_CONFIG";
-    public static String DEFAULT_CONFIG_FILE_LOCATION = "hsql.hibernate.cfg.xml"; //$NON-NLS-1$
+  public static String DEFAULT_CONFIG_FILE_LOCATION = "hsql.hibernate.cfg.xml"; //$NON-NLS-1$
+  private static final Log logger = LogFactory.getLog(HibernateSessionFactory.class);
 	/** 
      * Location of hibernate.cfg.xml file.
      * Location should be on the classpath as Hibernate uses  
@@ -52,8 +56,7 @@ public class HibernateSessionFactory {
       } else {
         defaultConfigFile = DEFAULT_CONFIG_FILE_LOCATION;
         addConfiguration(DEFAULT_CONFIG_NAME,defaultConfigFile);
-      }
-      
+      }        
     }
     public static void addConfiguration(String name,String configFile)
     {
@@ -70,18 +73,18 @@ public class HibernateSessionFactory {
     	try {
 			configuration.configure(configFile);
 			// If Hibernate is running in a managed environment
-			isHibernateManaged = AppConfigProperties.getInstance().isHibernateManaged();
-			if(!isHibernateManaged) {
-	      SessionFactory sessionFactory = configuration.buildSessionFactory();
-	      configs.put(name,new HibConfig(sessionFactory,configuration,configFile));			  
-			} else {
+		 isHibernateManaged = AppConfigProperties.getInstance().isHibernateManaged();
+     if(!isHibernateManaged) {
+        SessionFactory sessionFactory = configuration.buildSessionFactory();
+        configs.put(name,new HibConfig(sessionFactory,configuration,configFile));       
+      } else {
         factoryJndiName = configuration.getProperty(Environment.SESSION_FACTORY_NAME);
         if (factoryJndiName != null && factoryJndiName.length() > 0) {
           configuration.buildSessionFactory(); // Let hibernate Bind it to JNDI...  
         } else {
           throw new HibernateException("Hibernate is configured to be managed and" + Environment.SESSION_FACTORY_NAME.toString()+ " is missing or null.");
         }
-			}
+      }
 		} catch (Exception e) {
 			System.err
 					.println("%%%% Error Creating SessionFactory %%%%");
@@ -175,9 +178,13 @@ public class HibernateSessionFactory {
 	}
 	
 	public static org.hibernate.SessionFactory getSessionFactory(String configName) {
-	  isHibernateManaged = AppConfigProperties.getInstance().isHibernateManaged();
+	    isHibernateManaged = AppConfigProperties.getInstance().isHibernateManaged();
+	    return getSessionFactory(configName,isHibernateManaged);
+	}
+	
+	private static org.hibernate.SessionFactory getSessionFactory(String configName, boolean isHibernateManaged) {
     // If Hibernate is managed than get the session factory from Jndi otherwise return the session factory from the map
-	  if (!isHibernateManaged) {
+    if (!isHibernateManaged) {
       HibConfig cfg = configs.get(configName);
       if (cfg==null)
         throw new HibernateException("Unknown configuration: " + configName);
@@ -205,7 +212,7 @@ public class HibernateSessionFactory {
       }
       return sf;
       
-    }
+    }	  
 	}
 
 	/**

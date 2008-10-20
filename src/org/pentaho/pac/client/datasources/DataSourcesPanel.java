@@ -197,6 +197,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
   }
 
   private void addNewDataSource() {
+    newDataSourceDialogBox.refreshDriversList();
     newDataSourceDialogBox.setDataSource(null);
     newDataSourceDialogBox.center();
   }
