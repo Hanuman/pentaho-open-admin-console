@@ -30,9 +30,6 @@ import com.google.gwt.user.client.ui.TabPanel;
 public class ScheduleCreatorDialog extends ConfirmDialog {
   private static final String SELECTED = "selected"; //$NON-NLS-1$
   
-  private static final String DEFAULT_WIDTH = "475px"; //$NON-NLS-1$
-  private static final String DEFAULT_HEIGHT = "400px"; //$NON-NLS-1$
-  
   public enum TabIndex {
     SCHEDULE( 0, MSGS.schedule() ),
     SCHEDULE_ACTION( 1, MSGS.selectedFilesTabLabel() );
@@ -73,7 +70,6 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
     super();
     this.setNoBorderOnClientPanel();
     setTitle( MSGS.scheduleCreator() );
-    setSize( DEFAULT_WIDTH, DEFAULT_HEIGHT);
     
     tabPanel.setSize("100%", "100%");
     
@@ -86,7 +82,6 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
     DeckPanel dp = tabPanel.getDeckPanel();
     dp.setStyleName( "scheduleCreatorDeckPanel" ); //$NON-NLS-1$
     dp.addStyleName("gwt-TabPanelBottom");
-    dp.setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     
     scheduleTabLabel.setStylePrimaryName( "tabLabel" ); //$NON-NLS-1$
     scheduleActionTabLabel.setStylePrimaryName( "tabLabel" ); //$NON-NLS-1$
@@ -119,7 +114,7 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
     
     addWidgetToClientArea( tabPanel );
   }
-  
+
   public void setPanelSize(String width, String height){
     setSize(width, height);
     

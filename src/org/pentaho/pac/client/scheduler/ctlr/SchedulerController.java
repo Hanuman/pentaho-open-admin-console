@@ -58,7 +58,7 @@ public class SchedulerController {
       
       // init dialog
       this.scheduleCreatorDialog = new ScheduleCreatorDialog();
-      this.scheduleCreatorDialog.setPanelSize("475px", "370px"); //$NON-NLS-1$ //$NON-NLS-2$
+      this.scheduleCreatorDialog.setPanelSize("475px", "465px"); //$NON-NLS-1$ //$NON-NLS-2$
       this.scheduleCreatorDialog.setOnCancelHandler( new ICallback<BasicDialog>() {
         public void onHandle(BasicDialog dlg) {
           clearScheduleEditorValidationMsgs();
