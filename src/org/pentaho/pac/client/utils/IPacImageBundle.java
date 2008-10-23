@@ -39,4 +39,11 @@ public interface IPacImageBundle extends ImageBundle {
   
   @Resource( "org/pentaho/pac/public/style/images/close.png" )
   public AbstractImagePrototype closeIcon();
+  
+  @Resource( "org/pentaho/pac/public/style/images/serverAlive.png" )
+  public AbstractImagePrototype serverAliveIcon();
+  
+  @Resource( "org/pentaho/pac/public/style/images/serverDead.png" )
+  public AbstractImagePrototype serverDeadIcon();
+    
 }

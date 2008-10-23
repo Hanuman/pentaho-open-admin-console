@@ -8,16 +8,14 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class AdminConsoleToolbar extends HorizontalPanel {
-  private Label statusLabel;
+  ToolbarIndicator toolbarIndicator;
   private Timer statusTimer = null;
-  private SimplePanel serverIcon = new SimplePanel();
   HorizontalPanel buttonsPanel = new HorizontalPanel();
-  
+  HorizontalPanel indicatorsRight = new HorizontalPanel();
   public void addImageButton(Image image) {
     buttonsPanel.setStyleName("buttons"); //$NON-NLS-1$
     buttonsPanel.add(image);
@@ -52,23 +50,10 @@ public class AdminConsoleToolbar extends HorizontalPanel {
     indicatorsLeft.setStyleName("indicators_left"); //$NON-NLS-1$
     indicatorsPanel.add(indicatorsLeft);
     
-    HorizontalPanel indicatorsRight = new HorizontalPanel();
     indicatorsRight.setStyleName("indicators_right"); //$NON-NLS-1$
     indicatorsLeft.add(indicatorsRight);
-   
-    statusLabel = new Label(PentahoAdminConsole.MSGS.toolbarStatus());
-    statusLabel.setStyleName("indicators_label"); //$NON-NLS-1$
-
-    serverIcon.setStyleName( "biServerDeadIcon" ); //$NON-NLS-1$
-    serverIcon.setTitle( PentahoAdminConsole.MSGS.biServerDead() );
-    
-    HorizontalPanel indicators = new HorizontalPanel();
-    indicators.setStyleName("indicators"); //$NON-NLS-1$
-    
-    indicators.add(statusLabel);
-    indicators.add(serverIcon);
-    
-    indicatorsRight.add(indicators);
+    contructToolbarIndicator();
+    setIndicators(toolbarIndicator);
     Image helpImage = PacImageBundle.getBundle().helpIcon().createImage();
     helpImage.setTitle(PentahoAdminConsole.MSGS.help());
     helpImage.addClickListener( new ClickListener() {
@@ -116,12 +101,10 @@ public class AdminConsoleToolbar extends HorizontalPanel {
         PacServiceFactory.getPacService().isBiServerAlive(
             new AsyncCallback<Object>() {
               public void onSuccess( Object isAlive ) {
-                serverIcon.setStyleName( "biServerAliveIcon" ); //$NON-NLS-1$
-                serverIcon.setTitle( PentahoAdminConsole.MSGS.biServerAlive() );
+                toolbarIndicator.displayServerAlive();
               }
               public void onFailure(Throwable caught) {
-                serverIcon.setStyleName( "biServerDeadIcon" ); //$NON-NLS-1$
-                serverIcon.setTitle( PentahoAdminConsole.MSGS.biServerDead() );
+                toolbarIndicator.displayServerDead();
               }
             }
           );
@@ -144,6 +127,20 @@ public class AdminConsoleToolbar extends HorizontalPanel {
   
   public HorizontalPanel getButtonPanel() {
     return buttonsPanel;
+  }
+  public void setToolbarIndicator(ToolbarIndicator toolbarIndicator) {
+    this.toolbarIndicator = toolbarIndicator;
+  }
+  public ToolbarIndicator getToolbarIndicator() {
+    return this.toolbarIndicator;
+  }
+  public void contructToolbarIndicator() {
+   ToolbarIndicator toolbarIndicator = new ToolbarIndicator();
+   toolbarIndicator.buildToolbarIndicator();
+   setToolbarIndicator(toolbarIndicator);
+  }
+  public void setIndicators(ToolbarIndicator toolbarIndicator) {
+    indicatorsRight.add(toolbarIndicator);    
   }
 
 }

@@ -19,6 +19,8 @@ package org.pentaho.pac.server.common;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
 import java.util.Properties;
 
 import org.apache.commons.logging.Log;
@@ -53,7 +55,7 @@ public class ConsoleProperties {
   public static final String CONSOLE_SECURITY_ENABLED = "console.security.enabled"; //$NON-NLS-1$
   public static final String CONSOLE_SECURITY_AUTH_CONFIG_PATH = "console.security.auth.config.path"; //$NON-NLS-1$
   public static final String CONSOLE_SECURITY_ROLES_ALLOWED = "console.security.roles.allowed"; //$NON-NLS-1$
-  public static final String DEFAULT_CONSOLE_PROPERTIES_FILE_NAME = "resource/config/console.properties"; //$NON-NLS-1$
+  public static final String DEFAULT_CONSOLE_PROPERTIES_FILE_NAME = "console.properties"; //$NON-NLS-1$
   public static final String STOP_ARG = "-STOP"; //$NON-NLS-1$
   public static final String STOP_PORT = "console.stop.port.number";//$NON-NLS-1$
   public static final String CONSOLE_SECURITY_ROLE_DELIMITER = "console.security.roles.delimiter"; //$NON-NLS-1$
@@ -74,9 +76,11 @@ public class ConsoleProperties {
   public void init( String pathToConfigResource ) {
     FileInputStream fis = null;
     try {
-      File file = new File(pathToConfigResource);
+      URL url = ClassLoader.getSystemResource(pathToConfigResource);
+      URI uri = url.toURI();
+      File file = new File(uri);
       fis = new FileInputStream(file);
-    } catch (IOException e1) {
+    } catch (Exception e1) {
       logger.error(Messages.getString("PacProService.OPEN_PROPS_FAILED", DEFAULT_CONSOLE_PROPERTIES_FILE_NAME)); //$NON-NLS-1$
     }
     if (null != fis) {
