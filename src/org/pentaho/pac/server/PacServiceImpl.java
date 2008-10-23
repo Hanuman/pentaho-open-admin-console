@@ -19,6 +19,10 @@ import java.util.Set;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -754,14 +758,28 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
 
   public String getHomePageAsHtml(String url) {
     
-    Map<String,Object> params = new HashMap<String,Object>();
-    String timeOut = AppConfigProperties.getInstance().getHomepageTimeout();
-    params.put( HttpMethodParams.SO_TIMEOUT, timeOut );
     
     String html = null;
+    HttpClient client = new HttpClient();
+    String charset;
     try {
-      html = HTTP_CLIENT.execRemoteMethod(url, null, HttpMethodType.GET, params, "text/html" );//$NON-NLS-1$
-    } catch (ProxyException e) {
+
+      String timeOut = AppConfigProperties.getInstance().getHomepageTimeout();
+      HttpMethodParams params = new HttpMethodParams();
+      params.setParameter(HttpMethodParams.SO_TIMEOUT, Integer.parseInt(timeOut));
+      GetMethod get = new GetMethod(url);
+      get.setParams(params);
+      client.executeMethod(get);
+      
+      //getResponseBodyAsString() and the like were decoding as ISO-8859-1 instead of UTF-8.
+      //This is indeed the default behavior of HttpClient if the charset is not defined in 
+      //the Content-Type reponse header. We're overriding that since we know our source is
+      //UTF-8
+      byte[] bytes = get.getResponseBody();
+      html = new String(bytes, "UTF-8");    //$NON-NLS-1$
+      
+    } catch (Exception e) {
+      logger.error(e);
       html = showStatic();
     }
     final String BODY_TAG = "<body>"; //$NON-NLS-1$
