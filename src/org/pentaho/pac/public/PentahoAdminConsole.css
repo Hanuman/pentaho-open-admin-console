@@ -95,7 +95,40 @@ a:active{color:#ff0000}
   border: 1px solid #7f9db9;
 }
 
+.enabled-image-button {
+  cursor: pointer;
+  cursor: hand;
+}
+
+.enabled-image-button-over {
+  cursor: pointer;
+  cursor: hand;	
+}
+
+.disabled-image-button {
+  cursor: default;	
+}
+
+.disabled-image-button-over {
+  cursor: default;
+}
+
 .gwt-HorizontalSplitPanel {
+}
+
+.currently-registered-table-panel {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.monitoring-status-table-panel {
+  padding-top: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.currently-registered-table-top {
+  margin-bottom: 2px;	
 }
 
 .gwt-HorizontalSplitPanel .hsplitter {
@@ -150,9 +183,6 @@ a:active{color:#ff0000}
 #loading-msg {
   font: normal 10px arial, tahoma, sans-serif;
 }
-
-
-
 
 .modalDialogPageBackground {
   opacity: 0.20;
@@ -278,6 +308,9 @@ a:visited {
 	border-color:#000000;
 	border-width:1px;
 	margin: 0px 0px 0px 10px;	/* top right bottom left*/
+	outline: 0px;
+	-moz-user-focus: none;   
+	user-focus: none;
 }
 
 .gwt-Button:hover {
@@ -367,9 +400,21 @@ a:visited {
 }
 
 .gwt-Hyperlink {
+  outline: 0px;
+  -moz-user-focus: none;   
+  user-focus: none;
+}
+
+.gwt-Hyperlink a{
+  outline: 0px;
+  -moz-user-focus: none;   
+  user-focus: none;
 }
 
 .gwt-Image {
+  outline: 0px;
+  -moz-user-focus: none;   
+  user-focus: none;
 }
 
 .gwt-Label {
@@ -451,17 +496,17 @@ a:visited {
 
 .gwt-TabPanelBottom {
 		background-color:#EDEDED;
+		border-top-color:#A0AF21;
 		border-color:#95A22C;
 		border-style:solid;
 		border-width: 3px 1px 1px 1px;
 }
 
 .gwt-TabBar {
-  margin-top: 9px;
-  margin-right: 12px;
 }
 
 .gwt-TabBar .gwt-TabBarFirst {
+  border-style: none;
 }
 
 .gwt-TabBar .gwt-TabBarRest {
@@ -473,11 +518,14 @@ a:visited {
   color: black;
   font-color: black;
   cursor: hand;
-  background-color: #eeeeee;
-	border-color:#848484;
-	border-style:solid;
-	border-width: 1px 1px 0px 1px;
+  background-color: #CACACA;
+  border-color:#848484;
+  border-style:solid;
+  border-width: 1px 1px 0px 1px;
   margin-right: 2px;
+  outline: 0px;
+  -moz-user-focus: none;   
+  user-focus: none;
 }
 
 .gwt-TabBar .gwt-TabBarItem-selected {
@@ -491,13 +539,11 @@ a:visited {
   margin-right: 2px;
 }
 
-.gwt-TabBar .gwt-TabBarItemLabel-selected {
+.gwt-TabBar .gwt-TabBarItem-selected div{
   color: white;
-  font-size: 8pt;
 }
 
-.gwt-TabBar .gwt-TabBarItemLabel {
-  font-size: 8pt;
+.gwt-TabBar .gwt-TabBarItem div{
   font-color: black;
 }
 
@@ -702,33 +748,42 @@ a:visited {
 	margin-bottom: 0px;
 	margin-left:0px;
 	cursor: pointer;
-	
 	text-align: left;
 	font-weight: normal;
 	font-family: Tahoma, Arial, Helvetica, sans-serif;
 	font-size: 14px;
-	color: #FFF; /* #FF3600 */
 	text-decoration: none;
 	border:none;
+	outline: 0px;
+	-moz-user-focus: none;   
+	user-focus: none;
 }
 
+.leftToggleButtons div {
+	color: #FFF;	
+}
+
+.leftToggleButtons-down div {
+	color: #000;	
+}
+
+.leftToggleButtons-down-hovering div {
+	color: #000;	
+}
 .leftToggleButtons-up {
   clear: both;
 	background: url("style/images/btn2.png") left center no-repeat;
 	line-height: 35px;
 	padding: 1px 0px 4px 15px;
 	cursor: pointer;
-	
 	text-align: left;
 	font-weight: normal;
 	font-family: Tahoma, Arial, Helvetica, sans-serif;
 	font-size: 14px;
-	color: #FFF; /* #FF3600 */
 	text-decoration: none;
 }
 
 .leftToggleButtons-up-hovering {
-	color: #292929;
 	background-image: url(style/images/btn3.png);
 	background-repeat: no-repeat;
 	text-decoration: none;
@@ -740,12 +795,11 @@ a:visited {
 	background: url("style/images/btn.png") left center no-repeat;
 	line-height: 35px;
 	padding: 1px 0px 4px 15px;
-	cursor: pointer;
+	cursor: default;
 	text-align: left;
 	font-weight: normal;
 	font-family: Tahoma, Arial, Helvetica, sans-serif;
 	font-size: 14px;
-	color: #FFF; /* #FF3600 */
 	text-decoration: none;
 }
 
@@ -754,12 +808,11 @@ a:visited {
 	background: url("style/images/btn.png") left center no-repeat;
 	line-height: 35px;
 	padding: 1px 0px 4px 15px;
-	cursor: pointer;
+	cursor: default;
 	text-align: left;
 	font-weight: normal;
 	font-family: Tahoma, Arial, Helvetica, sans-serif;
 	font-size: 14px;
-	color: #FFF; /* #FF3600 */
 	text-decoration: none;
 }
 
@@ -827,6 +880,7 @@ a:visited {
   height: 32px;
   margin: 5px 0px 0px 10px; /* top right bottom left*/
   font-size: .8em;
+  cursor: none;
 }
 .usersToggleBtn-down-hovering {
   background-image:url(style/images/users_selected.png);
@@ -836,6 +890,7 @@ a:visited {
   height: 32px;
   margin: 5px 0px 0px 10px; /* top right bottom left*/
   font-size: .8em;
+  cursor: none;
 }
 
 .usersToggleBtn div {
@@ -872,8 +927,8 @@ a:visited {
   height: 32px;
   margin: 5px 0px 0px 10px; /* top right bottom left*/
   font-size: .8em;
+  cursor: none;
 }
-
 .rolesToggleBtn-down-hovering {
   background-image:url(style/images/roles_selected.png);
   background-repeat: no-repeat;
@@ -882,6 +937,7 @@ a:visited {
   height: 32px;
   margin: 5px 0px 0px 10px; /* top right bottom left*/
   font-size: .8em;
+  cursor: none;
 }
 
 .rolesToggleBtn div {
