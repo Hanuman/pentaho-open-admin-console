@@ -1,5 +1,6 @@
 package org.pentaho.pac.client;
 
+import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.utils.PacImageBundle;
 
 import com.google.gwt.user.client.Timer;
@@ -54,6 +55,36 @@ public class AdminConsoleToolbar extends HorizontalPanel {
     indicatorsLeft.add(indicatorsRight);
     contructToolbarIndicator();
     setIndicators(toolbarIndicator);
+
+    Image resetRepositoryImage = PacImageBundle.getBundle().refreshIcon().createImage();
+    resetRepositoryImage.setTitle(PentahoAdminConsole.MSGS.resetServer());
+    resetRepositoryImage.addClickListener(new ClickListener(){
+      public void onClick(Widget sender) {
+        final MessageDialog resetDialog = new MessageDialog(PentahoAdminConsole.MSGS.resetServer());
+        resetDialog.setMessage("Resetting repository...");
+        resetDialog.center();
+        
+        PacServiceFactory.getPacService().resetRepository(new AsyncCallback<Object>() {
+          public void onSuccess(Object result) {
+            MessageDialog successDialog = new MessageDialog("Success");
+            successDialog.setMessage("Repository successfully reset.");
+            
+            resetDialog.hide();
+            successDialog.center();
+          }
+          public void onFailure(Throwable caught) {
+            MessageDialog failureDialog = new MessageDialog("Success");
+            failureDialog.setMessage("Repository reset failed: " + caught.getMessage());
+            
+            resetDialog.hide();
+            failureDialog.center();
+          }
+        });
+      }
+    });
+
+    addImageButton(resetRepositoryImage);
+    
     Image helpImage = PacImageBundle.getBundle().helpIcon().createImage();
     helpImage.setTitle(PentahoAdminConsole.MSGS.help());
     helpImage.addClickListener( new ClickListener() {
@@ -70,25 +101,7 @@ public class AdminConsoleToolbar extends HorizontalPanel {
         });
       }
     });
-    
-    Image refreshSettingsImage = PacImageBundle.getBundle().refreshIcon().createImage();
-    refreshSettingsImage.setTitle(PentahoAdminConsole.MSGS.resetServer());
-    refreshSettingsImage.addClickListener( new ClickListener() {
-      public void onClick(Widget sender) {
-        PacServiceFactory.getPacService().getHelpUrl(new AsyncCallback<String>(){
 
-          public void onFailure(Throwable arg0) {
-            // TODO Add message indicating failure to find help doc
-          }
-
-          public void onSuccess(String helpUrl) {
-            Window.open(helpUrl, "UserGuide", ""); //$NON-NLS-1$ //$NON-NLS-2$
-          }          
-        });
-      }
-    });
-
-    addImageButton(refreshSettingsImage);
     addImageButton(helpImage);
     
     centerPanel.add(buttonsPanel);
