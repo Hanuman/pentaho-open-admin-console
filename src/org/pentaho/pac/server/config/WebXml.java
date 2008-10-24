@@ -32,17 +32,6 @@ public class WebXml {
   private static final String CONTEXT_PARAM_NAME_TEMPLATE_XPATH = CONTEXT_PARAM_XPATH + "/param-name[text()=\"{0}\"]";
   private static final String SERVLET_NAME_TEMPLATE_XPATH = ROOT_ELEMENT + "/servlet/servlet-name[text() = \"{0}\"]";
   
-  private static final String ACEGI_SECURITY_LDAP_CONFIG_FILE = "applicationContext-acegi-security-ldap.xml";
-  private static final String ACEGI_SECURITY_DB_CONFIG_FILE = "applicationContext-acegi-security-jdbc.xml";
-  private static final String ACEGI_SECURITY_MEMORY_CONFIG_FILE = "applicationContext-acegi-security-memory.xml";
-  private static final String PENTAHO_SECURITY_LDAP_CONFIG_FILE = "applicationContext-pentaho-security-ldap.xml";
-  private static final String PENTAHO_SECURITY_DB_CONFIG_FILE = "applicationContext-pentaho-security-jdbc.xml";
-  private static final String PENTAHO_SECURITY_MEMORY_CONFIG_FILE = "applicationContext-pentaho-security-memory.xml";
-  
-  public enum AuthenticationType {
-    MEMORY_BASED_AUTHENTICATION, LDAP_BASED_AUTHENTICATION, DB_BASED_AUTHENTICATION
-  };
-  
   public WebXml(File pentahoXmlFile) throws IOException, DocumentException{
     this(getContents(pentahoXmlFile));    
   }
@@ -64,26 +53,10 @@ public class WebXml {
     document.addElement(ROOT_ELEMENT);
   }
   
-  public String getContextConfig() {
+  public String getContextConfigFileName() {
     return getContextParamValue(CONTEXT_CONFIG_CONTEXT_PARAM_NAME);
   }
 
-  public AuthenticationType getAuthentication() {
-    
-    String contextConfig = getContextConfig();
-    AuthenticationType authenticationType = null;
-      
-    if((contextConfig.indexOf(ACEGI_SECURITY_MEMORY_CONFIG_FILE) >= 0) && (contextConfig.indexOf(PENTAHO_SECURITY_MEMORY_CONFIG_FILE) >= 0)) { 
-      authenticationType = AuthenticationType.MEMORY_BASED_AUTHENTICATION;
-    } else if((contextConfig.indexOf(ACEGI_SECURITY_DB_CONFIG_FILE) >= 0) && (contextConfig.indexOf(PENTAHO_SECURITY_DB_CONFIG_FILE) >= 0)) { 
-      authenticationType = AuthenticationType.DB_BASED_AUTHENTICATION;
-    } else if((contextConfig.indexOf(ACEGI_SECURITY_LDAP_CONFIG_FILE) >= 0) && (contextConfig.indexOf(PENTAHO_SECURITY_LDAP_CONFIG_FILE) >= 0)) { 
-      authenticationType = AuthenticationType.LDAP_BASED_AUTHENTICATION;
-    }
-      
-    return authenticationType;
-  }
-  
   public String getBaseUrl() {
     return getContextParamValue(BASE_URL_CONTEXT_PARAM_NAME); //$NON-NLS-1$
   }
@@ -108,28 +81,32 @@ public class WebXml {
     return getServletMapping( HOME_SERVLET_NAME ); //$NON-NLS-1$
   }
 
-  
-  private void setValue(String xPath, String value) {
-    setValue(xPath, value, false);
-  }
-  
-  private void setValue(String xPath, String value, boolean useCData) {
-    Element element = (Element) document.selectSingleNode( xPath );
-    if (element == null) {
-      element = DocumentHelper.makeElement(document, xPath);
-    }
-    if (useCData) {
-      element.clearContent(); 
-      element.addCDATA( value );
-    } else {
-      element.setText( value );
-    }
+  public void setContextConfigFileName(String fileName) {
+    setContextParamValue(CONTEXT_CONFIG_CONTEXT_PARAM_NAME, fileName);
   }
 
-  private String getValue(String xpath) {
-    String value = null;
-    Element element = (Element)document.selectSingleNode(xpath);
-    return element != null ? element.getText() : null;
+  public void setBaseUrl(String baseUrl) {
+    setContextParamValue(BASE_URL_CONTEXT_PARAM_NAME, baseUrl); //$NON-NLS-1$
+  }
+
+  public void setSolutionPath(String solutionPath) {
+    setContextParamValue(SOLUTION_PATH_CONTEXT_PARAM_NAME, solutionPath); //$NON-NLS-1$
+  }
+    
+  public void setLocaleLanguage(String language) {
+    setContextParamValue(LOCALE_LANGUAGE_CONTEXT_PARAM_NAME, language); //$NON-NLS-1$
+  }
+  
+  public void setLocaleCountry(String country) {
+    setContextParamValue(LOCALE_COUNTRY_CONTEXT_PARAM_NAME, country); //$NON-NLS-1$
+  }
+  
+  public void setEncoding(String encoding) {
+    setContextParamValue(ENCODING_CONTEXT_PARAM_NAME, encoding); //$NON-NLS-1$
+  }
+  
+  public void setHomePage(String homePage) {
+    setServletMapping(HOME_SERVLET_NAME, homePage); //$NON-NLS-1$
   }
   
   public Document getDocument() {
@@ -170,18 +147,18 @@ public class WebXml {
   
   public void setContextParamValue( String name, String value) {
     String xPath = MessageFormat.format(CONTEXT_PARAM_NAME_TEMPLATE_XPATH, name);
-    Element contextParamElement = (Element)document.selectSingleNode(xPath);
+    Element contextParamNameElement = (Element)document.selectSingleNode(xPath);
     if (value == null) {
-      if (contextParamElement != null) {
-        contextParamElement.getParent().detach();
+      if (contextParamNameElement != null) {
+        contextParamNameElement.getParent().detach();
       }
     } else {
-      if (contextParamElement == null) {
-        contextParamElement = document.getRootElement().addElement(CONTEXT_PARAM_ELEMENT);
-        Element paramNameElement = contextParamElement.addElement(PARAM_NAME_ELEMENT);
+      if (contextParamNameElement == null) {
+        contextParamNameElement = document.getRootElement().addElement(CONTEXT_PARAM_ELEMENT);
+        Element paramNameElement = contextParamNameElement.addElement(PARAM_NAME_ELEMENT);
         paramNameElement.setText(name);
       }
-      Element paramValueElement = DocumentHelper.makeElement(contextParamElement, PARAM_VALUE_ELEMENT);
+      Element paramValueElement = DocumentHelper.makeElement(contextParamNameElement.getParent(), PARAM_VALUE_ELEMENT);
       paramValueElement.setText(value);
     }
   }
