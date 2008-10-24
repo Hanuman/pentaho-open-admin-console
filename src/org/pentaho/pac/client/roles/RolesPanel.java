@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.pentaho.gwt.widgets.client.buttons.ImageButton;
 import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
@@ -66,10 +67,10 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
   UsersList assignedUsersList = new UsersList(true);
   RoleDetailsPanel roleDetailsPanel = new RoleDetailsPanel();
   Button updateRoleBtn = new Button(MSGS.update());
-  Button addRoleBtn = new Button("+"); //$NON-NLS-1$
-  Button deleteRoleBtn = new Button("-"); //$NON-NLS-1$
-  Button addRoleAssignmentBtn = new Button("+"); //$NON-NLS-1$
-  Button deleteRoleAssignmentBtn = new Button("-"); //$NON-NLS-1$
+  ImageButton addRoleBtn = new ImageButton("style/images/add.png", "style/images/add_disabled.png", MSGS.addRole(), 15, 15); //$NON-NLS-1$ //$NON-NLS-2$
+  ImageButton deleteRoleBtn = new ImageButton("style/images/remove.png", "style/images/remove_disabled.png", MSGS.deleteRoles(), 15, 15); //$NON-NLS-1$ //$NON-NLS-2$ 
+  ImageButton addRoleAssignmentBtn = new ImageButton("style/images/add.png", "style/images/add_disabled.png", MSGS.assignRoles(), 15, 15); //$NON-NLS-1$ //$NON-NLS-2$ 
+  ImageButton deleteRoleAssignmentBtn = new ImageButton("style/images/remove.png", "style/images/remove_disabled.png", MSGS.unassignRoles(), 15, 15); //$NON-NLS-1$ //$NON-NLS-2$
   TextBox filterTextBox = new TextBox();
   NewRoleDialogBox newRoleDialogBox = new NewRoleDialogBox();
   ConfirmDialog confirmDeleteRolesDialog = new ConfirmDialog();
@@ -77,6 +78,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
   
   UserAssignmentsDialogBox userAssignmentsDialog = new UserAssignmentsDialogBox();
   
+  @SuppressWarnings("unchecked")
 	public RolesPanel() {
 	  DockPanel roleListPanel = buildRolesListPanel();
 	  roleListPanel.setStyleName("borderPane"); //$NON-NLS-1$
@@ -176,12 +178,6 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     roleListPanel.setWidth("100%"); //$NON-NLS-1$
     rolesList.setHeight("100%"); //$NON-NLS-1$
     rolesList.setWidth("100%"); //$NON-NLS-1$
-    addRoleBtn.setWidth("20px"); //$NON-NLS-1$
-    addRoleBtn.setTitle(MSGS.addRole());
-    deleteRoleBtn.setWidth("20px"); //$NON-NLS-1$
-    deleteRoleBtn.setTitle(MSGS.deleteRoles());
-    addRoleBtn.setHeight("20px"); //$NON-NLS-1$
-    deleteRoleBtn.setHeight("20px"); //$NON-NLS-1$
     filterTextBox.setWidth( "100%" ); //$NON-NLS-1$
     deleteRoleBtn.setEnabled(false);
     
@@ -208,13 +204,6 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     assignedUsersPanel.setCellWidth(assignedUsersList, "100%"); //$NON-NLS-1$
     assignedUsersList.setHeight("100%"); //$NON-NLS-1$
     assignedUsersList.setWidth("100%"); //$NON-NLS-1$
-    
-    deleteRoleAssignmentBtn.setHeight("20px"); //$NON-NLS-1$
-    deleteRoleAssignmentBtn.setWidth("20px"); //$NON-NLS-1$
-    deleteRoleAssignmentBtn.setTitle(MSGS.unassignUsers());
-    addRoleAssignmentBtn.setHeight("20px"); //$NON-NLS-1$
-    addRoleAssignmentBtn.setWidth("20px"); //$NON-NLS-1$
-    addRoleAssignmentBtn.setTitle(MSGS.assignUsers());
     
     assignedUsersList.addChangeListener(this);
     deleteRoleAssignmentBtn.addClickListener(this);
@@ -254,6 +243,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     newRoleDialogBox.center();
    }
 	
+	@SuppressWarnings("unchecked")
 	private void deleteSelectedRoles() {
 	  final List<ProxyPentahoRole> selectedRoles = rolesList.getSelectedObjects();
 	  if (selectedRoles.size() > 0) {
@@ -278,6 +268,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 	  }
 	}
 	
+	@SuppressWarnings("unchecked")
   private void unassignSelectedUsers() {
     List<ProxyPentahoRole> selectedRoles = rolesList.getSelectedObjects();
     if (selectedRoles.size() == 1) {
@@ -332,6 +323,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     assignedUserSelectionChanged();
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void updateRoleDetails(final Widget sender) {
     final ProxyPentahoRole role = roleDetailsPanel.getRole();
     AsyncCallback callback = new AsyncCallback() {

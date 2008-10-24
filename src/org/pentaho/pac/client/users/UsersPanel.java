@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.pentaho.gwt.widgets.client.buttons.ImageButton;
 import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
@@ -37,7 +38,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class UsersPanel extends HorizontalPanel implements ClickListener, ChangeListener, PopupListener, KeyboardListener {
-
   
   class UserNameFilter implements IListBoxFilter {
     String userNameFilter;
@@ -68,10 +68,10 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
   RolesList assignedRolesList = new RolesList(true);
   UserDetailsPanel userDetailsPanel = new UserDetailsPanel();
   Button updateUserBtn = new Button(MSGS.update());
-  Button addUserBtn = new Button("+"); //$NON-NLS-1$
-  Button deleteUserBtn = new Button("-"); //$NON-NLS-1$
-  Button addRoleAssignmentBtn = new Button("+"); //$NON-NLS-1$
-  Button deleteRoleAssignmentBtn = new Button("-"); //$NON-NLS-1$
+  ImageButton addUserBtn = new ImageButton("style/images/add.png", "style/images/add_disabled.png", MSGS.addUser(), 15, 15); //$NON-NLS-1$ //$NON-NLS-2$
+  ImageButton deleteUserBtn = new ImageButton("style/images/remove.png", "style/images/remove_disabled.png", MSGS.deleteUsers(), 15, 15); //$NON-NLS-1$ //$NON-NLS-2$ 
+  ImageButton addRoleAssignmentBtn = new ImageButton("style/images/add.png", "style/images/add_disabled.png", MSGS.assignRoles(), 15, 15); //$NON-NLS-1$ //$NON-NLS-2$ 
+  ImageButton deleteRoleAssignmentBtn = new ImageButton("style/images/remove.png", "style/images/remove_disabled.png", MSGS.unassignRoles(), 15, 15); //$NON-NLS-1$ //$NON-NLS-2$ 
   TextBox filterTextBox = new TextBox();
   NewUserDialogBox newUserDialogBox = new NewUserDialogBox();
   ConfirmDialog confirmDeleteUsersDialog = new ConfirmDialog();
@@ -79,6 +79,7 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
   
   RoleAssignmentsDialogBox roleAssignmentsDialog = new RoleAssignmentsDialogBox();
   
+  @SuppressWarnings("unchecked")
 	public UsersPanel() {
 	  //User List Panel
 	  VerticalPanel userListPanel = buildUsersListPanel();
@@ -197,12 +198,6 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
     userListPanel.setWidth("100%"); //$NON-NLS-1$
     usersList.setHeight("100%"); //$NON-NLS-1$
     usersList.setWidth("100%"); //$NON-NLS-1$
-    addUserBtn.setWidth("20px"); //$NON-NLS-1$
-    deleteUserBtn.setWidth("20px"); //$NON-NLS-1$
-    deleteUserBtn.setTitle(MSGS.deleteUsers());
-    addUserBtn.setHeight("20px"); //$NON-NLS-1$
-    addUserBtn.setTitle(MSGS.addUser());
-    deleteUserBtn.setHeight("20px"); //$NON-NLS-1$
     filterTextBox.setWidth( "100%" ); //$NON-NLS-1$
     deleteUserBtn.setEnabled(false);
     
@@ -238,13 +233,6 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
 	  assignedRolesPanel.setCellWidth(assignedRolesList, "100%"); //$NON-NLS-1$
 	  assignedRolesList.setHeight("100%"); //$NON-NLS-1$
 	  assignedRolesList.setWidth("100%"); //$NON-NLS-1$
-	  
-	  deleteRoleAssignmentBtn.setHeight("20px"); //$NON-NLS-1$
-	  deleteRoleAssignmentBtn.setWidth("20px"); //$NON-NLS-1$
-	  deleteRoleAssignmentBtn.setTitle(MSGS.unassignRoles());
-	  addRoleAssignmentBtn.setHeight("20px"); //$NON-NLS-1$
-	  addRoleAssignmentBtn.setWidth("20px"); //$NON-NLS-1$
-	  addRoleAssignmentBtn.setTitle(MSGS.assignRoles());
 	  
     assignedRolesList.addChangeListener(this);
 	  deleteRoleAssignmentBtn.addClickListener(this);
@@ -289,6 +277,7 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
     newUserDialogBox.center();
   }
 	
+	@SuppressWarnings("unchecked")
 	private void deleteSelectedUsers() {
 	  final List<ProxyPentahoUser> selectedUsers = usersList.getSelectedObjects();
 	  if (selectedUsers.size() > 0) {
@@ -314,6 +303,7 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
 	  }
 	}
 	
+	@SuppressWarnings("unchecked")
   private void unassignSelectedRoles() {
     List<ProxyPentahoUser> selectedUsers = usersList.getSelectedObjects();
     if (selectedUsers.size() == 1) {
@@ -346,7 +336,11 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
   }
   
   private void assignedRoleSelectionChanged() {
-    deleteRoleAssignmentBtn.setEnabled(assignedRolesList.getSelectedObjects().size() > 0);
+    if (assignedRolesList.getSelectedObjects().size() > 0){
+      deleteRoleAssignmentBtn.setEnabled(true);
+    }else{
+      deleteRoleAssignmentBtn.setEnabled(false);
+    }
   }
   
 	private void userSelectionChanged() {
@@ -362,13 +356,24 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
     }
     userDetailsPanel.setEnabled(selectedUsers.size() == 1);
     updateUserBtn.setEnabled(selectedUsers.size() == 1);
-    deleteUserBtn.setEnabled(selectedUsers.size() > 0);
-    addRoleAssignmentBtn.setEnabled(selectedUsers.size() == 1);
+    
+    if (selectedUsers.size() > 0){
+      deleteUserBtn.setEnabled(true);
+    }else{
+      deleteUserBtn.setEnabled(false);
+    }
+    
+    if (selectedUsers.size() == 1){
+      addRoleAssignmentBtn.setEnabled(true);
+    }else{
+      addRoleAssignmentBtn.setEnabled(false);
+    }
     
     userDetailsPanel.getUserNameTextBox().setEnabled(false);
     assignedRoleSelectionChanged();
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void updateUserDetails( final Widget sender ) {
 	  if (!userDetailsPanel.getPassword().equals(userDetailsPanel.getPasswordConfirmation())) { 
 	    errorDialog.setText(MSGS.updateUser());

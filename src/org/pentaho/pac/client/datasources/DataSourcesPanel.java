@@ -1,5 +1,6 @@
 package org.pentaho.pac.client.datasources;
 
+import org.pentaho.gwt.widgets.client.buttons.ImageButton;
 import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
@@ -34,26 +35,17 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 //  TabPanel generalAdvanceDbPanel = new TabPanel();
 
   MessageDialog messageDialog = new MessageDialog();
-
   DataSourcesList dataSourcesList = new DataSourcesList();
-
   DataSourceGeneralPanel dataSourceGeneralPanel = new DataSourceGeneralPanel();
-
   DataSourceAdvancePanel dataSourceAdvancePanel = new DataSourceAdvancePanel();
-
   DeckPanel deckPanel = new DeckPanel();
-
   ToggleButton generalButton = new ToggleButton(MSGS.general(), MSGS.general());
-
   ToggleButton advanceButton = new ToggleButton(MSGS.advance(), MSGS.advance());
-
   Button updateDataSourceBtn = new Button(MSGS.update());
-
   Button testDataSourceBtn = new Button(MSGS.test());
-
-  Button addDataSourceBtn = new Button("+"); //$NON-NLS-1$
-
-  Button deleteDataSourceBtn = new Button("-"); //$NON-NLS-1$
+  
+  ImageButton addDataSourceBtn = new ImageButton("style/images/add.png", "style/images/add_disabled.png", MSGS.addDataSource(), 15, 15); //$NON-NLS-1$ //$NON-NLS-2$
+  ImageButton deleteDataSourceBtn = new ImageButton("style/images/remove.png", "style/images/remove_disabled.png", MSGS.deleteDataSources(), 15, 15); //$NON-NLS-1$ //$NON-NLS-2$
 
   NewDataSourceDialogBox newDataSourceDialogBox = new NewDataSourceDialogBox();
 
@@ -156,12 +148,6 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
     dataSourceListPanel.setWidth("100%"); //$NON-NLS-1$
     dataSourcesList.setHeight("100%"); //$NON-NLS-1$
     dataSourcesList.setWidth("100%"); //$NON-NLS-1$
-    addDataSourceBtn.setWidth("20px"); //$NON-NLS-1$
-    addDataSourceBtn.setTitle(MSGS.addDataSource());
-    deleteDataSourceBtn.setWidth("20px"); //$NON-NLS-1$
-    deleteDataSourceBtn.setTitle(MSGS.deleteDataSources());
-    addDataSourceBtn.setHeight("20px"); //$NON-NLS-1$
-    deleteDataSourceBtn.setHeight("20px"); //$NON-NLS-1$
     deleteDataSourceBtn.setEnabled(false);
     dataSourcesList.addChangeListener(this);
     addDataSourceBtn.addClickListener(this);
