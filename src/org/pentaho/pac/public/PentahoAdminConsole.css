@@ -118,6 +118,16 @@ a:active{color:#ff0000}
   border: 1px solid #7f9db9;
 }
 
+.image-button {
+  cursor: pointer;
+  cursor: hand;
+}
+
+.image-button-over {
+  cursor: pointer;
+  cursor: hand;	
+}
+
 .enabled-image-button {
   cursor: pointer;
   cursor: hand;
