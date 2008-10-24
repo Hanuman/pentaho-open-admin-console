@@ -71,7 +71,7 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
     this.setNoBorderOnClientPanel();
     setTitle( MSGS.scheduleCreator() );
     
-    tabPanel.setSize("100%", "100%");
+    tabPanel.setSize("100%", "100%"); //$NON-NLS-1$ //$NON-NLS-2$
     
     actionSequenceEditor.setWidth( "100%" ); //$NON-NLS-1$
     actionSequenceEditor.setHeight( "100%" ); //$NON-NLS-1$
@@ -81,7 +81,7 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
     tabPanel.add( actionSequenceEditor, scheduleActionTabLabel );
     DeckPanel dp = tabPanel.getDeckPanel();
     dp.setStyleName( "scheduleCreatorDeckPanel" ); //$NON-NLS-1$
-    dp.addStyleName("gwt-TabPanelBottom");
+    dp.addStyleName("gwt-TabPanelBottom"); //$NON-NLS-1$
     
     scheduleTabLabel.setStylePrimaryName( "tabLabel" ); //$NON-NLS-1$
     scheduleActionTabLabel.setStylePrimaryName( "tabLabel" ); //$NON-NLS-1$
