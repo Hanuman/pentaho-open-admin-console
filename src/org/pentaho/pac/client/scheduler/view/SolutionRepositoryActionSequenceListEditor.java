@@ -9,7 +9,6 @@ import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class SolutionRepositoryActionSequenceListEditor extends SimplePanel {
   
@@ -56,7 +55,7 @@ public class SolutionRepositoryActionSequenceListEditor extends SimplePanel {
   }
   
   public void setActionsAsList( List<String> friendlyNames, List<String> names ) {
-    assert friendlyNames == null || friendlyNames.size() == names.size() : "size of lists must be identical"; //$NON-NLS-1$
+    assert friendlyNames == null || friendlyNames.size() == names.size() : "size of lists must be identical";
     
     actionsEditor.removeAll();
     if ( null != friendlyNames ) {
