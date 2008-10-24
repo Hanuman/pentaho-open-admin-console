@@ -66,9 +66,16 @@ public class GenericObjectListBox<T> extends ListBox {
   }
   
   public void setSelectedObject(T object) {
-    List<T> objects = new ArrayList<T>();
-    objects.add(object);
-    setSelectedObjects(objects);
+    if (object == null) {
+      int itemCount = getItemCount();
+      for (int i = 0; i < itemCount; i++) {
+        setItemSelected(i, false);
+      }
+    } else {
+      List<T> objects = new ArrayList<T>();
+      objects.add(object);
+      setSelectedObjects(objects);
+    }
   }
   
   public void setSelectedObjects(List<T> objects) {
