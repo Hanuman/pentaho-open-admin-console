@@ -537,7 +537,9 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       // TODO need a way better error message here please, maybe include some information from the exception?
       throw new PacServiceException(Messages.getString("PacService.FAILED_TO_GET_DATASDOURCE"), e); //$NON-NLS-1$
     } finally {
-      dataSourceMgmtService.closeSession();
+      if (dataSourceMgmtService != null){
+        dataSourceMgmtService.closeSession();
+      }
     }
     return dataSources.toArray(new PentahoDataSource[0]);
 
