@@ -33,6 +33,7 @@ import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class RolesPanel extends DockPanel implements ClickListener, ChangeListener, PopupListener, KeyboardListener {
@@ -161,7 +162,9 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 	public DockPanel buildRolesListPanel() {
 	  DockPanel headerDockPanel = new DockPanel();
     headerDockPanel.add(deleteRoleBtn, DockPanel.EAST);
-    
+    VerticalPanel spacer = new VerticalPanel();
+    spacer.setWidth("2"); //$NON-NLS-1$
+    headerDockPanel.add(spacer, DockPanel.EAST);
 	  headerDockPanel.add(addRoleBtn, DockPanel.EAST);
     Label label = new Label(MSGS.roles());
 	  headerDockPanel.add(label, DockPanel.WEST);
@@ -191,7 +194,9 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 	public DockPanel buildAssignedUsersPanel() {
     DockPanel headerDockPanel = new DockPanel();
     headerDockPanel.add(deleteRoleAssignmentBtn, DockPanel.EAST);
-    
+    VerticalPanel spacer = new VerticalPanel();
+    spacer.setWidth("2"); //$NON-NLS-1$
+    headerDockPanel.add(spacer, DockPanel.EAST);
     headerDockPanel.add(addRoleAssignmentBtn, DockPanel.EAST);
     Label label = new Label(MSGS.assignedUsers());
     headerDockPanel.add(label, DockPanel.WEST);

@@ -182,6 +182,9 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
 	public VerticalPanel buildUsersListPanel() {
 	  DockPanel headerDockPanel = new DockPanel();
     headerDockPanel.add(deleteUserBtn, DockPanel.EAST);
+    VerticalPanel spacer = new VerticalPanel();
+    spacer.setWidth("2"); //$NON-NLS-1$
+    headerDockPanel.add(spacer, DockPanel.EAST);
 	  headerDockPanel.add(addUserBtn, DockPanel.EAST);
     Label label = new Label("Users"); //$NON-NLS-1$
 	  headerDockPanel.add(label, DockPanel.WEST);
@@ -220,6 +223,9 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
     headerDockPanel.add(label, DockPanel.WEST);
     headerDockPanel.setCellWidth(label, "100%");  //$NON-NLS-1$
     headerDockPanel.add(deleteRoleAssignmentBtn, DockPanel.EAST);
+    VerticalPanel spacer2 = new VerticalPanel();
+    spacer2.setWidth("2"); //$NON-NLS-1$
+    headerDockPanel.add(spacer2, DockPanel.EAST);
     headerDockPanel.add(addRoleAssignmentBtn, DockPanel.EAST);
     
     headerDockPanel.add(spacer, DockPanel.WEST);

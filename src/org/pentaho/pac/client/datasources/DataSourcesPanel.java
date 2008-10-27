@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 public class DataSourcesPanel extends DockPanel implements ClickListener, ChangeListener, PopupListener {
@@ -129,12 +130,14 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
     dockPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
     dataSourceGeneralPanel.getJndiNameTextBox().setReadOnly(true);
     return dockPanel;
-
   }
 
   public DockPanel buildDataSourcesListPanel() {
     DockPanel headerDockPanel = new DockPanel();
     headerDockPanel.add(deleteDataSourceBtn, DockPanel.EAST);
+    VerticalPanel spacer = new VerticalPanel();
+    spacer.setWidth("2"); //$NON-NLS-1$
+    headerDockPanel.add(spacer, DockPanel.EAST);
     headerDockPanel.add(addDataSourceBtn, DockPanel.EAST);
     Label label = new Label(MSGS.dataSources());
     headerDockPanel.add(label, DockPanel.WEST);
