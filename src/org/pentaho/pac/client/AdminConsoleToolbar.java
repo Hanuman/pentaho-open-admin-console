@@ -21,7 +21,7 @@ public class AdminConsoleToolbar extends HorizontalPanel {
     buttonsPanel.setStyleName("buttons"); //$NON-NLS-1$
     buttonsPanel.add(image);
   }
-  public AdminConsoleToolbar(){
+  public AdminConsoleToolbar(final IRefreshableAdminConsole console){
     super();
 
     setStyleName("adminconsole-toolbar"); //$NON-NLS-1$
@@ -56,35 +56,15 @@ public class AdminConsoleToolbar extends HorizontalPanel {
     contructToolbarIndicator();
     setIndicators(toolbarIndicator);
 
-    Image resetRepositoryImage = PacImageBundle.getBundle().refreshIcon().createImage();
-    resetRepositoryImage.setTitle(PentahoAdminConsole.MSGS.resetServer());
-    resetRepositoryImage.addClickListener(new ClickListener(){
+    Image refreshConsoleImage = PacImageBundle.getBundle().refreshIcon().createImage();
+    refreshConsoleImage.setTitle(PentahoAdminConsole.MSGS.resetServer());
+    refreshConsoleImage.addClickListener(new ClickListener(){
       public void onClick(Widget sender) {
-        final MessageDialog resetDialog = new MessageDialog(PentahoAdminConsole.MSGS.resetServer());
-        resetDialog.setMessage("Resetting repository...");
-        resetDialog.center();
-        
-        //TODO refresh all of the components in the EE console
-        PacServiceFactory.getPacService().resetRepository(new AsyncCallback<Object>() {
-          public void onSuccess(Object result) {
-            MessageDialog successDialog = new MessageDialog("Success");
-            successDialog.setMessage("Repository successfully reset.");
-            
-            resetDialog.hide();
-            successDialog.center();
-          }
-          public void onFailure(Throwable caught) {
-            MessageDialog failureDialog = new MessageDialog("Success");
-            failureDialog.setMessage("Repository reset failed: " + caught.getMessage());
-            
-            resetDialog.hide();
-            failureDialog.center();
-          }
-        });
+        console.refresh();
       }
     });
 
-    addImageButton(resetRepositoryImage);
+    addImageButton(refreshConsoleImage);
     
     Image helpImage = PacImageBundle.getBundle().helpIcon().createImage();
     helpImage.setTitle(PentahoAdminConsole.MSGS.help());

@@ -11,11 +11,11 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class PentahoAdminConsole extends DockPanel {
+public class PentahoAdminConsole extends DockPanel implements IRefreshableAdminConsole {
   
   public static final PacLocalizedMessages MSGS = (PacLocalizedMessages)GWT.create(PacLocalizedMessages.class);
   
-  protected AdminConsoleToolbar toolbar = new AdminConsoleToolbar();
+  protected AdminConsoleToolbar toolbar = new AdminConsoleToolbar(this);
   protected AdminConsoleMasterDetailsPanel adminConsoleMasterDetailsPanel = new AdminConsoleMasterDetailsPanel();
   
   public enum AdminConsolePageId {
@@ -39,7 +39,6 @@ public class PentahoAdminConsole extends DockPanel {
     adminConsoleMasterDetailsPanel.addPage(AdminConsolePageId.HOME_PAGE.ordinal(), PentahoAdminConsole.MSGS.home(), new HomePanel("http://www.pentaho.com/console_home"));
     adminConsoleMasterDetailsPanel.addPage(AdminConsolePageId.ADMIN_PAGE.ordinal(), PentahoAdminConsole.MSGS.administration(), new AdministrationTabPanel());   
     
-    
     adminConsoleMasterDetailsPanel.selectPage(AdminConsolePageId.HOME_PAGE.ordinal());
     
     setStyleName("main-panel"); //$NON-NLS-1$
@@ -56,7 +55,6 @@ public class PentahoAdminConsole extends DockPanel {
     };
     PacServiceFactory.getPacService().initialze(callback);
   }
-  
   
   protected HorizontalPanel buildTopPanel() {
     HorizontalPanel topPanel = new HorizontalPanel();
@@ -80,5 +78,6 @@ public class PentahoAdminConsole extends DockPanel {
       }
     }
   }
+  
 }
  
