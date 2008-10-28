@@ -298,8 +298,17 @@ public class PentahoObjectsConfig {
   }
 
   protected Element getObjectBeanElement(String objectId) {
-    String xPath = MessageFormat.format(BEAN_ID_XPATH, objectId);
-    return (Element) document.selectSingleNode( xPath );
+    try {
+      String xPath = MessageFormat.format(BEAN_ID_XPATH, objectId);
+      HashMap<String, String> map = new HashMap<String, String>();
+      map.put( "default", DEFAULT_NAMESPACE); 
+      Dom4jXPath xpath = new Dom4jXPath(xPath);
+      xpath.setNamespaceContext( new SimpleNamespaceContext( map));
+      Element element = (Element) xpath.selectSingleNode( document);
+      return element;
+    } catch(JaxenException jex) {
+      return null;
+    }
   }
   
   public void setObject(String objectId, ObjectDescriptor objectDescriptor) {
