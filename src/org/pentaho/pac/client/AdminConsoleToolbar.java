@@ -64,6 +64,7 @@ public class AdminConsoleToolbar extends HorizontalPanel {
         resetDialog.setMessage("Resetting repository...");
         resetDialog.center();
         
+        //TODO refresh all of the components in the EE console
         PacServiceFactory.getPacService().resetRepository(new AsyncCallback<Object>() {
           public void onSuccess(Object result) {
             MessageDialog successDialog = new MessageDialog("Success");
