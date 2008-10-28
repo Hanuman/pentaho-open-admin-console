@@ -58,6 +58,7 @@
 			</zipfileset>
 			<zipfileset dir="build-res" includes="*.bat" prefix="${admin-console.name}" />
 			<zipfileset dir="build-res" includes="*.sh" prefix="${admin-console.name}" />
+			<zipfileset dir="${basedir}" includes="version.properties" prefix="${admin-console.name}" />
 		</zip>
 	</target>
 
