@@ -30,8 +30,8 @@ public class JdbcDriverDiscoveryServiceImpl extends RemoteServiceServlet impleme
   private static final long interval = 300000; // every five mins
 
   private final HashMap<String,CacheInfo> cache = new HashMap<String,CacheInfo>();
-  private static final String DEFAULT_JDBC_PATH_1 = "./lib";
-  private static final String DEFAULT_JDBC_PATH_2 = "./lib-ext/jdbc";
+  private static final String DEFAULT_JDBC_PATH_1 = "./lib"; //$NON-NLS-1$
+  private static final String DEFAULT_JDBC_PATH_2 = "./lib-ext/jdbc";//$NON-NLS-1$
 
   private static String jdbcDriverPath;
 
@@ -47,7 +47,7 @@ public class JdbcDriverDiscoveryServiceImpl extends RemoteServiceServlet impleme
   }
   private void initFromConfiguration() {
     AppConfigProperties appCfg = AppConfigProperties.getInstance();
-    jdbcDriverPath = StringUtils.defaultIfEmpty(appCfg.getJdbcDriverPath(), System.getProperty("jdbc.drivers.path")); //$NON-NLS-1$ //$NON-NLS-2$
+    jdbcDriverPath = StringUtils.defaultIfEmpty(appCfg.getJdbcDriverPath(), System.getProperty("jdbc.drivers.path")); //$NON-NLS-1$ 
     if(!isExist(jdbcDriverPath)) {
       jdbcDriverPath = DEFAULT_JDBC_PATH_1;
     } else if(!isExist(jdbcDriverPath)){
@@ -61,7 +61,7 @@ public class JdbcDriverDiscoveryServiceImpl extends RemoteServiceServlet impleme
       return getAvailableJdbcDrivers(jdbcDriverPath);
     } else {
       throw new JdbcDriverDiscoveryServiceException(Messages
-          .getString("JdbcDriverDiscoveryService.NO_JDBC_DRIVER_PATH_SPECIFIED"));
+          .getErrorString("JdbcDriverDiscoveryService.ERROR_0002_NO_DRIVERS_FOUND_IN_JDBC_DRIVER_PATH"));//$NON-NLS-1$
     }
 
   }
@@ -123,20 +123,20 @@ public class JdbcDriverDiscoveryServiceImpl extends RemoteServiceServlet impleme
             ci.cachedObj = drivers.toArray(new NameValue[drivers.size()]);  
           } else {
             throw new JdbcDriverDiscoveryServiceException(Messages
-                .getString("JdbcDriverDiscoveryService.NO_DRIVERS_FOUND_IN_JDBC_DRIVER_PATH"));
+                .getErrorString("JdbcDriverDiscoveryService.ERROR_0002_NO_DRIVERS_FOUND_IN_JDBC_DRIVER_PATH")); //$NON-NLS-1$
           }
           
         } else {
           throw new JdbcDriverDiscoveryServiceException(Messages
-              .getString("JdbcDriverDiscoveryService.NO_DRIVERS_FOUND_IN_JDBC_DRIVER_PATH"));
+              .getErrorString("JdbcDriverDiscoveryService.ERROR_0002_NO_DRIVERS_FOUND_IN_JDBC_DRIVER_PATH")); //$NON-NLS-1$ 
         }
       } else {
         throw new JdbcDriverDiscoveryServiceException(Messages
-            .getString("JdbcDriverDiscoveryService.NO_JDBC_DRIVER_PATH_SPECIFIED"));
+            .getErrorString("JdbcDriverDiscoveryService.ERROR_0001_NO_JDBC_DRIVER_PATH_SPECIFIED")); //$NON-NLS-1$
       }
     } catch (Exception e) {
       throw new JdbcDriverDiscoveryServiceException(Messages
-          .getString("JdbcDriverDiscoveryService.NO_JDBC_DRIVER_PATH_SPECIFIED"), e);
+          .getErrorString("JdbcDriverDiscoveryService.ERROR_0001_NO_JDBC_DRIVER_PATH_SPECIFIED"), e); //$NON-NLS-1$
     }
     return ci.cachedObj;
   }

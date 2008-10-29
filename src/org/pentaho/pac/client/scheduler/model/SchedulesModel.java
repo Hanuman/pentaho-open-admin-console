@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.pentaho.gwt.widgets.client.utils.TimeUtil;
+import org.pentaho.pac.client.PentahoAdminConsole;
 
 /**
  * 
@@ -52,7 +53,7 @@ public class SchedulesModel {
   
   public void add( List<Schedule> l ) {
     for ( Schedule schedule : l ) {
-      assert isValidSchedule( schedule ) : "Loading an invalid schedule: " + schedule.toString();
+      assert isValidSchedule( schedule ) : PentahoAdminConsole.MSGS.loadingInvalidSchedule(schedule.toString());
       add( schedule.getJobName(), schedule );
     }
   }

@@ -7,14 +7,10 @@ import java.util.Map;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.pentaho.pac.client.SchedulerService;
 import org.pentaho.pac.client.scheduler.model.Schedule;
 import org.pentaho.pac.common.SchedulerServiceException;
 import org.pentaho.pac.server.biplatformproxy.SchedulerAdminUIComponentProxy;
-import org.pentaho.pac.server.common.AppConfigProperties;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -25,8 +21,6 @@ public class SchedulerServiceImpl extends RemoteServiceServlet implements Schedu
    */
   private static final long serialVersionUID = 420L;
 
-  private static final Log logger = LogFactory.getLog(SchedulerServiceImpl.class);
-  
   private static SchedulerAdminUIComponentProxy schedulerProxy = null;
   static {
     schedulerProxy = new SchedulerAdminUIComponentProxy();

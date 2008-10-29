@@ -12,9 +12,8 @@ import org.pentaho.platform.util.xml.dom4j.XmlDom4JHelper;
 public class TestManagerConfig {
 
   Document document;
-  private static final String ROOT_ELEMENT = "test-suite";
-  private static final String TEST_MGR_XPATH = ROOT_ELEMENT + "/test-manager";
-  private static final String DEFAULT_FILE_NAME = "test-suite/test-settings.xml";
+  private static final String ROOT_ELEMENT = "test-suite"; //$NON-NLS-1$
+  private static final String TEST_MGR_XPATH = ROOT_ELEMENT + "/test-manager";//$NON-NLS-1$
   
   public TestManagerConfig(File pentahoXmlFile) throws IOException, DocumentException{
     this(XmlDom4JHelper.getDocFromFile(pentahoXmlFile, null));    
@@ -27,7 +26,7 @@ public class TestManagerConfig {
   public TestManagerConfig(Document doc) throws DocumentException {
     Element rootElement = doc.getRootElement();
     if ((rootElement != null) &&  !doc.getRootElement().getName().equals(ROOT_ELEMENT)) {
-      throw new DocumentException("Invalid root element.");
+      throw new DocumentException("Invalid root element.");//$NON-NLS-1$
     }
     document = doc;
   }
@@ -54,7 +53,6 @@ public class TestManagerConfig {
   }
 
   private String getValue(String xpath) {
-    String value = null;
     Element element = (Element)document.selectSingleNode(xpath);
     return element != null ? element.getText() : null;
   }

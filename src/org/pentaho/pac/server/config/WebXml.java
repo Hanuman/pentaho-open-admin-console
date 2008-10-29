@@ -17,20 +17,20 @@ public class WebXml {
 
   Document document;
   
-  private static final String PARAM_NAME_ELEMENT = "param-name";
-  private static final String PARAM_VALUE_ELEMENT = "param-value";
-  private static final String ROOT_ELEMENT = "web-app";
-  private static final String CONTEXT_CONFIG_CONTEXT_PARAM_NAME = "contextConfigLocation";
-  private static final String BASE_URL_CONTEXT_PARAM_NAME = "base-url";
-  private static final String SOLUTION_PATH_CONTEXT_PARAM_NAME = "solution-path";
-  private static final String LOCALE_LANGUAGE_CONTEXT_PARAM_NAME = "locale-language";
-  private static final String LOCALE_COUNTRY_CONTEXT_PARAM_NAME = "locale-country";
-  private static final String ENCODING_CONTEXT_PARAM_NAME = "encoding";
-  private static final String HOME_SERVLET_NAME = "Home";
-  private static final String CONTEXT_PARAM_ELEMENT = "context-param";
-  private static final String CONTEXT_PARAM_XPATH = ROOT_ELEMENT + "/" + CONTEXT_PARAM_ELEMENT;
-  private static final String CONTEXT_PARAM_NAME_TEMPLATE_XPATH = CONTEXT_PARAM_XPATH + "/param-name[text()=\"{0}\"]";
-  private static final String SERVLET_NAME_TEMPLATE_XPATH = ROOT_ELEMENT + "/servlet/servlet-name[text() = \"{0}\"]";
+  private static final String PARAM_NAME_ELEMENT = "param-name"; //$NON-NLS-1$
+  private static final String PARAM_VALUE_ELEMENT = "param-value"; //$NON-NLS-1$
+  private static final String ROOT_ELEMENT = "web-app"; //$NON-NLS-1$
+  private static final String CONTEXT_CONFIG_CONTEXT_PARAM_NAME = "contextConfigLocation"; //$NON-NLS-1$
+  private static final String BASE_URL_CONTEXT_PARAM_NAME = "base-url"; //$NON-NLS-1$
+  private static final String SOLUTION_PATH_CONTEXT_PARAM_NAME = "solution-path"; //$NON-NLS-1$
+  private static final String LOCALE_LANGUAGE_CONTEXT_PARAM_NAME = "locale-language"; //$NON-NLS-1$
+  private static final String LOCALE_COUNTRY_CONTEXT_PARAM_NAME = "locale-country"; //$NON-NLS-1$
+  private static final String ENCODING_CONTEXT_PARAM_NAME = "encoding"; //$NON-NLS-1$
+  private static final String HOME_SERVLET_NAME = "Home"; //$NON-NLS-1$
+  private static final String CONTEXT_PARAM_ELEMENT = "context-param"; //$NON-NLS-1$
+  private static final String CONTEXT_PARAM_XPATH = ROOT_ELEMENT + "/" + CONTEXT_PARAM_ELEMENT; //$NON-NLS-1$
+  private static final String CONTEXT_PARAM_NAME_TEMPLATE_XPATH = CONTEXT_PARAM_XPATH + "/param-name[text()=\"{0}\"]"; //$NON-NLS-1$
+  private static final String SERVLET_NAME_TEMPLATE_XPATH = ROOT_ELEMENT + "/servlet/servlet-name[text() = \"{0}\"]"; //$NON-NLS-1$
   
   public WebXml(File pentahoXmlFile) throws IOException, DocumentException{
     this(getContents(pentahoXmlFile));    
@@ -43,7 +43,7 @@ public class WebXml {
   public WebXml(Document doc) throws DocumentException {
     Element rootElement = doc.getRootElement();
     if ((rootElement != null) &&  !doc.getRootElement().getName().equals(ROOT_ELEMENT)) {
-      throw new DocumentException("Invalid root element.");
+      throw new DocumentException("Invalid root element."); //$NON-NLS-1$
     }
     document = doc;
   }
@@ -58,27 +58,27 @@ public class WebXml {
   }
 
   public String getBaseUrl() {
-    return getContextParamValue(BASE_URL_CONTEXT_PARAM_NAME); //$NON-NLS-1$
+    return getContextParamValue(BASE_URL_CONTEXT_PARAM_NAME);
   }
 
   public String getSolutionPath() {
-    return getContextParamValue(SOLUTION_PATH_CONTEXT_PARAM_NAME); //$NON-NLS-1$
+    return getContextParamValue(SOLUTION_PATH_CONTEXT_PARAM_NAME);
   }
     
   public String getLocaleLanguage() {
-    return getContextParamValue(LOCALE_LANGUAGE_CONTEXT_PARAM_NAME); //$NON-NLS-1$
+    return getContextParamValue(LOCALE_LANGUAGE_CONTEXT_PARAM_NAME);
   }
   
   public String getLocaleCountry() {
-    return getContextParamValue(LOCALE_COUNTRY_CONTEXT_PARAM_NAME); //$NON-NLS-1$
+    return getContextParamValue(LOCALE_COUNTRY_CONTEXT_PARAM_NAME);
   }
   
   public String getEncoding() {
-    return getContextParamValue(ENCODING_CONTEXT_PARAM_NAME); //$NON-NLS-1$
+    return getContextParamValue(ENCODING_CONTEXT_PARAM_NAME);
   }
   
   public String getHomePage() {
-    return getServletMapping( HOME_SERVLET_NAME ); //$NON-NLS-1$
+    return getServletMapping( HOME_SERVLET_NAME ); 
   }
 
   public void setContextConfigFileName(String fileName) {
@@ -86,27 +86,27 @@ public class WebXml {
   }
 
   public void setBaseUrl(String baseUrl) {
-    setContextParamValue(BASE_URL_CONTEXT_PARAM_NAME, baseUrl); //$NON-NLS-1$
+    setContextParamValue(BASE_URL_CONTEXT_PARAM_NAME, baseUrl);
   }
 
   public void setSolutionPath(String solutionPath) {
-    setContextParamValue(SOLUTION_PATH_CONTEXT_PARAM_NAME, solutionPath); //$NON-NLS-1$
+    setContextParamValue(SOLUTION_PATH_CONTEXT_PARAM_NAME, solutionPath);
   }
     
   public void setLocaleLanguage(String language) {
-    setContextParamValue(LOCALE_LANGUAGE_CONTEXT_PARAM_NAME, language); //$NON-NLS-1$
+    setContextParamValue(LOCALE_LANGUAGE_CONTEXT_PARAM_NAME, language);
   }
   
   public void setLocaleCountry(String country) {
-    setContextParamValue(LOCALE_COUNTRY_CONTEXT_PARAM_NAME, country); //$NON-NLS-1$
+    setContextParamValue(LOCALE_COUNTRY_CONTEXT_PARAM_NAME, country);
   }
   
   public void setEncoding(String encoding) {
-    setContextParamValue(ENCODING_CONTEXT_PARAM_NAME, encoding); //$NON-NLS-1$
+    setContextParamValue(ENCODING_CONTEXT_PARAM_NAME, encoding);
   }
   
   public void setHomePage(String homePage) {
-    setServletMapping(HOME_SERVLET_NAME, homePage); //$NON-NLS-1$
+    setServletMapping(HOME_SERVLET_NAME, homePage);
   }
   
   public Document getDocument() {
@@ -119,7 +119,7 @@ public class WebXml {
     BufferedReader input =  new BufferedReader(new FileReader(aFile));
     try {
       String line = null;
-      String lineSeparator = System.getProperty("line.separator");
+      String lineSeparator = System.getProperty("line.separator"); //$NON-NLS-1$
       while (( line = input.readLine()) != null){
         contents.append(line);
         contents.append(lineSeparator);
@@ -165,7 +165,7 @@ public class WebXml {
   
   public boolean setServletMapping( String name, String value) {
     String xPath = MessageFormat.format(SERVLET_NAME_TEMPLATE_XPATH, name);
-    Node node = document.selectSingleNode(xPath); //$NON-NLS-1$ //$NON-NLS-2$
+    Node node = document.selectSingleNode(xPath);
     if( node != null ) {
       node = node.selectSingleNode( "../jsp-file" ); //$NON-NLS-1$
     }
@@ -178,7 +178,7 @@ public class WebXml {
 
   public String getServletMapping( String name ) {
     String xPath = MessageFormat.format(SERVLET_NAME_TEMPLATE_XPATH, name);
-    Node node = document.selectSingleNode(xPath); //$NON-NLS-1$ //$NON-NLS-2$
+    Node node = document.selectSingleNode(xPath);
     String value = null;
     if( node != null ) {
       node = node.selectSingleNode( "../jsp-file" ); //$NON-NLS-1$

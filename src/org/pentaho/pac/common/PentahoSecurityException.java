@@ -5,6 +5,11 @@ package org.pentaho.pac.common;
 
 public class PentahoSecurityException extends CheckedException {
   
+  /**
+   * 
+   */
+  private static final long serialVersionUID = 1L;
+
   public PentahoSecurityException(String msg) {
     super(msg);
   }

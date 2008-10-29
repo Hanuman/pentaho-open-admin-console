@@ -1,12 +1,5 @@
 package org.pentaho.pac.client;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import org.pentaho.pac.client.scheduler.model.Schedule;
-import org.pentaho.pac.common.SchedulerServiceException;
-
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface SchedulerServiceAsync extends ISchedulerServiceAsync {

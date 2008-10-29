@@ -198,9 +198,9 @@ public class FrozenHeaderTable extends Composite implements ScrollListener {
 
 	private String getSingleStyleName(TableStyles.Type type) {
 		if (model.getStyles() == null)
-			return "";
+			return ""; //$NON-NLS-1$
 		List<String> sstyles = model.getStyles().getStyleNames(type);
-		return sstyles.size() > 0 ? sstyles.get(0) : "";
+		return sstyles.size() > 0 ? sstyles.get(0) : ""; //$NON-NLS-1$
 	}
 
 	private void cellClicked(int row, int column) {
@@ -211,7 +211,7 @@ public class FrozenHeaderTable extends Composite implements ScrollListener {
 	public void selectRow(int rowIndex) {
 		selectedRowIndex = rowIndex;
 
-		String rowId = "1";// getSelectedRowId();
+		String rowId = "1";// getSelectedRowId(); //$NON-NLS-1$
 		if (this.rowSelectionListeners != null) {
 			for (int i = 0; i < this.rowSelectionListeners.size(); i++) {
 				RowSelectionListener listener = (RowSelectionListener) this.rowSelectionListeners

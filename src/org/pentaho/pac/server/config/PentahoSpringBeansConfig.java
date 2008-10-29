@@ -11,6 +11,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.pentaho.platform.engine.security.userroledao.messages.Messages;
 import org.pentaho.platform.util.xml.dom4j.XmlDom4JHelper;
 
 public class PentahoSpringBeansConfig {
@@ -19,18 +20,18 @@ public class PentahoSpringBeansConfig {
     MEMORY_BASED_AUTHENTICATION, LDAP_BASED_AUTHENTICATION, DB_BASED_AUTHENTICATION
   };
   
-  private static final String ROOT_ELEMENT = "beans";
-  private static final String IMPORT_ELEMENT = "import";
-  private static final String RESOURCE_XPATH = ROOT_ELEMENT + "/" + IMPORT_ELEMENT;
-  private static final String RESOURCE_ATTR_NAME = "resource";
+  private static final String ROOT_ELEMENT = "beans"; //$NON-NLS-1$
+  private static final String IMPORT_ELEMENT = "import";//$NON-NLS-1$
+  private static final String RESOURCE_XPATH = ROOT_ELEMENT + "/" + IMPORT_ELEMENT;//$NON-NLS-1$
+  private static final String RESOURCE_ATTR_NAME = "resource";//$NON-NLS-1$
   
-  private static final String ACEGI_SECURITY_LDAP_CONFIG_FILE = "applicationContext-acegi-security-ldap.xml";
-  private static final String ACEGI_SECURITY_DB_CONFIG_FILE = "applicationContext-acegi-security-hibernate.xml";
-  private static final String ACEGI_SECURITY_MEMORY_CONFIG_FILE = "applicationContext-acegi-security-memory.xml";
-  private static final String PENTAHO_SECURITY_LDAP_CONFIG_FILE = "applicationContext-pentaho-security-ldap.xml";
-  private static final String PENTAHO_SECURITY_DB_CONFIG_FILE = "applicationContext-pentaho-security-hibernate.xml";
-  private static final String PENTAHO_SECURITY_MEMORY_CONFIG_FILE = "applicationContext-pentaho-security-memory.xml";
-  private static final String LDAP_PLACEHOLDER_CONFIG_FILE = "applicationContext-placeholder.xml";
+  private static final String ACEGI_SECURITY_LDAP_CONFIG_FILE = "applicationContext-acegi-security-ldap.xml"; //$NON-NLS-1$
+  private static final String ACEGI_SECURITY_DB_CONFIG_FILE = "applicationContext-acegi-security-hibernate.xml"; //$NON-NLS-1$
+  private static final String ACEGI_SECURITY_MEMORY_CONFIG_FILE = "applicationContext-acegi-security-memory.xml"; //$NON-NLS-1$
+  private static final String PENTAHO_SECURITY_LDAP_CONFIG_FILE = "applicationContext-pentaho-security-ldap.xml"; //$NON-NLS-1$
+  private static final String PENTAHO_SECURITY_DB_CONFIG_FILE = "applicationContext-pentaho-security-hibernate.xml"; //$NON-NLS-1$
+  private static final String PENTAHO_SECURITY_MEMORY_CONFIG_FILE = "applicationContext-pentaho-security-memory.xml"; //$NON-NLS-1$
+  private static final String LDAP_PLACEHOLDER_CONFIG_FILE = "applicationContext-placeholder.xml"; //$NON-NLS-1$
   
   Document document;
   
@@ -45,7 +46,7 @@ public class PentahoSpringBeansConfig {
   public PentahoSpringBeansConfig(Document doc) throws DocumentException {
     Element rootElement = doc.getRootElement();
     if ((rootElement != null) &&  !doc.getRootElement().getName().equals(ROOT_ELEMENT)) {
-      throw new DocumentException("Invalid root element.");
+      throw new DocumentException(Messages.getErrorString("PentahoSpringBeansConfig.ERROR_0001_INVALID_ROOT_ELEMENT")); //$NON-NLS-1$      
     }
     document = doc;
   }
@@ -55,6 +56,7 @@ public class PentahoSpringBeansConfig {
     document.addElement(ROOT_ELEMENT);
   }
   
+  @SuppressWarnings("unchecked")
   public String[] getSystemConfigFileNames() {
     ArrayList<String> fileNames = new ArrayList<String>();
     List nodes = document.selectNodes(RESOURCE_XPATH);
@@ -65,6 +67,7 @@ public class PentahoSpringBeansConfig {
     return fileNames.toArray(new String[0]);
   }
   
+  @SuppressWarnings("unchecked")
   public void setSystemConfigFileNames(String[] fileNames) {
     List nodes = document.selectNodes(RESOURCE_XPATH);
     for (Iterator iter = nodes.iterator(); iter.hasNext(); ) {

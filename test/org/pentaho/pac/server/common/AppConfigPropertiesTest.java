@@ -3,13 +3,8 @@ package org.pentaho.pac.server.common;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
-import java.util.Properties;
-
 import org.apache.commons.lang.StringUtils;
-import org.dom4j.Document;
 import org.junit.Test;
-import org.pentaho.platform.api.engine.ISystemSettings;
 
 /**
  * Tests {@link AppConfigProperties}.

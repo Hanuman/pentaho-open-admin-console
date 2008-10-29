@@ -50,7 +50,7 @@ public class DataSourceHibernateDAO implements IDataSourceDAO {
       throw new DAOException(ex.getMessage(), ex);
     }
   }
-
+  @SuppressWarnings("unchecked")
   public List<PentahoDataSource> getDataSources() throws DAOException {
     try {
       String queryString = "from PentahoDataSource";  //$NON-NLS-1$

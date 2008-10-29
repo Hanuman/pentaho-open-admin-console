@@ -9,15 +9,13 @@ import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.client.common.ui.dialog.AccumulatorDialog;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
-import org.pentaho.pac.common.PentahoSecurityException;
-import org.pentaho.pac.common.roles.NonExistingRoleException;
+import org.pentaho.pac.client.utils.ExceptionParser;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
-import org.pentaho.pac.common.users.NonExistingUserException;
 import org.pentaho.pac.common.users.ProxyPentahoUser;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-public class RoleAssignmentsDialogBox extends AccumulatorDialog {
+public class RoleAssignmentsDialogBox extends AccumulatorDialog<ProxyPentahoRole> {
   boolean roleAssignmentsModified = false;
   ProxyPentahoUser user;
   MessageDialog errorDialog = new MessageDialog( MSGS.error() );
@@ -31,8 +29,8 @@ public class RoleAssignmentsDialogBox extends AccumulatorDialog {
     
     setTitle(MSGS.assignRoles());
 
-    setOnOkHandler( new ICallback() {
-      public void onHandle( Object o ) {
+    setOnOkHandler( new ICallback<MessageDialog>() {
+      public void onHandle( MessageDialog o ) {
         assignSelectedRoles();
       }
     });
@@ -71,22 +69,15 @@ public class RoleAssignmentsDialogBox extends AccumulatorDialog {
   
   private void assignSelectedRoles() {
     
-    AsyncCallback callback = new AsyncCallback() {
+    AsyncCallback<Object> callback = new AsyncCallback<Object>() {
       public void onSuccess(Object result) {
         roleAssignmentsModified = true;
         hide();
       }
 
       public void onFailure(Throwable caught) {
-        if (caught instanceof PentahoSecurityException) {
-          errorDialog.setMessage(MSGS.insufficientPrivileges());
-        } else if (caught instanceof NonExistingRoleException) {
-          errorDialog.setMessage(MSGS.roleDoesNotExist(caught.getMessage()));
-        } else if (caught instanceof NonExistingUserException) {
-          errorDialog.setMessage(MSGS.userDoesNotExist(caught.getMessage()));
-        } else {
-          errorDialog.setMessage(caught.getMessage());
-        }
+        errorDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+        errorDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));          
         errorDialog.center();
       }
     };

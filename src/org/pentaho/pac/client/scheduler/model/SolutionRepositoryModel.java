@@ -26,7 +26,7 @@ public class SolutionRepositoryModel {
     
   }
   
-  private static String SOLUTION_REPOSITORY_PATH_SEPARATOR = "/";
+  private static String SOLUTION_REPOSITORY_PATH_SEPARATOR = "/"; //$NON-NLS-1$
   
   /**
    * NOTE: path must never have a leading "/". The paths returned from the PCI

@@ -45,7 +45,7 @@ public class NamedColumn implements ColumnModel {
 	class CellLabel extends HTML {
 		  public CellLabel(String name) {
 		        setHTML(
-		          "<a onmouseover=\"status='';return true;\" href=\"#\">" + name + "</a>"
+		          "<a onmouseover=\"status='';return true;\" href=\"#\">" + name + "</a>" //$NON-NLS-1$ //$NON-NLS-2$
 		        );
 
 		        

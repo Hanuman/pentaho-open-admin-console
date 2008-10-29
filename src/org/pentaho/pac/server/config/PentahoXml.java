@@ -10,23 +10,24 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.pentaho.platform.engine.security.userroledao.messages.Messages;
 
 public class PentahoXml {
   
   Document document;
   
-  private static final String ROOT_ELEMENT = "pentaho-system";
-  private static final String AUDIT_DATE_FORMAT_XPATH = ROOT_ELEMENT + "/audit/auditDateFormat";
-  private static final String AUDIT_LOG_FILE_XPATH = ROOT_ELEMENT + "/audit/auditLogFile";
-  private static final String AUDIT_LOG_SEPARATOR_XPATH = ROOT_ELEMENT + "/audit/id_separator";
-  private static final String DEFAULT_PARAMETER_FORM = ROOT_ELEMENT + "/default-parameter-xsl";
-  private static final String LOG_FILE_XPATH = ROOT_ELEMENT + "/log-file";
-  private static final String LOG_LEVEL_XPATH = ROOT_ELEMENT + "/log-level";
-  private static final String SOLUTION_REPOSITORY_CACHE_SIZE_XPATH = ROOT_ELEMENT + "/solution-repository/cache-size";
-  private static final String ACL_FILES_XPATH = ROOT_ELEMENT + "/acl-files";
-  private static final String ADMIN_ROLE_XPATH = ROOT_ELEMENT + "/acl-voter/admin-role";
-  private static final String ANONYMOUS_USER_XPATH = ROOT_ELEMENT + "/anonymous-authentication/anonymous-user";
-  private static final String ANONYMOUS_ROLE_XPATH = ROOT_ELEMENT + "/anonymous-authentication/anonymous-role";
+  private static final String ROOT_ELEMENT = "pentaho-system"; //$NON-NLS-1$
+  private static final String AUDIT_DATE_FORMAT_XPATH = ROOT_ELEMENT + "/audit/auditDateFormat"; //$NON-NLS-1$
+  private static final String AUDIT_LOG_FILE_XPATH = ROOT_ELEMENT + "/audit/auditLogFile"; //$NON-NLS-1$
+  private static final String AUDIT_LOG_SEPARATOR_XPATH = ROOT_ELEMENT + "/audit/id_separator"; //$NON-NLS-1$ 
+  private static final String DEFAULT_PARAMETER_FORM = ROOT_ELEMENT + "/default-parameter-xsl"; //$NON-NLS-1$
+  private static final String LOG_FILE_XPATH = ROOT_ELEMENT + "/log-file"; //$NON-NLS-1$
+  private static final String LOG_LEVEL_XPATH = ROOT_ELEMENT + "/log-level"; //$NON-NLS-1$
+  private static final String SOLUTION_REPOSITORY_CACHE_SIZE_XPATH = ROOT_ELEMENT + "/solution-repository/cache-size"; //$NON-NLS-1$
+  private static final String ACL_FILES_XPATH = ROOT_ELEMENT + "/acl-files"; //$NON-NLS-1$
+  private static final String ADMIN_ROLE_XPATH = ROOT_ELEMENT + "/acl-voter/admin-role"; //$NON-NLS-1$
+  private static final String ANONYMOUS_USER_XPATH = ROOT_ELEMENT + "/anonymous-authentication/anonymous-user"; //$NON-NLS-1$
+  private static final String ANONYMOUS_ROLE_XPATH = ROOT_ELEMENT + "/anonymous-authentication/anonymous-role"; //$NON-NLS-1$
   
   public PentahoXml(File pentahoXmlFile) throws IOException, DocumentException{
     this(getContents(pentahoXmlFile));    
@@ -39,7 +40,7 @@ public class PentahoXml {
   public PentahoXml(Document doc) throws DocumentException {
     Element rootElement = doc.getRootElement();
     if ((rootElement != null) &&  !doc.getRootElement().getName().equals(ROOT_ELEMENT)) {
-      throw new DocumentException("Invalid root element.");
+      throw new DocumentException(Messages.getErrorString("PentahoXml.ERROR_0001_INVALID_ROOT_ELEMENT")); //$NON-NLS-1$ 
     }
     document = doc;
   }
@@ -112,7 +113,7 @@ public class PentahoXml {
   }
   
   public void setSolutionRepositoryCacheSize(Integer solutionReporitoryCacheSize) {
-    setValue(SOLUTION_REPOSITORY_CACHE_SIZE_XPATH, solutionReporitoryCacheSize == null ? "" : solutionReporitoryCacheSize.toString());
+    setValue(SOLUTION_REPOSITORY_CACHE_SIZE_XPATH, solutionReporitoryCacheSize == null ? "" : solutionReporitoryCacheSize.toString()); //$NON-NLS-1$
   }
   
   
@@ -121,7 +122,7 @@ public class PentahoXml {
   }
   
   public void setAclFiles(String fileExtensions) {
-    setValue(ACL_FILES_XPATH, fileExtensions != null ? fileExtensions : "");
+    setValue(ACL_FILES_XPATH, fileExtensions != null ? fileExtensions : ""); //$NON-NLS-1$
   }
   
   public String getAdminRole() {
@@ -129,7 +130,7 @@ public class PentahoXml {
   }
   
   public void setAdminRole(String role) {
-    setValue(ADMIN_ROLE_XPATH, role != null ? role : "");
+    setValue(ADMIN_ROLE_XPATH, role != null ? role : ""); //$NON-NLS-1$
   }
   
   public String getAnonymousUser() {
@@ -137,7 +138,7 @@ public class PentahoXml {
   }
   
   public void setAnonymousUser(String user) {
-    setValue(ANONYMOUS_USER_XPATH, user != null ? user : "");
+    setValue(ANONYMOUS_USER_XPATH, user != null ? user : ""); //$NON-NLS-1$
   }
   
   public String getAnonymousRole() {
@@ -145,7 +146,7 @@ public class PentahoXml {
   }
   
   public void setAnonymousRole(String role) {
-    setValue(ANONYMOUS_ROLE_XPATH, role != null ? role : "");
+    setValue(ANONYMOUS_ROLE_XPATH, role != null ? role : ""); //$NON-NLS-1$
   }
   
   private void setValue(String xPath, String value) {
@@ -166,7 +167,6 @@ public class PentahoXml {
   }
 
   private String getValue(String xpath) {
-    String value = null;
     Element element = (Element)document.selectSingleNode(xpath);
     return element != null ? element.getText() : null;
   }
@@ -181,7 +181,7 @@ public class PentahoXml {
     BufferedReader input =  new BufferedReader(new FileReader(aFile));
     try {
       String line = null;
-      String lineSeparator = System.getProperty("line.separator");
+      String lineSeparator = System.getProperty("line.separator"); //$NON-NLS-1$
       while (( line = input.readLine()) != null){
         contents.append(line);
         contents.append(lineSeparator);

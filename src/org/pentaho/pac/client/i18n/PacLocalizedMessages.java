@@ -2011,6 +2011,73 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @get.key helpWindowTitle
    */
   String helpWindowTitle();
+
+/**
+ * Translated "Resetting repository..."
+ * 
+ * @return translated "Resetting repository..."
+ * @get.key resettingRepository
+ */
+String resettingRepository();
+
+
+/**
+ * Translated "Resetting repository..."
+ * 
+ * @return translated "Resetting repository..."
+ * @get.key resetRepositorySuccess
+ */
+String resetRepositorySuccess();
+
+
+/**
+ * Translated "Repository reset failed:"
+ * 
+ * @return translated "Repository reset failed:"
+ * @get.key resetRepositoryFailed
+ */
+String resetRepositoryFailed(String arg0);
+
+
+/**
+ * Translated "Success"
+ * 
+ * @return translated "Success"
+ * @get.key success
+ */
+String success();
+
+/**
+ * Translated "UserGuide"
+ * 
+ * @return translated "UserGuide"
+ * @get.key userGuide
+ */
+String userGuide();
+
+/**
+ * Translated "Common Tasks"
+ * 
+ * @return translated "Common Tasks"
+ * @get.key commonTasks
+ */
+String commonTasks();
+
+/**
+ * Translated "size of lists must be identical"
+ * 
+ * @return translated "size of lists must be identical"
+ * @get.key sizeListMustBeIdentical
+ */
+String sizeListMustBeIdentical();
+
+/**
+ * Translated "Loading an invalid schedule:"
+ * 
+ * @return translated "Loading an invalid schedule:"
+ * @get.key loadingInvalidSchedule
+ */
+String loadingInvalidSchedule(String arg0);
   
   /**
    * Translated "Error Getting Status Data"

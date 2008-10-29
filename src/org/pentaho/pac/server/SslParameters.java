@@ -12,13 +12,13 @@ public class SslParameters {
     private String keyPassword;
     private String keyStore;
     private String keyStorePassword;
-    private String keyStoreType = "JKS"; // type of the key store
+    private String keyStoreType = "JKS"; // type of the key store //$NON-NLS-1$
     private String trustStore;
     private String trustStorePassword;
-    private String trustStoreType = "JKS";
-    private String protocol = "TLS";
-    private String keyManagerFactoryAlgorithm = "SunX509"; // cert algorithm
-    private String trustManagerFactoryAlgorithm = "SunX509"; // cert algorithm
+    private String trustStoreType = "JKS"; //$NON-NLS-1$
+    private String protocol = "TLS"; //$NON-NLS-1$
+    private String keyManagerFactoryAlgorithm = "SunX509"; // cert algorithm //$NON-NLS-1$
+    private String trustManagerFactoryAlgorithm = "SunX509"; // cert algorithm //$NON-NLS-1$
     private boolean wantClientAuth;
     private boolean needClientAuth;
 

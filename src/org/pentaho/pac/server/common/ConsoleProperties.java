@@ -81,14 +81,14 @@ public class ConsoleProperties {
       File file = new File(uri);
       fis = new FileInputStream(file);
     } catch (Exception e1) {
-      logger.error(Messages.getString("PacProService.OPEN_PROPS_FAILED", DEFAULT_CONSOLE_PROPERTIES_FILE_NAME)); //$NON-NLS-1$
+      logger.error(Messages.getErrorString("ConsoleProperties.ERROR_0001_OPEN_PROPS_FAILED", pathToConfigResource)); //$NON-NLS-1$      
     }
     if (null != fis) {
       properties = new Properties();
       try {
         properties.load(fis);
       } catch (IOException e) {
-        logger.error(Messages.getString("PacProService.LOAD_PROPS_FAILED", DEFAULT_CONSOLE_PROPERTIES_FILE_NAME)); //$NON-NLS-1$
+        logger.error(Messages.getErrorString("ConsoleProperties.ERROR_0002_LOAD_PROPS_FAILED", DEFAULT_CONSOLE_PROPERTIES_FILE_NAME)); //$NON-NLS-1$
       }
     }
   }

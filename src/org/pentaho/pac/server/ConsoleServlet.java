@@ -10,7 +10,12 @@ import javax.servlet.http.HttpServletResponse;
 public abstract class ConsoleServlet extends HttpServlet {
 
 	
-	  protected final void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	  /**
+   * 
+   */
+  private static final long serialVersionUID = -4220122336517696578L;
+
+    protected final void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		  doHandle(request, response);
 		  }
 

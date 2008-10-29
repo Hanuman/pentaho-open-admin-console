@@ -15,6 +15,7 @@ import org.pentaho.pac.client.scheduler.model.SolutionRepositoryModel;
 import org.pentaho.pac.client.scheduler.view.ActionSequencePicker;
 import org.pentaho.pac.client.scheduler.view.ActionSequencePickerDialog;
 import org.pentaho.pac.client.scheduler.view.SolutionRepositoryActionSequenceListEditor;
+import org.pentaho.pac.client.utils.ExceptionParser;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.xml.client.Document;
@@ -108,8 +109,8 @@ public class SolutionRepositoryActionSequenceListEditorController {
   }
   
   private static String createActionSequencePath( String solution, String path, String action ) {
-    System.out.println( solution + path + ( !StringUtils.isEmpty(action) ? "/" + action : "" ) );
-    return solution + path + ( !StringUtils.isEmpty(action) ? "/" + action : "" );
+    System.out.println( solution + path + ( !StringUtils.isEmpty(action) ? "/" + action : "" ) ); //$NON-NLS-1$ //$NON-NLS-2$
+    return solution + path + ( !StringUtils.isEmpty(action) ? "/" + action : "" ); //$NON-NLS-1$ //$NON-NLS-2$
   }
   
   private void copyActionsFromPickerToActionSequenceEditor() {
@@ -176,8 +177,9 @@ public class SolutionRepositoryActionSequenceListEditorController {
       } // end onSuccess
 
       public void onFailure(Throwable caught) {
-        MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
-            caught.getMessage() );
+        MessageDialog messageDialog = new MessageDialog();
+        messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));   
         messageDialog.center();
         solutionRepositoryModel = null;
         isInitialized = false;

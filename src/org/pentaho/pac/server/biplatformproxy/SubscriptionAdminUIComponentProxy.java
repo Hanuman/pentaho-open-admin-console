@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.pentaho.pac.server.i18n.Messages;
 import org.pentaho.pac.client.scheduler.model.Schedule;
 import org.pentaho.pac.common.SchedulerServiceException;
 import org.pentaho.pac.server.biplatformproxy.xmlserializer.SubscriptionXmlSerializer;
@@ -42,7 +43,7 @@ public class SubscriptionAdminUIComponentProxy {
     try {
       m = s.getSubscriptionSchedulesFromXml( responseStrXml );
     } catch (XmlSerializerException e) {
-      throw new SchedulerServiceException( e.getMessage(), e );
+      throw new SchedulerServiceException(Messages.getErrorString("SubscriptionAdminUIComponentProxy.ERROR_0015_PUBLIC_UNABLE_TO_RETRIEVE_SHCEDULE_LIST",e.getMessage()), e); //$NON-NLS-1$
     }
     return m;
   }
@@ -70,111 +71,120 @@ public class SubscriptionAdminUIComponentProxy {
       Date startDate, Date endDate,
       String cronString,
       String actionsList ) throws SchedulerServiceException {
+    try {
+      DateFormat dateTimeFormatter = DateUtil.getDateTimeFormatter();
+      String strStartDate = dateTimeFormatter.format( startDate );
+      String strEndDate = null != endDate
+        ? dateTimeFormatter.format( endDate )
+        : null;
+      Map<String, Object> params = new HashMap<String, Object>();
+      // If the action sequence list is null then we will only create a schedule without
+      // a content otherwise schedule with content will be created
+      if(actionsList != null && actionsList.length() > 0) {
+        params.put( "schedulerAction", "doAddScheduleAndContent" ); //$NON-NLS-1$  //$NON-NLS-2$
+          String[] actionsAr = actionsList.split( "," ); //$NON-NLS-1$
+          params.put( "actionRefs", actionsAr ); //$NON-NLS-1$
+      } else {
+        params.put( "schedulerAction", "doAddScheduleWithoutContent" ); //$NON-NLS-1$  //$NON-NLS-2$  
+      }
   
-    DateFormat dateTimeFormatter = DateUtil.getDateTimeFormatter();
-    String strStartDate = dateTimeFormatter.format( startDate );
-    String strEndDate = null != endDate
-      ? dateTimeFormatter.format( endDate )
-      : null;
-    Map<String, Object> params = new HashMap<String, Object>();
-    // If the action sequence list is null then we will only create a schedule without
-    // a content otherwise schedule with content will be created
-    if(actionsList != null && actionsList.length() > 0) {
-      params.put( "schedulerAction", "doAddScheduleAndContent" ); //$NON-NLS-1$  //$NON-NLS-2$
-        String[] actionsAr = actionsList.split( "," ); //$NON-NLS-1$
-        params.put( "actionRefs", actionsAr ); //$NON-NLS-1$
-    } else {
-      params.put( "schedulerAction", "doAddScheduleWithoutContent" ); //$NON-NLS-1$  //$NON-NLS-2$  
-    }
-
-    
-    // TODO sbarkdull, this may not be right (using jobName for title)
-    params.put( "title", jobName ); //$NON-NLS-1$
-    params.put( "schedRef", jobName ); //$NON-NLS-1$
-    params.put( "desc", description ); //$NON-NLS-1$
-    params.put( "start-date-time", strStartDate ); //$NON-NLS-1$
-    if ( null != strEndDate ) {
-      params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
-    }
-    params.put( "cron", cronString ); //$NON-NLS-1$
-    params.put( "group", jobGroup ); //$NON-NLS-1$
-
-    executePostMethod( params );
+      
+      // TODO sbarkdull, this may not be right (using jobName for title)
+      params.put( "title", jobName ); //$NON-NLS-1$
+      params.put( "schedRef", jobName ); //$NON-NLS-1$
+      params.put( "desc", description ); //$NON-NLS-1$
+      params.put( "start-date-time", strStartDate ); //$NON-NLS-1$
+      if ( null != strEndDate ) {
+        params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
+      }
+      params.put( "cron", cronString ); //$NON-NLS-1$
+      params.put( "group", jobGroup ); //$NON-NLS-1$
+  
+      executePostMethod( params );
+    } catch(SchedulerServiceException sse) {
+      throw new SchedulerServiceException(Messages.getErrorString("SubscriptionAdminUIComponentProxy.ERROR_0011_PUBLIC_UNABLE_TO_CREATE_CRON_SCHEDULE",jobName), sse); //$NON-NLS-1$
+    }    
   }
   
   public void createRepeatSchedule( String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
       String strRepeatCount, String repeatInterval,
       String actionsList ) throws SchedulerServiceException {
-
-    DateFormat dateTimeFormatter = DateUtil.getDateTimeFormatter();
-    String strStartDate = dateTimeFormatter.format( startDate );
-    String strEndDate = null != endDate
-      ? dateTimeFormatter.format( endDate )
-      : null;
-    Map<String, Object> params = new HashMap<String, Object>();
-    // If the action sequence list is null then we will only create a schedule without
-    // a content otherwise schedule with content will be created
-    if(actionsList != null && actionsList.length() > 0) {
-    	params.put( "schedulerAction", "doAddScheduleAndContent" ); //$NON-NLS-1$  //$NON-NLS-2$
-        String[] actionsAr = actionsList.split( "," ); //$NON-NLS-1$
-        params.put( "actionRefs", actionsAr ); //$NON-NLS-1$
-    } else {
-    	params.put( "schedulerAction", "doAddScheduleWithoutContent" ); //$NON-NLS-1$  //$NON-NLS-2$	
+    try {
+      DateFormat dateTimeFormatter = DateUtil.getDateTimeFormatter();
+      String strStartDate = dateTimeFormatter.format( startDate );
+      String strEndDate = null != endDate
+        ? dateTimeFormatter.format( endDate )
+        : null;
+      Map<String, Object> params = new HashMap<String, Object>();
+      // If the action sequence list is null then we will only create a schedule without
+      // a content otherwise schedule with content will be created
+      if(actionsList != null && actionsList.length() > 0) {
+        params.put( "schedulerAction", "doAddScheduleAndContent" ); //$NON-NLS-1$  //$NON-NLS-2$
+          String[] actionsAr = actionsList.split( "," ); //$NON-NLS-1$
+          params.put( "actionRefs", actionsAr ); //$NON-NLS-1$
+      } else {
+        params.put( "schedulerAction", "doAddScheduleWithoutContent" ); //$NON-NLS-1$  //$NON-NLS-2$  
+      }
+      
+      // TODO sbarkdull, this may not be right (using jobName for title)
+      params.put( "title", jobName ); //$NON-NLS-1$
+      params.put( "schedRef", jobName ); //$NON-NLS-1$
+      params.put( "desc", description ); //$NON-NLS-1$
+      params.put( "start-date-time", strStartDate ); //$NON-NLS-1$
+      if ( null != strEndDate ) {
+        params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
+      }
+      if ( null != strRepeatCount ) {
+        params.put( "repeat-count", strRepeatCount ); //$NON-NLS-1$
+      }
+      assert Integer.parseInt( repeatInterval ) >= 0 : "Invalid repeat interval"; //$NON-NLS-1$
+      params.put( "repeat-time-millisecs", repeatInterval ); //$NON-NLS-1$
+      params.put( "group", jobGroup ); //$NON-NLS-1$
+  
+      executePostMethod( params );
+    } catch(SchedulerServiceException sse) {
+      throw new SchedulerServiceException(Messages.getErrorString("SubscriptionAdminUIComponentProxy.ERROR_0013_PUBLIC_UNABLE_TO_CREATE_REPEATING_SCHEDULE",jobName), sse); //$NON-NLS-1$
     }
-    
-    // TODO sbarkdull, this may not be right (using jobName for title)
-    params.put( "title", jobName ); //$NON-NLS-1$
-    params.put( "schedRef", jobName ); //$NON-NLS-1$
-    params.put( "desc", description ); //$NON-NLS-1$
-    params.put( "start-date-time", strStartDate ); //$NON-NLS-1$
-    if ( null != strEndDate ) {
-      params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
-    }
-    if ( null != strRepeatCount ) {
-      params.put( "repeat-count", strRepeatCount ); //$NON-NLS-1$
-    }
-    assert Integer.parseInt( repeatInterval ) >= 0 : "Invalid repeat interval"; //$NON-NLS-1$
-    params.put( "repeat-time-millisecs", repeatInterval ); //$NON-NLS-1$
-    params.put( "group", jobGroup ); //$NON-NLS-1$
-
-    executePostMethod( params );
   }
   
   public void updateCronSchedule( String oldJobName, String oldJobGroup, String schedId,
       String jobName, String jobGroup, String description,
       Date startDate, Date endDate,
       String cronString, String actionsList ) throws SchedulerServiceException {
-
-    DateFormat dateTimeFormatter = DateUtil.getDateTimeFormatter();
-    String strStartDate = dateTimeFormatter.format( startDate );
-    String strEndDate = null != endDate
-      ? dateTimeFormatter.format( endDate )
-      : null;
-    Map<String, Object> params = new HashMap<String, Object>();
-    // If the action sequence list is null then we will only create a schedule without
-    // a content otherwise schedule with content will be created
-    if(actionsList != null && actionsList.length() > 0) {
-      params.put( "schedulerAction", "doEditScheduleAndContent" ); //$NON-NLS-1$  //$NON-NLS-2$
-        String[] actionsAr = actionsList.split( "," ); //$NON-NLS-1$
-        params.put( "actionRefs", actionsAr ); //$NON-NLS-1$
-    } else {
-      params.put( "schedulerAction", "doEditScheduleWithoutContent" ); //$NON-NLS-1$  //$NON-NLS-2$ 
+    try {
+      DateFormat dateTimeFormatter = DateUtil.getDateTimeFormatter();
+      String strStartDate = dateTimeFormatter.format( startDate );
+      String strEndDate = null != endDate
+        ? dateTimeFormatter.format( endDate )
+        : null;
+      Map<String, Object> params = new HashMap<String, Object>();
+      // If the action sequence list is null then we will only create a schedule without
+      // a content otherwise schedule with content will be created
+      if(actionsList != null && actionsList.length() > 0) {
+        params.put( "schedulerAction", "doEditScheduleAndContent" ); //$NON-NLS-1$  //$NON-NLS-2$
+          String[] actionsAr = actionsList.split( "," ); //$NON-NLS-1$
+          params.put( "actionRefs", actionsAr ); //$NON-NLS-1$
+      } else {
+        params.put( "schedulerAction", "doEditScheduleWithoutContent" ); //$NON-NLS-1$  //$NON-NLS-2$ 
+      }
+      
+      params.put( "schedId", schedId ); //$NON-NLS-1$
+      params.put( "schedRef", jobName ); //$NON-NLS-1$
+      params.put( "group", jobGroup ); //$NON-NLS-1$
+      params.put( "desc", description ); //$NON-NLS-1$
+      // TODO sbarkdull, this may not be right (using jobName for title)
+      params.put( "title", jobName ); //$NON-NLS-1$
+      params.put( "start-date-time", strStartDate ); //$NON-NLS-1$
+      if ( null != strEndDate ) {
+        params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
+      }
+      params.put( "cron", cronString ); //$NON-NLS-1$S
+  
+      executePostMethod( params );
+    } catch(SchedulerServiceException sse) {
+      throw new SchedulerServiceException(Messages.getErrorString("SubscriptionAdminUIComponentProxy.ERROR_0012_PUBLIC_UNABLE_TO_UPDATE_CRON_SCHEDULE", oldJobName,jobName), sse); //$NON-NLS-1$
     }
-    
-    params.put( "schedId", schedId ); //$NON-NLS-1$
-    params.put( "schedRef", jobName ); //$NON-NLS-1$
-    params.put( "group", jobGroup ); //$NON-NLS-1$
-    params.put( "desc", description ); //$NON-NLS-1$
-    // TODO sbarkdull, this may not be right (using jobName for title)
-    params.put( "title", jobName ); //$NON-NLS-1$
-    params.put( "start-date-time", strStartDate ); //$NON-NLS-1$
-    if ( null != strEndDate ) {
-      params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
-    }
-    params.put( "cron", cronString ); //$NON-NLS-1$S
-
-    executePostMethod( params );
   }
   
   public void updateRepeatSchedule(  String oldJobName, String oldJobGroup, String schedId,
@@ -182,82 +192,101 @@ public class SubscriptionAdminUIComponentProxy {
       Date startDate, Date endDate,
       String strRepeatCount, String repeatInterval,
       String actionsList ) throws SchedulerServiceException {
-
-    DateFormat dateTimeFormatter = DateUtil.getDateTimeFormatter();
-    String strStartDate = dateTimeFormatter.format( startDate );
-    String strEndDate = null != endDate 
-      ? dateTimeFormatter.format( endDate )
-      : null;
-    Map<String, Object> params = new HashMap<String, Object>();
-    // TODO sbarkdull, some of these params may not be used, clean up
-    // If the action sequence list is null then we will only create a schedule without
-    // a content otherwise schedule with content will be created
-    if(actionsList != null && actionsList.length() > 0) {
-    	params.put( "schedulerAction", "doEditScheduleAndContent" ); //$NON-NLS-1$  //$NON-NLS-2$
-        String[] actionsAr = actionsList.split( "," ); //$NON-NLS-1$
-        params.put( "actionRefs", actionsAr ); //$NON-NLS-1$
-    } else {
-    	params.put( "schedulerAction", "doEditScheduleWithoutContent" ); //$NON-NLS-1$  //$NON-NLS-2$	
+    try {
+      DateFormat dateTimeFormatter = DateUtil.getDateTimeFormatter();
+      String strStartDate = dateTimeFormatter.format( startDate );
+      String strEndDate = null != endDate 
+        ? dateTimeFormatter.format( endDate )
+        : null;
+      Map<String, Object> params = new HashMap<String, Object>();
+      // TODO sbarkdull, some of these params may not be used, clean up
+      // If the action sequence list is null then we will only create a schedule without
+      // a content otherwise schedule with content will be created
+      if(actionsList != null && actionsList.length() > 0) {
+        params.put( "schedulerAction", "doEditScheduleAndContent" ); //$NON-NLS-1$  //$NON-NLS-2$
+          String[] actionsAr = actionsList.split( "," ); //$NON-NLS-1$
+          params.put( "actionRefs", actionsAr ); //$NON-NLS-1$
+      } else {
+        params.put( "schedulerAction", "doEditScheduleWithoutContent" ); //$NON-NLS-1$  //$NON-NLS-2$ 
+      }
+      params.put( "schedId", schedId ); //$NON-NLS-1$
+      params.put( "schedRef", jobName ); //$NON-NLS-1$
+      params.put( "group", jobGroup ); //$NON-NLS-1$
+      params.put( "desc", description ); //$NON-NLS-1$
+      // TODO sbarkdull, this may not be right (using jobName for title)
+      params.put( "title", jobName ); //$NON-NLS-1$
+      params.put( "start-date-time", strStartDate ); //$NON-NLS-1$
+      if ( null != strEndDate ) {
+        params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
+      }
+      if ( null != strRepeatCount ) {
+        params.put( "repeat-count", strRepeatCount ); //$NON-NLS-1$
+      }
+      assert Integer.parseInt( repeatInterval ) >= 0 : "Invalid repeat interval"; //$NON-NLS-1$
+      params.put( "repeat-time-millisecs", repeatInterval ); //$NON-NLS-1$
+  
+      executePostMethod( params );
+    } catch(SchedulerServiceException sse) {
+      throw new SchedulerServiceException(Messages.getErrorString("SubscriptionAdminUIComponentProxy.ERROR_0014_PUBLIC_UNABLE_TO_UPDATE_REPEATING_SCHEDULE", oldJobName,jobName), sse); //$NON-NLS-1$
     }
-    params.put( "schedId", schedId ); //$NON-NLS-1$
-    params.put( "schedRef", jobName ); //$NON-NLS-1$
-    params.put( "group", jobGroup ); //$NON-NLS-1$
-    params.put( "desc", description ); //$NON-NLS-1$
-    // TODO sbarkdull, this may not be right (using jobName for title)
-    params.put( "title", jobName ); //$NON-NLS-1$
-    params.put( "start-date-time", strStartDate ); //$NON-NLS-1$
-    if ( null != strEndDate ) {
-      params.put( "end-date-time", strEndDate ); //$NON-NLS-1$
-    }
-    if ( null != strRepeatCount ) {
-      params.put( "repeat-count", strRepeatCount ); //$NON-NLS-1$
-    }
-    assert Integer.parseInt( repeatInterval ) >= 0 : "Invalid repeat interval"; //$NON-NLS-1$
-    params.put( "repeat-time-millisecs", repeatInterval ); //$NON-NLS-1$
-
-    executePostMethod( params );
   }
   
   public void deleteJobs( List<Schedule> scheduleList ) throws SchedulerServiceException {
     
     for ( Schedule s : scheduleList ) {
-      Map<String, Object> params = new HashMap<String, Object>();
-      params.put( "schedulerAction", "doDeleteScheduleContentAndSubscription" ); //$NON-NLS-1$  //$NON-NLS-2$
-      params.put( "schedId", s.getSchedId() ); //$NON-NLS-1$
-
-      String responseStrXml = executeGetMethod( params );
+      try {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put( "schedulerAction", "doDeleteScheduleContentAndSubscription" ); //$NON-NLS-1$  //$NON-NLS-2$
+        params.put( "schedId", s.getSchedId() ); //$NON-NLS-1$
+  
+        executeGetMethod( params );
+      } catch(SchedulerServiceException sse) {
+        throw new SchedulerServiceException(Messages.getErrorString("SubscriptionAdminUIComponentProxy.ERROR_0001_PUBLIC_UNABLE_TO_DELETE_JOB", s.getSchedId()), sse); //$NON-NLS-1$
+      }      
     }
   }
   public void pauseJobs( List<Schedule> scheduleList ) throws SchedulerServiceException {
     
     for ( Schedule s : scheduleList ) {
+    try {
       Map<String, Object> params = new HashMap<String, Object>();
       params.put( "schedulerAction", "doPauseJob" ); //$NON-NLS-1$  //$NON-NLS-2$
       params.put( "jobId", s.getJobName() ); //$NON-NLS-1$
 
       executeGetMethod( params );
+    } catch(SchedulerServiceException sse) {
+      throw new SchedulerServiceException(Messages.getErrorString("SubscriptionAdminUIComponentProxy.ERROR_0003_PUBLIC_UNABLE_TO_PAUSE_JOB", s.getJobName()), sse); //$NON-NLS-1$        
+    }
     }
   }
   
   public void resumeJobs( List<Schedule> scheduleList ) throws SchedulerServiceException {
     
     for ( Schedule s : scheduleList ) {
-      Map<String, Object> params = new HashMap<String, Object>();
-      params.put( "schedulerAction", "doResumeJob" ); //$NON-NLS-1$  //$NON-NLS-2$
-      params.put( "jobId", s.getJobName() ); //$NON-NLS-1$
-
-      executeGetMethod( params );
+      try {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put( "schedulerAction", "doResumeJob" ); //$NON-NLS-1$  //$NON-NLS-2$
+        params.put( "jobId", s.getJobName() ); //$NON-NLS-1$
+  
+        executeGetMethod( params );
+      } catch(SchedulerServiceException sse) {
+        throw new SchedulerServiceException(Messages.getErrorString("SubscriptionAdminUIComponentProxy.ERROR_0004_PUBLIC_UNABLE_TO_RESUME_JOB", s.getJobName()), sse); //$NON-NLS-1$        
+      }
     }
   }
   
   public void executeJobs( List<Schedule> scheduleList ) throws SchedulerServiceException {
     
     for ( Schedule s : scheduleList ) {
-      Map<String, Object> params = new HashMap<String, Object>();
-      params.put( "schedulerAction", "doExecuteJob" ); //$NON-NLS-1$  //$NON-NLS-2$
-      params.put( "jobId", s.getJobName() ); //$NON-NLS-1$
-
-      executeGetMethod( params );
+      try {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put( "schedulerAction", "doExecuteJob" ); //$NON-NLS-1$  //$NON-NLS-2$
+        params.put( "jobId", s.getJobName() ); //$NON-NLS-1$
+  
+        executeGetMethod( params );
+      } catch(SchedulerServiceException sse) {
+        throw new SchedulerServiceException(Messages.getErrorString("SubscriptionAdminUIComponentProxy.ERROR_0002_PUBLIC_UNABLE_TO_EXECUTE_JOB", s.getJobName()), sse); //$NON-NLS-1$        
+      }
     }
   }
   

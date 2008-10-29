@@ -55,7 +55,7 @@ public class SolutionRepositoryActionSequenceListEditor extends SimplePanel {
   }
   
   public void setActionsAsList( List<String> friendlyNames, List<String> names ) {
-    assert friendlyNames == null || friendlyNames.size() == names.size() : "size of lists must be identical";
+    assert friendlyNames == null || friendlyNames.size() == names.size() : MSGS.sizeListMustBeIdentical();
     
     actionsEditor.removeAll();
     if ( null != friendlyNames ) {

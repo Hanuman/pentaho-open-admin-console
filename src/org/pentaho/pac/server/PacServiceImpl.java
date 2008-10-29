@@ -20,8 +20,6 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.io.IOUtils;
@@ -125,7 +123,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       
     } catch (DAOException e) {
       throw new PacServiceException(
-          Messages.getString("PacService.FAILED_TO_GET_USER_NAME" ), e ); //$NON-NLS-1$
+          Messages.getErrorString("PacService.ERROR_0033_FAILED_TO_GET_USER_NAME" ), e ); //$NON-NLS-1$
     }
     return userRoleSecurityInfo;
   }
@@ -141,7 +139,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       userRoleMgmtService.createUser(user);
       result = true;
     } catch (DAOException e) {
-      String msg = Messages.getString("PacService.ERROR_0004_USER_CREATION_FAILED", proxyUser.getName()) //$NON-NLS-1$
+      String msg = Messages.getErrorString("PacService.ERROR_0004_USER_CREATION_FAILED", proxyUser.getName()) //$NON-NLS-1$
           + " " + e.getMessage(); //$NON-NLS-1$
       throw new PacServiceException(msg, e);
     }
@@ -165,7 +163,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       }
       result = true;
     } catch (DAOException e) {
-      throw new PacServiceException(Messages.getString("PacService.USER_DELETION_FAILED", e.getMessage())); //$NON-NLS-1$
+      throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0013_USER_DELETION_FAILED_NO_USER", e.getMessage())); //$NON-NLS-1$
     }
     return result;
   }
@@ -179,7 +177,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
 
       }
     } catch (DAOException e) {
-      throw new PacServiceException(Messages.getString("PacService.FAILED_TO_FIND_USER", pUserName), e); //$NON-NLS-1$
+      throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0032_FAILED_TO_FIND_USER", pUserName), e); //$NON-NLS-1$
     }
     return proxyPentahoUser;
   }
@@ -194,7 +192,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
         proxyUsers[i++] = toProxyUser(user);
       }
     } catch (DAOException e) {
-      throw new PacServiceException(Messages.getString("PacService.FAILED_TO_GET_USER_NAME"), e); //$NON-NLS-1$
+      throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0033_FAILED_TO_GET_USER_NAME"), e); //$NON-NLS-1$
     }
     return proxyUsers;
   }
@@ -211,7 +209,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
         throw new NonExistingRoleException(proxyRole.getName());
       }
     } catch (DAOException e) {
-      throw new PacServiceException(Messages.getString("PacService.FAILED_TO_FIND_USER", proxyRole.getName()), e); //$NON-NLS-1$
+      throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0032_FAILED_TO_FIND_USER", proxyRole.getName()), e); //$NON-NLS-1$
     }
     return users.toArray(new ProxyPentahoUser[0]);
   }
@@ -227,7 +225,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       userRoleMgmtService.updateUser(syncUsers(user, proxyUser));
       result = true;
     } catch (DAOException e) {
-      String msg = Messages.getString("PacService.USER_UPDATE_FAILED", proxyUser.getName()) //$NON-NLS-1$
+      String msg = Messages.getErrorString("PacService.ERROR_0038_USER_UPDATE_FAILED", proxyUser.getName()) //$NON-NLS-1$
           + " " + e.getMessage(); //$NON-NLS-1$
       throw new PacServiceException(msg, e);
     }
@@ -253,7 +251,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     } catch (DAOException e) {
       rollbackTransaction();
       throw new PacServiceException(
-          Messages.getString("PacService.ROLE_UPDATE_FAILED", proxyUser.getName() ), e ); //$NON-NLS-1$
+          Messages.getErrorString("PacService.ERROR_0034_ROLE_UPDATE_FAILED", proxyUser.getName() ), e ); //$NON-NLS-1$
     }
   }
   
@@ -277,7 +275,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     } catch (DAOException e) {
       rollbackTransaction();
       throw new PacServiceException(
-          Messages.getString("PacService.ROLE_UPDATE_FAILED", proxyRole.getName() ), e ); //$NON-NLS-1$
+          Messages.getErrorString("PacService.ERROR_0034_ROLE_UPDATE_FAILED", proxyRole.getName() ), e ); //$NON-NLS-1$
     }
   }
 
@@ -286,14 +284,14 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
         try {
       IPentahoRole role = userRoleMgmtService.getRole(roleName);
       if (null == role) {
-        throw new PacServiceException(Messages.getString("PacService.ROLE_UPDATE_FAILED", roleName)); //$NON-NLS-1$
+        throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0034_ROLE_UPDATE_FAILED", roleName)); //$NON-NLS-1$
       }
 
       Set<IPentahoUser> users = new HashSet<IPentahoUser>();
       for (String username : usernames) {
         IPentahoUser user = userRoleMgmtService.getUser(username);
         if (null == user) {
-          throw new PacServiceException(Messages.getString("PacService.ROLE_UPDATE_FAILED", roleName)); //$NON-NLS-1$
+          throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0034_ROLE_UPDATE_FAILED", roleName)); //$NON-NLS-1$
         }
         users.add(user);
       }
@@ -303,7 +301,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       userRoleMgmtService.updateRole(role);
     } catch (DAOException e) {
       rollbackTransaction();
-      throw new PacServiceException(Messages.getString("PacService.ROLE_UPDATE_FAILED", roleName), e); //$NON-NLS-1$
+      throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0034_ROLE_UPDATE_FAILED", roleName), e); //$NON-NLS-1$
     }
   }
 
@@ -315,7 +313,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       userRoleMgmtService.createRole(syncRoles(role, proxyRole));
       result = true;
     } catch ( DAOException e) {
-      throw new PacServiceException(e.getClass().getName() + " " + e.getMessage()); //$NON-NLS-1$
+      throw new PacServiceException(e); //$NON-NLS-1$
     }
     return result;
   }
@@ -330,7 +328,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
         if ( null == persistedRoles[i] )
         {
           throw new PacServiceException(
-              Messages.getString("PacService.ROLE_DELETION_FAILED_NO_ROLE", roles[i].getName() ) ); //$NON-NLS-1$
+              Messages.getErrorString("PacService.ERROR_0010_ROLE_DELETION_FAILED_NO_ROLE", roles[i].getName() ) ); //$NON-NLS-1$
         }
       }
       for (int i = 0; i < persistedRoles.length; i++) {
@@ -339,7 +337,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       result = true;
     } catch (DAOException e) {
       throw new PacServiceException(
-          Messages.getString("PacService.ROLE_DELETION_FAILED", e.getMessage())); //$NON-NLS-1$
+          Messages.getErrorString("PacService.ERROR_0011_ROLE_DELETION_FAILED", e.getMessage())); //$NON-NLS-1$
     }
     return result;
   }
@@ -358,7 +356,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       }
     } catch (DAOException e) {
       throw new PacServiceException(
-          Messages.getString("PacService.FAILED_TO_FIND_USER", proxyUser.getName() ), e ); //$NON-NLS-1$
+          Messages.getErrorString("PacService.ERROR_0032_FAILED_TO_FIND_USER", proxyUser.getName() ), e ); //$NON-NLS-1$
     }
     return proxyRoles.toArray(new ProxyPentahoRole[0]);
   }
@@ -372,7 +370,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       }
     } catch (DAOException e) {
       throw new PacServiceException(
-          Messages.getString("PacService.FAILED_TO_GET_ROLE_NAME" ), e ); //$NON-NLS-1$
+          Messages.getErrorString("PacService.ERROR_0031_FAILED_TO_GET_ROLE_NAME" ), e ); //$NON-NLS-1$
     }
     return proxyRoles.toArray(new ProxyPentahoRole[0]);
   }
@@ -384,20 +382,20 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       if ( null == role )
       {
         throw new PacServiceException(
-            Messages.getString("PacService.ROLE_UPDATE_FAILED_DOES_NOT_EXIST", proxyPentahoRole.getName()) ); //$NON-NLS-1$
+            Messages.getErrorString("PacService.ERROR_0036_ROLE_UPDATE_FAILED_DOES_NOT_EXIST", proxyPentahoRole.getName()) ); //$NON-NLS-1$
       }
 
       userRoleMgmtService.updateRole(syncRoles(role, proxyPentahoRole));
       result = true;
     } catch (DAOException e) {
       throw new PacServiceException(
-          Messages.getString("PacService.ROLE_UPDATE_FAILED", proxyPentahoRole.getName() ), e ); //$NON-NLS-1$
+          Messages.getErrorString("PacService.ERROR_0034_ROLE_UPDATE_FAILED", proxyPentahoRole.getName() ), e ); //$NON-NLS-1$
     } catch (PentahoSecurityException e) {
       throw new PacServiceException(
-          Messages.getString("PacService.ROLE_UPDATE_FAILED_NO_PERMISSION", proxyPentahoRole.getName() ), e );  //$NON-NLS-1$
+          Messages.getErrorString("PacService.ERROR_0035_ROLE_UPDATE_FAILED_NO_PERMISSION", proxyPentahoRole.getName() ), e );  //$NON-NLS-1$
     } catch (NonExistingRoleException e) {
       throw new PacServiceException(
-          Messages.getString("PacService.ROLE_UPDATE_FAILED_USER_DOES_NOT_EXIST", proxyPentahoRole.getName(), /*role name*/e.getMessage() ), e ); //$NON-NLS-1$
+          Messages.getErrorString("PacService.ERROR_0037_ROLE_UPDATE_FAILED_USER_DOES_NOT_EXIST", proxyPentahoRole.getName(), /*role name*/e.getMessage() ), e ); //$NON-NLS-1$
     }
     return result;
   }
@@ -417,12 +415,12 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     } catch(PasswordServiceException pse) {
       throw new PacServiceException( pse.getMessage(), pse );
     } catch (DuplicateDataSourceException dde) {
-      throw new PacServiceException(Messages.getString("PacService.ERROR_0009_DATASOURCE_ALREADY_EXIST", dataSource.getName()), dde); //$NON-NLS-1$
+      throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0009_DATASOURCE_ALREADY_EXIST", dataSource.getName()), dde); //$NON-NLS-1$
 
     } catch (DAOException e) {
-      throw new PacServiceException(Messages.getString("PacService.ERROR_0007_DATASOURCE_CREATION_FAILED", dataSource.getName()), e); //$NON-NLS-1$
+      throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0007_DATASOURCE_CREATION_FAILED", dataSource.getName()), e); //$NON-NLS-1$
     } catch (PentahoSecurityException pse) {
-      throw new PacServiceException(Messages.getString("PacService.ERROR_0008_NO_CREATE_DATASOURCE_PERMISSION", dataSource.getName()), pse); //$NON-NLS-1$
+      throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0008_NO_CREATE_DATASOURCE_PERMISSION", dataSource.getName()), pse); //$NON-NLS-1$
 
     } finally {
       if (!result) {
@@ -446,14 +444,11 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       result = true;
       dataSourceMgmtService.commitTransaction();
     } catch (NonExistingDataSourceException neds) {
-      String msg = Messages.getString(
-          "PacService.DATASOURCE_DELETION_FAILED_NO_DATASOURCE", persistedDataSources.getName()) //$NON-NLS-1$
-          + " " + neds.getMessage(); //$NON-NLS-1$
-      throw new PacServiceException(msg, neds);
+      throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0016_DATASOURCE_DELETION_FAILED_NO_DATASOURCE", persistedDataSources.getName(),neds.getMessage()), neds); //$NON-NLS-1$
     } catch (DAOException e) {
-      throw new PacServiceException(Messages.getString("PacService.DATASOURCE_DELETION_FAILED", persistedDataSources.getName()), e); //$NON-NLS-1$
+      throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0017_DATASOURCE_DELETION_FAILED", persistedDataSources.getName()), e); //$NON-NLS-1$
     } catch (PentahoSecurityException pse) {
-      throw new PacServiceException(Messages.getString("PacService.DATASOURCE_DELETION_FAILED_NO_PERMISSION", persistedDataSources.getName()), pse); //$NON-NLS-1$
+      throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0018_DATASOURCE_DELETION_FAILED_NO_PERMISSION", persistedDataSources.getName()), pse); //$NON-NLS-1$
     } finally {
       if (!result) {
         rollbackTransaction();
@@ -501,11 +496,11 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     } catch(PasswordServiceException pse) {
         throw new PacServiceException( pse.getMessage(), pse );
     } catch (NonExistingDataSourceException neds) {
-      throw new PacServiceException(Messages.getString("PacService.DATASOURCE_UPDATE_FAILED_DOES_NOT_EXIST", dataSource.getName()), neds);
+      throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0021_DATASOURCE_UPDATE_FAILED_DOES_NOT_EXIST", dataSource.getName()), neds); //$NON-NLS-1$
     } catch (DAOException e) {
-      throw new PacServiceException(Messages.getString("PacService.DATASOURCE_UPDATE_FAILED", dataSource.getName()), e);
+      throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0019_DATASOURCE_UPDATE_FAILED", dataSource.getName()), e); //$NON-NLS-1$
     } catch (PentahoSecurityException pse) {
-      throw new PacServiceException(Messages.getString("PacService.DATASOURCE_UPDATE_FAILED_NO_PERMISSION", dataSource.getName()), pse);
+      throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0020_DATASOURCE_UPDATE_FAILED_NO_PERMISSION", dataSource.getName()), pse); //$NON-NLS-1$
 
     } finally {
       if (!result) {
@@ -535,7 +530,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
 
     } catch (DAOException e) {
       // TODO need a way better error message here please, maybe include some information from the exception?
-      throw new PacServiceException(Messages.getString("PacService.FAILED_TO_GET_DATASDOURCE"), e); //$NON-NLS-1$
+      throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0023_FAILED_TO_GET_DATASDOURCE", e.getLocalizedMessage()), e); //$NON-NLS-1$
     } finally {
       if (dataSourceMgmtService != null){
         dataSourceMgmtService.closeSession();
@@ -557,33 +552,33 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
 
     String driverClass = ds.getDriverClass();
     if (StringUtils.isEmpty(driverClass)) {
-      throw new DataSourceManagementException(Messages.getString("PacService.CONNECTION_ATTEMPT_FAILED",driverClass)); //$NON-NLS-1$  
+      throw new DataSourceManagementException(Messages.getErrorString("PacService.ERROR_0024_CONNECTION_ATTEMPT_FAILED",driverClass)); //$NON-NLS-1$  
     }
     Class<?> driverC = null;
 
     try {
       driverC = Class.forName(driverClass);
     } catch (ClassNotFoundException e) {
-      throw new DataSourceManagementException(Messages.getString("PacService.DRIVER_NOT_FOUND_IN_CLASSPATH",driverClass), e); //$NON-NLS-1$
+      throw new DataSourceManagementException(Messages.getErrorString("PacService.ERROR_0026_DRIVER_NOT_FOUND_IN_CLASSPATH",driverClass), e); //$NON-NLS-1$
     }
     if (!Driver.class.isAssignableFrom(driverC)) {
-      throw new DataSourceManagementException(Messages.getString("PacService.DRIVER_NOT_FOUND_IN_CLASSPATH",driverClass)); //$NON-NLS-1$    }
+      throw new DataSourceManagementException(Messages.getErrorString("PacService.ERROR_0026_DRIVER_NOT_FOUND_IN_CLASSPATH",driverClass)); //$NON-NLS-1$    }
     }
     Driver driver = null;
     
     try {
       driver = driverC.asSubclass(Driver.class).newInstance();
     } catch (InstantiationException e) {
-      throw new DataSourceManagementException(Messages.getString("PacService.UNABLE_TO_INSTANCE_DRIVER",driverClass), e); //$NON-NLS-1$
+      throw new DataSourceManagementException(Messages.getErrorString("PacService.ERROR_0027_UNABLE_TO_INSTANCE_DRIVER",driverClass), e); //$NON-NLS-1$
     } catch (IllegalAccessException e) {
-      throw new DataSourceManagementException(Messages.getString("PacService.UNABLE_TO_INSTANCE_DRIVER",driverClass), e); //$NON-NLS-1$    }
+      throw new DataSourceManagementException(Messages.getErrorString("PacService.ERROR_0027_UNABLE_TO_INSTANCE_DRIVER",driverClass), e); //$NON-NLS-1$    }
     }
     try {
       DriverManager.registerDriver(driver);
       conn = DriverManager.getConnection(ds.getUrl(), ds.getUserName(), ds.getPassword());
       return conn;
     } catch (SQLException e) {
-      throw new DataSourceManagementException(Messages.getString("PacService.UNABLE_TO_CONNECT",e.getMessage()), e); //$NON-NLS-1$
+      throw new DataSourceManagementException(Messages.getErrorString("PacService.ERROR_0025_UNABLE_TO_CONNECT",e.getMessage()), e); //$NON-NLS-1$
     }
   }
 
@@ -616,12 +611,12 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
         stmt = conn.createStatement();
         rs = stmt.executeQuery(ds.getQuery());
       } else {
-        throw new PacServiceException(Messages.getString("PacService.QUERY_NOT_VALID")); //$NON-NLS-1$
+        throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0028_QUERY_NOT_VALID")); //$NON-NLS-1$
       }
     } catch (DataSourceManagementException dme) {
-      throw new PacServiceException(Messages.getString("PacService.QUERY_VALIDATION_FAILED",ds.getQuery()), dme); //$NON-NLS-1$
+      throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0029_QUERY_VALIDATION_FAILED",ds.getQuery()), dme); //$NON-NLS-1$
     } catch (SQLException e) {
-      throw new PacServiceException(Messages.getString("PacService.QUERY_VALIDATION_FAILED",ds.getQuery()), e); //$NON-NLS-1$
+      throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0029_QUERY_VALIDATION_FAILED",ds.getQuery()), e); //$NON-NLS-1$
     } finally {
       try {
         if (rs != null) {
@@ -645,7 +640,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     try {
       dataSourceMgmtService.rollbackTransaction();
     } catch (Exception e) {
-      logger.error( Messages.getString( "PacService.rollbackFailed" ) );  //$NON-NLS-1$
+      logger.error( Messages.getErrorString( "PacService.ERROR_0048_ROLLBACK_FAILED" ) );  //$NON-NLS-1$
     }
   }
   
@@ -751,19 +746,22 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   private String resetSolutionRepository(String userid ) throws PacServiceException {
 
     try {
-      String strResponse = biServerProxy.execRemoteMethod(getBIServerBaseUrl(), "ResetRepository", HttpMethodType.GET, getUserName(), /*params*/null );//$NON-NLS-1$
+      biServerProxy.execRemoteMethod(getBIServerBaseUrl(), "ResetRepository", HttpMethodType.GET, getUserName(), /*params*/null );//$NON-NLS-1$
     } catch (ProxyException e) {
       throw new PacServiceException( e.getMessage(), e );
     } 
     return Messages.getString( "PacService.ACTION_COMPLETE" ); //$NON-NLS-1$
   }
 
+  public String getHomepageUrl() {
+    return AppConfigProperties.getInstance().getHomepageUrl();
+  }
+  
   public String getHomePageAsHtml(String url) {
     
     
     String html = null;
     HttpClient client = new HttpClient();
-    String charset;
     try {
 
       String timeOut = AppConfigProperties.getInstance().getHomepageTimeout();
@@ -801,7 +799,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     try {
       return IOUtils.toString(flatFile);
     } catch (IOException e) {
-      String msg = Messages.getString( "PacService.ioError", templateFileName ); //$NON-NLS-1$
+      String msg = Messages.getErrorString( "PacService.ERROR_0047_IO_ERROR", templateFileName ); //$NON-NLS-1$
       logger.error( msg,e);
       return "<span>" + msg + "</span>"; //$NON-NLS-1$ //$NON-NLS-2$
     }
@@ -809,14 +807,14 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   
   public void isBiServerAlive() throws PacServiceException {
     try {
-      String response = HTTP_CLIENT.execRemoteMethod(getBIServerBaseUrl(), "ping/alive.gif", HttpMethodType.GET, null );//$NON-NLS-1$
+      HTTP_CLIENT.execRemoteMethod(getBIServerBaseUrl(), "ping/alive.gif", HttpMethodType.GET, null );//$NON-NLS-1$
     } catch (Exception e) {
       throw new PacServiceException( e.getMessage(), e );
     } 
   }
   
   public int getBiServerStatusCheckPeriod() {
-    String strBiServerStatusCheckPeriod = StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getBiServerStatusCheckPeriod(), System.getProperty(AppConfigProperties.KEY_BISERVER_STATUS_CHECK_PERIOD) ); //$NON-NLS-1$
+    String strBiServerStatusCheckPeriod = StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getBiServerStatusCheckPeriod(), System.getProperty(AppConfigProperties.KEY_BISERVER_STATUS_CHECK_PERIOD) ); 
     try {
       if(strBiServerStatusCheckPeriod != null && strBiServerStatusCheckPeriod.length() > 0) {
         return Integer.parseInt( strBiServerStatusCheckPeriod );  
@@ -824,7 +822,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
         return DEFAULT_CHECK_PERIOD;
       }
     } catch( NumberFormatException e ) {
-      logger.error( Messages.getString( "PacService.THREAD_SCHEDULING_FAILED" ), e ); //$NON-NLS-1$
+      logger.error( Messages.getErrorString( "PacService.ERROR_0045_THREAD_SCHEDULING_FAILED" ), e ); //$NON-NLS-1$
       return DEFAULT_CHECK_PERIOD;
     }
   }
@@ -834,8 +832,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     try{
       AppConfigProperties.getInstance().initialize();      
     } catch(AppConfigException ace) {
-      logger.error( Messages.getString( "PacService.SERVICE_INITIALIZATION_FAILED",ace.getLocalizedMessage())); //$NON-NLS-1$
-      throw new ServiceInitializationException(Messages.getString( "PacService.SERVICE_INITIALIZATION_FAILED",ace.getLocalizedMessage()), ace);
+      throw new ServiceInitializationException(Messages.getErrorString( "PacService.ERROR_0046_SERVICE_INITIALIZATION_FAILED",ace.getLocalizedMessage()), ace); //$NON-NLS-1$
     }
     HibernateSessionFactory.addDefaultConfiguration();
     userRoleMgmtService = new UserRoleMgmtService();

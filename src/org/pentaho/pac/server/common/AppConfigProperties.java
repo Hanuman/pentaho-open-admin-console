@@ -86,6 +86,8 @@ public class AppConfigProperties {
   
   public static final String KEY_HELP_URL = "help-url"; //$NON-NLS-1$
   
+  public static final String KEY_HOMEPAGE_URL = "homepage-url"; //$NON-NLS-1$
+  
   public static final String DEFAULT_PROPERTIES_FILE_NAME = "console.xml"; //$NON-NLS-1$
 
   public static final String DEFAULT_VALUE_PASSWORD_SERVICE_CLASS = "org.pentaho.platform.util.Base64PasswordService"; //$NON-NLS-1$
@@ -103,6 +105,8 @@ public class AppConfigProperties {
   public static final String DEFAULT_HIBERNATE_CONFIG_PATH = "hsql.hibernate.cfg.xml"; //$NON-NLS-1$
   
   public static final String DEFAULT_HELP_URL = "http://wiki.pentaho.com/display/PentahoDoc/The+Pentaho+Administration+Console"; //$NON-NLS-1$
+  
+  public static final String DEFAULT_HOMEPAGE_URL = "http://www.pentaho.com/console_home"; //$NON-NLS-1$
     
   public static final String DEFAULT_SOLUTION_PATH = "./../pentaho-solutions"; //$NON-NLS-1$ 
   
@@ -121,9 +125,9 @@ public class AppConfigProperties {
   private static String helpUrl;
   private static String solutionPath;
   private static String warPath;
-  private static String jdbcDriverPath;
   private static List<String> defaultRoles = new ArrayList<String>();
   private static String defaultRolesString;
+  private static String homepageUrl;
 
   
   // ~ Instance fields =================================================================================================
@@ -168,6 +172,10 @@ public class AppConfigProperties {
    */
   public List<String> getDefaultRoles() {
     return defaultRoles;
+  }
+ 
+  public String getHomepageUrl() {
+    return homepageUrl;
   }
   
   public String getHomepageTimeout() {
@@ -222,7 +230,7 @@ public class AppConfigProperties {
         File file = new File(ClassLoader.getSystemResource(path).toURI());
         return file.getAbsolutePath();
       } catch(Exception e) {
-        logger.info( Messages.getString("AppConfigProperties.UNABLE_TO_GET_ABSOLUTE_PATH", path, e.getLocalizedMessage())); //$NON-NLS-1$
+        logger.info( Messages.getErrorString("AppConfigProperties.ERROR_0009_UNABLE_TO_GET_ABSOLUTE_PATH", path, e.getLocalizedMessage())); //$NON-NLS-1$
         return "resource/config/" + path; //$NON-NLS-1$  
       }
     }
@@ -267,13 +275,13 @@ public class AppConfigProperties {
     ISystemSettings settings = new OpenAdminConsoleSettings();
     warPath = settings.getSystemSetting(KEY_WAR_PATH, null);
     if(!validateWarPath(warPath)) {
-      throw new AppConfigException(Messages.getString("AppConfigProperties.WAR_PATH_NOT_CONFIGURED", warPath)); 
+      throw new AppConfigException(Messages.getErrorString("AppConfigProperties.ERROR_0007_WAR_PATH_NOT_CONFIGURED", warPath)); //$NON-NLS-1$ 
     }
     // Soluiton path
     solutionPath = settings.getSystemSetting(KEY_SOLUTION_PATH, null);
 
     if(!validateSolutionPath(solutionPath)) {
-      throw new AppConfigException(Messages.getString("AppConfigProperties.SOLUTION_PATH_NOT_CONFIGURED", solutionPath)); 
+      throw new AppConfigException(Messages.getErrorString("AppConfigProperties.ERROR_0008_SOLUTION_PATH_NOT_CONFIGURED", solutionPath));  //$NON-NLS-1$
     }
     
     // Help url
@@ -286,13 +294,17 @@ public class AppConfigProperties {
     biserverStatusCheckPeriod = settings.getSystemSetting(KEY_BISERVER_STATUS_CHECK_PERIOD, DEFAULT_BISERVER_STATUS_CHECK_PERIOD);
     // Platform username
     platformUsername = settings.getSystemSetting(KEY_PLATFORM_USERNAME, DEFAULT_PLATFORM_USERNAME);
+    
+    // Help url
+    homepageUrl = settings.getSystemSetting(KEY_HOMEPAGE_URL, DEFAULT_HOMEPAGE_URL);
+    
 
     // Initializing DefaultRoles
     
     if (defaultRolesString == null || defaultRolesString.length() == 0) {
       defaultRoles = Collections.emptyList();
     } else {
-      StringTokenizer tokenizer = new StringTokenizer(defaultRolesString, COMMA); //$NON-NLS-1$
+      StringTokenizer tokenizer = new StringTokenizer(defaultRolesString, COMMA);
       while (tokenizer.hasMoreTokens()) {
         defaultRoles.add(tokenizer.nextToken());
       }
@@ -307,8 +319,7 @@ public class AppConfigProperties {
       PasswordServiceFactory.init(passwordServiceClass);
 
     } catch(Exception e) {
-      logger.error( Messages.getString("AppConfigProperties.UNABLE_TO_READ_FILE", solutionPath + PENTAHO_OBJECTS_SPRING_XML)); //$NON-NLS-1$
-      throw new AppConfigException(Messages.getString("AppConfigProperties.UNABLE_TO_READ_FILE", solutionPath + PENTAHO_OBJECTS_SPRING_XML), e);
+      throw new AppConfigException(Messages.getErrorString("AppConfigProperties.ERROR_0004_UNABLE_TO_READ_FILE", solutionPath + PENTAHO_OBJECTS_SPRING_XML), e); //$NON-NLS-1$
     }
     
     // Initializing isHibernateManaged & HibernateConfigPath
@@ -327,8 +338,7 @@ public class AppConfigProperties {
       } 
 
     } catch(Exception e) {
-      logger.error( Messages.getString("AppConfigProperties.UNABLE_TO_READ_FILE", solutionPath + HIBERNATE_MANAGED_XML_PATH)); //$NON-NLS-1$
-      throw new AppConfigException(Messages.getString("AppConfigProperties.UNABLE_TO_READ_FILE", solutionPath + HIBERNATE_MANAGED_XML_PATH), e);
+      throw new AppConfigException(Messages.getErrorString("AppConfigProperties.ERROR_0004_UNABLE_TO_READ_FILE", solutionPath + HIBERNATE_MANAGED_XML_PATH), e); //$NON-NLS-1$
     } 
 
     // Initializing Base URL
@@ -339,12 +349,11 @@ public class AppConfigProperties {
         baseUrl = DEFAULT_BISERVER_BASE_URL;
       }
     } catch(Exception e) {
-      logger.error( Messages.getString("AppConfigProperties.UNABLE_TO_READ_FILE", warPath + WEB_XML_PATH)); //$NON-NLS-1$
-      throw new AppConfigException(Messages.getString("AppConfigProperties.UNABLE_TO_READ_FILE",warPath + WEB_XML_PATH), e);
+      throw new AppConfigException(Messages.getErrorString("AppConfigProperties.ERROR_0004_UNABLE_TO_READ_FILE",warPath + WEB_XML_PATH), e); //$NON-NLS-1$
     }
     // Initializing BiServer Context Path
-    int start = baseUrl.lastIndexOf(COLON); //$NON-NLS-1$
-    int middle = baseUrl.indexOf(SLASH, start); //$NON-NLS-1$
+    int start = baseUrl.lastIndexOf(COLON);
+    int middle = baseUrl.indexOf(SLASH, start);
 
     // Initializing BiServer context path
     biserverContextPath = baseUrl.substring(middle, baseUrl.length()-1);
@@ -382,7 +391,7 @@ public class AppConfigProperties {
         }
       }
     } catch(Exception e) {
-      logger.error( Messages.getString("AppConfigProperties.WAR_PATH_NOT_CONFIGURED", warPath)); //$NON-NLS-1$
+      logger.error( Messages.getErrorString("AppConfigProperties.ERROR_0007_WAR_PATH_NOT_CONFIGURED", warPath)); //$NON-NLS-1$
       return false;
     }
   }
@@ -416,7 +425,7 @@ public class AppConfigProperties {
         }
       }
     } catch(Exception e) {
-      logger.error( Messages.getString("AppConfigProperties.SOLUTION_PATH_NOT_CONFIGURED", solutionPath)); //$NON-NLS-1$
+      logger.error( Messages.getErrorString("AppConfigProperties.ERROR_0008_SOLUTION_PATH_NOT_CONFIGURED", solutionPath)); //$NON-NLS-1$
       return false;
     }
   }

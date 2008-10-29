@@ -10,6 +10,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.pentaho.platform.engine.security.userroledao.messages.Messages;
 
 public class HibernateSettingsXml {
   
@@ -30,7 +31,7 @@ public class HibernateSettingsXml {
   public HibernateSettingsXml(Document doc) throws DocumentException {
     Element rootElement = doc.getRootElement();
     if ((rootElement != null) &&  !doc.getRootElement().getName().equals(ROOT_ELEMENT)) {
-      throw new DocumentException("Invalid root element.");
+      throw new DocumentException(Messages.getErrorString("HibernateSettingsXml.ERROR_0001_INVALID_ROOT_ELEMENT")); //$NON-NLS-1$
     }
     document = doc;
   }
@@ -88,7 +89,7 @@ public class HibernateSettingsXml {
     BufferedReader input =  new BufferedReader(new FileReader(aFile));
     try {
       String line = null;
-      String lineSeparator = System.getProperty("line.separator");
+      String lineSeparator = System.getProperty("line.separator"); //$NON-NLS-1$
       while (( line = input.readLine()) != null){
         contents.append(line);
         contents.append(lineSeparator);

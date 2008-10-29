@@ -15,10 +15,8 @@ import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.roles.RoleAssignmentsDialogBox;
 import org.pentaho.pac.client.roles.RolesList;
-import org.pentaho.pac.common.PentahoSecurityException;
-import org.pentaho.pac.common.roles.NonExistingRoleException;
+import org.pentaho.pac.client.utils.ExceptionParser;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
-import org.pentaho.pac.common.users.NonExistingUserException;
 import org.pentaho.pac.common.users.ProxyPentahoUser;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -294,15 +292,9 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
 	      }
 
 	      public void onFailure(Throwable caught) {
-	        errorDialog.setText(MSGS.deleteUsers());
-          if (caught instanceof PentahoSecurityException) {
-            errorDialog.setMessage(MSGS.insufficientPrivileges());
-          } else if (caught instanceof NonExistingUserException) {
-            errorDialog.setMessage(MSGS.userDoesNotExist(caught.getMessage()));
-          } else {
-            errorDialog.setMessage(caught.getMessage());
-          }
-          errorDialog.center();
+          MessageDialog messageDialog = new MessageDialog();
+          messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+          messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));  
 	      }
 	    };
 	    UserAndRoleMgmtService.instance().deleteUsers(selectedUsers.toArray(new ProxyPentahoUser[0]), callback);
@@ -324,17 +316,9 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
         }
 
         public void onFailure(Throwable caught) {
-          errorDialog.setText(MSGS.removeRoles());
-          if (caught instanceof PentahoSecurityException) {
-            errorDialog.setMessage(MSGS.insufficientPrivileges());
-          } else if (caught instanceof NonExistingUserException) {
-            errorDialog.setMessage(MSGS.userDoesNotExist(caught.getMessage()));
-          } else if (caught instanceof NonExistingRoleException) {
-            errorDialog.setMessage(MSGS.roleDoesNotExist(caught.getMessage()));
-          } else {
-            errorDialog.setMessage(caught.getMessage());
-          }
-          errorDialog.center();
+          MessageDialog messageDialog = new MessageDialog();
+          messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+          messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));  
         }
       };
       UserAndRoleMgmtService.instance().setRoles(selectedUsers.get(0), (ProxyPentahoRole[])assignedRoles.toArray(new ProxyPentahoRole[0]), callback);
@@ -400,15 +384,10 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
 	      }
 
 	      public void onFailure(Throwable caught) {
-          errorDialog.setText(MSGS.updateUser());
-          if (caught instanceof PentahoSecurityException) {
-            errorDialog.setMessage(MSGS.insufficientPrivileges());
-          } else if (caught instanceof NonExistingUserException) {
-            errorDialog.setMessage(MSGS.userDoesNotExist(caught.getMessage()));
-          } else {
-            errorDialog.setMessage(caught.getMessage());
-          }
-          errorDialog.center();
+	        MessageDialog messageDialog = new MessageDialog();
+	        messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+	        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));   
+	        messageDialog.center();
           ((Button)sender).setEnabled( true );
 	      }
 	    }; // end AsyncCallback

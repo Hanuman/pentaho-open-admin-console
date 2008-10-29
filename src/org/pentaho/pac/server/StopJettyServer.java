@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.URI;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Properties;
 
@@ -14,7 +16,7 @@ import org.apache.commons.logging.LogFactory;
 import org.pentaho.pac.server.i18n.Messages;
 
 public class StopJettyServer {
-  public static final String DEFAULT_CONSOLE_PROPERTIES_FILE_NAME = "resource/config/console.properties"; //$NON-NLS-1$
+  public static final String DEFAULT_CONSOLE_PROPERTIES_FILE_NAME = "console.properties"; //$NON-NLS-1$
   public static final String CONSOLE_HOST_NAME = "console.hostname"; //$NON-NLS-1$
   public static final int DEFAULT_STOP_PORT_NUMBER = 8022;
   public static final String DEFAULT_HOSTNAME = "localhost"; //$NON-NLS-1$
@@ -27,17 +29,19 @@ public class StopJettyServer {
     FileInputStream fis = null;
     Properties properties = null;
     try {
-      File file = new File(DEFAULT_CONSOLE_PROPERTIES_FILE_NAME);
+      URL url = ClassLoader.getSystemResource(DEFAULT_CONSOLE_PROPERTIES_FILE_NAME);
+      URI uri = url.toURI();
+      File file = new File(uri);
       fis = new FileInputStream(file);
-    } catch (IOException e1) {
-      logger.error(Messages.getString("PacService.OPEN_PROPS_FAILED", DEFAULT_CONSOLE_PROPERTIES_FILE_NAME)); //$NON-NLS-1$
+    } catch (Exception e1) {
+      logger.error(Messages.getErrorString("StopJettyServer.ERROR_0001_OPEN_PROPS_FAILED", DEFAULT_CONSOLE_PROPERTIES_FILE_NAME)); //$NON-NLS-1$
     }
     if (null != fis) {
       properties = new Properties();
       try {
         properties.load(fis);
       } catch (IOException e) {
-        logger.error(Messages.getString("PacService.LOAD_PROPS_FAILED", DEFAULT_CONSOLE_PROPERTIES_FILE_NAME)); //$NON-NLS-1$
+        logger.error(Messages.getErrorString("StopJettyServer.ERROR_0002_LOAD_PROPS_FAILED", DEFAULT_CONSOLE_PROPERTIES_FILE_NAME)); //$NON-NLS-1$
       }
     }
     if (properties != null) {
@@ -71,7 +75,7 @@ public class StopJettyServer {
       out.println(STOP_ARG);
       out.flush();
     } catch (Exception e) {
-      logger.error(Messages.getString("PacService.UNKNOWN_HOST", host.getHostName())); //$NON-NLS-1$
+      logger.error(Messages.getErrorString("StopJettyServer.ERROR_0003_UNKNOWN_HOST", host.getHostName())); //$NON-NLS-1$
     }
 
   }

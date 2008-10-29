@@ -1,8 +1,6 @@
 package org.pentaho.pac.client.common.ui.toolbar;
 
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MouseListener;

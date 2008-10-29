@@ -9,6 +9,7 @@ import org.pentaho.pac.common.users.DuplicateUserException;
 import org.pentaho.pac.common.users.NonExistingUserException;
 import org.pentaho.pac.server.common.DAOException;
 import org.pentaho.pac.server.common.DAOFactory;
+import org.pentaho.pac.server.i18n.Messages;
 import org.pentaho.platform.engine.security.userroledao.AlreadyExistsException;
 import org.pentaho.platform.engine.security.userroledao.IPentahoRole;
 import org.pentaho.platform.engine.security.userroledao.IPentahoUser;
@@ -28,12 +29,12 @@ import org.pentaho.platform.engine.security.userroledao.UncategorizedUserRoleDao
       try {
         userRoleDAO.createRole(newRole);
       } catch (AlreadyExistsException e) {
-        throw new DuplicateRoleException(e);
+        throw new DuplicateRoleException(Messages.getErrorString("PacService.ERROR_0049_ROLE_ALREADY_EXIST", newRole.getName()), e); //$NON-NLS-1$
       } catch (UncategorizedUserRoleDaoException e) {
-        throw new DAOException(e);
+        throw new DAOException(Messages.getErrorString("PacService.ERROR_0050_UNRECOGNIZED_ROLE_CREATION",e.getLocalizedMessage()), e); //$NON-NLS-1$
       }
     } else {
-      throw new PentahoSecurityException();
+      throw new PentahoSecurityException(Messages.getErrorString("PacService.ERROR_0002_NO_CREATE_ROLE_PERMISSION",newRole.getName())); //$NON-NLS-1$      
     }
   }
 
@@ -42,12 +43,12 @@ import org.pentaho.platform.engine.security.userroledao.UncategorizedUserRoleDao
     try {
       userRoleDAO.createUser(newUser);
     } catch (AlreadyExistsException e) {
-      throw new DuplicateUserException(e);
+      throw new DuplicateUserException(Messages.getErrorString("PacService.ERROR_0051_USER_ALREADY_EXIST", newUser.getUsername()), e); //$NON-NLS-1$      
     } catch (UncategorizedUserRoleDaoException e) {
-      throw new DAOException(e);
+      throw new DAOException(Messages.getErrorString("PacService.ERROR_0052_UNRECOGNIZED_USER_CREATION",e.getLocalizedMessage()), e); //$NON-NLS-1$      
     }
     } else {
-      throw new PentahoSecurityException();
+      throw new PentahoSecurityException(Messages.getErrorString("PacService.ERROR_0005_NO_CREATE_USER_PERMISSION",newUser.getUsername())); //$NON-NLS-1$      
     }
   }
 
@@ -56,12 +57,12 @@ import org.pentaho.platform.engine.security.userroledao.UncategorizedUserRoleDao
     try {
       role = userRoleDAO.getRole(roleName);
     } catch (UncategorizedUserRoleDaoException e) {
-      throw new DAOException(e);
+      throw new DAOException(Messages.getErrorString("PacService.ERROR_0053_UNRECOGNIZED_ROLE_DELETION",e.getLocalizedMessage()), e); //$NON-NLS-1$      
     }
     if (role != null) {
       deleteRole(role);
     } else {
-      throw new NonExistingRoleException(roleName);
+      throw new NonExistingRoleException(Messages.getErrorString("PacService.ERROR_0010_ROLE_DELETION_FAILED_NO_ROLE",roleName)); //$NON-NLS-1$
     }
   }
   
@@ -70,12 +71,12 @@ import org.pentaho.platform.engine.security.userroledao.UncategorizedUserRoleDao
       try {
         userRoleDAO.deleteRole(role);
       } catch (NotFoundException e) {
-        throw new NonExistingRoleException(e);
+        throw new NonExistingRoleException(Messages.getErrorString("PacService.ERROR_0010_ROLE_DELETION_FAILED_NO_ROLE",role.getName()), e); //$NON-NLS-1$
       } catch (UncategorizedUserRoleDaoException e) {
-        throw new DAOException(e);
+        throw new DAOException(Messages.getErrorString("PacService.ERROR_0053_UNRECOGNIZED_ROLE_DELETION",e.getLocalizedMessage()), e); //$NON-NLS-1$        
       }
     } else {
-      throw new PentahoSecurityException();
+      throw new PentahoSecurityException(Messages.getErrorString("PacService.ERROR_0012_ROLE_DELETION_FAILED_NO_PERMISSION",role.getName())); //$NON-NLS-1$
     }
   }
 
@@ -84,12 +85,12 @@ import org.pentaho.platform.engine.security.userroledao.UncategorizedUserRoleDao
     try {
       user = userRoleDAO.getUser(userName);
     } catch (UncategorizedUserRoleDaoException e) {
-      throw new DAOException(e);
+      throw new DAOException(Messages.getErrorString("PacService.ERROR_0054_UNRECOGNIZED_USER_DELETION",e.getLocalizedMessage()), e); //$NON-NLS-1$      
     }
     if (user != null) {
       deleteUser(user);
     } else {
-      throw new NonExistingUserException( userName );
+      throw new NonExistingUserException(Messages.getErrorString("PacService.ERROR_0013_USER_DELETION_FAILED_NO_USER",userName)); //$NON-NLS-1$            
     }
   }
   
@@ -98,12 +99,12 @@ import org.pentaho.platform.engine.security.userroledao.UncategorizedUserRoleDao
       try {
         userRoleDAO.deleteUser(user);
       } catch (NotFoundException e) {
-        throw new NonExistingUserException(e);
+        throw new NonExistingUserException(Messages.getErrorString("PacService.ERROR_0013_USER_DELETION_FAILED_NO_USER",user.getUsername())); //$NON-NLS-1$        
       } catch (UncategorizedUserRoleDaoException e) {
-        throw new DAOException(e);
+        throw new DAOException(Messages.getErrorString("PacService.ERROR_0054_UNRECOGNIZED_USER_DELETION",e.getLocalizedMessage()), e); //$NON-NLS-1$        
       }
     } else {
-      throw new PentahoSecurityException();
+      throw new PentahoSecurityException(Messages.getErrorString("PacService.ERROR_0015_USER_DELETION_FAILED_NO_PERMISSION",user.getUsername())); //$NON-NLS-1$      
     }    
   }
 
@@ -111,7 +112,7 @@ import org.pentaho.platform.engine.security.userroledao.UncategorizedUserRoleDao
     try {
       return userRoleDAO.getRole(name);
     } catch (UncategorizedUserRoleDaoException e) {
-      throw new DAOException(e);
+      throw new DAOException(Messages.getErrorString("PacService.ERROR_0055_UNRECOGNIZED_ROLE_RETRIEVAL",e.getLocalizedMessage()), e); //$NON-NLS-1$      
     }
   }
 
@@ -119,7 +120,7 @@ import org.pentaho.platform.engine.security.userroledao.UncategorizedUserRoleDao
     try {
       return userRoleDAO.getRoles();
     } catch (UncategorizedUserRoleDaoException e) {
-      throw new DAOException(e);
+      throw new DAOException(Messages.getErrorString("PacService.ERROR_0057_UNRECOGNIZED_ROLES_RETRIEVAL",e.getLocalizedMessage()), e); //$NON-NLS-1$      
     }
   }
 
@@ -127,7 +128,7 @@ import org.pentaho.platform.engine.security.userroledao.UncategorizedUserRoleDao
     try {
       return userRoleDAO.getUser(name);
     } catch (UncategorizedUserRoleDaoException e) {
-      throw new DAOException(e);
+      throw new DAOException(Messages.getErrorString("PacService.ERROR_0056_UNRECOGNIZED_USER_RETRIEVAL",e.getLocalizedMessage()), e); //$NON-NLS-1$      
     }
   }
 
@@ -135,7 +136,7 @@ import org.pentaho.platform.engine.security.userroledao.UncategorizedUserRoleDao
     try {
       return userRoleDAO.getUsers();
     } catch (UncategorizedUserRoleDaoException e) {
-      throw new DAOException(e);
+      throw new DAOException(Messages.getErrorString("PacService.ERROR_0058_UNRECOGNIZED_USERS_RETRIEVAL",e.getLocalizedMessage()), e); //$NON-NLS-1$      
     }
   }
 
@@ -144,12 +145,12 @@ import org.pentaho.platform.engine.security.userroledao.UncategorizedUserRoleDao
       try {
         userRoleDAO.updateRole(role);
       } catch (NotFoundException e) {
-        throw new NonExistingRoleException(e);
+        throw new NonExistingRoleException(Messages.getErrorString("PacService.ERROR_0036_ROLE_UPDATE_FAILED_DOES_NOT_EXIST",role.getName()), e); //$NON-NLS-1$        
       } catch (UncategorizedUserRoleDaoException e) {
-        throw new DAOException(e);
+        throw new DAOException(Messages.getErrorString("PacService.ERROR_0059_UNRECOGNIZED_ROLES_UPDATE",e.getLocalizedMessage()), e); //$NON-NLS-1$
       }
     } else {
-      throw new PentahoSecurityException();
+      throw new PentahoSecurityException(Messages.getErrorString("PacService.ERROR_0035_ROLE_UPDATE_FAILED_NO_PERMISSION",role.getName())); //$NON-NLS-1$      
     }    
   }
 
@@ -158,12 +159,12 @@ import org.pentaho.platform.engine.security.userroledao.UncategorizedUserRoleDao
       try {
         userRoleDAO.updateUser(user);
       } catch (NotFoundException e) {
-        throw new NonExistingUserException(e);
+        throw new NonExistingUserException(Messages.getErrorString("PacService.ERROR_0039_USER_UPDATE_FAILED_DOES_NOT_EXIST",user.getUsername()), e); //$NON-NLS-1$
       } catch (UncategorizedUserRoleDaoException e) {
-        throw new DAOException(e);
+        throw new DAOException(Messages.getErrorString("PacService.ERROR_0060_UNRECOGNIZED_USERS_UPDATE",e.getLocalizedMessage()), e); //$NON-NLS-1$        
       }
     } else {
-      throw new PentahoSecurityException();
+      throw new PentahoSecurityException(Messages.getErrorString("PacService.ERROR_0061_USER_UPDATE_FAILED_NO_PERMISSION",user.getUsername())); //$NON-NLS-1$
     }    
   }
   

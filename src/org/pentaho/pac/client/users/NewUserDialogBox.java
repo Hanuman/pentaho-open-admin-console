@@ -4,9 +4,8 @@ import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
-import org.pentaho.pac.common.PentahoSecurityException;
+import org.pentaho.pac.client.utils.ExceptionParser;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
-import org.pentaho.pac.common.users.DuplicateUserException;
 import org.pentaho.pac.common.users.ProxyPentahoUser;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -27,8 +26,8 @@ public class NewUserDialogBox extends ConfirmDialog {
     userDetailsPanel.setStyleName( "newUserDialogBox.detailsPanel" ); //$NON-NLS-1$
     addWidgetToClientArea( userDetailsPanel );
     
-    setOnOkHandler( new ICallback() {
-      public void onHandle( Object o ) {
+    setOnOkHandler( new ICallback<MessageDialog>() {
+      public void onHandle( MessageDialog o ) {
         createUser();
       }
     });
@@ -94,7 +93,7 @@ public class NewUserDialogBox extends ConfirmDialog {
     } else {
       final ProxyPentahoUser user = getUser();
       if (user != null) {
-        AsyncCallback callback = new AsyncCallback() {
+        AsyncCallback<Object> callback = new AsyncCallback<Object>() {
           public void onSuccess(Object result) {
             okBtn.setEnabled(true);
             cancelBtn.setEnabled(true);
@@ -109,8 +108,9 @@ public class NewUserDialogBox extends ConfirmDialog {
               }
               
               public void onFailure(Throwable caught) {
-                messageDialog.setMessage(MSGS.addDefaultRolesFailed());
-                messageDialog.center();
+                MessageDialog messageDialog = new MessageDialog();
+                messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+                messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));                   
               }
             });
             
@@ -119,13 +119,9 @@ public class NewUserDialogBox extends ConfirmDialog {
           }
 
           public void onFailure(Throwable caught) {
-            if (caught instanceof PentahoSecurityException) {
-              messageDialog.setMessage(MSGS.insufficientPrivileges());
-            } else if (caught instanceof DuplicateUserException) {
-              messageDialog.setMessage(MSGS.userAlreadyExist());
-            } else {
-              messageDialog.setMessage(caught.getMessage());
-            }
+            MessageDialog messageDialog = new MessageDialog();
+            messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+            messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));   
             messageDialog.center();
             okBtn.setEnabled(true);
             cancelBtn.setEnabled(true);

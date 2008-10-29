@@ -8,57 +8,56 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.HashMap;
-import java.util.List;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.dom4j.XPath;
 import org.dom4j.io.SAXReader;
 import org.jaxen.JaxenException;
 import org.jaxen.SimpleNamespaceContext;
 import org.jaxen.dom4j.Dom4jXPath;
+import org.pentaho.platform.engine.security.userroledao.messages.Messages;
 
 public class PentahoObjectsConfig {
-  private static final String DEFAULT_NAMESPACE = "http://www.springframework.org/schema/beans";
-  private static final String DEFAULT = "default";
-  private static final String ROOT = "beans";
-  private static final String ROOT_ELEMENT = DEFAULT + ":beans";
-  private static final String BEAN_ELEMENT = DEFAULT + ":bean";
-  private static final String ID_ATTRIBUTE = "id";
-  private static final String CLASS_ATTRIBUTE = "class";
-  private static final String SCOPE_ATTRIBUTE = "scope";
-  private static final String BEAN_ID_XPATH = ROOT_ELEMENT + "/" + BEAN_ELEMENT + "[@" + ID_ATTRIBUTE + "=\"{0}\"]";
-  public static final String SOLUTION_ENGINE_ID = "ISolutionEngine";
-  public static final String SOLUTION_REPOSITORY_ID = "ISolutionRepository";
-  public static final String CONTENT_REPOSITORY_ID = "IContentRepository";
-  public static final String RUNTIME_REPOSITORY_ID = "IRuntimeRepository";
-  public static final String AUDIT_FILE_ENTRY_ID = "IAuditEntry";
-  public static final String UI_TEMPLATER_ID = "IUITemplater";
-  public static final String USER_FILES_COMPONENT_ID = "IUserFilesComponent";
-  public static final String BACKGROUND_EXECUTION_HELPER_ID = "IBackgroundExecution";
-  public static final String SUBSCRIPTION_REPOSITORY_ID = "ISubscriptionRepository";
-  public static final String SUBSCRIPTION_SCHEDULER_ID = "ISubscriptionScheduler";
-  public static final String CWM_SCHEMA_FACTORY_ID = "ICwmSchemaFactory";
-  public static final String USER_SETTINGS_SERVICE_ID = "IUserSettingService";
-  public static final String FILE_OUTPUT_HANDLER_ID = "file";
-  public static final String CONTENT_REPOSITORY_OUTPUT_HANDLER_ID = "contentrepo";
-  public static final String ACL_PUBLISHER_ID = "IAclPublisher";
-  public static final String ACL_VOTER_ID = "IAclVoter";
-  public static final String VERSION_HELPER_ID = "IVersionHelper";
-  public static final String CACHE_MGR_ID = "ICacheManager";
-  public static final String SCHEDULER_ID = "IScheduler";
-  public static final String CONDITONAL_EXECUTION_ID = "IConditionalExecution";
-  public static final String MSG_FORMATTER_ID = "IMessageFormatter";
-  public static final String NAVIGATION_COMPONENT_ID = "INavigationComponent";
-  public static final String DATA_SOURCE_SERVICE_ID = "IDatasourceService";
-  public static final String PASSWORD_SERVICE_ID = "IPasswordService";
-  public static final String DATA_SOURCE_ID = "IDatasource";
-  public static final String DATA_SOURCE_MGMT_SERVICE_ID = "IDatasourceMgmtService";
-  public static final String PROTOTYPE = "prototype";
-  public static final String SESSION = "session";
-  public static final String SINGLETON = "singleton";
+  private static final String DEFAULT_NAMESPACE = "http://www.springframework.org/schema/beans";  //$NON-NLS-1$
+  private static final String DEFAULT = "default"; //$NON-NLS-1$
+  private static final String ROOT = "beans"; //$NON-NLS-1$
+  private static final String ROOT_ELEMENT = DEFAULT + ":beans"; //$NON-NLS-1$
+  private static final String BEAN_ELEMENT = DEFAULT + ":bean"; //$NON-NLS-1$
+  private static final String ID_ATTRIBUTE = "id"; //$NON-NLS-1$
+  private static final String CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
+  private static final String SCOPE_ATTRIBUTE = "scope"; //$NON-NLS-1$
+  private static final String BEAN_ID_XPATH = ROOT_ELEMENT + "/" + BEAN_ELEMENT + "[@" + ID_ATTRIBUTE + "=\"{0}\"]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+  public static final String SOLUTION_ENGINE_ID = "ISolutionEngine"; //$NON-NLS-1$
+  public static final String SOLUTION_REPOSITORY_ID = "ISolutionRepository"; //$NON-NLS-1$
+  public static final String CONTENT_REPOSITORY_ID = "IContentRepository"; //$NON-NLS-1$ 
+  public static final String RUNTIME_REPOSITORY_ID = "IRuntimeRepository"; //$NON-NLS-1$
+  public static final String AUDIT_FILE_ENTRY_ID = "IAuditEntry"; //$NON-NLS-1$
+  public static final String UI_TEMPLATER_ID = "IUITemplater"; //$NON-NLS-1$
+  public static final String USER_FILES_COMPONENT_ID = "IUserFilesComponent"; //$NON-NLS-1$
+  public static final String BACKGROUND_EXECUTION_HELPER_ID = "IBackgroundExecution"; //$NON-NLS-1$
+  public static final String SUBSCRIPTION_REPOSITORY_ID = "ISubscriptionRepository"; //$NON-NLS-1$ 
+  public static final String SUBSCRIPTION_SCHEDULER_ID = "ISubscriptionScheduler"; //$NON-NLS-1$
+  public static final String CWM_SCHEMA_FACTORY_ID = "ICwmSchemaFactory"; //$NON-NLS-1$
+  public static final String USER_SETTINGS_SERVICE_ID = "IUserSettingService"; //$NON-NLS-1$
+  public static final String FILE_OUTPUT_HANDLER_ID = "file"; //$NON-NLS-1$
+  public static final String CONTENT_REPOSITORY_OUTPUT_HANDLER_ID = "contentrepo"; //$NON-NLS-1$
+  public static final String ACL_PUBLISHER_ID = "IAclPublisher"; //$NON-NLS-1$
+  public static final String ACL_VOTER_ID = "IAclVoter"; //$NON-NLS-1$
+  public static final String VERSION_HELPER_ID = "IVersionHelper"; //$NON-NLS-1$
+  public static final String CACHE_MGR_ID = "ICacheManager"; //$NON-NLS-1$
+  public static final String SCHEDULER_ID = "IScheduler"; //$NON-NLS-1$
+  public static final String CONDITONAL_EXECUTION_ID = "IConditionalExecution"; //$NON-NLS-1$
+  public static final String MSG_FORMATTER_ID = "IMessageFormatter"; //$NON-NLS-1$
+  public static final String NAVIGATION_COMPONENT_ID = "INavigationComponent"; //$NON-NLS-1$
+  public static final String DATA_SOURCE_SERVICE_ID = "IDatasourceService"; //$NON-NLS-1$
+  public static final String PASSWORD_SERVICE_ID = "IPasswordService"; //$NON-NLS-1$
+  public static final String DATA_SOURCE_ID = "IDatasource"; //$NON-NLS-1$
+  public static final String DATA_SOURCE_MGMT_SERVICE_ID = "IDatasourceMgmtService"; //$NON-NLS-1$
+  public static final String PROTOTYPE = "prototype"; //$NON-NLS-1$
+  public static final String SESSION = "session"; //$NON-NLS-1$
+  public static final String SINGLETON = "singleton"; //$NON-NLS-1$
   
   public enum ScopeType {
     undefined, prototype, session, singleton
@@ -78,7 +77,7 @@ public class PentahoObjectsConfig {
   public void setDocument(Document doc) throws DocumentException {
     Element rootElement = doc.getRootElement();
     if ((rootElement != null) &&  !doc.getRootElement().getName().equals(ROOT)) {
-      throw new DocumentException("Invalid root element.");
+      throw new DocumentException(Messages.getErrorString("PentahoObjectsConfig.ERROR_0001_INVALID_ROOT_ELEMENT")); //$NON-NLS-1$
     }
     document = doc;
   }
@@ -301,7 +300,7 @@ public class PentahoObjectsConfig {
     try {
       String xPath = MessageFormat.format(BEAN_ID_XPATH, objectId);
       HashMap<String, String> map = new HashMap<String, String>();
-      map.put( "default", DEFAULT_NAMESPACE); 
+      map.put( "default", DEFAULT_NAMESPACE);  //$NON-NLS-1$
       Dom4jXPath xpath = new Dom4jXPath(xPath);
       xpath.setNamespaceContext( new SimpleNamespaceContext( map));
       Element element = (Element) xpath.selectSingleNode( document);
@@ -352,7 +351,7 @@ public class PentahoObjectsConfig {
     try {
       String xPath = MessageFormat.format(BEAN_ID_XPATH, objectId);
       HashMap<String, String> map = new HashMap<String, String>();
-      map.put( "default", DEFAULT_NAMESPACE); 
+      map.put( "default", DEFAULT_NAMESPACE);  //$NON-NLS-1$
       Dom4jXPath xpath = new Dom4jXPath(xPath);
       xpath.setNamespaceContext( new SimpleNamespaceContext( map));
       Element element = (Element) xpath.selectSingleNode( document);
@@ -366,7 +365,7 @@ public class PentahoObjectsConfig {
     try {
       String xPath = MessageFormat.format(BEAN_ID_XPATH, objectId);
       HashMap<String, String> map = new HashMap<String, String>();
-      map.put( "default", DEFAULT_NAMESPACE);
+      map.put( "default", DEFAULT_NAMESPACE);  //$NON-NLS-1$
       Dom4jXPath xpath = new Dom4jXPath(BEAN_ID_XPATH);
       xpath.setNamespaceContext( new SimpleNamespaceContext( map));
       Element element = (Element) xpath.selectSingleNode( document);
@@ -396,7 +395,7 @@ public class PentahoObjectsConfig {
     BufferedReader input =  new BufferedReader(new FileReader(aFile));
     try {
       String line = null;
-      String lineSeparator = System.getProperty("line.separator");
+      String lineSeparator = System.getProperty("line.separator");  //$NON-NLS-1$
       while (( line = input.readLine()) != null){
         contents.append(line);
         contents.append(lineSeparator);

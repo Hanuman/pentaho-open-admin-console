@@ -4,6 +4,7 @@ import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
+import org.pentaho.pac.client.utils.ExceptionParser;
 import org.pentaho.pac.common.NameValue;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
 
@@ -105,8 +106,8 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
     
     addWidgetToClientArea( testButton );
 
-    setOnOkHandler( new ICallback() {
-      public void onHandle( Object o ) {
+    setOnOkHandler( new ICallback<MessageDialog>() {
+      public void onHandle( MessageDialog o ) {
         createDataSource();
       }
     });
@@ -293,15 +294,15 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
     } else {
       PentahoDataSource dataSource = getDataSource();
       if (dataSource != null) {
-        AsyncCallback callback = new AsyncCallback() {
-          public void onSuccess(Object result) {
+        AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+          public void onSuccess(Boolean result) {
             dataSourceCreated = true;
             hide();
           }
 
           public void onFailure(Throwable caught) {
-            messageDialog.setText(MSGS.errorCreatingDataSource());
-            messageDialog.setMessage(caught.getMessage());
+            messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+            messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));          
             messageDialog.center();
           }
         };
@@ -320,16 +321,16 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
   private void testDataSourceConnection() {
     final PentahoDataSource dataSource = getDataSource();
 
-    AsyncCallback callback = new AsyncCallback() {
-      public void onSuccess(Object result) {
+    AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+      public void onSuccess(Boolean result) {
         messageDialog.setText(MSGS.testConnection());
         messageDialog.setMessage(MSGS.connectionTestSuccessful());
         messageDialog.center();
       }
 
       public void onFailure(Throwable caught) {
-        messageDialog.setText(MSGS.testConnection());
-        messageDialog.setMessage(caught.getMessage());
+        messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));          
         messageDialog.center();
       }
     };

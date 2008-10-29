@@ -122,7 +122,7 @@ public class ThreadSafeHttpClient {
         method.setFollowRedirects( true );
         break;
       default:
-        throw new RuntimeException( Messages.getString( "ThreadSafeHttpClient.invalidHttpMethodType", methodType.toString() ) );  // can never happen //$NON-NLS-1$
+        throw new RuntimeException( Messages.getErrorString( "ThreadSafeHttpClient.ERROR_0002_INVALID_HTTP_METHOD_TYPE", methodType.toString() ) );  // can never happen //$NON-NLS-1$
     }
     return executeMethod( method );
   }
@@ -144,7 +144,7 @@ public class ThreadSafeHttpClient {
       if (httpStatus != HttpStatus.SC_OK) {
         String status = method.getStatusLine().toString();
         String uri = method.getURI().toString();
-        String errorMsg = Messages.getErrorString( "ThreadSafeHttpClient.ERROR_0001_CLIENT_REQUEST_FAILED",
+        String errorMsg = Messages.getErrorString( "ThreadSafeHttpClient.ERROR_0001_CLIENT_REQUEST_FAILED", //$NON-NLS-1$
             uri, status );
         logger.error( errorMsg );
         throw new ProxyException(status);  // TODO

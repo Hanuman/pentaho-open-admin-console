@@ -11,23 +11,22 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class AccumulatorPanel extends HorizontalPanel implements ClickListener {
+public class AccumulatorPanel<T> extends HorizontalPanel implements ClickListener {
   Button addToAccumulationBtn = new Button("&gt;"); //$NON-NLS-1$
   Button removeFromAccumulationBtn = new Button("&lt;"); //$NON-NLS-1$
-  GenericObjectListBox availableItemsListBox = new GenericObjectListBox(true);
-  GenericObjectListBox accumulatedItemsListBox = new GenericObjectListBox(true);
+  GenericObjectListBox<T> availableItemsListBox = new GenericObjectListBox<T>(true);
+  GenericObjectListBox<T> accumulatedItemsListBox = new GenericObjectListBox<T>(true);
   Label availableItemsLabel = new Label(PentahoAdminConsole.getLocalizedMessages().availableItemsTitle());
   Label accumulatedItemsLabel = new Label(PentahoAdminConsole.getLocalizedMessages().assignedItemsTitle());
 
   public AccumulatorPanel() {
-    this(new GenericObjectListBox(true), new GenericObjectListBox(true));
+    this(new GenericObjectListBox<T>(true), new GenericObjectListBox<T>(true));
   }
   
-  public AccumulatorPanel(GenericObjectListBox availableItemsListBox, GenericObjectListBox accumulatedItemsListBox) {
+  public AccumulatorPanel(GenericObjectListBox<T> availableItemsListBox, GenericObjectListBox<T> accumulatedItemsListBox) {
     this.accumulatedItemsListBox = accumulatedItemsListBox;
     this.availableItemsListBox  = availableItemsListBox;
     
@@ -82,11 +81,11 @@ public class AccumulatorPanel extends HorizontalPanel implements ClickListener {
     return removeFromAccumulationBtn;
   }
 
-  public ListBox getAvailableItemsListBox() {
+  public GenericObjectListBox<T> getAvailableItemsListBox() {
     return availableItemsListBox;
   }
 
-  public ListBox getAccumulatedItemsListBox() {
+  public GenericObjectListBox<T> getAccumulatedItemsListBox() {
     return accumulatedItemsListBox;
   }
 
@@ -99,17 +98,17 @@ public class AccumulatorPanel extends HorizontalPanel implements ClickListener {
   }
   
   protected void removeSelectedItemsFromAccumulation() {
-    List selectedObjects = accumulatedItemsListBox.getSelectedObjects();
+    List<T> selectedObjects = accumulatedItemsListBox.getSelectedObjects();
     accumulatedItemsListBox.removeSelectedObjects();
-    for (Iterator iter = selectedObjects.iterator(); iter.hasNext();) {
+    for (Iterator<T> iter = selectedObjects.iterator(); iter.hasNext();) {
       availableItemsListBox.addObject(iter.next());
     }
   }
   
   protected void addSelectedItemsToAccumulation() {
-    List selectedObjects = availableItemsListBox.getSelectedObjects();
+    List<T> selectedObjects = availableItemsListBox.getSelectedObjects();
     availableItemsListBox.removeSelectedObjects();
-    for (Iterator iter = selectedObjects.iterator(); iter.hasNext();) {
+    for (Iterator<T> iter = selectedObjects.iterator(); iter.hasNext();) {
       accumulatedItemsListBox.addObject(iter.next());
     }
   }

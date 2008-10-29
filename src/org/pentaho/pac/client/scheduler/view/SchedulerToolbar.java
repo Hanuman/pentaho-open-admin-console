@@ -40,8 +40,6 @@ public class SchedulerToolbar extends HorizontalPanel {
   private PushButton suspendBtn = null;
   private PushButton resumeBtn = null;
   private PushButton runNowBtn = null;
-  private PushButton suspendSchedulerBtn = null;
-  private PushButton resumeSchedulerBtn = null;
   private PushButton refreshBtn = null;
   private ListBox filterList = null;
 
@@ -51,8 +49,6 @@ public class SchedulerToolbar extends HorizontalPanel {
   private ICallback<Widget> onSuspendListener = null;
   private ICallback<Widget> onResumeListener = null;
   private ICallback<Widget> onRunNowListener = null;
-  private ICallback<Widget> onSuspendSchedulerListener = null;
-  private ICallback<Widget> onResumeSchedulerListener = null;
   private ICallback<Widget> onRefreshListener = null;
   private ICallback<String> onFilterListChangeListener = null;
   
@@ -129,30 +125,6 @@ public class SchedulerToolbar extends HorizontalPanel {
       }
     });
     leftPanel.add( runNowBtn );
-    
-    //toolbarDivider
-    img = new Image( "style/images/toolbarDivider.png", 0, 0, 2, 16 ); //$NON-NLS-1$
-    leftPanel.add( img );
-    
-    suspendSchedulerBtn = createPushButton( MSGS.suspendScheduler(), "toolbarSuspendSchedulerBtn", new ClickListener() { //$NON-NLS-1$
-      public void onClick(Widget sender) {
-        assert false : "note implemented"; //$NON-NLS-1$
-        if ( null != onSuspendSchedulerListener ) {
-          onSuspendSchedulerListener.onHandle( null );
-        }
-      }
-    });
-    leftPanel.add( suspendSchedulerBtn );
-
-    resumeSchedulerBtn = createPushButton( MSGS.resumeScheduler(), "toolbarResumeSchedulerBtn", new ClickListener() { //$NON-NLS-1$
-      public void onClick(Widget sender) {
-        assert false : "note implemented"; //$NON-NLS-1$
-        if ( null != onResumeSchedulerListener ) {
-          onResumeSchedulerListener.onHandle( null );
-        }
-      }
-    });
-    leftPanel.add( resumeSchedulerBtn );
     
     //toolbarDivider
     img = new Image( "style/images/toolbarDivider.png", 0, 0, 2, 16 ); //$NON-NLS-1$
@@ -255,14 +227,6 @@ public class SchedulerToolbar extends HorizontalPanel {
     this.onRunNowListener = cb;
   }
   
-  public void setOnResumeSchedulerListener( ICallback<Widget> cb ) {
-    this.onResumeSchedulerListener = cb;
-  }
-  
-  public void setOnSuspendSchedulerListener( ICallback<Widget> cb ) {
-    this.onSuspendSchedulerListener = cb;
-  }
-  
   public void setOnRefreshListener( ICallback<Widget> cb ) {
     this.onRefreshListener = cb;
   }
@@ -293,14 +257,6 @@ public class SchedulerToolbar extends HorizontalPanel {
 
   public PushButton getSuspendBtn() {
     return suspendBtn;
-  }
-
-  public PushButton getResumeSchedulerBtn() {
-    return resumeSchedulerBtn;
-  }
-
-  public PushButton getSuspendSchedulerBtn() {
-    return suspendSchedulerBtn;
   }
 
   public PushButton getRefreshBtn() {

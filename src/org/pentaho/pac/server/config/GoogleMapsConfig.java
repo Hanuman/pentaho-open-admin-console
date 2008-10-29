@@ -7,13 +7,13 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.pentaho.platform.engine.security.userroledao.messages.Messages;
 import org.pentaho.platform.util.xml.dom4j.XmlDom4JHelper;
 
 public class GoogleMapsConfig {
 
-  private static final String ROOT_ELEMENT = "google";
-  private static final String DEFAULT_FILE_NAME = "google/googlesettings.xml";
-  private static final String GOOGLE_MAPS_KEY_XPATH = ROOT_ELEMENT +"/google_maps_api_key";
+  private static final String ROOT_ELEMENT = "google";  //$NON-NLS-1$
+  private static final String GOOGLE_MAPS_KEY_XPATH = ROOT_ELEMENT +"/google_maps_api_key";  //$NON-NLS-1$
   
   Document document;
   
@@ -28,7 +28,7 @@ public class GoogleMapsConfig {
   public GoogleMapsConfig(Document doc) throws DocumentException {
     Element rootElement = doc.getRootElement();
     if ((rootElement != null) &&  !doc.getRootElement().getName().equals(ROOT_ELEMENT)) {
-      throw new DocumentException("Invalid root element.");
+      throw new DocumentException(Messages.getErrorString("GoogleMapsConfig.ERROR_0001_INVALID_ROOT_ELEMENT")); //$NON-NLS-1$
     }
     document = doc;
   }
@@ -55,7 +55,6 @@ public class GoogleMapsConfig {
   }
 
   private String getValue(String xpath) {
-    String value = null;
     Element element = (Element)document.selectSingleNode(xpath);
     return element != null ? element.getText() : null;
   }

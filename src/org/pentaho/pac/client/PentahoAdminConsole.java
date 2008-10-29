@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class PentahoAdminConsole extends DockPanel implements IRefreshableAdminConsole {
   
   public static final PacLocalizedMessages MSGS = (PacLocalizedMessages)GWT.create(PacLocalizedMessages.class);
-  
+  public static final String DEFAULT_HOMEPAGE_URL = "http://www.pentaho.com/console_home"; //$NON-NLS-1$  
   protected AdminConsoleToolbar toolbar = new AdminConsoleToolbar(this);
   protected AdminConsoleMasterDetailsPanel adminConsoleMasterDetailsPanel = new AdminConsoleMasterDetailsPanel();
   
@@ -36,13 +36,21 @@ public class PentahoAdminConsole extends DockPanel implements IRefreshableAdminC
     setCellWidth(adminConsoleMasterDetailsPanel, "100%"); //$NON-NLS-1$
     setCellHeight(adminConsoleMasterDetailsPanel, "100%"); //$NON-NLS-1$    
     
-    adminConsoleMasterDetailsPanel.addPage(AdminConsolePageId.HOME_PAGE.ordinal(), PentahoAdminConsole.MSGS.home(), new HomePanel("http://www.pentaho.com/console_home"));
-    adminConsoleMasterDetailsPanel.addPage(AdminConsolePageId.ADMIN_PAGE.ordinal(), PentahoAdminConsole.MSGS.administration(), new AdministrationTabPanel());   
-    
-    adminConsoleMasterDetailsPanel.selectPage(AdminConsolePageId.HOME_PAGE.ordinal());
-    
+    AsyncCallback<String> homepageUrlcallback = new AsyncCallback<String>() {
+      public void onSuccess(String result) {
+        adminConsoleMasterDetailsPanel.addPage(AdminConsolePageId.HOME_PAGE.ordinal(), PentahoAdminConsole.MSGS.home(), new HomePanel(result));
+        adminConsoleMasterDetailsPanel.addPage(AdminConsolePageId.ADMIN_PAGE.ordinal(), PentahoAdminConsole.MSGS.administration(), new AdministrationTabPanel());   
+        adminConsoleMasterDetailsPanel.selectPage(AdminConsolePageId.HOME_PAGE.ordinal());
+      }
+      public void onFailure(Throwable caught) {
+        adminConsoleMasterDetailsPanel.addPage(AdminConsolePageId.HOME_PAGE.ordinal(), PentahoAdminConsole.MSGS.home(), new HomePanel(DEFAULT_HOMEPAGE_URL));
+        adminConsoleMasterDetailsPanel.addPage(AdminConsolePageId.ADMIN_PAGE.ordinal(), PentahoAdminConsole.MSGS.administration(), new AdministrationTabPanel());   
+        adminConsoleMasterDetailsPanel.selectPage(AdminConsolePageId.HOME_PAGE.ordinal());
+      }
+    };
+    PacServiceFactory.getPacService().getHomepageUrl(homepageUrlcallback);  
     setStyleName("main-panel"); //$NON-NLS-1$
-    AsyncCallback callback = new AsyncCallback() {
+    AsyncCallback<Object> callback = new AsyncCallback<Object>() {
           public void onSuccess(Object result) {
             refresh();
           }

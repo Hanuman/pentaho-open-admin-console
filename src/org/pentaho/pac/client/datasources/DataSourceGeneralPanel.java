@@ -34,7 +34,7 @@ public class DataSourceGeneralPanel extends VerticalPanel {
     add(jndiNameTextBox);
     add(new Label(MSGS.jdbcDriverClass()));
     add(jdbcClassNamePanel);
-    jdbcClassNamePanel.setWidth("100%");
+    jdbcClassNamePanel.setWidth("100%");//$NON-NLS-1$
     add(new Label(MSGS.dbUserName()));
     add(userNameTextBox);
     add(new Label(MSGS.dbPassword()));

@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.datasources.DuplicateDataSourceException;
-import org.pentaho.pac.common.datasources.IPentahoDataSource;
 import org.pentaho.pac.common.datasources.NonExistingDataSourceException;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
 import org.pentaho.pac.server.common.DAOException;

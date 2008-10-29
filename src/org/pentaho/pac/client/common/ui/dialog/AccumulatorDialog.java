@@ -4,19 +4,19 @@ import org.pentaho.pac.client.common.ui.AccumulatorPanel;
 import org.pentaho.pac.client.common.ui.GenericObjectListBox;
 
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ListBox;
 
 
-public class AccumulatorDialog extends ConfirmDialog {
-  AccumulatorPanel accumulatorPanel;
+public class AccumulatorDialog<T> extends ConfirmDialog {
+  AccumulatorPanel<T> accumulatorPanel;
   
-  public AccumulatorDialog(GenericObjectListBox availableItemsListBox, GenericObjectListBox accumulatedItemsListBox) {
-    accumulatorPanel = new AccumulatorPanel(availableItemsListBox, accumulatedItemsListBox);
+
+  public AccumulatorDialog(GenericObjectListBox<T> availableItemsListBox, GenericObjectListBox<T> accumulatedItemsListBox) {
+    accumulatorPanel = new AccumulatorPanel<T>(availableItemsListBox, accumulatedItemsListBox);
     initDialog();
   }
   
   public AccumulatorDialog() {
-    accumulatorPanel = new AccumulatorPanel();
+    accumulatorPanel = new AccumulatorPanel<T>();
     initDialog();
   }
   
@@ -27,7 +27,7 @@ public class AccumulatorDialog extends ConfirmDialog {
     setTitle(""); //$NON-NLS-1$
   }
 
-  public ListBox getAccumulatedItemsListBox() {
+  public GenericObjectListBox<T> getAccumulatedItemsListBox() {
     return accumulatorPanel.getAccumulatedItemsListBox();
   }
 
@@ -35,7 +35,7 @@ public class AccumulatorDialog extends ConfirmDialog {
     return accumulatorPanel.getAddToAccumulationBtn();
   }
 
-  public ListBox getAvailableItemsListBox() {
+  public GenericObjectListBox<T> getAvailableItemsListBox() {
     return accumulatorPanel.getAvailableItemsListBox();
   }
 
@@ -43,7 +43,7 @@ public class AccumulatorDialog extends ConfirmDialog {
     return accumulatorPanel.getRemoveFromAccumulationBtn();
   }
 
-  public AccumulatorPanel getAccumulatorPanel() {
+  public AccumulatorPanel<T> getAccumulatorPanel() {
     return accumulatorPanel;
   }
   

@@ -24,6 +24,7 @@ import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.GroupBox;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.utils.ExceptionParser;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -56,8 +57,8 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
     addGroupBox(1, 0, 1, MSGS.solutionRepository());
     addGroupBox(2, 1, 0, MSGS.refreshBiServer());
     
-    flexTable.getColumnFormatter().setWidth(0, "50%");
-    flexTable.getColumnFormatter().setWidth(1, "50%");
+    flexTable.getColumnFormatter().setWidth(0, "50%"); //$NON-NLS-1$
+    flexTable.getColumnFormatter().setWidth(1, "50%");//$NON-NLS-1$
     
     addServiceButton(0, 0, 1, cleanRepositoryBtn);
     addServiceButton(0, 0, 0, scheduleRepositoryCleaningBtn);
@@ -82,7 +83,7 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
     groupBox.setWidth("100%"); //$NON-NLS-1$   
     groupBox.setHeight("100%"); //$NON-NLS-1$
     
-    flexTable.getCellFormatter().setHeight(row, column, "100%");
+    flexTable.getCellFormatter().setHeight(row, column, "100%"); //$NON-NLS-1$
     flexTable.setWidget(row, column, groupBox);
     
     groupBox.setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
@@ -99,19 +100,19 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
   }
   
   protected void runService(final Button serviceButton) {
-    AsyncCallback callback = new AsyncCallback() {
+    AsyncCallback<String> callback = new AsyncCallback<String>() {
       
-      public void onSuccess(Object result) {
+      public void onSuccess(String result) {
         MessageDialog messageDialog = new MessageDialog(MSGS.services(), 
-            result.toString() );
+            result);
         messageDialog.center();
         serviceButton.setEnabled(true);
       }
 
       public void onFailure(Throwable caught) {
-        MessageDialog messageDialog = new MessageDialog(MSGS.error(), 
-            caught.getMessage() );
-        messageDialog.center();
+        MessageDialog messageDialog = new MessageDialog();
+        messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));   
         serviceButton.setEnabled(true);
       }
     }; // end AsyncCallback

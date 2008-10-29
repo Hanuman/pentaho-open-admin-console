@@ -13,11 +13,11 @@ public class TableStyles {
 	
 	public TableStyles()
 	{
-		addStyle(TableStyles.Type.TABLE_HEADER_PANEL, "pentaho-tableHeader-panel");
-		addStyle(TableStyles.Type.TABLE_HEADER_TEXT, "pentaho-tableHeader-text");
-		addStyle(TableStyles.Type.EVEN_ROW, "pentaho-tableRow-even");
-		addStyle(TableStyles.Type.ODD_ROW, "pentaho-tableRow-odd");
-		addStyle(TableStyles.Type.SELECTED_ROW, "pentaho-tableRow-selected");
+		addStyle(TableStyles.Type.TABLE_HEADER_PANEL, "pentaho-tableHeader-panel"); //$NON-NLS-1$ 
+		addStyle(TableStyles.Type.TABLE_HEADER_TEXT, "pentaho-tableHeader-text"); //$NON-NLS-1$
+		addStyle(TableStyles.Type.EVEN_ROW, "pentaho-tableRow-even"); //$NON-NLS-1$
+		addStyle(TableStyles.Type.ODD_ROW, "pentaho-tableRow-odd"); //$NON-NLS-1$
+		addStyle(TableStyles.Type.SELECTED_ROW, "pentaho-tableRow-selected"); //$NON-NLS-1$
 	}
 
 	private Map<Type, List<String>> styles = new HashMap<Type, List<String>>();

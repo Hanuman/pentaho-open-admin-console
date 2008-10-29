@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.pentaho.pac.client.PentahoAdminConsole.AdminConsolePageId;
 import org.pentaho.pac.client.common.SelectListener;
 
 import com.google.gwt.user.client.ui.ClickListener;

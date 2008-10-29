@@ -47,6 +47,7 @@ import org.pentaho.pac.client.scheduler.view.SchedulerToolbar;
 import org.pentaho.pac.client.scheduler.view.SchedulesListCtrl;
 import org.pentaho.pac.client.scheduler.view.SolutionRepositoryActionSequenceListEditor;
 import org.pentaho.pac.client.scheduler.view.ScheduleCreatorDialog.TabIndex;
+import org.pentaho.pac.client.utils.ExceptionParser;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ButtonBase;
@@ -66,6 +67,9 @@ public class SchedulerToolbarController {
   private static final String DISABLED = "disabled"; //$NON-NLS-1$
   private boolean isInitialized = false;
   private boolean loadingInitialized = false;
+  private static String SUSPENDED_SCHEDULER_STATE = "suspended"; //$NON-NLS-1$
+  private static String NORMAL_SCHEDULER_STATE = "normal"; //$NON-NLS-1$
+  
   public SchedulerToolbarController( ScheduleCreatorDialog pScheduleCreatorDialog,
       SchedulerToolbar schedulerToolbar, SchedulesListCtrl schedulesListCtrl ) {
     this.scheduleCreatorDialog = pScheduleCreatorDialog;
@@ -188,9 +192,9 @@ public class SchedulerToolbarController {
       }
 
       public void onFailure(Throwable caught) {
-        MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
-            caught.getMessage() );
-        messageDialog.center();
+        MessageDialog messageDialog = new MessageDialog();
+        messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));          
       }
     };
     final List<Schedule> scheduleList = schedulesListCtrl.getSelectedSchedules();
@@ -292,9 +296,9 @@ public class SchedulerToolbarController {
       }
 
       public void onFailure(Throwable caught) {
-        MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
-            caught.getMessage() + " " + MSGS.updateFailedScheduleLost() ); //$NON-NLS-1$
-        messageDialog.center();
+        MessageDialog messageDialog = new MessageDialog();
+        messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));           
       }
     };
     
@@ -412,9 +416,9 @@ public class SchedulerToolbarController {
       public void onFailure(Throwable caught) {
         loadingPanel.hide();
         schedulesListCtrl.setTempMessage( MSGS.noSchedules() );
-        MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
-            caught.getMessage() );
-        messageDialog.center();
+        MessageDialog messageDialog = new MessageDialog();
+        messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));           
         enableTools();
       } // end outer onFailure
     }; // end schedulerServiceCallback
@@ -430,12 +434,12 @@ public class SchedulerToolbarController {
     boolean resolvedSuspended = false, resolvedEnabled = false;
     
     for (Schedule schedule:scheduleList) {
-    	if (!resolvedSuspended && !schedule.getTriggerState().equalsIgnoreCase("suspended")){
+    	if (!resolvedSuspended && !schedule.getTriggerState().equalsIgnoreCase(SUSPENDED_SCHEDULER_STATE)){
     		suspendEnabled = true;
     		resolvedSuspended = true;
 		}
     	
-    	if (!resolvedEnabled && !schedule.getTriggerState().equalsIgnoreCase("normal")){
+    	if (!resolvedEnabled && !schedule.getTriggerState().equalsIgnoreCase(NORMAL_SCHEDULER_STATE)){
     		resumeEnabled = true;
     		resolvedEnabled = true;
 		}
@@ -449,8 +453,6 @@ public class SchedulerToolbarController {
     enableWidget( schedulerToolbar.getSuspendBtn(),  suspendEnabled );
     enableWidget( schedulerToolbar.getResumeBtn(), resumeEnabled );
     enableWidget( schedulerToolbar.getRunNowBtn(), numSelectedItems > 0 );
-    enableWidget( schedulerToolbar.getSuspendSchedulerBtn(), false );
-    enableWidget( schedulerToolbar.getResumeSchedulerBtn(), false );
     enableWidget( schedulerToolbar.getRefreshBtn(), true );
   }
   
@@ -477,9 +479,9 @@ public class SchedulerToolbarController {
       }
 
       public void onFailure(Throwable caught) {
-        MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
-            caught.getMessage() );
-        messageDialog.center();
+        MessageDialog messageDialog = new MessageDialog();
+        messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));     
       }
     }; // end responseCallback
     
@@ -572,10 +574,9 @@ public class SchedulerToolbarController {
             loadJobsTable();
           }
           public void onFailure(Throwable caught) {
-            // TODO sbarkdull
-            MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
-                caught.getMessage() );
-            messageDialog.center();
+            MessageDialog messageDialog = new MessageDialog();
+            messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+            messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));   
           }
         }; // end inner callback
         final List<Schedule> subscriptionSchedList = getSubscriptionSchedules( selectedScheduleList );
@@ -583,10 +584,9 @@ public class SchedulerToolbarController {
       } // end onSuccess
       
       public void onFailure(Throwable caught) {
-        // TODO sbarkdull
-        MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
-            caught.getMessage() );
-        messageDialog.center();
+        MessageDialog messageDialog = new MessageDialog();
+        messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));   
       }
     }; // end outer callback -----------
 
@@ -785,10 +785,9 @@ public class SchedulerToolbarController {
             loadJobsTable();
           }
           public void onFailure(Throwable caught) {
-            // TODO sbarkdull
-            MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
-                caught.getMessage() );
-            messageDialog.center();
+            MessageDialog messageDialog = new MessageDialog();
+            messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+            messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));     
           }
         }; // end inner callback
         final List<Schedule> subscriptionSchedList = getSubscriptionSchedules( selectedScheduleList );
@@ -796,10 +795,9 @@ public class SchedulerToolbarController {
       } // end onSuccess
       
       public void onFailure(Throwable caught) {
-        // TODO sbarkdull
-        MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
-            caught.getMessage() );
-        messageDialog.center();
+        MessageDialog messageDialog = new MessageDialog();
+        messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));     
       }
     }; // end outer callback -----------
 
@@ -818,10 +816,9 @@ public class SchedulerToolbarController {
             loadJobsTable();
           }
           public void onFailure(Throwable caught) {
-            // TODO sbarkdull
-            MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
-                caught.getMessage() );
-            messageDialog.center();
+            MessageDialog messageDialog = new MessageDialog();
+            messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+            messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));    
           }
         }; // end inner callback
         final List<Schedule> subscriptionSchedList = getSubscriptionSchedules( selectedScheduleList );
@@ -829,10 +826,9 @@ public class SchedulerToolbarController {
       } // end onSuccess
       
       public void onFailure(Throwable caught) {
-        // TODO sbarkdull
-        MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
-            caught.getMessage() );
-        messageDialog.center();
+        MessageDialog messageDialog = new MessageDialog();
+        messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));    
       }
     }; // end outer callback -----------
 
@@ -851,10 +847,9 @@ public class SchedulerToolbarController {
             loadJobsTable();
           }
           public void onFailure(Throwable caught) {
-            // TODO sbarkdull
-            MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
-                caught.getMessage() );
-            messageDialog.center();
+            MessageDialog messageDialog = new MessageDialog();
+            messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+            messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));     
           }
         }; // end inner callback
         final List<Schedule> subscriptionSchedList = getSubscriptionSchedules( selectedScheduleList );
@@ -862,10 +857,9 @@ public class SchedulerToolbarController {
       } // end onSuccess
       
       public void onFailure(Throwable caught) {
-        // TODO sbarkdull
-        MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
-            caught.getMessage() );
-        messageDialog.center();
+        MessageDialog messageDialog = new MessageDialog();
+        messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));    
       }
     }; // end outer callback -----------
 

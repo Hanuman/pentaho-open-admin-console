@@ -1,6 +1,5 @@
 package org.pentaho.pac.client;
 
-import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.utils.PacImageBundle;
 
 import com.google.gwt.user.client.Timer;
@@ -77,7 +76,7 @@ public class AdminConsoleToolbar extends HorizontalPanel {
           }
 
           public void onSuccess(String helpUrl) {
-            Window.open(helpUrl, "UserGuide", ""); //$NON-NLS-1$ //$NON-NLS-2$
+            Window.open(helpUrl, PentahoAdminConsole.MSGS.userGuide(), ""); //$NON-NLS-1$ 
           }          
         });
       }

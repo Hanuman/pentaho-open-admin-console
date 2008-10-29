@@ -66,10 +66,9 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
     // has been populated.
     Timer timer = new Timer() {
       public void run() {
-        AsyncCallback callback = new AsyncCallback() {
-          public void onSuccess(Object result) {
-            PentahoDataSource[] dataSources = (PentahoDataSource[]) result;
-            assertTrue(dataSources.length > 0);
+        AsyncCallback<PentahoDataSource[]> callback = new AsyncCallback<PentahoDataSource[]>() {
+          public void onSuccess(PentahoDataSource[] result) {
+            assertTrue(result.length > 0);
           }
 
           public void onFailure(Throwable caught) {
@@ -119,8 +118,8 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
         dataSource.setUrl(url);
         dataSource.setUserName(userName);
         dataSource.setWait(wait);
-        AsyncCallback callback = new AsyncCallback() {
-          public void onSuccess(Object result) {
+        AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+          public void onSuccess(Boolean result) {
             assertTrue(true);
           }
 
@@ -173,8 +172,8 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
         dataSource.setUrl(url);
         dataSource.setUserName(userName);
         dataSource.setWait(wait);
-        AsyncCallback callback = new AsyncCallback() {
-          public void onSuccess(Object result) {
+        AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+          public void onSuccess(Boolean result) {
             assertTrue(true);
           }
 
@@ -226,8 +225,8 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
         dataSource.setUrl(url);
         dataSource.setUserName(userName);
         dataSource.setWait(wait);
-        AsyncCallback callback = new AsyncCallback() {
-          public void onSuccess(Object result) {
+        AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+          public void onSuccess(Boolean result) {
             assertTrue(true);
           }
 
@@ -279,8 +278,8 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
         dataSource.setUserName(userName);
         dataSource.setWait(wait);
         dataSources[0] = dataSource;
-        AsyncCallback callback = new AsyncCallback() {
-          public void onSuccess(Object result) {
+        AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+          public void onSuccess(Boolean result) {
             assertTrue(true);
           }
 
@@ -348,7 +347,7 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
         user.setName(name);
         user.setPassword(password);
 
-        AsyncCallback callback = new AsyncCallback() {
+        AsyncCallback<Object> callback = new AsyncCallback<Object>() {
           public void onSuccess(Object result) {
             assertTrue(true);
           }
@@ -391,8 +390,8 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
         user.setName(name);
         user.setPassword(password);
 
-        AsyncCallback callback = new AsyncCallback() {
-          public void onSuccess(Object result) {
+        AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+          public void onSuccess(Boolean result) {
             assertTrue(true);
           }
 
@@ -436,8 +435,8 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
         user.setName(name);
         user.setPassword(password);
         users[0] = user;
-        AsyncCallback callback = new AsyncCallback() {
-          public void onSuccess(Object result) {
+        AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+          public void onSuccess(Boolean result) {
             assertTrue(true);
           }
 
@@ -501,8 +500,8 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
         role.setDescription(description);
         role.setName(name);
 
-        AsyncCallback callback = new AsyncCallback() {
-          public void onSuccess(Object result) {
+        AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+          public void onSuccess(Boolean result) {
             assertTrue(true);
           }
 
@@ -540,8 +539,8 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
         role.setDescription(description);
         role.setName(name);
 
-        AsyncCallback callback = new AsyncCallback() {
-          public void onSuccess(Object result) {
+        AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+          public void onSuccess(Boolean result) {
             assertTrue(true);
           }
 
@@ -581,8 +580,8 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
         role.setDescription(description);
         role.setName(name);
         roles[0] = role;
-        AsyncCallback callback = new AsyncCallback() {
-          public void onSuccess(Object result) {
+        AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+          public void onSuccess(Boolean result) {
             assertTrue(true);
           }
 
@@ -670,8 +669,8 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
         dataSource.setUrl(url);
         dataSource.setUserName(userName);
         dataSource.setWait(wait);
-        AsyncCallback callback = new AsyncCallback() {
-          public void onSuccess(Object result) {
+        AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+          public void onSuccess(Boolean result) {
             assertTrue(true);
           }
 
@@ -724,7 +723,7 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
         user.setName(uName);
         user.setPassword(password);
 
-        AsyncCallback callback = new AsyncCallback() {
+        AsyncCallback<Object> callback = new AsyncCallback<Object>() {
           public void onSuccess(Object result) {
             assertTrue(true);
           }
@@ -778,7 +777,7 @@ public class PentahoAdminConsoleTest extends GWTTestCase {
         user.setName(uName);
         user.setPassword(password);
         users[0] = user;
-        AsyncCallback callback = new AsyncCallback() {
+        AsyncCallback<Object> callback = new AsyncCallback<Object>() {
           public void onSuccess(Object result) {
             assertTrue(true);
           }

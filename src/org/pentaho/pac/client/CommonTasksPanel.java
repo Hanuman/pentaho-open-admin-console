@@ -15,7 +15,7 @@ public class CommonTasksPanel extends SimplePanel {
     SimplePanel headerPanel = new SimplePanel();
     headerPanel.setStyleName("CommonTasksHeader"); //$NON-NLS-1$
     
-    Label header = new Label("Common Tasks");
+    Label header = new Label(PentahoAdminConsole.MSGS.commonTasks());
     header.setStyleName("commonTasksHeaderText"); //$NON-NLS-1$
     headerPanel.add(header);
     vertPanel.add(headerPanel);

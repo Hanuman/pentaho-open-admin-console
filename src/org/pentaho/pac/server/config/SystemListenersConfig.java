@@ -12,52 +12,53 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.pentaho.platform.engine.security.userroledao.messages.Messages;
 import org.pentaho.platform.util.xml.dom4j.XmlDom4JHelper;
 
 
 public class SystemListenersConfig {
 
-  private static final String ROOT_ELEMENT = "beans";
-  private static final String BEAN_ELEMENT = "bean";
-  private static final String CLASS_ATTRIBUTE = "class";
-  private static final String ID_ATTRIBUTE = "id";
-  private static final String NAME_ATTRIBUTE = "name";
-  private static final String VALUE_ATTRIBUTE = "value";
-  private static final String PROPERTY_ELEMENT = "property";
-  private static final String VALUE_ELEMENT = "value";
-  private static final String CONSTRUCTOR_ARG_ELEMENT = "constructor-arg";
-  private static final String LIST_ELEMENT = "list";
+  private static final String ROOT_ELEMENT = "beans"; //$NON-NLS-1$
+  private static final String BEAN_ELEMENT = "bean"; //$NON-NLS-1$
+  private static final String CLASS_ATTRIBUTE = "class"; //$NON-NLS-1$
+  private static final String ID_ATTRIBUTE = "id"; //$NON-NLS-1$
+  private static final String NAME_ATTRIBUTE = "name"; //$NON-NLS-1$
+  private static final String VALUE_ATTRIBUTE = "value"; //$NON-NLS-1$
+  private static final String PROPERTY_ELEMENT = "property"; //$NON-NLS-1$
+  private static final String VALUE_ELEMENT = "value"; //$NON-NLS-1$
+  private static final String CONSTRUCTOR_ARG_ELEMENT = "constructor-arg"; //$NON-NLS-1$
+  private static final String LIST_ELEMENT = "list"; //$NON-NLS-1$
   
-  private static final String SYSTEM_LISTENER_LIST_ID="systemListenersList";
+  private static final String SYSTEM_LISTENER_LIST_ID="systemListenersList";//$NON-NLS-1$ 
     
-  public static final String JFREE_REPORT_SYSTEM_LISTENER_ID = "jfreeReportSystemListener";
-  public static final String KETTLE_SYSTEM_LISTENER_ID = "kettleSystemListener";
-  public static final String MONDRIAN_SYSTEM_LISTENER_ID = "mondrianSystemListener";
-  public static final String QUARTZ_SYSTEM_LISTENER_ID = "quartzSystemListener";
-  public static final String METADATA_SYSTEM_LISTENER_ID = "metadataSystemListener";
-  public static final String VERSION_CHECKER_SYSTEM_LISTENER_ID = "versionCheckerSystemListener";
-  public static final String NON_POOLED_DATASOURCE_SYSTEM_LISTENER_ID = "nonPooledDataSourceSystemListener";
-  public static final String POOLED_DATASOURCE_SYSTEM_LISTENER_ID = "pooledDataSourceSystemListener";
+  public static final String JFREE_REPORT_SYSTEM_LISTENER_ID = "jfreeReportSystemListener"; //$NON-NLS-1$
+  public static final String KETTLE_SYSTEM_LISTENER_ID = "kettleSystemListener"; //$NON-NLS-1$ 
+  public static final String MONDRIAN_SYSTEM_LISTENER_ID = "mondrianSystemListener"; //$NON-NLS-1$  
+  public static final String QUARTZ_SYSTEM_LISTENER_ID = "quartzSystemListener"; //$NON-NLS-1$
+  public static final String METADATA_SYSTEM_LISTENER_ID = "metadataSystemListener"; //$NON-NLS-1$
+  public static final String VERSION_CHECKER_SYSTEM_LISTENER_ID = "versionCheckerSystemListener"; //$NON-NLS-1$
+  public static final String NON_POOLED_DATASOURCE_SYSTEM_LISTENER_ID = "nonPooledDataSourceSystemListener"; //$NON-NLS-1$
+  public static final String POOLED_DATASOURCE_SYSTEM_LISTENER_ID = "pooledDataSourceSystemListener"; //$NON-NLS-1$
   
-  public static final String VERSION_CHECKER_DISABLED_PROPERTY = "disableVersionCheck";
-  public static final String VERSION_CHECKER_INTERVAL_PROPERTY = "repeatIntervalSeconds";
-  public static final String VERSION_CHECKER_RELEASES_PROPERTY = "requestedReleases";
+  public static final String VERSION_CHECKER_DISABLED_PROPERTY = "disableVersionCheck"; //$NON-NLS-1$
+  public static final String VERSION_CHECKER_INTERVAL_PROPERTY = "repeatIntervalSeconds"; //$NON-NLS-1$
+  public static final String VERSION_CHECKER_RELEASES_PROPERTY = "requestedReleases"; //$NON-NLS-1$
   
   
   private static final String LISTENER_LIST_XPATH = ROOT_ELEMENT 
-                                                    + "/" + BEAN_ELEMENT 
-                                                    + "[@" + ID_ATTRIBUTE + "=\"" + SYSTEM_LISTENER_LIST_ID + "\"]" 
-                                                    + "/" + CONSTRUCTOR_ARG_ELEMENT
-                                                    + "/" + LIST_ELEMENT; 
+                                                    + "/" + BEAN_ELEMENT //$NON-NLS-1$ 
+                                                    + "[@" + ID_ATTRIBUTE + "=\"" + SYSTEM_LISTENER_LIST_ID + "\"]" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+                                                    + "/" + CONSTRUCTOR_ARG_ELEMENT //$NON-NLS-1$
+                                                    + "/" + LIST_ELEMENT;  //$NON-NLS-1$
   private static final String LISTENER_BEAN_XPATH = LISTENER_LIST_XPATH
-                                                    + "/" + BEAN_ELEMENT; 
+                                                    + "/" + BEAN_ELEMENT; //$NON-NLS-1$ 
   private static final String LISTENER_BEAN_SEARCH_TEMPLATE = LISTENER_BEAN_XPATH
-                                                              + "[@" + ID_ATTRIBUTE + "=\"{0}\"]"
-                                                              + "[@" + CLASS_ATTRIBUTE + "=\"{1}\"]";
+                                                              + "[@" + ID_ATTRIBUTE + "=\"{0}\"]"//$NON-NLS-1$ //$NON-NLS-2$
+                                                              + "[@" + CLASS_ATTRIBUTE + "=\"{1}\"]"; //$NON-NLS-1$ //$NON-NLS-2$
   private static final String LISTENER_BEAN_ID_SEARCH_TEMPLATE = LISTENER_BEAN_XPATH
-                                                                + "[@" + ID_ATTRIBUTE + "=\"{0}\"]";
+                                                                + "[@" + ID_ATTRIBUTE + "=\"{0}\"]"; //$NON-NLS-1$ //$NON-NLS-2$
   private static final String LISTENER_BEAN_CLASS_SEARCH_TEMPLATE = LISTENER_BEAN_XPATH
-                                                                + "[@" + CLASS_ATTRIBUTE + "=\"{0}\"]";
+                                                                + "[@" + CLASS_ATTRIBUTE + "=\"{0}\"]"; //$NON-NLS-1$ //$NON-NLS-2$ 
   
   Document document;
   
@@ -72,7 +73,7 @@ public class SystemListenersConfig {
   public SystemListenersConfig(Document doc) throws DocumentException {
     Element rootElement = doc.getRootElement();
     if ((rootElement != null) &&  !doc.getRootElement().getName().equals(ROOT_ELEMENT)) {
-      throw new DocumentException("Invalid root element.");
+      throw new DocumentException(Messages.getErrorString("SystemListenersConfig.ERROR_0001_INVALID_ROOT_ELEMENT")); //$NON-NLS-1$
     }
     document = doc;
   }
@@ -158,6 +159,7 @@ public class SystemListenersConfig {
     }
   }
   
+  @SuppressWarnings("unchecked")
   public List<SystemListener> getSystemListeners() {
     ArrayList<SystemListener> systemListeners = new ArrayList<SystemListener>();
     List elements = document.selectNodes( LISTENER_BEAN_XPATH );
@@ -171,6 +173,7 @@ public class SystemListenersConfig {
     return systemListeners;
   }
   
+  @SuppressWarnings("unchecked")
   public void setSystemListeners(List<SystemListener> systemListeners) {
     List<Element> originalListenerElements = document.selectNodes( LISTENER_BEAN_XPATH );
     for (Element origElement : originalListenerElements) {
@@ -262,7 +265,7 @@ public class SystemListenersConfig {
   public Document getDocument() {
     return document;
   }
-  
+  @SuppressWarnings("unchecked")
   public Properties getSystemListenerProperties(String listenerId, String className) {
     Properties properties = new Properties();
     Element systemListenerElement = getSystemListenerElement(listenerId, className);
@@ -282,7 +285,7 @@ public class SystemListenersConfig {
     }
     return properties;
   }
-  
+  @SuppressWarnings("unchecked")
   public void setSystemListenerProperties(String listenerId, String className, Properties properties) {
     Element systemListenerElement = getSystemListenerElement(listenerId, className);
     if (systemListenerElement != null) {

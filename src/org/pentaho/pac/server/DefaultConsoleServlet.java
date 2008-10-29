@@ -26,7 +26,7 @@ public class DefaultConsoleServlet extends ConsoleServlet {
 
     // allow set attribute on consoleconfig even if console validation fails
     if ("/halt".equals(request.getServletPath())) { //$NON-NLS-1$
-      response.getWriter().write(Messages.getString("CONSOLE.STOPPING")); //$NON-NLS-1$
+      response.getWriter().write(Messages.getString("JettyServer.STOPPING")); //$NON-NLS-1$
       halter.stop();
       return;
     }

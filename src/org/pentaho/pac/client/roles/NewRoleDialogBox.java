@@ -4,9 +4,8 @@ import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
-import org.pentaho.pac.common.PentahoSecurityException;
+import org.pentaho.pac.client.utils.ExceptionParser;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
-import org.pentaho.pac.common.users.DuplicateUserException;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.TextBox;
@@ -25,8 +24,8 @@ public class NewRoleDialogBox extends ConfirmDialog {
     roleDetailsPanel.setStyleName( "newRoleDialogBox.detailsPanel" ); //$NON-NLS-1$
     addWidgetToClientArea( roleDetailsPanel );
     
-    setOnOkHandler( new ICallback() {
-      public void onHandle( Object o ) {
+    setOnOkHandler( new ICallback<MessageDialog>() {
+      public void onHandle( MessageDialog o ) {
         createRole();
       }
     });
@@ -72,8 +71,8 @@ public class NewRoleDialogBox extends ConfirmDialog {
     } else {
       ProxyPentahoRole role = getRole();
       if (role != null) {
-        AsyncCallback callback = new AsyncCallback() {
-          public void onSuccess(Object result) {
+        AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+          public void onSuccess(Boolean result) {
             okBtn.setEnabled(true);
             cancelBtn.setEnabled(true);
             roleCreated = true;
@@ -81,13 +80,8 @@ public class NewRoleDialogBox extends ConfirmDialog {
           }
 
           public void onFailure(Throwable caught) {
-            if (caught instanceof PentahoSecurityException) {
-              messageDialog.setMessage(MSGS.insufficientPrivileges());
-            } else if (caught instanceof DuplicateUserException) {
-              messageDialog.setMessage(MSGS.roleAlreadyExists());
-            } else {
-              messageDialog.setMessage(MSGS.roleCreationFailed(caught.getMessage()));
-            }
+            messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+            messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));          
             messageDialog.center();
             okBtn.setEnabled(true);
             cancelBtn.setEnabled(true);

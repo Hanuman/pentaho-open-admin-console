@@ -18,10 +18,9 @@ package org.pentaho.pac.client.home;
 import org.pentaho.pac.client.IRefreshableAdminPage;
 import org.pentaho.pac.client.PacServiceAsync;
 import org.pentaho.pac.client.PacServiceFactory;
-import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.GroupBox;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.utils.ExceptionParser;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -33,7 +32,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
  */
 public class HomePanel extends SimplePanel implements IRefreshableAdminPage{
 
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
+  MessageDialog messageDialog = new MessageDialog();
   private static int sUid;
   private GroupBox groupbox;
   private String url;
@@ -66,10 +65,8 @@ public class HomePanel extends SimplePanel implements IRefreshableAdminPage{
     PacServiceAsync pacService = PacServiceFactory.getPacService();
     pacService.getHomePageAsHtml(url, new AsyncCallback<String>() {
       public void onFailure(Throwable caught) {
-        
-        MessageDialog messageDialog = new MessageDialog(
-            MSGS.error(),
-            MSGS.failedToLoadHome( caught.getMessage() ) );
+        messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));          
         messageDialog.center();
       }
       public void onSuccess(String htmlContent) {

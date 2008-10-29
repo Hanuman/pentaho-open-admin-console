@@ -7,6 +7,7 @@ import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.utils.ExceptionParser;
 import org.pentaho.pac.common.NameValue;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
 
@@ -28,7 +29,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class DataSourcesPanel extends DockPanel implements ClickListener, ChangeListener, PopupListener {
 
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
-
+  public static final String EMPTY_STRING = ""; //$NON-NLS-1$ 
   public static final int GENERAL_PANEL_ID = 0;
 
   public static final int ADVANCE_PANEL_ID = 1;
@@ -83,8 +84,8 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
     newDataSourceDialogBox.addPopupListener(this);
     updateDataSourceBtn.addClickListener(this);
     testDataSourceBtn.addClickListener(this);
-    confirmDataSourceDeleteDialog.setOnOkHandler(new ICallback() {
-      public void onHandle(Object o) {
+    confirmDataSourceDeleteDialog.setOnOkHandler(new ICallback<MessageDialog>() {
+      public void onHandle(MessageDialog o) {
         confirmDataSourceDeleteDialog.hide();
         deleteSelectedDataSources();
 
@@ -194,8 +195,8 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
   private void deleteSelectedDataSources() {
     final PentahoDataSource[] selectedDataSources = dataSourcesList.getSelectedDataSources();
     if (selectedDataSources.length > 0) {
-      AsyncCallback callback = new AsyncCallback() {
-        public void onSuccess(Object result) {
+      AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+        public void onSuccess(Boolean result) {
           messageDialog.setText(MSGS.deleteDataSources());
           messageDialog.setMessage(MSGS.successfulDataSourceDelete()); 
           messageDialog.center();
@@ -203,8 +204,8 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
         }
 
         public void onFailure(Throwable caught) {
-          messageDialog.setText(MSGS.errorDeletingDataSource());
-          messageDialog.setMessage(caught.getMessage());
+          messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+          messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));          
           messageDialog.center();
         }
       };
@@ -248,8 +249,8 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
       final int index = dataSourcesList.getSelectedIndex();
 
       ((Button) sender).setEnabled(false);
-      AsyncCallback callback = new AsyncCallback() {
-        public void onSuccess(Object result) {
+      AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+        public void onSuccess(Boolean result) {
           messageDialog.setText(MSGS.updateDataSource());
           messageDialog.setMessage(MSGS.successfulDataSourceUpdate()); 
           messageDialog.center();
@@ -259,8 +260,8 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
         }
 
         public void onFailure(Throwable caught) {
-          messageDialog.setText(MSGS.errorUpdatingDataSource());
-          messageDialog.setMessage(caught.getMessage());
+          messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+          messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));          
           messageDialog.center();
           ((Button) sender).setEnabled(true);
         }
@@ -280,15 +281,15 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
         }
 
         public void onFailure(Throwable caught) {
-          messageDialog.setText(MSGS.testValidationQuery());
-          messageDialog.setMessage(caught.getMessage());
+          messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+          messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));          
           messageDialog.center();
         }
       };
       
     AsyncCallback<Boolean> connTestCallback = new AsyncCallback<Boolean>() {
       public void onSuccess(Boolean result) {
-        if (dataSource.getQuery()!=null && !dataSource.getQuery().trim().equals("")) {
+        if (dataSource.getQuery()!=null && !dataSource.getQuery().trim().equals(EMPTY_STRING)) { 
           PacServiceFactory.getPacService().testDataSourceValidationQuery(dataSource, validationUrlCallback);
         }
         else{
@@ -299,8 +300,8 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
       }
 
       public void onFailure(Throwable caught) {
-        messageDialog.setText(MSGS.testValidationQuery());
-        messageDialog.setMessage(caught.getMessage());
+        messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));          
         messageDialog.center();
       }
     };
@@ -322,7 +323,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 
   public void refresh() {
     PacServiceFactory.getJdbcDriverDiscoveryService().initialize(
-        new AsyncCallback() {
+        new AsyncCallback<Object>() {
           public void onFailure(Throwable caught) {
             dataSourcesList.refresh();
             dataSourceGeneralPanel.refresh(null);

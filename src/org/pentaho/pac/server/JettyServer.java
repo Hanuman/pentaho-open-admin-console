@@ -64,7 +64,7 @@ public class JettyServer implements Halter, IJettyServer {
 
   public JettyServer() {
     // Get the CONSOLE_HOME Environment variable. This is required as it is needed to cofigure Jetty
-    consoleHome = System.getProperty("CONSOLE_HOME", CURRENT_DIR);
+    consoleHome = System.getProperty("CONSOLE_HOME", CURRENT_DIR);//$NON-NLS-1$
     // Set the jetty.home to PEHTAHO_HOME
     System.setProperty(JETTY_HOME, consoleHome);
     readConfiguration();
@@ -97,7 +97,7 @@ public class JettyServer implements Halter, IJettyServer {
       server.stop();
       running = false;
     } catch (Exception e) {
-      logger.error("error starting server", e); //$NON-NLS-1$
+      logger.error(Messages.getErrorString("JettyServer.ERROR_0001_UNABLE_START_SERVER"), e); //$NON-NLS-1$
     }
   }
 
@@ -128,26 +128,21 @@ public class JettyServer implements Halter, IJettyServer {
       ((SocketConnector) connector).setResolveNames(true);  
     }
 
-    logger.info("starting " + connector.getName()); //$NON-NLS-1$
     server.setConnectors(new Connector[] { connector });
     server.setStopAtShutdown(true);
-    logger.info("Console Starting"); //$NON-NLS-1$
+    logger.info(Messages.getString("JettyServer.CONSOLE_STARTING")); //$NON-NLS-1$
 
     try {
       server.start();
-      logger.info("Administration console is now started. Console can be accessed " +//$NON-NLS-1$
-      		" using " + ((sslEnable) ? "https" : "http")//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      		  + "://" + hostName + ":" + connector.getPort() + " or " + //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      		    ((sslEnable) ? "https" : "http") //$NON-NLS-1$ //$NON-NLS-2$
-      		      + "://" + hostIP + ":" + connector.getPort()); //$NON-NLS-1$ //$NON-NLS-2$
+      logger.info(Messages.getString("JettyServer.CONSOLE_STARTED", ((sslEnable) ? "https" : "http")//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          + "://" + hostName + ":" + connector.getPort(), ((sslEnable) ? "https" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+              : "http") + "://" + hostIP + ":" + connector.getPort())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     } catch (BindException e) {
       haltNow();
     } catch (RuntimeException e) {
-      // let runtime exceptions leak, developer should handle them before release.
-      logger.error("Error starting server", e); //$NON-NLS-1$
       throw e;
     } catch (Exception e) {
-      logger.error("Error starting server", e); //$NON-NLS-1$
+      logger.error(Messages.getErrorString("JettyServer.ERROR_0001_UNABLE_START_SERVER"), e); //$NON-NLS-1$
     }
   }
 
@@ -156,14 +151,14 @@ public class JettyServer implements Halter, IJettyServer {
   }
   
   public String[] getWelcomeFiles() {
-    return new String[] { "PentahoAdminConsole.html" };
+    return new String[] { "PentahoAdminConsole.html" };//$NON-NLS-1$
   }
   
   protected Context createServletContext() {
     ContextHandlerCollection contextHandlers = new ContextHandlerCollection();
     Context servletContext = new Context(contextHandlers, "/", Context.SESSIONS); //$NON-NLS-1$
-    servletContext.setResourceBase( getResourceBaseName() ); //$NON-NLS-1$
-    servletContext.setWelcomeFiles( getWelcomeFiles() ); //$NON-NLS-1$
+    servletContext.setResourceBase( getResourceBaseName() ); 
+    servletContext.setWelcomeFiles( getWelcomeFiles() ); 
     
     return servletContext;
   }
@@ -171,8 +166,7 @@ public class JettyServer implements Halter, IJettyServer {
   public void configureResourceHandlers( Context servletContext, SecurityHandler securityHandler ) {
     ResourceHandler resources = new ResourceHandler();
     resources.setResourceBase( getResourceBaseName() );
-    resources.setWelcomeFiles( getWelcomeFiles() ); //$NON-NLS-1$
-
+    resources.setWelcomeFiles( getWelcomeFiles() ); 
     if (securityHandler != null) {
       server.setHandlers(new Handler[] { securityHandler, resources, servletContext });
     } else {
@@ -207,7 +201,7 @@ public class JettyServer implements Halter, IJettyServer {
         realm.setLoginModuleName(loginModuleName);
         realm.setCallbackHandlerClass(callbackHandler);
         securityHandler = new SecurityHandler();
-        securityHandler.setUserRealm(realm); //$NON-NLS-1$ //$NON-NLS-2$        
+        securityHandler.setUserRealm(realm);       
         securityHandler.setConstraintMappings(new ConstraintMapping[] { constraintMapping });
     }
     return securityHandler;
@@ -288,13 +282,13 @@ public class JettyServer implements Halter, IJettyServer {
     }
 
     public void run() {
-      logger.info(Messages.getString("CONSOLE.WAITING_TO_HALT")); //$NON-NLS-1$
+      logger.info(Messages.getString("JettyServer.WAITING_TO_HALT")); //$NON-NLS-1$
       try {
         Thread.sleep(3000);
       } catch (Exception e) {
         // ignore this
       }
-      logger.info(Messages.getString("CONSOLE.HALTING")); //$NON-NLS-1$
+      logger.info(Messages.getString("JettyServer.HALTING")); //$NON-NLS-1$
       jettyServer.haltNow();
     }
   }
@@ -359,19 +353,17 @@ public class JettyServer implements Halter, IJettyServer {
     Connector connector;
     String keyStore = ssl.getKeyStore();
     if (keyStore == null) {
-        keyStore = System.getProperty("javax.net.ssl.keyStore", "");
+        keyStore = System.getProperty("javax.net.ssl.keyStore", ""); //$NON-NLS-1$ //$NON-NLS-2$
         if (keyStore == null) {
-            throw new IllegalArgumentException(
-                           "keyStore or system property javax.net.ssl.keyStore must be set");
+            throw new IllegalArgumentException(Messages.getErrorString("JettyServer.ERROR_0001_KEY_STORE_MUST_BE_SET")); //$NON-NLS-1$
         }
     }
 
     String keyStorePassword = ssl.getKeyStorePassword();
     if (keyStorePassword == null) {
-        keyStorePassword = System.getProperty("javax.net.ssl.keyStorePassword");
+        keyStorePassword = System.getProperty("javax.net.ssl.keyStorePassword"); //$NON-NLS-1$
         if (keyStorePassword == null) {
-            throw new IllegalArgumentException(
-                "keyStorePassword or system property javax.net.ssl.keyStorePassword must be set");
+            throw new IllegalArgumentException(Messages.getErrorString("JettyServer.ERROR_0002_KEY_STORE_PASSWORD_MUST_BE_SET")); //$NON-NLS-1$
         }
     }
     SslSocketConnector sslConnector = new SslSocketConnector();
@@ -415,19 +407,20 @@ public class JettyServer implements Halter, IJettyServer {
           if (inputLine != null && inputLine.length() > 0) {
             inputLine = inputLine.trim();
             if (inputLine.equalsIgnoreCase(ConsoleProperties.STOP_ARG)) {
-              logger.info("Waiting to halt console"); //$NON-NLS-1$
+              logger.info(Messages.getString("JettyServer.WAITING_TO_HALT")); //$NON-NLS-1$
+              
               try {
                 Thread.sleep(3000);
               } catch (Exception e) {
                 // ignore this
               }
-              logger.info("Console is halting"); //$NON-NLS-1$
+              logger.info(Messages.getString("JettyServer.HALTING")); //$NON-NLS-1$
               jettyServer.haltNow();
             }
           }
         }
       } catch (IOException ioe) {
-        logger.error("IO Error:" + ioe.getLocalizedMessage()); //$NON-NLS-1$
+        logger.error(Messages.getErrorString("JettyServer.ERROR_0002_IO_ERROR",ioe.getLocalizedMessage())); //$NON-NLS-1$
       }
     }
   }

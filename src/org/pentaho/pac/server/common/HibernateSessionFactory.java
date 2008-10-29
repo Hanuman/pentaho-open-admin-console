@@ -7,15 +7,13 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
-import org.pentaho.platform.util.messages.Messages;
+import org.pentaho.platform.engine.security.userroledao.messages.Messages;
 
 
 /**
@@ -25,9 +23,8 @@ import org.pentaho.platform.util.messages.Messages;
  */
 public class HibernateSessionFactory {
 
-	public static final String DEFAULT_CONFIG_NAME = "$$DEFAULT_CONFIG";
+	public static final String DEFAULT_CONFIG_NAME = "$$DEFAULT_CONFIG"; //$NON-NLS-1$
   public static String DEFAULT_CONFIG_FILE_LOCATION = "hsql.hibernate.cfg.xml"; //$NON-NLS-1$
-  private static final Log logger = LogFactory.getLog(HibernateSessionFactory.class);
 	/** 
      * Location of hibernate.cfg.xml file.
      * Location should be on the classpath as Hibernate uses  
@@ -82,12 +79,12 @@ public class HibernateSessionFactory {
         if (factoryJndiName != null && factoryJndiName.length() > 0) {
           configuration.buildSessionFactory(); // Let hibernate Bind it to JNDI...  
         } else {
-          throw new HibernateException("Hibernate is configured to be managed and" + Environment.SESSION_FACTORY_NAME.toString()+ " is missing or null.");
+          throw new HibernateException(Messages.getErrorString("HibernateSessionFactory.ERROR_0002_MISSING_MANAGED_CONFIGURATION", Environment.SESSION_FACTORY_NAME.toString()));//$NON-NLS-1$
         }
       }
 		} catch (Exception e) {
 			System.err
-					.println("%%%% Error Creating SessionFactory %%%%");
+					.println("%%%% Error Creating SessionFactory %%%%"); //$NON-NLS-1$
 			e.printStackTrace();
 		}
     }
@@ -113,8 +110,7 @@ public class HibernateSessionFactory {
     public static Session getSession(String configName) throws HibernateException {
     	HibConfig cfg = configs.get(configName);
     	if (cfg==null)
-    		throw new HibernateException("Unknown configuration: " + configName);
-    	
+        throw new HibernateException(Messages.getErrorString("HibernateSessionFactory.ERROR_0001_UNKNOWN_CONFIGURATION",configName)); //$NON-NLS-1$
         Session session = cfg.threadLocal.get();
 
 		if (session == null || !session.isOpen()) {
@@ -159,8 +155,7 @@ public class HibernateSessionFactory {
     {
     	HibConfig cfg = configs.get(configName);
     	if (cfg==null)
-    		throw new HibernateException("Unknown configuration: " + configName);
-    	
+    	  throw new HibernateException(Messages.getErrorString("HibernateSessionFactory.ERROR_0001_UNKNOWN_CONFIGURATION",configName)); //$NON-NLS-1$    	
     	 Session session = (Session) cfg.threadLocal.get();
          cfg.threadLocal.set(null);
 
@@ -187,8 +182,7 @@ public class HibernateSessionFactory {
     if (!isHibernateManaged) {
       HibConfig cfg = configs.get(configName);
       if (cfg==null)
-        throw new HibernateException("Unknown configuration: " + configName);
-      
+        throw new HibernateException(Messages.getErrorString("HibernateSessionFactory.ERROR_0001_UNKNOWN_CONFIGURATION",configName)); //$NON-NLS-1$
       return cfg.sessionFactory;
     } else {
       SessionFactory sf = null;
@@ -231,7 +225,7 @@ public class HibernateSessionFactory {
 	public static Configuration getConfiguration(String configName) {
 		HibConfig cfg = configs.get(configName);
     	if (cfg==null)
-    		throw new HibernateException("Unknown configuration: " + configName);
+    		throw new HibernateException(Messages.getErrorString("HibernateSessionFactory.ERROR_0001_UNKNOWN_CONFIGURATION",configName)); //$NON-NLS-1$
     	
     	return cfg.configuration;
 	}
