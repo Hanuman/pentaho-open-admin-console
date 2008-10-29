@@ -102,7 +102,7 @@ public class AppConfigProperties {
   
   public static final String DEFAULT_HIBERNATE_CONFIG_PATH = "hsql.hibernate.cfg.xml"; //$NON-NLS-1$
   
-  public static final String DEFAULT_HELP_URL = "http://wiki.pentaho.com/display/PentahoDoc/01.The+Pentaho+Administration+Console"; //$NON-NLS-1$
+  public static final String DEFAULT_HELP_URL = "http://wiki.pentaho.com/display/PentahoDoc/The+Pentaho+Administration+Console"; //$NON-NLS-1$
     
   public static final String DEFAULT_SOLUTION_PATH = "./../pentaho-solutions"; //$NON-NLS-1$ 
   
