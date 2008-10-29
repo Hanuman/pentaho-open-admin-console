@@ -2011,4 +2011,13 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
    * @get.key helpWindowTitle
    */
   String helpWindowTitle();
+  
+  /**
+   * Translated "Error Getting Status Data"
+   * 
+   * @return translated "Error Getting Status Data"
+   * @get.key errorGettingStatusData
+   */
+  String errorGettingStatusData();
+  
 }
