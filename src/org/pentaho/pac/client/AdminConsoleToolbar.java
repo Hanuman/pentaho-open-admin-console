@@ -21,6 +21,9 @@ public class AdminConsoleToolbar extends HorizontalPanel {
     buttonsPanel.add(image);
   }
   public AdminConsoleToolbar(final IRefreshableAdminConsole console){
+    this(console, null);
+  }
+  public AdminConsoleToolbar(final IRefreshableAdminConsole console, final String helpUrlOverride){
     super();
 
     setStyleName("adminconsole-toolbar"); //$NON-NLS-1$
@@ -69,16 +72,20 @@ public class AdminConsoleToolbar extends HorizontalPanel {
     helpImage.setTitle(PentahoAdminConsole.MSGS.help());
     helpImage.addClickListener( new ClickListener() {
       public void onClick(Widget sender) {
-        PacServiceFactory.getPacService().getHelpUrl(new AsyncCallback<String>(){
+        if (helpUrlOverride != null && helpUrlOverride.length() > 0){
+          Window.open(helpUrlOverride, PentahoAdminConsole.MSGS.userGuide(), ""); //$NON-NLS-1$
+        }else{
+          PacServiceFactory.getPacService().getHelpUrl(new AsyncCallback<String>(){
 
-          public void onFailure(Throwable arg0) {
-            // TODO Add message indicating failure to find help doc
-          }
+            public void onFailure(Throwable arg0) {
+              //TODO show error message
+            }
 
-          public void onSuccess(String helpUrl) {
-            Window.open(helpUrl, PentahoAdminConsole.MSGS.userGuide(), ""); //$NON-NLS-1$ 
-          }          
-        });
+            public void onSuccess(String helpUrl) {
+              Window.open(helpUrl, PentahoAdminConsole.MSGS.userGuide(), ""); //$NON-NLS-1$ 
+            }          
+          });
+        }
       }
     });
 
@@ -135,5 +142,5 @@ public class AdminConsoleToolbar extends HorizontalPanel {
   public void setIndicators(ToolbarIndicator toolbarIndicator) {
     indicatorsRight.add(toolbarIndicator);    
   }
-
+  
 }
