@@ -102,7 +102,7 @@ public class AppConfigProperties {
   
   public static final String DEFAULT_HOMEPAGE_TIMEOUT = "15000"; //$NON-NLS-1$
   
-  public static final String DEFAULT_HIBERNATE_CONFIG_PATH = "hsql.hibernate.cfg.xml"; //$NON-NLS-1$
+  public static final String DEFAULT_HIBERNATE_CONFIG_PATH = "system/hibernate/hsql.hibernate.cfg.xml"; //$NON-NLS-1$
   
   public static final String DEFAULT_HELP_URL = "http://wiki.pentaho.com/display/PentahoDoc/The+Pentaho+Administration+Console"; //$NON-NLS-1$
   
@@ -327,15 +327,16 @@ public class AppConfigProperties {
       HibernateSettingsXml hibernateSettingXml = new HibernateSettingsXml(new File(solutionPath + HIBERNATE_MANAGED_XML_PATH));
       String hibernateConfigFile = hibernateSettingXml.getHibernateConfigFile();
       if(hibernateConfigFile != null && hibernateConfigFile.length() > 0) {
-        hibernateConfigPath = hibernateConfigFile.substring(hibernateConfigFile.lastIndexOf(SLASH)+1, hibernateConfigFile.length());
-        if (StringUtils.isEmpty(hibernateConfigPath) ) {
+          hibernateConfigPath = hibernateConfigFile;
+      } else {
           hibernateConfigPath = DEFAULT_HIBERNATE_CONFIG_PATH;
-         }
       }
       String isHibernateManaged = hibernateSettingXml.getHibernateManaged();
       if(isHibernateManaged != null && isHibernateManaged.length() > 0) {
         hibernateManaged = Boolean.parseBoolean(isHibernateManaged);  
-      } 
+      } else {
+        hibernateManaged = false;
+      }
 
     } catch(Exception e) {
       throw new AppConfigException(Messages.getErrorString("AppConfigProperties.ERROR_0004_UNABLE_TO_READ_FILE", solutionPath + HIBERNATE_MANAGED_XML_PATH), e); //$NON-NLS-1$

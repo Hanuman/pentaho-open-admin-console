@@ -9,6 +9,5 @@
 	<classpathentry kind="lib" path="lib/pentaho-gwt-widgets-2.0.9-SNAPSHOT-sources.jar"/>
 	<classpathentry kind="lib" path="lib/gwt-dnd-2.5.6.jar"/>
 	<classpathentry kind="lib" path="package-res/resource/config"/>
-	<classpathentry kind="lib" path="package-res/resource/hibernate"/>
 	<classpathentry kind="output" path="eclipse-bin"/>
 </classpath>

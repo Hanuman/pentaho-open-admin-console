@@ -168,6 +168,9 @@ import org.pentaho.platform.engine.security.userroledao.UncategorizedUserRoleDao
     }    
   }
   
+  public void refreshUserRoleDAO() throws DAOException{
+    userRoleDAO = DAOFactory.getUserRoleDAO();
+  }
 
   protected boolean hasCreateUserPerm(IPentahoUser user) {
     return true;

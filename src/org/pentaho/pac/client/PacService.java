@@ -18,7 +18,8 @@ import com.google.gwt.user.client.rpc.RemoteService;
 
 public interface PacService extends RemoteService {
   public UserRoleSecurityInfo getUserRoleSecurityInfo() throws PacServiceException;
-  public void initialze() throws ServiceInitializationException;  
+  public void initialze() throws ServiceInitializationException;
+  public void updateHibernate() throws PacServiceException;
   public boolean createRole(ProxyPentahoRole role) throws DuplicateRoleException, PentahoSecurityException, PacServiceException;
   public boolean deleteRoles(ProxyPentahoRole[] roles) throws NonExistingRoleException, PentahoSecurityException, PacServiceException;
   public boolean updateRole(ProxyPentahoRole role) throws NonExistingRoleException, NonExistingUserException, PentahoSecurityException, PacServiceException;

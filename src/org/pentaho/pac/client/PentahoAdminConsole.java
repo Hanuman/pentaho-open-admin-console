@@ -3,6 +3,7 @@ package org.pentaho.pac.client;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.home.HomePanel;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.utils.ExceptionParser;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -56,9 +57,10 @@ public class PentahoAdminConsole extends DockPanel implements IRefreshableAdminC
           }
           public void onFailure(Throwable caught) {
             MessageDialog errorDialog = new MessageDialog(PentahoAdminConsole.MSGS.error());
-            errorDialog.setText(MSGS.errorInitializingPacService());
-            errorDialog.setMessage(caught.getLocalizedMessage());
+            errorDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+            errorDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));          
             errorDialog.center();
+            setVisible(false);
           }
     };
     PacServiceFactory.getPacService().initialze(callback);

@@ -1,5 +1,6 @@
 package org.pentaho.pac.server.common;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +25,8 @@ import org.pentaho.platform.engine.security.userroledao.messages.Messages;
 public class HibernateSessionFactory {
 
 	public static final String DEFAULT_CONFIG_NAME = "$$DEFAULT_CONFIG"; //$NON-NLS-1$
-  public static String DEFAULT_CONFIG_FILE_LOCATION = "hsql.hibernate.cfg.xml"; //$NON-NLS-1$
+  public static String DEFAULT_CONFIG_FILE_LOCATION = "system/hibernate/hsql.hibernate.cfg.xml"; //$NON-NLS-1$
+  public static String SLASH = "/"; //$NON-NLS-1$
 	/** 
      * Location of hibernate.cfg.xml file.
      * Location should be on the classpath as Hibernate uses  
@@ -47,13 +49,15 @@ public class HibernateSessionFactory {
     }
     
     public static void addDefaultConfiguration() {
-      defaultConfigFile = AppConfigProperties.getInstance().getHibernateConfigPath();
-      if(defaultConfigFile != null && defaultConfigFile.length() > 0) {
+      String hibernateConfigPath = AppConfigProperties.getInstance().getHibernateConfigPath();
+      String solutionPath = AppConfigProperties.getInstance().getSolutionPath();
+      if(hibernateConfigPath != null && hibernateConfigPath.length() > 0) {
+        defaultConfigFile = solutionPath + SLASH + hibernateConfigPath;
         addConfiguration(DEFAULT_CONFIG_NAME,defaultConfigFile);
       } else {
-        defaultConfigFile = DEFAULT_CONFIG_FILE_LOCATION;
-        addConfiguration(DEFAULT_CONFIG_NAME,defaultConfigFile);
-      }        
+        defaultConfigFile = solutionPath + SLASH + DEFAULT_CONFIG_FILE_LOCATION;
+        addConfiguration(DEFAULT_CONFIG_NAME,defaultConfigFile);        
+      }
     }
     public static void addConfiguration(String name,String configFile)
     {
@@ -68,10 +72,16 @@ public class HibernateSessionFactory {
     	Configuration configuration = new AnnotationConfiguration();
     	
     	try {
-			configuration.configure(configFile);
-			// If Hibernate is running in a managed environment
-		 isHibernateManaged = AppConfigProperties.getInstance().isHibernateManaged();
-     if(!isHibernateManaged) {
+    	File file = new File(configFile);
+    	if(file != null && file.exists()) {
+    	  configuration.configure(file);
+    	} else {
+    	  configuration.configure(configFile);
+    	}
+        
+      // If Hibernate is running in a managed environment
+      isHibernateManaged = AppConfigProperties.getInstance().isHibernateManaged();
+      if(!isHibernateManaged) {
         SessionFactory sessionFactory = configuration.buildSessionFactory();
         configs.put(name,new HibConfig(sessionFactory,configuration,configFile));       
       } else {
@@ -83,9 +93,7 @@ public class HibernateSessionFactory {
         }
       }
 		} catch (Exception e) {
-			System.err
-					.println("%%%% Error Creating SessionFactory %%%%"); //$NON-NLS-1$
-			e.printStackTrace();
+			throw new HibernateException(Messages.getErrorString("HibernateSessionFactory.ERROR_0003_UNABLE_TO_CREATE_SESSION_FACTORY", e.getLocalizedMessage()));//$NON-NLS-1$
 		}
     }
 	
@@ -136,9 +144,7 @@ public class HibernateSessionFactory {
 			cfg.configuration.configure(cfg.configFile);
 			cfg.sessionFactory = cfg.configuration.buildSessionFactory();
 		} catch (Exception e) {
-			System.err
-					.println("%%%% Error Creating SessionFactory %%%%"); //$NON-NLS-1$
-			e.printStackTrace();
+      throw new HibernateException(Messages.getErrorString("HibernateSessionFactory.ERROR_0004_UNABLE_TO_REBUILD_SESSION_FACTORY", e.getLocalizedMessage()));//$NON-NLS-1$
 		}
 	}
 

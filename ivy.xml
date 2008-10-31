@@ -33,6 +33,7 @@
     <dependency org="dom4j"               name="dom4j" rev="1.6.1" transitive="false" />
     <dependency org="jaxen"               name="jaxen" rev="1.1" transitive="false" />
     <dependency org="org.springframework" name="spring" rev="2.0" transitive="false" />
+    <dependency org="org.acegisecurity"   name="acegi-security"      rev="1.0.6" transitive="false"/>
 
     <!-- hibernate related dependencies -->
     <dependency org="org.hibernate"       name="hibernate" rev="3.2.6.ga">
@@ -72,8 +73,10 @@
     </dependency>
     <dependency org="pentaho"         name="pentaho-bi-platform-util" rev="${project.revision}" conf="codegen,runtime->default" transitive="false" changing="true" />
     <dependency org="pentaho"         name="pentaho-bi-platform-engine-core" rev="${project.revision}" conf="codegen,runtime->default" transitive="false" changing="true" />
+    <dependency org="pentaho"         name="pentaho-bi-platform-engine-services" rev="${project.revision}" conf="codegen,runtime->default" transitive="false" changing="true" />    
+    <dependency org="pentaho"         name="pentaho-bi-platform-engine-security" rev="${project.revision}" conf="codegen,runtime->default" transitive="false" changing="true" />     
     <dependency org="pentaho"         name="pentaho-bi-platform-security-userroledao" rev="${project.revision}" conf="codegen,runtime->default" transitive="false" changing="true" />
-
+    <dependency org="pentaho"         name="pentaho-bi-platform-repository" rev="${project.revision}" conf="codegen,runtime->default" transitive="false" changing="true" />
     
     <!-- The organization of GWT Widgets can not be varied since we do not create optimized versions of the GWT Widgets -->
     <dependency org="pentaho" name="pentaho-gwt-widgets" rev="${dependency.pentaho-gwt-widgets.revision}" conf="codegen,runtime->default" changing="true">

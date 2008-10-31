@@ -126,6 +126,7 @@ public class DataSourcesList extends ListBox {
       }
 
       public void onFailure(Throwable caught) {
+        setDataSources(null);
         MessageDialog errorDialog = new MessageDialog(MSGS.error() );
         errorDialog.setText(MSGS.errorLoadingDataSources());
         errorDialog.setMessage(MSGS.dataSourcesRefreshError(caught.getMessage()));

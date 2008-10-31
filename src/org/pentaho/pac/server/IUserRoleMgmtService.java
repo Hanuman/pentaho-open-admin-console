@@ -36,5 +36,7 @@ import org.pentaho.platform.engine.security.userroledao.IPentahoUser;
   public void updateRole(IPentahoRole role) throws NonExistingRoleException, DAOException, PentahoSecurityException;
 
   public void updateUser(IPentahoUser user) throws NonExistingUserException, DAOException, PentahoSecurityException;
+  
+  public void refreshUserRoleDAO() throws DAOException;
 
 }

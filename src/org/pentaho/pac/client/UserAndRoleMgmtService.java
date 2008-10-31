@@ -33,6 +33,7 @@ public class UserAndRoleMgmtService {
       }
 
       public void onFailure(Throwable caught) {
+        userRoleSecurityInfo = null;
         callback.onFailure(caught);
       }
     };

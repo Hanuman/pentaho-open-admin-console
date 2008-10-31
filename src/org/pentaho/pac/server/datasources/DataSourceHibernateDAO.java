@@ -8,16 +8,17 @@ import org.hibernate.Session;
 import org.hibernate.exception.JDBCConnectionException;
 import org.pentaho.pac.common.datasources.DuplicateDataSourceException;
 import org.pentaho.pac.common.datasources.NonExistingDataSourceException;
-import org.pentaho.pac.common.datasources.PentahoDataSource;
 import org.pentaho.pac.server.common.DAOException;
 import org.pentaho.pac.server.common.HibernateSessionFactory;
+import org.pentaho.platform.api.repository.datasource.IDatasource;
+import org.pentaho.platform.repository.datasource.Datasource;
 
 public class DataSourceHibernateDAO implements IDataSourceDAO {
 
   public DataSourceHibernateDAO() {
   }
 
-  public void createDataSource(PentahoDataSource newDataSource) throws DuplicateDataSourceException, DAOException {
+  public void createDataSource(IDatasource newDataSource) throws DuplicateDataSourceException, DAOException {
     if (getDataSource(newDataSource.getName()) == null) {
       try {
         getSession().save(newDataSource);
@@ -30,8 +31,8 @@ public class DataSourceHibernateDAO implements IDataSourceDAO {
     }
   }
 
-  public void deleteDataSource(PentahoDataSource dataSource) throws NonExistingDataSourceException, DAOException {
-    PentahoDataSource tmpDataSource = getDataSource(dataSource.getName());
+  public void deleteDataSource(IDatasource dataSource) throws NonExistingDataSourceException, DAOException {
+    IDatasource tmpDataSource = getDataSource(dataSource.getName());
     if (tmpDataSource != null) {
       try {
         getSession().delete(tmpDataSource);
@@ -43,25 +44,25 @@ public class DataSourceHibernateDAO implements IDataSourceDAO {
     }
   }
 
-  public PentahoDataSource getDataSource(String jndiName) throws DAOException {
+  public IDatasource getDataSource(String jndiName) throws DAOException {
     try {
-      return(PentahoDataSource) getSession().get(PentahoDataSource.class.getName(), jndiName);
+      return(IDatasource) getSession().get(Datasource.class.getName(), jndiName);
     } catch (HibernateException ex) {
       throw new DAOException(ex.getMessage(), ex);
     }
   }
   @SuppressWarnings("unchecked")
-  public List<PentahoDataSource> getDataSources() throws DAOException {
+  public List<IDatasource> getDataSources() throws DAOException {
     try {
-      String queryString = "from PentahoDataSource";  //$NON-NLS-1$
-      Query queryObject = getSession().createQuery(queryString);
-      return queryObject.list();
+      String nameQuery = "org.pentaho.platform.repository.datasource.Datasource.findAllDatasources"; //$NON-NLS-1$
+      Query qry = getSession().getNamedQuery(nameQuery).setCacheable(true);
+      return  qry.list();
     } catch (HibernateException ex) {
       throw new DAOException( ex.getMessage(), ex );
     }
   }
 
-  public void updateDataSource(PentahoDataSource dataSource) throws NonExistingDataSourceException, DAOException {
+  public void updateDataSource(IDatasource dataSource) throws NonExistingDataSourceException, DAOException {
     try {
       getSession().update(dataSource);
     } catch (HibernateException ex) {

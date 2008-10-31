@@ -2,9 +2,12 @@ package org.pentaho.pac.server.common;
 
 import static org.pentaho.pac.server.common.HibernateSessionFactory.DEFAULT_CONFIG_NAME;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
 import org.pentaho.pac.server.datasources.DataSourceHibernateDAO;
 import org.pentaho.pac.server.datasources.IDataSourceDAO;
+import org.pentaho.pac.server.i18n.Messages;
 import org.pentaho.platform.engine.security.userroledao.IUserRoleDao;
 import org.pentaho.platform.engine.security.userroledao.hibernate.HibernateUserRoleDao;
 import org.pentaho.platform.engine.security.userroledao.hibernate.UserRoleDaoTransactionDecorator;
@@ -17,6 +20,7 @@ import org.springframework.transaction.support.TransactionTemplate;
  * TODO mlowery This is kind of a useless factory, since the classes it returns are hard-coded.
  */
 public class DAOFactory {
+  private static final Log logger = LogFactory.getLog(DAOFactory.class);
   public static IUserRoleDao getUserRoleDAO() {
     SessionFactory sessionFactory = HibernateSessionFactory.getSessionFactory(DEFAULT_CONFIG_NAME);
     HibernateUserRoleDao userRoleDao = new HibernateUserRoleDao();
@@ -34,7 +38,12 @@ public class DAOFactory {
     initHandler.setUserRoleDao(txnDao);
 
     userRoleDao.setInitHandler(initHandler);
-    userRoleDao.init();
+    try {
+      userRoleDao.init();  
+    } catch(Exception e) {
+      logger.warn(Messages.getString("DAOFactory.WARN_0001_UNABLE_TO_INITIALIZE_USER_ROLE_DAO"), e); //$NON-NLS-1$
+    }
+    
     return txnDao;
   }
 
