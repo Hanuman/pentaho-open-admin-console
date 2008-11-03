@@ -48,6 +48,10 @@ public class ScheduleEditorValidator implements IUiValidator {
       isValid = false;
       schedEd.setGroupNameError( MSGS.specifyGroupName() );
     }
+    if ( StringUtils.isEmpty( schedEd.getDescription() ) ) {
+      isValid = false;
+      schedEd.setDescriptionError( MSGS.specifyDescription() );
+    }
 
     switch ( schedEd.getScheduleType() ) {
       case RUN_ONCE:
