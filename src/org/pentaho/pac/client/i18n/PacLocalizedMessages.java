@@ -1254,9 +1254,9 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String no();
 
   /**
-   * Translated "Specify a name.".
+   * Translated "Please specify a name.".
    * 
-   * @return translated "Specify a name."
+   * @return translated "Please specify a name."
    * @gwt.key specifyName
    */
   String specifyName();
@@ -1294,9 +1294,9 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String selectBtnLabel();
 
   /**
-   * Translated "Specify a start date.".
+   * Translated "Please specify a start date.".
    * 
-   * @return translated "Specify a start date."
+   * @return translated "Please specify a start date."
    * @gwt.key specifyStartDate
    */
   String specifyStartDate();
@@ -1406,9 +1406,9 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String startTimeColon();
 
   /**
-   * Translated "Specify an end date.".
+   * Translated "Please specify an end date.".
    * 
-   * @return translated "Specify an end date."
+   * @return translated "Please specify an end date."
    * @gwt.key specifyEndDate
    */
   String specifyEndDate();
@@ -1462,13 +1462,21 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String openBtnLabel();
 
   /**
-   * Translated "Specify a group name.".
+   * Translated "Please specify a group name.".
    * 
-   * @return translated "Specify a group name."
+   * @return translated "Please specify a group name."
    * @gwt.key specifyGroupName
    */
   String specifyGroupName();
 
+  /**
+   * Translated "Please specify a description.".
+   * 
+   * @return translated "Please specify a description."
+   * @gwt.key specifyDescription
+   */
+  String specifyDescription();
+  
   /**
    * Translated "getWhichWeekOfMonth() not valid for recurrence type: {0}.".
    * 
