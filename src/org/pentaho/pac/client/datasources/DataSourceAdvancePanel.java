@@ -139,10 +139,19 @@ public class DataSourceAdvancePanel extends VerticalPanel implements KeyboardLis
   }
 
   public void onKeyPress(Widget sender, char keyCode, int modifiers) {
-    if (!Character.isDigit(keyCode)) {
+    if ((!Character.isDigit(keyCode)) && (!(
+        (keyCode == KeyboardListener.KEY_BACKSPACE) ||
+        (keyCode == KeyboardListener.KEY_DELETE) ||
+        (keyCode == KeyboardListener.KEY_LEFT) ||
+        (keyCode == KeyboardListener.KEY_RIGHT) ||
+        (keyCode == KeyboardListener.KEY_UP) ||
+        (keyCode == KeyboardListener.KEY_DOWN) ||
+        (keyCode == KeyboardListener.KEY_HOME) ||
+        (keyCode == KeyboardListener.KEY_END)
+        ))) {
       TextBox textBox = (TextBox)sender;
       textBox.cancelKey();
-    }    
+    }
   }
 
   public void onKeyUp(Widget sender, char keyCode, int modifiers) {
