@@ -3,15 +3,17 @@ package org.pentaho.pac.client.datasources;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
+import org.pentaho.pac.client.common.keyfilters.KeyListenerFactory;
+import org.pentaho.pac.client.common.keyfilters.KeyListenerFactory.FILTER_TYPE;
 
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
-public class DataSourceAdvancePanel extends VerticalPanel implements KeyboardListener{
+public class DataSourceAdvancePanel extends VerticalPanel{
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
+  private KeyboardListener defaultKeyListener = KeyListenerFactory.getKeyboardListener(FILTER_TYPE.NUMERIC);
   TextBox maxActiveConnTextBox = new TextBox();
   TextBox idleConnTextBox = new TextBox();
   TextBox validationQueryTextBox = new TextBox();
@@ -28,9 +30,9 @@ public class DataSourceAdvancePanel extends VerticalPanel implements KeyboardLis
     add(new Label(MSGS.dbWaitTime()));
     add(waitTextBox);
     add(label);
-    maxActiveConnTextBox.addKeyboardListener(this);
-    idleConnTextBox.addKeyboardListener(this);
-    waitTextBox.addKeyboardListener(this);
+    maxActiveConnTextBox.addKeyboardListener(defaultKeyListener);
+    idleConnTextBox.addKeyboardListener(defaultKeyListener);
+    waitTextBox.addKeyboardListener(defaultKeyListener);
     
     maxActiveConnTextBox.setWidth("100%"); //$NON-NLS-1$
     idleConnTextBox.setWidth("100%"); //$NON-NLS-1$
@@ -135,30 +137,7 @@ public class DataSourceAdvancePanel extends VerticalPanel implements KeyboardLis
     waitTextBox.setEnabled(enabled);
   }
 
-  public void onKeyDown(Widget sender, char keyCode, int modifiers) {
+  public void refresh() {
   }
-
-  public void onKeyPress(Widget sender, char keyCode, int modifiers) {
-    if ((!Character.isDigit(keyCode)) && (!(
-        (keyCode == KeyboardListener.KEY_BACKSPACE) ||
-        (keyCode == KeyboardListener.KEY_DELETE) ||
-        (keyCode == KeyboardListener.KEY_LEFT) ||
-        (keyCode == KeyboardListener.KEY_RIGHT) ||
-        (keyCode == KeyboardListener.KEY_UP) ||
-        (keyCode == KeyboardListener.KEY_DOWN) ||
-        (keyCode == KeyboardListener.KEY_HOME) ||
-        (keyCode == KeyboardListener.KEY_END)
-        ))) {
-      TextBox textBox = (TextBox)sender;
-      textBox.cancelKey();
-    }
-  }
-
-  public void onKeyUp(Widget sender, char keyCode, int modifiers) {
-   }
-  
-   public void refresh() {
-     
-   }
  
 }
