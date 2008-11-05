@@ -22,14 +22,22 @@ public class NumericFilterGeneric implements KeyboardListener{
   }
 
   public void onKeyPress(Widget sender, char keyCode, int modifiers) {
-    if ((!Character.isDigit(keyCode)) && (keyCode != (char) KEY_TAB)
-        && (keyCode != (char) KEY_BACKSPACE)
-        && (keyCode != (char) KEY_DELETE) && (keyCode != (char) KEY_ENTER) 
-        && (keyCode != (char) KEY_HOME) && (keyCode != (char) KEY_END)
-        && (keyCode != (char) KEY_LEFT) && (keyCode != (char) KEY_UP)
-        && (keyCode != (char) KEY_RIGHT) && (keyCode != (char) KEY_DOWN)) {
-      //TODO: Allow for '.' & '-' & ','
-      ((TextBox)sender).cancelKey();
+     if ((!Character.isDigit(keyCode)) && (!(
+        (keyCode == KEY_TAB) ||
+        (keyCode == KEY_ENTER) ||
+        (keyCode == KEY_BACKSPACE) ||
+        (keyCode == KEY_DELETE) ||
+        (keyCode == KEY_LEFT) ||
+        (keyCode == KEY_RIGHT) ||
+        (keyCode == KEY_UP) ||
+        (keyCode == KEY_DOWN) ||
+        (keyCode == KEY_HOME) ||
+        (keyCode == KEY_END) ||
+        (keyCode == '-')
+        ))) {
+       
+      TextBox textBox = (TextBox)sender;
+      textBox.cancelKey();
     }
   }
 
