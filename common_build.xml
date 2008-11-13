@@ -1255,16 +1255,6 @@
           description="Runs a lightweight continuous integration build." />
 
   <!--=======================================================================
-        continuous-release
-        
-        Runs a release build including versioning, project dist and javadoc.
-        ====================================================================-->
-    <target name="continuous-release"
-            depends="clean-all,version-properties,resolve,dist-javadoc,dist-source,dist"
-            description="Runs a typical testless continuous integration build with a version file" />
-
-
-  <!--=======================================================================
 	    javadoc
 	    
 	    Generates javadoc source documentation for this project
