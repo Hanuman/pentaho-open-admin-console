@@ -10,9 +10,10 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.pentaho.pac.common.config.IHibernateSettings;
 import org.pentaho.platform.engine.security.userroledao.messages.Messages;
 
-public class HibernateSettingsXml {
+public class HibernateSettingsXml implements IHibernateSettings{
   
   Document document;
   
@@ -49,12 +50,12 @@ public class HibernateSettingsXml {
     setValue(XPATH_TO_HIBERNATE_CFG_FILE, hibernateConfigFile);
   }
   
-  public String getHibernateManaged() {
-    return getValue(XPATH_TO_HIBERNATE_MANAGED);
+  public boolean getHibernateManaged() {
+    return Boolean.parseBoolean(getValue(XPATH_TO_HIBERNATE_MANAGED));
   }
   
-  public void setHibernateManaged(String hibernateManaged) {
-    setValue(XPATH_TO_HIBERNATE_MANAGED, hibernateManaged);
+  public void setHibernateManaged(boolean hibernateManaged) {
+    setValue(XPATH_TO_HIBERNATE_MANAGED, Boolean.toString(hibernateManaged));
   }
     
   private void setValue(String xPath, String value) {

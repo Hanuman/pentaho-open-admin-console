@@ -331,12 +331,7 @@ public class AppConfigProperties {
       } else {
           hibernateConfigPath = DEFAULT_HIBERNATE_CONFIG_PATH;
       }
-      String isHibernateManaged = hibernateSettingXml.getHibernateManaged();
-      if(isHibernateManaged != null && isHibernateManaged.length() > 0) {
-        hibernateManaged = Boolean.parseBoolean(isHibernateManaged);  
-      } else {
-        hibernateManaged = false;
-      }
+      hibernateManaged = hibernateSettingXml.getHibernateManaged();
 
     } catch(Exception e) {
       throw new AppConfigException(Messages.getErrorString("AppConfigProperties.ERROR_0004_UNABLE_TO_READ_FILE", solutionPath + HIBERNATE_MANAGED_XML_PATH), e); //$NON-NLS-1$
