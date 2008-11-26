@@ -302,7 +302,7 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
 
           public void onFailure(Throwable caught) {
             messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-            messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));          
+            messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorCreatingDataSource()));          
             messageDialog.center();
           }
         };
@@ -330,7 +330,7 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
 
       public void onFailure(Throwable caught) {
         messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));          
+        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorTestingDataSourceConnection()));          
         messageDialog.center();
       }
     };

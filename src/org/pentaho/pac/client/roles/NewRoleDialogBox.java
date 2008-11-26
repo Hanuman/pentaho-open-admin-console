@@ -81,7 +81,7 @@ public class NewRoleDialogBox extends ConfirmDialog {
 
           public void onFailure(Throwable caught) {
             messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-            messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));          
+            messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorCreatingRole()));          
             messageDialog.center();
             okBtn.setEnabled(true);
             cancelBtn.setEnabled(true);

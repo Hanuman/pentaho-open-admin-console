@@ -205,7 +205,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 
         public void onFailure(Throwable caught) {
           messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-          messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));          
+          messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorDeletingDataSource()));          
           messageDialog.center();
         }
       };
@@ -261,7 +261,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 
         public void onFailure(Throwable caught) {
           messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-          messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));          
+          messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorUpdatingDataSource()));          
           messageDialog.center();
           ((Button) sender).setEnabled(true);
         }
@@ -282,7 +282,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 
         public void onFailure(Throwable caught) {
           messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-          messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));          
+          messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorTestingDataSourceConnection()));          
           messageDialog.center();
         }
       };
@@ -301,7 +301,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 
       public void onFailure(Throwable caught) {
         messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));          
+        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorTestingDataSourceConnection()));          
         messageDialog.center();
       }
     };

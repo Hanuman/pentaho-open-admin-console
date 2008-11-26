@@ -79,7 +79,7 @@ public class UserAssignmentsDialogBox extends AccumulatorDialog<ProxyPentahoUser
       public void onFailure(Throwable caught) {
         MessageDialog messageDialog = new MessageDialog();
         messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));    
+        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorAssigningSelectedUsers()));    
       }
     };
     UserAndRoleMgmtService.instance().setUsers(role, accumulatedUsersList.getObjects().toArray(new ProxyPentahoUser[0]), callback);

@@ -228,6 +228,9 @@ public class JettyServer implements Halter, IJettyServer {
     ServletHolder jdbcdriverdiscoveryservice = new ServletHolder(new org.pentaho.pac.server.common.JdbcDriverDiscoveryServiceImpl());
     servletContext.addServlet(jdbcdriverdiscoveryservice, "/jdbcdriverdiscoverysvc"); //$NON-NLS-1$
 
+    ServletHolder hibernateconfigurationservice = new ServletHolder(new org.pentaho.pac.server.common.HibernateConfigurationServiceImpl());
+    servletContext.addServlet(hibernateconfigurationservice, "/hibernateconfigurationsvc"); //$NON-NLS-1$
+
   }
 
   public void configureEventListeners( Context servletContext ) {

@@ -30,8 +30,8 @@ public class JdbcDriverDiscoveryServiceImpl extends RemoteServiceServlet impleme
   private static final long interval = 300000; // every five mins
 
   private final HashMap<String,CacheInfo> cache = new HashMap<String,CacheInfo>();
-  private static final String DEFAULT_JDBC_PATH_1 = "./lib"; //$NON-NLS-1$
-  private static final String DEFAULT_JDBC_PATH_2 = "./lib-ext/jdbc";//$NON-NLS-1$
+  private static final String DEFAULT_JDBC_PATH_2 = "./lib"; //$NON-NLS-1$
+  private static final String DEFAULT_JDBC_PATH_1 = "./lib-ext/jdbc";//$NON-NLS-1$
 
   private static String jdbcDriverPath;
 
@@ -50,7 +50,8 @@ public class JdbcDriverDiscoveryServiceImpl extends RemoteServiceServlet impleme
     jdbcDriverPath = StringUtils.defaultIfEmpty(appCfg.getJdbcDriverPath(), System.getProperty("jdbc.drivers.path")); //$NON-NLS-1$ 
     if(!isExist(jdbcDriverPath)) {
       jdbcDriverPath = DEFAULT_JDBC_PATH_1;
-    } else if(!isExist(jdbcDriverPath)){
+    } 
+    if(!isExist(jdbcDriverPath)){
       jdbcDriverPath = DEFAULT_JDBC_PATH_2;
     }
     cache.clear();

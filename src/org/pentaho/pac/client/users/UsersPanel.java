@@ -281,12 +281,11 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
     newUserDialogBox.center();
   }
 	
-	@SuppressWarnings("unchecked")
 	private void deleteSelectedUsers() {
 	  final List<ProxyPentahoUser> selectedUsers = usersList.getSelectedObjects();
 	  if (selectedUsers.size() > 0) {
-	    AsyncCallback callback = new AsyncCallback() {
-	      public void onSuccess(Object result) {
+	    AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+	      public void onSuccess(Boolean result) {
 	        usersList.removeObjects(selectedUsers);
 	        userSelectionChanged();
 	      }
@@ -294,14 +293,13 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
 	      public void onFailure(Throwable caught) {
           MessageDialog messageDialog = new MessageDialog();
           messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-          messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));  
+          messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorDeletingUsers()));  
 	      }
 	    };
 	    UserAndRoleMgmtService.instance().deleteUsers(selectedUsers.toArray(new ProxyPentahoUser[0]), callback);
 	  }
 	}
 	
-	@SuppressWarnings("unchecked")
   private void unassignSelectedRoles() {
     List<ProxyPentahoUser> selectedUsers = usersList.getSelectedObjects();
     if (selectedUsers.size() == 1) {
@@ -310,7 +308,7 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
       final List<ProxyPentahoRole> rolesToUnassign = assignedRolesList.getSelectedObjects();
       assignedRoles.removeAll(rolesToUnassign);      
       
-      AsyncCallback callback = new AsyncCallback() {
+      AsyncCallback<Object> callback = new AsyncCallback<Object>() {
         public void onSuccess(Object result) {
           assignedRolesList.removeObjects(rolesToUnassign);
         }
@@ -318,7 +316,7 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
         public void onFailure(Throwable caught) {
           MessageDialog messageDialog = new MessageDialog();
           messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-          messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));  
+          messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorUnassigningRoles()));  
         }
       };
       UserAndRoleMgmtService.instance().setRoles(selectedUsers.get(0), (ProxyPentahoRole[])assignedRoles.toArray(new ProxyPentahoRole[0]), callback);
@@ -386,7 +384,7 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
 	      public void onFailure(Throwable caught) {
 	        MessageDialog messageDialog = new MessageDialog();
 	        messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-	        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));   
+	        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorUpdatingUser()));   
 	        messageDialog.center();
           ((Button)sender).setEnabled( true );
 	      }

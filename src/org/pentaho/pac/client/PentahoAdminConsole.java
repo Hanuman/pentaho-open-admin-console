@@ -58,7 +58,7 @@ public class PentahoAdminConsole extends DockPanel implements IRefreshableAdminC
           public void onFailure(Throwable caught) {
             MessageDialog errorDialog = new MessageDialog(PentahoAdminConsole.MSGS.error());
             errorDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-            errorDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));          
+            errorDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorInitializingPacService()));          
             errorDialog.center();
             setVisible(false);
           }

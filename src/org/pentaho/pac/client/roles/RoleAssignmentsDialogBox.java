@@ -77,7 +77,7 @@ public class RoleAssignmentsDialogBox extends AccumulatorDialog<ProxyPentahoRole
 
       public void onFailure(Throwable caught) {
         errorDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-        errorDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));          
+        errorDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorAssigningSelectedRoles()));          
         errorDialog.center();
       }
     };

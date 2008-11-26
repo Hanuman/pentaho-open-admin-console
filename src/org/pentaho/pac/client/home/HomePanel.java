@@ -18,6 +18,7 @@ package org.pentaho.pac.client.home;
 import org.pentaho.pac.client.IRefreshableAdminPage;
 import org.pentaho.pac.client.PacServiceAsync;
 import org.pentaho.pac.client.PacServiceFactory;
+import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.GroupBox;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.utils.ExceptionParser;
@@ -66,7 +67,7 @@ public class HomePanel extends SimplePanel implements IRefreshableAdminPage{
     pacService.getHomePageAsHtml(url, new AsyncCallback<String>() {
       public void onFailure(Throwable caught) {
         messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));          
+        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), PentahoAdminConsole.MSGS.errorGettingHomepage()));          
         messageDialog.center();
       }
       public void onSuccess(String htmlContent) {

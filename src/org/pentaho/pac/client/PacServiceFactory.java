@@ -11,6 +11,7 @@ public class PacServiceFactory {
   private static SubscriptionServiceAsync subscriptionService = null;
   private static SolutionRepositoryServiceAsync solutionRepositoryService = null;
   private static JdbcDriverDiscoveryServiceAsync jdbcDriverDiscoveryService = null;
+  private static HibernateConfigurationServiceAsync hibernateConfigurationService = null;
   
 
   public static PacServiceAsync getPacService() {
@@ -62,5 +63,14 @@ public class PacServiceFactory {
     }
     return jdbcDriverDiscoveryService;
   }  
-  
+
+  public static HibernateConfigurationServiceAsync getHibernateConfigurationService() {
+    if (hibernateConfigurationService == null) {
+      hibernateConfigurationService = (HibernateConfigurationServiceAsync) GWT.create(HibernateConfigurationService.class);
+      ServiceDefTarget endpoint = (ServiceDefTarget) hibernateConfigurationService;
+      String moduleRelativeURL = GWT.getModuleBaseURL() + "hibernateconfigurationsvc"; //$NON-NLS-1$
+      endpoint.setServiceEntryPoint(moduleRelativeURL);
+    }
+    return hibernateConfigurationService;
+  }  
 }

@@ -258,7 +258,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 
 	      public void onFailure(Throwable caught) {
 	        errorDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-	        errorDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));          
+	        errorDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorDeletingRoles()));          
 	        errorDialog.center();
 	      }
 	    };
@@ -266,8 +266,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 	  }
 	}
 	
-	@SuppressWarnings("unchecked")
-  private void unassignSelectedUsers() {
+	private void unassignSelectedUsers() {
     List<ProxyPentahoRole> selectedRoles = rolesList.getSelectedObjects();
     if (selectedRoles.size() == 1) {
       ArrayList<ProxyPentahoUser> assignedUsers = new ArrayList<ProxyPentahoUser>();
@@ -275,14 +274,14 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
       final List<ProxyPentahoUser> usersToUnassign = assignedUsersList.getSelectedObjects();
       assignedUsers.removeAll(usersToUnassign);      
       
-      AsyncCallback callback = new AsyncCallback() {
+      AsyncCallback<Object> callback = new AsyncCallback<Object>() {
         public void onSuccess(Object result) {
           assignedUsersList.removeObjects(usersToUnassign);
         }
 
         public void onFailure(Throwable caught) {
           errorDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-          errorDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));          
+          errorDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorUnassigningSelectedUsersFromRole()));          
           errorDialog.center();
         }
       };
@@ -329,7 +328,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 
       public void onFailure(Throwable caught) {
         errorDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-        errorDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));          
+        errorDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorUpdatingRole()));          
         errorDialog.center();
         ((Button)sender).setEnabled( true );
       }

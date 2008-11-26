@@ -22,6 +22,7 @@
 	<servlet class="org.pentaho.pac.server.pdi.svc.StepMetricsServiceImpl" path="/stepmetrics"/> 
 	<servlet class="org.pentaho.pac.server.DefaultConsoleServlet" path="/halt"/>
   	<servlet class="org.pentaho.pac.server.common.JdbcDriverDiscoveryServiceImpl" path="/jdbcdriverdiscoverysvc"/>
+  	<servlet class='org.pentaho.pac.server.common.HibernateConfigurationServiceImpl' path='/hibernateconfigurationsvc'/>
 	<source path="client"/>
 	<source path="common"/>
 	

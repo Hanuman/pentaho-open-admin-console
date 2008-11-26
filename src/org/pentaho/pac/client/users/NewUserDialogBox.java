@@ -110,7 +110,7 @@ public class NewUserDialogBox extends ConfirmDialog {
               public void onFailure(Throwable caught) {
                 MessageDialog messageDialog = new MessageDialog();
                 messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-                messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));                   
+                messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorAddingRolesForUser()));                   
               }
             });
             
@@ -121,7 +121,7 @@ public class NewUserDialogBox extends ConfirmDialog {
           public void onFailure(Throwable caught) {
             MessageDialog messageDialog = new MessageDialog();
             messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-            messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));   
+            messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorCreatingUser()));   
             messageDialog.center();
             okBtn.setEnabled(true);
             cancelBtn.setEnabled(true);

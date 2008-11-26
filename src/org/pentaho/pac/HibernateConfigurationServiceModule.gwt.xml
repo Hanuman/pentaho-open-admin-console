@@ -1,0 +1,10 @@
+<module>
+
+	<!-- Inherit the core Web Toolkit stuff.                  -->
+	<inherits name='com.google.gwt.user.User'/>
+
+	<!-- Specify the app entry point class.                   -->
+    <servlet path='/hibernateconfigurationsvc' class='org.pentaho.pac.server.common.HibernateConfigurationServiceImpl'/>  
+    <source path="client"/>
+    <source path="common"/>
+</module>

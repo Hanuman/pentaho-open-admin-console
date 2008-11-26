@@ -179,7 +179,7 @@ public class SolutionRepositoryActionSequenceListEditorController {
       public void onFailure(Throwable caught) {
         MessageDialog messageDialog = new MessageDialog();
         messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage()));   
+        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), caught.getMessage()));   
         messageDialog.center();
         solutionRepositoryModel = null;
         isInitialized = false;

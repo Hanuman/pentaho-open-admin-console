@@ -2095,4 +2095,102 @@ String loadingInvalidSchedule(String arg0);
    */
   String errorGettingStatusData();
   
+  
+  /**
+   * Translated "Error testing datasource connection"
+   * 
+   * @return translated "Error testing datasource connection"
+   * @get.key errorTestingDataSourceConnection
+   */
+  String errorTestingDataSourceConnection();
+  
+  /**
+   * Translated "Error creating role"
+   * 
+   * @return translated "Error creating role"
+   * @get.key errorCreatingRole
+   */
+  String errorCreatingRole();
+
+  /**
+   * Translated "Error assigning selected roles"
+   * 
+   * @return translated "Error assigning selected roles"
+   * @get.key errorAssigningSelectedRoles
+   */
+  String errorAssigningSelectedRoles();
+
+  /**
+  * Translated "Error unassigning selected users from role"
+  * 
+  * @return translated "Error unassigning selected users from role"
+  * @get.key errorUnassigningSelectedUsersFromRole
+  */
+  String errorUnassigningSelectedUsersFromRole();
+
+  /**
+  * Translated "Error deleting roles"
+  * 
+  * @return translated "Error deleting roles"
+  * @get.key errorDeletingRoles
+  */
+  String errorDeletingRoles();
+  /**
+   * Translated "Error updating role"
+   * 
+   * @return translated "Error updating role"
+   * @get.key errorUpdatingRole
+   */
+   String errorUpdatingRole();
+   /**
+    * Translated "Error getting homepage"
+    * 
+    * @return translated "Error getting homepage"
+    * @get.key errorGettingHomepage
+    */   
+   String errorGettingHomepage();
+   /**
+    * Translated "Error creating user"
+    * 
+    * @return translated "Error creating user"
+    * @get.key errorCreatingUser
+    */      
+   String errorCreatingUser();
+   /**
+    * Translated "Error adding roles for a user"
+    * 
+    * @return translated "Error adding roles for a user"
+    * @get.key errorAddingRolesForUser
+    */   
+   String errorAddingRolesForUser();
+
+   /**
+   * Translated "Error assigning selected users"
+   * 
+   * @return translated "Error assigning selected users"
+   * @get.key errorAssigningSelectedUsers
+   */   
+   String errorAssigningSelectedUsers();
+
+   /**
+    * Translated "Error updating a user"
+    * 
+    * @return translated "Error updating a user"
+    * @get.key errorUpdatingUser
+    */   
+   String errorUpdatingUser();
+   /**
+    * Translated "Error unassigning roles for a user"
+    * 
+    * @return translated "Error unassigning roles for a user"
+    * @get.key errorUnassigningRoles
+    */   
+   String errorUnassigningRoles();
+   /**
+    * Translated "Error deleting users"
+    * 
+    * @return translated "Error deleting users"
+    * @get.key errorDeletingUsers
+    */   
+   String errorDeletingUsers();
 }
