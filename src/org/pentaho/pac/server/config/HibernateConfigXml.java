@@ -9,6 +9,8 @@ import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.pentaho.pac.common.config.IHibernateConfig;
+import org.pentaho.pac.server.common.util.DtdEntityResolver;
+import org.pentaho.platform.api.util.XmlParseException;
 import org.pentaho.platform.engine.security.userroledao.messages.Messages;
 import org.pentaho.platform.util.xml.dom4j.XmlDom4JHelper;
 
@@ -25,11 +27,11 @@ public class HibernateConfigXml implements Serializable, IHibernateConfig {
   Document document;
   
   public HibernateConfigXml(File pentahoXmlFile) throws IOException, DocumentException{
-    this(XmlDom4JHelper.getDocFromFile(pentahoXmlFile, null));    
+    this(XmlDom4JHelper.getDocFromFile(pentahoXmlFile, new DtdEntityResolver()));    
   }
   
-  public HibernateConfigXml(String xml) throws DocumentException {
-    this(DocumentHelper.parseText(xml));
+  public HibernateConfigXml(String xml) throws DocumentException, XmlParseException {
+    this(XmlDom4JHelper.getDocFromString(xml, new DtdEntityResolver()));    
   }
   
   public HibernateConfigXml(Document doc) throws DocumentException {

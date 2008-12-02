@@ -12,6 +12,9 @@ import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.Node;
+import org.pentaho.pac.server.common.util.DtdEntityResolver;
+import org.pentaho.platform.api.util.XmlParseException;
+import org.pentaho.platform.util.xml.dom4j.XmlDom4JHelper;
 
 public class WebXml {
 
@@ -32,12 +35,12 @@ public class WebXml {
   private static final String CONTEXT_PARAM_NAME_TEMPLATE_XPATH = CONTEXT_PARAM_XPATH + "/param-name[text()=\"{0}\"]"; //$NON-NLS-1$
   private static final String SERVLET_NAME_TEMPLATE_XPATH = ROOT_ELEMENT + "/servlet/servlet-name[text() = \"{0}\"]"; //$NON-NLS-1$
   
-  public WebXml(File pentahoXmlFile) throws IOException, DocumentException{
+  public WebXml(File pentahoXmlFile) throws IOException, DocumentException, XmlParseException{
     this(getContents(pentahoXmlFile));    
   }
   
-  public WebXml(String xml) throws DocumentException {
-    this(DocumentHelper.parseText(xml));
+  public WebXml(String xml) throws DocumentException, XmlParseException {
+    this(XmlDom4JHelper.getDocFromString(xml, new DtdEntityResolver()));
   }
   
   public WebXml(Document doc) throws DocumentException {

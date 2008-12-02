@@ -11,7 +11,10 @@ import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.pentaho.pac.common.config.IHibernateSettings;
+import org.pentaho.pac.server.common.util.DtdEntityResolver;
+import org.pentaho.platform.api.util.XmlParseException;
 import org.pentaho.platform.engine.security.userroledao.messages.Messages;
+import org.pentaho.platform.util.xml.dom4j.XmlDom4JHelper;
 
 public class HibernateSettingsXml implements IHibernateSettings{
   
@@ -21,12 +24,12 @@ public class HibernateSettingsXml implements IHibernateSettings{
   private static final String XPATH_TO_HIBERNATE_CFG_FILE = "settings/config-file";//$NON-NLS-1$
   private static final String XPATH_TO_HIBERNATE_MANAGED = "settings/managed"; //$NON-NLS-1$
   
-  public HibernateSettingsXml(File hibernateSettingsXmlFile) throws IOException, DocumentException{
+  public HibernateSettingsXml(File hibernateSettingsXmlFile) throws IOException, DocumentException, XmlParseException{
     this(getContents(hibernateSettingsXmlFile));    
   }
   
-  public HibernateSettingsXml(String xml) throws DocumentException {
-    this(DocumentHelper.parseText(xml));
+  public HibernateSettingsXml(String xml) throws DocumentException, XmlParseException {
+    this(XmlDom4JHelper.getDocFromString(xml, new DtdEntityResolver()));    
   }
   
   public HibernateSettingsXml(Document doc) throws DocumentException {

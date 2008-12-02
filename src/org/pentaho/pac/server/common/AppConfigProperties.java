@@ -17,7 +17,6 @@
 package org.pentaho.pac.server.common;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,15 +25,11 @@ import java.util.StringTokenizer;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
 import org.pentaho.pac.server.config.HibernateSettingsXml;
 import org.pentaho.pac.server.config.PentahoObjectsConfig;
 import org.pentaho.pac.server.config.WebXml;
 import org.pentaho.pac.server.i18n.Messages;
 import org.pentaho.platform.api.engine.ISystemSettings;
-import org.pentaho.platform.engine.core.system.SystemSettings;
-import org.pentaho.platform.util.xml.dom4j.XmlDom4JHelper;
 
 /**
  * By default, this class will initialize itself from <code>resource/config/console.xml</code> (relative to the current
@@ -208,69 +203,7 @@ public class AppConfigProperties {
     return helpUrl;
   }
   
-  /**
-   * Reuse of {@link SystemSettings} where settings are read from <code>resource/config/console.xml</code>.
-   * 
-   * @author mlowery
-   */
-  private class OpenAdminConsoleSettings extends SystemSettings {
-
-    private static final long serialVersionUID = -5912709145466266140L;
-
-    public OpenAdminConsoleSettings() {
-      super();
-    }
-
-    /**
-     * Need to override since default implementation points to solution path (e.g. pentaho-solutions).
-     */
-    @Override
-    protected String getAbsolutePath(String path) {
-      try {
-        File file = new File(ClassLoader.getSystemResource(path).toURI());
-        return file.getAbsolutePath();
-      } catch(Exception e) {
-        logger.info( Messages.getErrorString("AppConfigProperties.ERROR_0009_UNABLE_TO_GET_ABSOLUTE_PATH", path, e.getLocalizedMessage())); //$NON-NLS-1$
-        return "resource/config/" + path; //$NON-NLS-1$  
-      }
-    }
-
-    /**
-     * Need to override since default implementation points to pentaho.xml.
-     */
-    @Override
-    public String getSystemSetting(final String settingName, final String defaultValue) {
-      return getSystemSetting(DEFAULT_PROPERTIES_FILE_NAME, settingName, defaultValue);
-    }
-
-    /**
-     * Need to override to stop caching behavior. Caching is disabled to allow this object to see changes to
-     * the console.xml file that are made by other objects.
-     */
-    @Override
-    public Document getSystemSettingsDocument(final String actionPath) {
-      
-      File f = new File(getAbsolutePath(actionPath));
-      if (!f.exists()) {
-        return null;
-      }
-      Document systemSettingsDocument = null;
-
-      try {
-        systemSettingsDocument = XmlDom4JHelper.getDocFromFile(f, null);
-      } catch (DocumentException e) {
-        logger.error(e);
-      } catch (IOException e) {
-        logger.error(e);
-      }
-
-      return systemSettingsDocument;
-    }
-
-  }
-  
-  
-  public void initialize() throws AppConfigException{
+   public void initialize() throws AppConfigException{
     // War path
     ISystemSettings settings = new OpenAdminConsoleSettings();
     warPath = settings.getSystemSetting(KEY_WAR_PATH, null);

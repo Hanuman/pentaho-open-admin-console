@@ -10,7 +10,10 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.pentaho.pac.server.common.util.DtdEntityResolver;
+import org.pentaho.platform.api.util.XmlParseException;
 import org.pentaho.platform.engine.security.userroledao.messages.Messages;
+import org.pentaho.platform.util.xml.dom4j.XmlDom4JHelper;
 
 public class PentahoXml {
   
@@ -29,12 +32,12 @@ public class PentahoXml {
   private static final String ANONYMOUS_USER_XPATH = ROOT_ELEMENT + "/anonymous-authentication/anonymous-user"; //$NON-NLS-1$
   private static final String ANONYMOUS_ROLE_XPATH = ROOT_ELEMENT + "/anonymous-authentication/anonymous-role"; //$NON-NLS-1$
   
-  public PentahoXml(File pentahoXmlFile) throws IOException, DocumentException{
+  public PentahoXml(File pentahoXmlFile) throws IOException, DocumentException, XmlParseException{
     this(getContents(pentahoXmlFile));    
   }
   
-  public PentahoXml(String xml) throws DocumentException {
-    this(DocumentHelper.parseText(xml));
+  public PentahoXml(String xml) throws DocumentException, XmlParseException {
+    this(XmlDom4JHelper.getDocFromString(xml, new DtdEntityResolver()));
   }
   
   public PentahoXml(Document doc) throws DocumentException {

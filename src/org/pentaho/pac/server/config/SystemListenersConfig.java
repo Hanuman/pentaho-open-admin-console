@@ -12,6 +12,8 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.pentaho.pac.server.common.util.DtdEntityResolver;
+import org.pentaho.platform.api.util.XmlParseException;
 import org.pentaho.platform.engine.security.userroledao.messages.Messages;
 import org.pentaho.platform.util.xml.dom4j.XmlDom4JHelper;
 
@@ -63,11 +65,11 @@ public class SystemListenersConfig {
   Document document;
   
   public SystemListenersConfig(File systemListenerConfigFile) throws IOException, DocumentException{
-    this(XmlDom4JHelper.getDocFromFile(systemListenerConfigFile, null));    
+    this(XmlDom4JHelper.getDocFromFile(systemListenerConfigFile, new DtdEntityResolver()));    
   }
   
-  public SystemListenersConfig(String xml) throws DocumentException {
-    this(DocumentHelper.parseText(xml));
+  public SystemListenersConfig(String xml) throws DocumentException, XmlParseException {
+    this(XmlDom4JHelper.getDocFromString(xml, new DtdEntityResolver()));
   }
   
   public SystemListenersConfig(Document doc) throws DocumentException {
