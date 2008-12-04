@@ -7,6 +7,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
+import org.hibernate.util.DTDEntityResolver;
 import org.pentaho.pac.server.i18n.Messages;
 import org.pentaho.platform.engine.core.system.SystemSettings;
 import org.pentaho.platform.util.xml.dom4j.XmlDom4JHelper;
@@ -61,7 +62,7 @@ public class OpenAdminConsoleSettings extends SystemSettings {
     Document systemSettingsDocument = null;
 
     try {
-      systemSettingsDocument = XmlDom4JHelper.getDocFromFile(f, null);
+      systemSettingsDocument = XmlDom4JHelper.getDocFromFile(f, new DTDEntityResolver());
     } catch (DocumentException e) {
       logger.error(e);
     } catch (IOException e) {
