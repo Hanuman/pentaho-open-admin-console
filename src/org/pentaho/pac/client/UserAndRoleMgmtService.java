@@ -84,6 +84,25 @@ public class UserAndRoleMgmtService {
       for (int i = 0; i < roles.length; i++) {
         roles[i] = (ProxyPentahoRole) (assignedRoles.get(i)).clone();
       }
+      
+      // FF3 bug requires roles array to have duplicates removed
+      // Beware this must be compiled by GWT
+      List<ProxyPentahoRole> finalRoles = new ArrayList<ProxyPentahoRole>();
+      outer:
+      for(ProxyPentahoRole role : roles){
+        for(ProxyPentahoRole uniqueRole : finalRoles){
+          if(role.getName().equals(uniqueRole.getName())){
+            continue outer;
+          }
+        }
+        finalRoles.add(role);
+      }
+      
+      roles = new ProxyPentahoRole[finalRoles.size()];
+      
+      for(int i = 0; i < finalRoles.size(); i++){
+        roles[i] = finalRoles.get(i);
+      }
     }
     return roles;
   }
@@ -111,6 +130,25 @@ public class UserAndRoleMgmtService {
       users = new ProxyPentahoUser[assignedUsers.size()];
       for (int i = 0; i < users.length; i++) {
         users[i] = (ProxyPentahoUser) (assignedUsers.get(i)).clone();
+      }
+      
+      // FF3 bug requires users array to have duplicates removed
+      // Beware this must be compiled by GWT
+      List<ProxyPentahoUser> finalUsers = new ArrayList<ProxyPentahoUser>();
+      outer:
+      for(ProxyPentahoUser user : users){
+        for(ProxyPentahoUser uniqueUser : finalUsers){
+          if(user.getName().equals(uniqueUser.getName())){
+            continue outer;
+          }
+        }
+        finalUsers.add(user);
+      }
+      
+      users = new ProxyPentahoUser[finalUsers.size()];
+      
+      for(int i = 0; i < finalUsers.size(); i++){
+        users[i] = finalUsers.get(i);
       }
     }
     return users;
