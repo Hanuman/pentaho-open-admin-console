@@ -5,15 +5,19 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
+import org.pentaho.pac.common.AclEntry;
 import org.pentaho.pac.server.common.util.DtdEntityResolver;
 import org.pentaho.platform.api.util.XmlParseException;
 import org.pentaho.platform.engine.security.userroledao.messages.Messages;
 import org.pentaho.platform.util.xml.dom4j.XmlDom4JHelper;
+
 
 public class PentahoXml {
   
@@ -31,6 +35,7 @@ public class PentahoXml {
   private static final String ADMIN_ROLE_XPATH = ROOT_ELEMENT + "/acl-voter/admin-role"; //$NON-NLS-1$
   private static final String ANONYMOUS_USER_XPATH = ROOT_ELEMENT + "/anonymous-authentication/anonymous-user"; //$NON-NLS-1$
   private static final String ANONYMOUS_ROLE_XPATH = ROOT_ELEMENT + "/anonymous-authentication/anonymous-role"; //$NON-NLS-1$
+  private static final String ACL_ENTRY_XPATH = ROOT_ELEMENT + "/acl-publisher/default-acls/acl-entry"; //$NON-NLS-1$
   
   public PentahoXml(File pentahoXmlFile) throws IOException, DocumentException, XmlParseException{
     this(getContents(pentahoXmlFile));    
@@ -100,6 +105,22 @@ public class PentahoXml {
   
   public void setLogLevel(String logLevel) {
     setValue(LOG_LEVEL_XPATH, logLevel);
+  }
+  
+  public List<AclEntry> getDefaultAcls() {
+    List<AclEntry> aclEntries = new ArrayList<AclEntry>();
+    List<Element> elements = document.selectNodes(ACL_ENTRY_XPATH); //$NON-NLS-1$ //$NON-NLS-2$
+    for (Element element : elements) {
+      AclEntry aclEntry = new AclEntry();
+      aclEntry.setPrincipalName(element.attributeValue("role"));
+      aclEntry.setPermission(element.attributeValue("acl"));
+      aclEntries.add(aclEntry);
+    }
+    return aclEntries;
+  }
+  
+  public void setDefaultAcls(List<AclEntry> defaultAcls) {
+    
   }
   
   public Integer getSolutionRepositoryCacheSize() {

@@ -1,0 +1,44 @@
+package org.pentaho.pac.common.config;
+
+public interface ISystemEnv {
+  public String getOsName();
+  public void setOsName(String osName);
+  public String getOsVersion();
+  public void setOsVersion(String osVersion);
+  public String getSunOsPatchLevel();
+  public void setSunOsPatchLevel(String sunOsPathLevel);
+  public String getUserCountry();
+  public void setUserCountry(String userCountry);
+  public String getUserLanguage();
+  public void setUserLanguage(String userLanguage);
+  public String getUserName();
+  public void setUserName(String userName);
+  public String getUserTimeZone();
+  public void setUserTimeZone(String userTimeZone);
+  public String getUserDir();
+  public void setUserDir(String userDir);
+  public String getJavaVersion();
+  public void setJavaVersion(String javaVersion);
+  public String getJavaVendor();
+  public void setJavaVendor(String javaVendor);
+  public String getJavaVmInfo();
+  public void setJavaVmInfo(String javaVmInfo);
+  public String getJavaVmName();
+  public void setJavaVmName(String javaVmName);
+  public String getFileEncoding();
+  public void setFileEncoding(String fileEncoding);
+  public String getJavaClassPath();
+  public void setJavaClassPath(String javaClassPath);
+  public String getJavaHome();
+  public void setJavaHome(String javaHome);
+  public String getJavaLibraryPath();
+  public void setJavaLibraryPath(String javaLibraryPath);
+  public String getAppServerBindAddr();
+  public void setAppServerBindAddr(String appServerBindAddr);
+  public String getAppServerHomeDir();
+  public void setAppServerHomeDir(String appServerHomeDir);
+  public String getAppServerLibUrl();
+  public void setAppServerLibUrl(String appServerLibUrl);
+  public String getPentahoOlapXmlDataSources();
+  public void setPentahoOlapXmlDataSources(String pentahoOlapXmlDataSources);
+}

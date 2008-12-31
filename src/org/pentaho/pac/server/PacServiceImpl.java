@@ -98,11 +98,6 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   
   // ~ Methods =========================================================================================================
 
-  public void init(ServletConfig config) throws ServletException {
-    super.init( config );
-  }
-  
-  
   public UserRoleSecurityInfo getUserRoleSecurityInfo() throws PacServiceException {
     UserRoleSecurityInfo userRoleSecurityInfo = new UserRoleSecurityInfo();
     try {
