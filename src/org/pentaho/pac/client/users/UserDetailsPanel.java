@@ -87,8 +87,8 @@ public class UserDetailsPanel extends VerticalPanel {
       setDescription(""); //$NON-NLS-1$
     } else {
       setUserName(user.getName());
-      setPassword(user.getPassword());
-      setPasswordConfirmation(user.getPassword());
+      setPassword(""); //$NON-NLS-1$
+      setPasswordConfirmation(""); //$NON-NLS-1$
       setDescription(user.getDescription());
     }
   }

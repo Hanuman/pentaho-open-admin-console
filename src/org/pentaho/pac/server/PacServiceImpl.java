@@ -883,10 +883,15 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       syncedUser = new PentahoUser(proxyUser.getName());
     }
     syncedUser.setDescription(proxyUser.getDescription());
-    try {
-      syncedUser.setPassword(PasswordServiceFactory.getPasswordService().encrypt(proxyUser.getPassword()));
-    } catch (PasswordServiceException e1) {
-      throw new PacServiceException(e1);
+    
+    // PPP-1527: Password is never sent back to the UI. It always shows as blank. If the user leaves it blank,
+    // password is not changed. If the user enters a value, set the password.
+    if (!StringUtils.isBlank(proxyUser.getPassword())) {
+      try {
+        syncedUser.setPassword(PasswordServiceFactory.getPasswordService().encrypt(proxyUser.getPassword()));
+      } catch (PasswordServiceException e1) {
+        throw new PacServiceException(e1);
+      }
     }
     syncedUser.setEnabled(proxyUser.getEnabled());
     return syncedUser;
