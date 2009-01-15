@@ -21,11 +21,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.acegisecurity.providers.encoding.PasswordEncoder;
 import org.apache.commons.lang.StringUtils;
 import org.pentaho.pac.common.config.IConsoleConfig;
 import org.pentaho.pac.server.config.ConsoleConfigXml;
 import org.pentaho.pac.server.config.HibernateSettingsXml;
 import org.pentaho.pac.server.config.PentahoObjectsConfig;
+import org.pentaho.pac.server.config.SpringSecurityHibernateConfig;
 import org.pentaho.pac.server.config.WebXml;
 import org.pentaho.pac.server.i18n.Messages;
 
@@ -45,6 +47,7 @@ public class AppConfigProperties {
   public static final String WEB_XML_PATH = "/WEB-INF/web.xml"; //$NON-NLS-1$
   public static final String HIBERNATE_MANAGED_XML_PATH = "/system/hibernate/hibernate-settings.xml"; //$NON-NLS-1$
   public static final String PENTAHO_OBJECTS_SPRING_XML = "/system/pentahoObjects.spring.xml"; //$NON-NLS-1$
+  public static final String SPRING_SECURITY_HIBERNATE_XML = "/system/applicationContext-acegi-security-hibernate.xml" ; //$NON-NLS-1$
   public static final String JDBC_DRIVER_PATH = "./jdbc"; //$NON-NLS-1$
   public static final String KEY_BISERVER_STATUS_CHECK_PERIOD = "biserver-status-check-period"; //$NON-NLS-1$
   public static final String KEY_BISERVER_BASE_URL = "biserver-base-url"; //$NON-NLS-1$
@@ -65,6 +68,7 @@ public class AppConfigProperties {
   private IConsoleConfig consoleConfig = null;
   private HibernateSettingsXml hibernateSettingXml = null;
   private PentahoObjectsConfig pentahoObjectsConfig = null;
+  private static SpringSecurityHibernateConfig springSecurityHibernateConfig = null;
 
   // ~ Instance fields =================================================================================================
   private static AppConfigProperties instance = new AppConfigProperties();
@@ -90,6 +94,10 @@ public class AppConfigProperties {
       throw new AppConfigException(Messages.getErrorString(
           "AppConfigProperties.ERROR_0004_UNABLE_TO_READ_FILE", getSolutionPath() + PENTAHO_OBJECTS_SPRING_XML), e); //$NON-NLS-1$
     }
+  }
+
+  public PasswordEncoder getPasswordEncoder(){
+    return getSpringSecurityHibernateConfig().getPasswordEncoder();
   }
   
   public String getPlatformUsername() {
@@ -247,5 +255,17 @@ public class AppConfigProperties {
     }
     return pentahoObjectsConfig;
   }
+  
+  SpringSecurityHibernateConfig getSpringSecurityHibernateConfig() {
+    if (springSecurityHibernateConfig == null) {
+      try {
+        springSecurityHibernateConfig = new SpringSecurityHibernateConfig(new File(getSolutionPath() + SPRING_SECURITY_HIBERNATE_XML));
+      } catch (Exception e) {
+        springSecurityHibernateConfig = new SpringSecurityHibernateConfig();
+      }
+    }
+    return springSecurityHibernateConfig;
+  }
+  
   
 }

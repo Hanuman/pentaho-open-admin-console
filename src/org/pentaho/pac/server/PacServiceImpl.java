@@ -874,11 +874,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     proxyPentahoUser.setName(user.getUsername());
     proxyPentahoUser.setDescription(user.getDescription());
     proxyPentahoUser.setEnabled(user.isEnabled());
-    try {
-      proxyPentahoUser.setPassword(PasswordServiceFactory.getPasswordService().decrypt(user.getPassword()));
-    } catch (PasswordServiceException e1) {
-      throw new PacServiceException(e1);
-    }
+    proxyPentahoUser.setPassword(""); //$NON-NLS-1$
     return proxyPentahoUser;
   }
 
@@ -896,15 +892,12 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     // PPP-1527: Password is never sent back to the UI. It always shows as blank. If the user leaves it blank,
     // password is not changed. If the user enters a value, set the password.
     if (!StringUtils.isBlank(proxyUser.getPassword())) {
-      try {
-        syncedUser.setPassword(PasswordServiceFactory.getPasswordService().encrypt(proxyUser.getPassword()));
-      } catch (PasswordServiceException e1) {
-        throw new PacServiceException(e1);
-      }
+      syncedUser.setPassword(AppConfigProperties.getInstance().getPasswordEncoder().encodePassword(proxyUser.getPassword(), null));
     }
     syncedUser.setEnabled(proxyUser.getEnabled());
     return syncedUser;
   }
+
   
   /**
    * Synchronizes <code>role</code> with fields from <code>proxyRole</code>. The users set of given <code>role</code> is
