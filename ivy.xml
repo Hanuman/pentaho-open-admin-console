@@ -91,7 +91,7 @@
     ====================================================================-->
     <dependency org="com.google.gwt"      name="gwt-servlet" rev="1.5.2" conf="runtime->default"/>
     <dependency org="hsqldb"              name="hsqldb" rev="1.8.0.7"  conf="runtime->default"/>
-    <dependency org="mysql"               name="mysql-connector-java" rev="5.1.5"  conf="runtime->default"/>
+    <dependency org="mysql"               name="mysql-connector-java" rev="5.0.7"  conf="runtime->default"/>
     
 <!--    exclude jetty's version of servlet api. it's checksum fails-->
     <dependency org="org.mortbay.jetty"   name="jetty-plus" rev="6.1.2" conf="runtime->default" transitive="false"/>
