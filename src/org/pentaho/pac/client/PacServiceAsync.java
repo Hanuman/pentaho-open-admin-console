@@ -10,7 +10,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface PacServiceAsync extends PentahoAsyncService<Object>{
   public void initialze(AsyncCallback<Object> callback);
-  public void updateHibernate(AsyncCallback<Object> callback);
+  public void refreshHibernateConfig(AsyncCallback<Object> callback);
   public void getUserRoleSecurityInfo(AsyncCallback<UserRoleSecurityInfo> callback);
   public void createUser(ProxyPentahoUser user, AsyncCallback<Boolean> callback);
   public void deleteUsers(ProxyPentahoUser[] users, AsyncCallback<Boolean> callback);

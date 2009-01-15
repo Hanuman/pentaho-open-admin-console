@@ -16,9 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
@@ -27,6 +24,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.pentaho.pac.client.PacService;
+import org.pentaho.pac.common.HibernateConfigException;
 import org.pentaho.pac.common.PacServiceException;
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.ServiceInitializationException;
@@ -101,7 +99,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   public UserRoleSecurityInfo getUserRoleSecurityInfo() throws PacServiceException {
     UserRoleSecurityInfo userRoleSecurityInfo = new UserRoleSecurityInfo();
     try {
-      List<IPentahoUser> users = userRoleMgmtService.getUsers();
+      List<IPentahoUser> users = getUserRoleMgmtService().getUsers();
       for (IPentahoUser user : users) {
 
         userRoleSecurityInfo.getUsers().add(toProxyUser(user));
@@ -130,13 +128,13 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
 
   // ~ User/Role Methods ===============================================================================================
   
-  public boolean createUser(ProxyPentahoUser proxyUser) throws DuplicateUserException, PentahoSecurityException,
+  public boolean createUser(ProxyPentahoUser proxyUser) throws HibernateConfigException, DuplicateUserException, PentahoSecurityException,
       PacServiceException {
     boolean result = false;
 
     IPentahoUser user = syncUsers(null, proxyUser);
     try {
-      userRoleMgmtService.createUser(user);
+      getUserRoleMgmtService().createUser(user);
       result = true;
     } catch (DAOException e) {
       String msg = Messages.getErrorString("PacService.ERROR_0004_USER_CREATION_FAILED", proxyUser.getName()) //$NON-NLS-1$
@@ -146,20 +144,20 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return result;
   }
 
-  public boolean deleteUsers(ProxyPentahoUser[] users) throws NonExistingUserException, PentahoSecurityException,
+  public boolean deleteUsers(ProxyPentahoUser[] users) throws HibernateConfigException, NonExistingUserException, PentahoSecurityException,
       PacServiceException {
     boolean result = false;
     IPentahoUser[] persistedUsers;
     try {
       persistedUsers = new IPentahoUser[users.length];
       for (int i = 0; i < users.length; i++) {
-        persistedUsers[i] = userRoleMgmtService.getUser(users[i].getName());
+        persistedUsers[i] = getUserRoleMgmtService().getUser(users[i].getName());
         if (null == persistedUsers[i]) {
           throw new NonExistingUserException(users[i].getName());
         }
       }
       for (int i = 0; i < persistedUsers.length; i++) {
-        userRoleMgmtService.deleteUser(persistedUsers[i]);
+        getUserRoleMgmtService().deleteUser(persistedUsers[i]);
       }
       result = true;
     } catch (DAOException e) {
@@ -168,10 +166,10 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return result;
   }
 
-  public ProxyPentahoUser getUser(String pUserName) throws PacServiceException {
+  public ProxyPentahoUser getUser(String pUserName) throws HibernateConfigException, PacServiceException {
     ProxyPentahoUser proxyPentahoUser = null;
     try {
-      IPentahoUser user = userRoleMgmtService.getUser(pUserName);
+      IPentahoUser user = getUserRoleMgmtService().getUser(pUserName);
       if (null != user) {
         proxyPentahoUser = toProxyUser(user);
 
@@ -182,10 +180,10 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return proxyPentahoUser;
   }
 
-  public ProxyPentahoUser[] getUsers() throws PacServiceException {
+  public ProxyPentahoUser[] getUsers() throws HibernateConfigException, PacServiceException {
     ProxyPentahoUser[] proxyUsers;
     try {
-      List<IPentahoUser> users = userRoleMgmtService.getUsers();
+      List<IPentahoUser> users = getUserRoleMgmtService().getUsers();
       proxyUsers = new ProxyPentahoUser[users.size()];
       int i = 0;
       for (IPentahoUser user : users) {
@@ -197,10 +195,10 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return proxyUsers;
   }
 
-  public ProxyPentahoUser[] getUsers(ProxyPentahoRole proxyRole) throws NonExistingRoleException, PacServiceException {
+  public ProxyPentahoUser[] getUsers(ProxyPentahoRole proxyRole) throws HibernateConfigException, NonExistingRoleException, PacServiceException {
     ArrayList<ProxyPentahoUser> users = new ArrayList<ProxyPentahoUser>();
     try {
-      IPentahoRole role = userRoleMgmtService.getRole(proxyRole.getName());
+      IPentahoRole role = getUserRoleMgmtService().getRole(proxyRole.getName());
       if (null != role) {
         for (IPentahoUser user : role.getUsers()) {
           users.add(toProxyUser(user));
@@ -214,15 +212,15 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return users.toArray(new ProxyPentahoUser[0]);
   }
 
-  public boolean updateUser(ProxyPentahoUser proxyUser) throws NonExistingUserException, PentahoSecurityException,
+  public boolean updateUser(ProxyPentahoUser proxyUser) throws HibernateConfigException, NonExistingUserException, PentahoSecurityException,
       PacServiceException {
     boolean result = false;
     try {
-      IPentahoUser user = userRoleMgmtService.getUser(proxyUser.getName());
+      IPentahoUser user = getUserRoleMgmtService().getUser(proxyUser.getName());
       if (null == user) {
         throw new NonExistingUserException(proxyUser.getName());
       }
-      userRoleMgmtService.updateUser(syncUsers(user, proxyUser));
+      getUserRoleMgmtService().updateUser(syncUsers(user, proxyUser));
       result = true;
     } catch (DAOException e) {
       String msg = Messages.getErrorString("PacService.ERROR_0038_USER_UPDATE_FAILED", proxyUser.getName()) //$NON-NLS-1$
@@ -232,9 +230,9 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return result;
   }
   
-  public void setRoles(ProxyPentahoUser proxyUser, ProxyPentahoRole[] assignedRoles) throws NonExistingRoleException, NonExistingUserException, PentahoSecurityException, PacServiceException{
+  public void setRoles(ProxyPentahoUser proxyUser, ProxyPentahoRole[] assignedRoles) throws HibernateConfigException, NonExistingRoleException, NonExistingUserException, PentahoSecurityException, PacServiceException{
     try {
-      IPentahoUser user = userRoleMgmtService.getUser( proxyUser.getName() );
+      IPentahoUser user = getUserRoleMgmtService().getUser( proxyUser.getName() );
       if ( null == user )
       {
         throw new NonExistingUserException(proxyUser.getName());
@@ -247,7 +245,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
 
       user.setRoles(rolesToSet);
       
-      userRoleMgmtService.updateUser(user);
+      getUserRoleMgmtService().updateUser(user);
     } catch (DAOException e) {
       rollbackTransaction();
       throw new PacServiceException(
@@ -255,10 +253,10 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     }
   }
   
-  public void setUsers( ProxyPentahoRole proxyRole, ProxyPentahoUser[] assignedUsers ) throws NonExistingRoleException, NonExistingUserException, PentahoSecurityException, PacServiceException
+  public void setUsers( ProxyPentahoRole proxyRole, ProxyPentahoUser[] assignedUsers ) throws HibernateConfigException, NonExistingRoleException, NonExistingUserException, PentahoSecurityException, PacServiceException
   {
     try {
-      IPentahoRole role = userRoleMgmtService.getRole( proxyRole.getName() );
+      IPentahoRole role = getUserRoleMgmtService().getRole( proxyRole.getName() );
       if ( null == role )
       {
         throw new NonExistingRoleException(proxyRole.getName());
@@ -271,7 +269,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
    
       role.setUsers(usersToSet);
       
-      userRoleMgmtService.updateRole(role);
+      getUserRoleMgmtService().updateRole(role);
     } catch (DAOException e) {
       rollbackTransaction();
       throw new PacServiceException(
@@ -279,17 +277,17 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     }
   }
 
-  public void updateRole(String roleName, String description, List<String> usernames) throws NonExistingRoleException,
+  public void updateRole(String roleName, String description, List<String> usernames) throws HibernateConfigException, NonExistingRoleException,
       NonExistingUserException, PentahoSecurityException, PacServiceException {
         try {
-      IPentahoRole role = userRoleMgmtService.getRole(roleName);
+      IPentahoRole role = getUserRoleMgmtService().getRole(roleName);
       if (null == role) {
         throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0034_ROLE_UPDATE_FAILED", roleName)); //$NON-NLS-1$
       }
 
       Set<IPentahoUser> users = new HashSet<IPentahoUser>();
       for (String username : usernames) {
-        IPentahoUser user = userRoleMgmtService.getUser(username);
+        IPentahoUser user = getUserRoleMgmtService().getUser(username);
         if (null == user) {
           throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0034_ROLE_UPDATE_FAILED", roleName)); //$NON-NLS-1$
         }
@@ -298,19 +296,19 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       
       role.setDescription(description);
       role.setUsers(users);
-      userRoleMgmtService.updateRole(role);
+      getUserRoleMgmtService().updateRole(role);
     } catch (DAOException e) {
       rollbackTransaction();
       throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0034_ROLE_UPDATE_FAILED", roleName), e); //$NON-NLS-1$
     }
   }
 
-  public boolean createRole(ProxyPentahoRole proxyRole) throws DuplicateRoleException, PentahoSecurityException, PacServiceException {
+  public boolean createRole(ProxyPentahoRole proxyRole) throws HibernateConfigException, DuplicateRoleException, PentahoSecurityException, PacServiceException {
     boolean result = false;
     IPentahoRole role = new PentahoRole(proxyRole.getName());
 
     try {
-      userRoleMgmtService.createRole(syncRoles(role, proxyRole));
+      getUserRoleMgmtService().createRole(syncRoles(role, proxyRole));
       result = true;
     } catch ( DAOException e) {
       throw new PacServiceException(e);
@@ -318,13 +316,13 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return result;
   }
 
-  public boolean deleteRoles(ProxyPentahoRole[] roles) throws NonExistingRoleException, PentahoSecurityException, PacServiceException {
+  public boolean deleteRoles(ProxyPentahoRole[] roles) throws HibernateConfigException, NonExistingRoleException, PentahoSecurityException, PacServiceException {
     boolean result = false;
     IPentahoRole[] persistedRoles;
     try {
       persistedRoles = new IPentahoRole[roles.length];
       for (int i = 0; i < roles.length; i++) {
-        persistedRoles[i] = userRoleMgmtService.getRole(roles[i].getName());
+        persistedRoles[i] = getUserRoleMgmtService().getRole(roles[i].getName());
         if ( null == persistedRoles[i] )
         {
           throw new PacServiceException(
@@ -332,7 +330,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
         }
       }
       for (int i = 0; i < persistedRoles.length; i++) {
-        userRoleMgmtService.deleteRole( persistedRoles[i] );
+        getUserRoleMgmtService().deleteRole( persistedRoles[i] );
       }
       result = true;
     } catch (DAOException e) {
@@ -342,10 +340,10 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return result;
   }
 
-  public ProxyPentahoRole[] getRoles(ProxyPentahoUser proxyUser) throws NonExistingUserException, PacServiceException {
+  public ProxyPentahoRole[] getRoles(ProxyPentahoUser proxyUser) throws HibernateConfigException, NonExistingUserException, PacServiceException {
     List<ProxyPentahoRole> proxyRoles = new ArrayList<ProxyPentahoRole>();
     try {
-      IPentahoUser user = userRoleMgmtService.getUser( proxyUser.getName());
+      IPentahoUser user = getUserRoleMgmtService().getUser( proxyUser.getName());
       if ( null != user )
       {
         for (IPentahoRole role : user.getRoles()) {
@@ -361,10 +359,10 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return proxyRoles.toArray(new ProxyPentahoRole[0]);
   }
   
-  public ProxyPentahoRole[] getRoles() throws PacServiceException {
+  public ProxyPentahoRole[] getRoles() throws HibernateConfigException, PacServiceException {
     List<ProxyPentahoRole> proxyRoles = new ArrayList<ProxyPentahoRole>();
     try {
-      List<IPentahoRole> roles = userRoleMgmtService.getRoles();
+      List<IPentahoRole> roles = getUserRoleMgmtService().getRoles();
       for (IPentahoRole role : roles) {
         proxyRoles.add(toProxyRole(role));
       }
@@ -375,17 +373,17 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return proxyRoles.toArray(new ProxyPentahoRole[0]);
   }
 
-  public boolean updateRole(ProxyPentahoRole proxyPentahoRole) throws PacServiceException {
+  public boolean updateRole(ProxyPentahoRole proxyPentahoRole) throws HibernateConfigException, PacServiceException {
     boolean result = false;
     try {
-      IPentahoRole role = userRoleMgmtService.getRole(proxyPentahoRole.getName());
+      IPentahoRole role = getUserRoleMgmtService().getRole(proxyPentahoRole.getName());
       if ( null == role )
       {
         throw new PacServiceException(
             Messages.getErrorString("PacService.ERROR_0036_ROLE_UPDATE_FAILED_DOES_NOT_EXIST", proxyPentahoRole.getName()) ); //$NON-NLS-1$
       }
 
-      userRoleMgmtService.updateRole(syncRoles(role, proxyPentahoRole));
+      getUserRoleMgmtService().updateRole(syncRoles(role, proxyPentahoRole));
       result = true;
     } catch (DAOException e) {
       throw new PacServiceException(
@@ -400,17 +398,17 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return result;
   }
 
-  public boolean createDataSource(PentahoDataSource dataSource) throws PacServiceException {
+  public boolean createDataSource(PentahoDataSource dataSource) throws PacServiceException, HibernateConfigException {
     boolean result = false;
     try {
-      dataSourceMgmtService.beginTransaction();
+      getDataSourceMgmtService().beginTransaction();
       // Get the password service
       IPasswordService passwordService = PasswordServiceFactory.getPasswordService();
       // Store the new encrypted password in the datasource object
       String encryptedPassword = passwordService.encrypt(dataSource.getPassword());
       dataSource.setPassword(encryptedPassword);
-      dataSourceMgmtService.createDataSource(toDatasource(dataSource));
-      dataSourceMgmtService.commitTransaction();
+      getDataSourceMgmtService().createDataSource(toDatasource(dataSource));
+      getDataSourceMgmtService().commitTransaction();
       result = true;
     } catch(PasswordServiceException pse) {
       throw new PacServiceException( pse.getMessage(), pse );
@@ -426,23 +424,23 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       if (!result) {
         rollbackTransaction();
       }
-      dataSourceMgmtService.closeSession();
+      getDataSourceMgmtService().closeSession();
     }
     return result;
 
   }
 
-  public boolean deleteDataSources(PentahoDataSource[] dataSources) throws PacServiceException {
+  public boolean deleteDataSources(PentahoDataSource[] dataSources) throws HibernateConfigException, PacServiceException {
     boolean result = false;
     IDatasource persistedDatasource = null;
     try {
-      dataSourceMgmtService.beginTransaction();
+      getDataSourceMgmtService().beginTransaction();
       for (int i = 0; i < dataSources.length; i++) {
-        persistedDatasource = dataSourceMgmtService.getDataSource(dataSources[i].getName());
-        dataSourceMgmtService.deleteDataSource(persistedDatasource);
+        persistedDatasource = getDataSourceMgmtService().getDataSource(dataSources[i].getName());
+        getDataSourceMgmtService().deleteDataSource(persistedDatasource);
       }
       result = true;
-      dataSourceMgmtService.commitTransaction();
+      getDataSourceMgmtService().commitTransaction();
     } catch (NonExistingDataSourceException neds) {
       throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0016_DATASOURCE_DELETION_FAILED_NO_DATASOURCE", persistedDatasource.getName(),neds.getMessage()), neds); //$NON-NLS-1$
     } catch (DAOException e) {
@@ -453,15 +451,15 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       if (!result) {
         rollbackTransaction();
       }
-      dataSourceMgmtService.closeSession();
+      getDataSourceMgmtService().closeSession();
     }
     return result;
   }
 
-  public boolean updateDataSource(PentahoDataSource dataSource) throws PacServiceException {
+  public boolean updateDataSource(PentahoDataSource dataSource) throws HibernateConfigException, PacServiceException {
     boolean result = false;
     try {
-      IDatasource ds = dataSourceMgmtService.getDataSource(dataSource.getName());
+      IDatasource ds = getDataSourceMgmtService().getDataSource(dataSource.getName());
       if (null == ds) {
         throw new NonExistingDataSourceException(dataSource.getName());
       }
@@ -489,9 +487,9 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
         ds.setWait(dataSource.getWait());  
       }
       
-      dataSourceMgmtService.beginTransaction();
-      dataSourceMgmtService.updateDataSource(ds);
-      dataSourceMgmtService.commitTransaction();
+      getDataSourceMgmtService().beginTransaction();
+      getDataSourceMgmtService().updateDataSource(ds);
+      getDataSourceMgmtService().commitTransaction();
       result = true;
     } catch(PasswordServiceException pse) {
         throw new PacServiceException( pse.getMessage(), pse );
@@ -506,16 +504,16 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       if (!result) {
         rollbackTransaction();
       }
-      dataSourceMgmtService.closeSession();
+      getDataSourceMgmtService().closeSession();
     }
     return result;
   }
 
-  public PentahoDataSource[] getDataSources() throws PacServiceException {
+  public PentahoDataSource[] getDataSources() throws HibernateConfigException, PacServiceException {
     List<IDatasource> datasources;
     PentahoDataSource[] pentahoDataSources;
     try {
-      datasources = dataSourceMgmtService.getDataSources();
+      datasources = getDataSourceMgmtService().getDataSources();
       pentahoDataSources = new PentahoDataSource[datasources.size()];
       int i = 0;
       for(IDatasource datasource: datasources) {
@@ -536,7 +534,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0023_FAILED_TO_GET_DATASDOURCE", e.getLocalizedMessage()), e); //$NON-NLS-1$
     } finally {
       if (dataSourceMgmtService != null){
-        dataSourceMgmtService.closeSession();
+        getDataSourceMgmtService().closeSession();
       }
     }
     return pentahoDataSources;
@@ -640,7 +638,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   private void rollbackTransaction()
   {
     try {
-      dataSourceMgmtService.rollbackTransaction();
+      getDataSourceMgmtService().rollbackTransaction();
     } catch (Exception e) {
       logger.error( Messages.getErrorString( "PacService.ERROR_0048_ROLLBACK_FAILED" ) );  //$NON-NLS-1$
     }
@@ -831,26 +829,37 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
 
 
   public void initialze() throws ServiceInitializationException {
-    try{
-      AppConfigProperties.getInstance().initialize();
-      HibernateSessionFactory.addDefaultConfiguration();
+  }
+  
+  private IUserRoleMgmtService getUserRoleMgmtService() throws HibernateConfigException {
+    if (userRoleMgmtService == null) {
+      synchronized (this) {
+        if (userRoleMgmtService == null) {
+          refreshHibernateConfig();
+        }
+      }
+    }
+    return userRoleMgmtService;
+  }
+  
+  private IDataSourceMgmtService getDataSourceMgmtService() throws HibernateConfigException {
+    if (dataSourceMgmtService == null) {
+      synchronized (this) {
+        if (dataSourceMgmtService == null) {
+          refreshHibernateConfig();
+        }
+      }
+    }
+    return dataSourceMgmtService;
+  }
+  
+  public synchronized void refreshHibernateConfig() throws HibernateConfigException {
+    try {
+      HibernateSessionFactory.initDefaultConfiguration();
       userRoleMgmtService = new UserRoleMgmtService();
       dataSourceMgmtService = new DataSourceMgmtService();
     } catch(Exception e) {
-      throw new ServiceInitializationException(Messages.getErrorString( "PacService.ERROR_0046_SERVICE_INITIALIZATION_FAILED",e.getLocalizedMessage()), e); //$NON-NLS-1$
-    }
-    
-  }
-  
-
-  public void updateHibernate() throws PacServiceException {
-    try {
-      HibernateSessionFactory.addOrUpdateConfiguration(HibernateSessionFactory.DEFAULT_CONFIG_NAME,
-          AppConfigProperties.getInstance().getSolutionPath()
-            + "/" + AppConfigProperties.getInstance().getHibernateConfigPath()); //$NON-NLS-1$
-        userRoleMgmtService.refreshUserRoleDAO();  
-    } catch(Exception e) {
-      throw new PacServiceException(Messages.getString("PacService.ERROR_0062_UNABLE_TO_REFRESH_HIBERNATE"), e); //$NON-NLS-1$      
+      throw new HibernateConfigException(Messages.getString("PacService.ERROR_0062_UNABLE_TO_REFRESH_HIBERNATE"), e); //$NON-NLS-1$      
     }
   }
   

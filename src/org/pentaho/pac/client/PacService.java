@@ -2,6 +2,7 @@ package org.pentaho.pac.client;
 
 
 
+import org.pentaho.pac.common.HibernateConfigException;
 import org.pentaho.pac.common.PacServiceException;
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.ServiceInitializationException;
@@ -19,25 +20,25 @@ import com.google.gwt.user.client.rpc.RemoteService;
 public interface PacService extends RemoteService {
   public UserRoleSecurityInfo getUserRoleSecurityInfo() throws PacServiceException;
   public void initialze() throws ServiceInitializationException;
-  public void updateHibernate() throws PacServiceException;
-  public boolean createRole(ProxyPentahoRole role) throws DuplicateRoleException, PentahoSecurityException, PacServiceException;
-  public boolean deleteRoles(ProxyPentahoRole[] roles) throws NonExistingRoleException, PentahoSecurityException, PacServiceException;
-  public boolean updateRole(ProxyPentahoRole role) throws NonExistingRoleException, NonExistingUserException, PentahoSecurityException, PacServiceException;
-  public ProxyPentahoRole[] getRoles() throws PacServiceException;
-  public ProxyPentahoRole[] getRoles(ProxyPentahoUser user) throws NonExistingUserException, PacServiceException;
-  public void setRoles(ProxyPentahoUser user, ProxyPentahoRole[] assignedRoles) throws NonExistingRoleException, NonExistingUserException, PentahoSecurityException, PacServiceException;
+  public void refreshHibernateConfig() throws HibernateConfigException, HibernateConfigException;
+  public boolean createRole(ProxyPentahoRole role) throws HibernateConfigException, DuplicateRoleException, PentahoSecurityException, PacServiceException;
+  public boolean deleteRoles(ProxyPentahoRole[] roles) throws HibernateConfigException, NonExistingRoleException, PentahoSecurityException, PacServiceException;
+  public boolean updateRole(ProxyPentahoRole role) throws HibernateConfigException, HibernateConfigException, NonExistingRoleException, NonExistingUserException, PentahoSecurityException, PacServiceException;
+  public ProxyPentahoRole[] getRoles() throws HibernateConfigException, PacServiceException;
+  public ProxyPentahoRole[] getRoles(ProxyPentahoUser user) throws HibernateConfigException, NonExistingUserException, PacServiceException;
+  public void setRoles(ProxyPentahoUser user, ProxyPentahoRole[] assignedRoles) throws HibernateConfigException, NonExistingRoleException, NonExistingUserException, PentahoSecurityException, PacServiceException;
   
-  public boolean createUser(ProxyPentahoUser user) throws DuplicateUserException, PentahoSecurityException, PacServiceException;
-  public boolean deleteUsers(ProxyPentahoUser[] users) throws NonExistingUserException, PentahoSecurityException, PacServiceException;
-  public boolean updateUser(ProxyPentahoUser user) throws NonExistingUserException, PentahoSecurityException, PacServiceException;
-  public ProxyPentahoUser[] getUsers() throws PacServiceException;
-  public ProxyPentahoUser[] getUsers(ProxyPentahoRole role) throws NonExistingRoleException, PacServiceException;
-  public void setUsers(ProxyPentahoRole role, ProxyPentahoUser[] assignedUsers) throws NonExistingRoleException, NonExistingUserException, PentahoSecurityException, PacServiceException;
+  public boolean createUser(ProxyPentahoUser user) throws HibernateConfigException, DuplicateUserException, PentahoSecurityException, PacServiceException;
+  public boolean deleteUsers(ProxyPentahoUser[] users) throws HibernateConfigException, NonExistingUserException, PentahoSecurityException, PacServiceException;
+  public boolean updateUser(ProxyPentahoUser user) throws HibernateConfigException, NonExistingUserException, PentahoSecurityException, PacServiceException;
+  public ProxyPentahoUser[] getUsers() throws HibernateConfigException, PacServiceException;
+  public ProxyPentahoUser[] getUsers(ProxyPentahoRole role) throws HibernateConfigException, NonExistingRoleException, PacServiceException;
+  public void setUsers(ProxyPentahoRole role, ProxyPentahoUser[] assignedUsers) throws HibernateConfigException, NonExistingRoleException, NonExistingUserException, PentahoSecurityException, PacServiceException;
   
-  public boolean createDataSource(PentahoDataSource dataSource) throws PacServiceException;
-  public boolean deleteDataSources(PentahoDataSource[] dataSources) throws PacServiceException;
-  public boolean updateDataSource(PentahoDataSource dataSource) throws PacServiceException;
-  public PentahoDataSource[] getDataSources() throws PacServiceException;
+  public boolean createDataSource(PentahoDataSource dataSource) throws HibernateConfigException, PacServiceException;
+  public boolean deleteDataSources(PentahoDataSource[] dataSources) throws HibernateConfigException, PacServiceException;
+  public boolean updateDataSource(PentahoDataSource dataSource) throws HibernateConfigException, PacServiceException;
+  public PentahoDataSource[] getDataSources() throws HibernateConfigException, PacServiceException;
   public boolean testDataSourceConnection(PentahoDataSource dataSource) throws PacServiceException;
   public boolean testDataSourceValidationQuery(PentahoDataSource dataSource) throws PacServiceException;
   

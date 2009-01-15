@@ -5,9 +5,6 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-
 import org.pentaho.pac.client.HibernateConfigurationService;
 import org.pentaho.pac.common.HibernateConfigurationServiceException;
 import org.pentaho.pac.common.NameValue;
@@ -21,33 +18,16 @@ public class HibernateConfigurationServiceImpl extends RemoteServiceServlet impl
 
   List<NameValue> hibernateConfigurations = new ArrayList<NameValue>();
 
-  private static String solutionPath;
-
   private static final String HIBERNATE = "/system/hibernate"; //$NON-NLS-1$
 
   public HibernateConfigurationServiceImpl() {
   }
 
-  public void init(ServletConfig config) throws ServletException {
-    super.init(config);
-    initialize();
-  }
-
   public void initialize() {
-    initFromConfiguration();
-  }
-
-  private void initFromConfiguration() {
-    try {
-      AppConfigProperties appCfg = AppConfigProperties.getInstance();
-      appCfg.initialize();
-      solutionPath = appCfg.getSolutionPath();
-    } catch (AppConfigException ace) {
-      solutionPath = null;
-    }
   }
 
   public NameValue[] getAvailableHibernateConfigurations() throws HibernateConfigurationServiceException {
+    String solutionPath = AppConfigProperties.getInstance().getSolutionPath();
     if (solutionPath != null && solutionPath.length() > 0) {
       return getAvailableHibernateConfigurations(solutionPath);
     } else {

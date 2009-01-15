@@ -51,19 +51,7 @@ public class PentahoAdminConsole extends DockPanel implements IRefreshableAdminC
     };
     PacServiceFactory.getPacService().getHomepageUrl(homepageUrlcallback);  
     setStyleName("main-panel"); //$NON-NLS-1$
-    AsyncCallback<Object> callback = new AsyncCallback<Object>() {
-          public void onSuccess(Object result) {
-            refresh();
-          }
-          public void onFailure(Throwable caught) {
-            MessageDialog errorDialog = new MessageDialog(PentahoAdminConsole.MSGS.error());
-            errorDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-            errorDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorInitializingPacService()));          
-            errorDialog.center();
-            setVisible(false);
-          }
-    };
-    PacServiceFactory.getPacService().initialze(callback);
+    refresh();
   }
   
   protected HorizontalPanel buildTopPanel() {
