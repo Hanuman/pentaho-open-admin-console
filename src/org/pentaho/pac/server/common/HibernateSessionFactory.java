@@ -99,7 +99,7 @@ public class HibernateSessionFactory {
       }
     } catch (Exception e) {
       throw new HibernateException(Messages.getErrorString(
-          "HibernateSessionFactory.ERROR_0003_UNABLE_TO_CREATE_SESSION_FACTORY", e.getLocalizedMessage()));//$NON-NLS-1$
+          "HibernateSessionFactory.ERROR_0003_UNABLE_TO_CREATE_SESSION_FACTORY", e.getLocalizedMessage()), e);//$NON-NLS-1$
     }
   }
 
