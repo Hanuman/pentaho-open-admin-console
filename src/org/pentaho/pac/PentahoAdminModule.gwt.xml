@@ -7,7 +7,7 @@
 	<inherits name="org.pentaho.pac.SubscriptionServiceModule"/>
 	<inherits name="org.pentaho.pac.SolutionRepositoryServiceModule"/>
 	<inherits name="org.pentaho.gwt.widgets.Widgets"/>
-	<inherits name="org.hanson.gwt.widgets/WidgetLibrary"/>
+	<inherits name="org.gwtwidgets.WidgetLibrary"/>
 
     <stylesheet src='PentahoAdminConsole.css'/>
 	<source path="client"/>
