@@ -23,6 +23,8 @@ import java.util.StringTokenizer;
 
 import org.acegisecurity.providers.encoding.PasswordEncoder;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.pentaho.pac.common.config.IConsoleConfig;
 import org.pentaho.pac.server.config.ConsoleConfigXml;
 import org.pentaho.pac.server.config.HibernateSettingsXml;
@@ -72,6 +74,8 @@ public class AppConfigProperties {
 
   // ~ Instance fields =================================================================================================
   private static AppConfigProperties instance = new AppConfigProperties();
+  
+  private static final Log logger = LogFactory.getLog(AppConfigProperties.class);
 
   // ~ Constructors ====================================================================================================
 
@@ -228,6 +232,7 @@ public class AppConfigProperties {
       try {
         consoleConfig = new ConsoleConfigXml(new File(ClassLoader.getSystemResource(CONFIG_FILE_NAME).toURI()));
       } catch (Exception ex) {
+        logger.warn(Messages.getErrorString("AppConfigProperties.ERROR_0004_UNABLE_TO_READ_FILE", CONFIG_FILE_NAME)); //$NON-NLS-1$
         consoleConfig = new ConsoleConfigXml();
       }
     }
@@ -239,6 +244,7 @@ public class AppConfigProperties {
       try {
         hibernateSettingXml = new HibernateSettingsXml(new File(getSolutionPath() + HIBERNATE_MANAGED_XML_PATH));
       } catch (Exception e) {
+        logger.warn(Messages.getErrorString("AppConfigProperties.ERROR_0004_UNABLE_TO_READ_FILE", getSolutionPath() + HIBERNATE_MANAGED_XML_PATH)); //$NON-NLS-1$
         hibernateSettingXml = new HibernateSettingsXml();
       }
     }
@@ -250,6 +256,7 @@ public class AppConfigProperties {
       try {
         pentahoObjectsConfig = new PentahoObjectsConfig(new File(getSolutionPath() + PENTAHO_OBJECTS_SPRING_XML));
       } catch (Exception e) {
+        logger.warn(Messages.getErrorString("AppConfigProperties.ERROR_0004_UNABLE_TO_READ_FILE", getSolutionPath() + PENTAHO_OBJECTS_SPRING_XML)); //$NON-NLS-1$
         pentahoObjectsConfig = new PentahoObjectsConfig();
       }
     }
@@ -261,6 +268,7 @@ public class AppConfigProperties {
       try {
         springSecurityHibernateConfig = new SpringSecurityHibernateConfig(new File(getSolutionPath() + SPRING_SECURITY_HIBERNATE_XML));
       } catch (Exception e) {
+        logger.warn(Messages.getErrorString("AppConfigProperties.ERROR_0004_UNABLE_TO_READ_FILE", getSolutionPath() + SPRING_SECURITY_HIBERNATE_XML)); //$NON-NLS-1$
         springSecurityHibernateConfig = new SpringSecurityHibernateConfig();
       }
     }
