@@ -25,10 +25,6 @@ public class SystemConfigFolder {
     return new File(getFolder().getAbsoluteFile() + File.separator + "pentaho.xml"); //$NON-NLS-1$
   }
   
-  public File getLicenseKeyConfigFile() {
-    return new File(getFolder().getAbsoluteFile() + File.separator + "license.xml"); //$NON-NLS-1$ //$NON-NLS-2$
-  }
-  
   public File getAdminPluginsFile() {
     return new File(getFolder().getAbsoluteFile() + File.separator + "adminPlugins.xml"); //$NON-NLS-1$ //$NON-NLS-2$
   }
