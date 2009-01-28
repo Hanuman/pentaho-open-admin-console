@@ -62,7 +62,7 @@ public class AppConfigProperties {
   public static final String DEFAULT_BISERVER_STATUS_CHECK_PERIOD = "30000"; //$NON-NLS-1$
   public static final String DEFAULT_HOMEPAGE_TIMEOUT = "15000"; //$NON-NLS-1$
   public static final String DEFAULT_HIBERNATE_CONFIG_PATH = "system/hibernate/hsql.hibernate.cfg.xml"; //$NON-NLS-1$
-  public static final String DEFAULT_HELP_URL = "http://wiki.pentaho.com/display/PentahoDoc/The+Pentaho+Administration+Console"; //$NON-NLS-1$
+  public static final String DEFAULT_HELP_URL = "http://wiki.pentaho.com/display/ServerDoc2x/The+Pentaho+Administration+Console"; //$NON-NLS-1$
   public static final String DEFAULT_HOMEPAGE_URL = "http://www.pentaho.com/console_home"; //$NON-NLS-1$
   public static final String DEFAULT_SOLUTION_PATH = "./../pentaho-solutions"; //$NON-NLS-1$ 
   public static final String DEFAULT_WAR_PATH = "./../tomcat/webapps/pentaho"; //$NON-NLS-1$
