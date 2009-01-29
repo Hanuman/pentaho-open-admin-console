@@ -241,7 +241,7 @@ public class SchedulerToolbarController {
       case MONTHLY: // fall through
       case YEARLY:
         if ( null == cronStr ) {
-          String repeatInterval = Integer.toString( TimeUtil.secsToMillisecs( 
+          String repeatInterval = Long.toString( TimeUtil.secsToMillisecs( 
                 scheduleEditor.getRepeatInSecs() ) );
           schedSvc.updateRepeatSchedule(
               oldSchedule.getJobName(),
@@ -529,7 +529,7 @@ public class SchedulerToolbarController {
       case MONTHLY: // fall through
       case YEARLY:
         if ( null == cronStr ) {
-          String repeatInterval = Integer.toString( TimeUtil.secsToMillisecs( 
+          String repeatInterval = Long.toString( TimeUtil.secsToMillisecs( 
                 scheduleEditor.getRepeatInSecs() ) );
           schedSvc.createRepeatSchedule(
               scheduleEditor.getName().trim(), 
@@ -621,13 +621,13 @@ public class SchedulerToolbarController {
     if ( sched.isCronSchedule() ) {
       scheduleEditor.setCronString( sched.getCronString() );  // throws CronParseException
     } else if ( sched.isRepeatSchedule() ) {
-      int repeatIntervalInSecs = TimeUtil.millsecondsToSecs( Integer.parseInt( repeatIntervalInMillisecs ) );
+      long repeatIntervalInSecs = TimeUtil.millsecondsToSecs( Long.parseLong( repeatIntervalInMillisecs ) );
       if ( 0 == repeatIntervalInSecs ) {
         // run once
         scheduleEditor.setScheduleType( ScheduleEditor.ScheduleType.RUN_ONCE );
       } else {
         // run multiple
-        scheduleEditor.setRepeatInSecs( repeatIntervalInSecs );
+        scheduleEditor.setRepeatInSecs( (int) repeatIntervalInSecs );
       }
     } else {
       throw new RuntimeException( MSGS.illegalStateMissingCronAndRepeat() );
