@@ -8,9 +8,9 @@
             <div class="group_container">
               <table width="660" border="0" cellspacing="4" cellpadding="2">
                 <tr>
-                  <td colspan="2" valign="top"><strong>Get a Pentaho BI Suite Subscription</strong><br />
+                  <td colspan="2" valign="top"><strong>Upgrade to Pentaho BI Suite Enterprise Edition</strong><br />
                     <br />
-A subscription provides you with professional technical support,  certified software, Management Services features, and intellectual  property indemnification.</td>
+Pentaho’s Enterprise Edition offerings provide the combination of software and services that enable organizations to achieve success with Pentaho’s open source business intelligence technology.</td>
 
                   <!--<td width="181" rowspan="3" valign="top">&nbsp;</td> -->
                 </tr>
@@ -27,8 +27,8 @@ A subscription provides you with professional technical support,  certified soft
                     </tr>
                     <tr>
                       <td bgcolor="#dee7cb"><img src="style/images/Clr.png" width="10"  height="110"/></td>
-                      <td valign="top" bgcolor="#dee7cb"><strong>Professional Support</strong><br />
-Accelerate development of your BI solution and ensure the ongoing  success of your production deployment and / or development phase.                      </td>
+                      <td valign="top" bgcolor="#dee7cb"><strong>Professional  Support and Product Expertise</strong><br />
+Accelerate the development of your BI solution and avoid lengthy disruptions in your production deployments through direct access to the Pentaho experts.  Pentaho goes well beyond traditional technical support by providing remote assistance, consultative support, knowledgebase access and more.                      </td>
                       <td bgcolor="#dee7cb">&nbsp;</td>
 
                     </tr>
@@ -48,8 +48,8 @@ Accelerate development of your BI solution and ensure the ongoing  success of yo
                     </tr>
                     <tr>
                       <td bgcolor="#dee7cb"><img src="style/images/Clr.png" width="10"  height="110"/></td>
-                      <td valign="top" bgcolor="#dee7cb"><strong>Certified Software</strong><br />
-Access certified versions that are stabilized,  production-deployable, and validated as part of Pentaho's release  process, ensuring the most stable, supportable, and optimized versions  of Pentaho modules, including cumulative bug fixes.
+                      <td valign="top" bgcolor="#dee7cb"><strong>Certified Software and Software Maintenance</strong><br />
+Deploy in production with confidence using certified, stabilized, and optimized releases of Pentaho’s best-in-class open source BI capabilities.  Get faster defect resolution through patch releases that are delivered to Enterprise Edition customers well in advance of Community Edition releases.
                       </td>
 
                       <td bgcolor="#dee7cb">&nbsp;</td>
@@ -73,8 +73,8 @@ Access certified versions that are stabilized,  production-deployable, and valid
                     <tr>
                       <td bgcolor="#dee7cb"><img src="style/images/Clr.png" width="10"  height="110"/></td>
 
-                      <td valign="top" bgcolor="#dee7cb"><strong>Pentaho Management Services</strong><br />
-Management Services adds additional capabilities designed for  production, large-scale, or mission-critical BI applications, while  ensuring that all new open source features are available in each  release.</td>
+                      <td valign="top" bgcolor="#dee7cb"><strong>Pentaho Enterprise Console</strong><br />
+Streamline deployment and simplify administration and maintenance with enhanced functionality including configuration utilities, application diagnostics, performance monitoring, audit reporting, and repository backup/restore capabilities.</td>
                       <td bgcolor="#dee7cb">&nbsp;</td>
                     </tr>
                     
@@ -94,8 +94,7 @@ Management Services adds additional capabilities designed for  production, large
                     <tr>
 
                       <td bgcolor="#dee7cb"><img src="style/images/Clr.png" width="10"  height="110"/></td>
-                      <td valign="top" bgcolor="#dee7cb"><strong>Indemnification</strong><br />
-Our indemnification reduces liability and provides peace of mind to  deploy, customize, and integrate open source-based technology for  strategic, sensitive, and mission-critical applications. </td>
+                      <td valign="top" bgcolor="#dee7cb"><strong>Software Assurance</strong><br />Get peace of mind and mitigate any concerns or risk associated with using open source technology in mission-critical applications through intellectual property indemnification and a warranty for services provided to you by Pentaho. </td>
                       <td bgcolor="#dee7cb">&nbsp;</td>
                     </tr>
                     
