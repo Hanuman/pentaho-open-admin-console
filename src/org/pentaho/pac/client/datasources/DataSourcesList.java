@@ -28,14 +28,15 @@ public class DataSourcesList extends ListBox {
   }
 
   public void setDataSources(PentahoDataSource[] dataSources) {
-    
-    this.dataSources.clear();
-    this.dataSources.addAll(Arrays.asList(dataSources));
-    clear();
-    for (int i = 0; i < dataSources.length; i++) {
-      addItem(dataSources[i].getName());
+    if(dataSources != null) {
+      this.dataSources.clear();
+      this.dataSources.addAll(Arrays.asList(dataSources));
+      clear();
+      for (int i = 0; i < dataSources.length; i++) {
+        addItem(dataSources[i].getName());
+      }
+      isInitialized = true;
     }
-    isInitialized = true;
   }
   
   public void setDataSource(int index, PentahoDataSource dataSource) {

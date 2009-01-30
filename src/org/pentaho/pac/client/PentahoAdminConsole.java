@@ -42,16 +42,17 @@ public class PentahoAdminConsole extends DockPanel implements IRefreshableAdminC
         adminConsoleMasterDetailsPanel.addPage(AdminConsolePageId.HOME_PAGE.ordinal(), PentahoAdminConsole.MSGS.home(), new HomePanel(result));
         adminConsoleMasterDetailsPanel.addPage(AdminConsolePageId.ADMIN_PAGE.ordinal(), PentahoAdminConsole.MSGS.administration(), new AdministrationTabPanel());   
         adminConsoleMasterDetailsPanel.selectPage(AdminConsolePageId.HOME_PAGE.ordinal());
+        refresh();
       }
       public void onFailure(Throwable caught) {
         adminConsoleMasterDetailsPanel.addPage(AdminConsolePageId.HOME_PAGE.ordinal(), PentahoAdminConsole.MSGS.home(), new HomePanel(DEFAULT_HOMEPAGE_URL));
         adminConsoleMasterDetailsPanel.addPage(AdminConsolePageId.ADMIN_PAGE.ordinal(), PentahoAdminConsole.MSGS.administration(), new AdministrationTabPanel());   
         adminConsoleMasterDetailsPanel.selectPage(AdminConsolePageId.HOME_PAGE.ordinal());
+        refresh();
       }
     };
     PacServiceFactory.getPacService().getHomepageUrl(homepageUrlcallback);  
     setStyleName("main-panel"); //$NON-NLS-1$
-    refresh();
   }
   
   protected HorizontalPanel buildTopPanel() {
