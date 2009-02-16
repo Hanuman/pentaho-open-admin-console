@@ -110,7 +110,6 @@
     <dependency org="antlr"               name="antlr" rev="2.7.6" conf="runtime->default" />    
     <dependency org="asm"                 name="asm" rev="1.5.3" conf="runtime->default" />    
     <dependency org="asm"                 name="asm-attrs" rev="1.5.3" conf="runtime->default" />    
-    <dependency org="pentaho"             name="pentaho-messages" rev="1.6.1" conf="runtime->default" />    
     <dependency org="javax.transaction"   name="jta" rev="1.0.1B" conf="runtime->default" />    
     <dependency org="javax.servlet"       name="servlet-api" rev="2.5" conf="runtime->default" />    
     
