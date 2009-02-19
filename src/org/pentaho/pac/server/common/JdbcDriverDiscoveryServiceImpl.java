@@ -171,7 +171,6 @@ public class JdbcDriverDiscoveryServiceImpl extends RemoteServiceServlet impleme
     return (file != null && file.isDirectory());     
   }
 
-  @Override
   public void onConfigChanged() {
     initialize();
   }
