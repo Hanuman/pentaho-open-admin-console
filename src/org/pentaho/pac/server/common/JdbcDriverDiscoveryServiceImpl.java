@@ -8,10 +8,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.pentaho.pac.client.JdbcDriverDiscoveryService;
 import org.pentaho.pac.common.JdbcDriverDiscoveryServiceException;
 import org.pentaho.pac.common.NameValue;
@@ -20,7 +22,7 @@ import org.pentaho.pac.server.util.ResolverUtil;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
-public class JdbcDriverDiscoveryServiceImpl extends RemoteServiceServlet implements JdbcDriverDiscoveryService {
+public class JdbcDriverDiscoveryServiceImpl extends RemoteServiceServlet implements JdbcDriverDiscoveryService, IConsoleConfigEventListener {
 
   /**
    * 
@@ -32,21 +34,33 @@ public class JdbcDriverDiscoveryServiceImpl extends RemoteServiceServlet impleme
   private final HashMap<String,CacheInfo> cache = new HashMap<String,CacheInfo>();
   private static final String DEFAULT_JDBC_PATH_2 = "./lib"; //$NON-NLS-1$
   private static final String DEFAULT_JDBC_PATH_1 = "./lib-ext/jdbc";//$NON-NLS-1$
-
+  private static final Log logger = LogFactory.getLog(JdbcDriverDiscoveryServiceImpl.class);
   private static String jdbcDriverPath;
 
   public JdbcDriverDiscoveryServiceImpl() {
   }
 
-  public void init(ServletConfig config) throws ServletException {
-    super.init(config);
-    initialize();
+  public void init() throws ServletException {
+    super.init();
+    ServletContext context = this.getServletContext();
+    ConsoleConfigEventMgr mgr = (ConsoleConfigEventMgr) context.getAttribute(ConsoleConfigEventMgr.CONSOLE_CONFIG_EVENT_MGR);
+    if(mgr != null) {
+      mgr.addConfigListener(this);  
+    }
   }
+
   public void initialize() {
     initFromConfiguration();
   }
   private void initFromConfiguration() {
     AppConfigProperties appCfg = AppConfigProperties.getInstance();
+    try {
+      appCfg.refreshConfig();  
+    } catch(AppConfigException ace) {
+      logger.error(Messages.getErrorString(
+          "JdbcDriverDiscoveryService.ERROR_0003_UNABLE_TO_INITIALIZE_CONFIGURATION", ace.getLocalizedMessage())); //$NON-NLS-1$      
+    }
+    
     jdbcDriverPath = StringUtils.defaultIfEmpty(appCfg.getJdbcDriverPath(), System.getProperty("jdbc.drivers.path")); //$NON-NLS-1$ 
     if(!isExist(jdbcDriverPath)) {
       jdbcDriverPath = DEFAULT_JDBC_PATH_1;
@@ -155,5 +169,10 @@ public class JdbcDriverDiscoveryServiceImpl extends RemoteServiceServlet impleme
   private boolean isExist(String location) {
     File file = new File(location);
     return (file != null && file.isDirectory());     
+  }
+
+  @Override
+  public void onConfigChanged() {
+    initialize();
   }
 }
