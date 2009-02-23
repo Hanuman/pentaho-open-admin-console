@@ -14,7 +14,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
-import org.pentaho.platform.engine.security.userroledao.messages.Messages;
+import org.pentaho.pac.server.i18n.Messages;
 
 /**
  * Configures and provides access to Hibernate sessions, tied to the
