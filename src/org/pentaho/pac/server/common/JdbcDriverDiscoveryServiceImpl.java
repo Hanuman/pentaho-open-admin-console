@@ -54,13 +54,6 @@ public class JdbcDriverDiscoveryServiceImpl extends RemoteServiceServlet impleme
   }
   private void initFromConfiguration() {
     AppConfigProperties appCfg = AppConfigProperties.getInstance();
-    try {
-      appCfg.refreshConfig();  
-    } catch(AppConfigException ace) {
-      logger.error(Messages.getErrorString(
-          "JdbcDriverDiscoveryService.ERROR_0003_UNABLE_TO_INITIALIZE_CONFIGURATION", ace.getLocalizedMessage())); //$NON-NLS-1$      
-    }
-    
     jdbcDriverPath = StringUtils.defaultIfEmpty(appCfg.getJdbcDriverPath(), System.getProperty("jdbc.drivers.path")); //$NON-NLS-1$ 
     if(!isExist(jdbcDriverPath)) {
       jdbcDriverPath = DEFAULT_JDBC_PATH_1;
