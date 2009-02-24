@@ -34,7 +34,6 @@ public class JdbcDriverDiscoveryServiceImpl extends RemoteServiceServlet impleme
   private final HashMap<String,CacheInfo> cache = new HashMap<String,CacheInfo>();
   private static final String DEFAULT_JDBC_PATH_2 = "./lib"; //$NON-NLS-1$
   private static final String DEFAULT_JDBC_PATH_1 = "./lib-ext/jdbc";//$NON-NLS-1$
-  private static final Log logger = LogFactory.getLog(JdbcDriverDiscoveryServiceImpl.class);
   private static String jdbcDriverPath;
 
   public JdbcDriverDiscoveryServiceImpl() {
@@ -46,6 +45,8 @@ public class JdbcDriverDiscoveryServiceImpl extends RemoteServiceServlet impleme
     ConsoleConfigEventMgr mgr = (ConsoleConfigEventMgr) context.getAttribute(ConsoleConfigEventMgr.CONSOLE_CONFIG_EVENT_MGR);
     if(mgr != null) {
       mgr.addConfigListener(this);  
+    } else {
+      initialize();
     }
   }
 

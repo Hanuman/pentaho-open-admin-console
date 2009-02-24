@@ -322,37 +322,24 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
   }
 
   public void refresh() {
-    PacServiceFactory.getJdbcDriverDiscoveryService().initialize(
-        new AsyncCallback<Object>() {
+    PacServiceFactory.getJdbcDriverDiscoveryService().getAvailableJdbcDrivers(
+        new AsyncCallback<NameValue[]>() {
           public void onFailure(Throwable caught) {
             dataSourcesList.refresh();
             dataSourceGeneralPanel.refresh(null);
             dataSourceAdvancePanel.refresh();
-            dataSourceSelectionChanged();            
+            newDataSourceDialogBox.refresh(null);
+            dataSourceSelectionChanged();
           }
 
-          public void onSuccess(Object result) {
-            PacServiceFactory.getJdbcDriverDiscoveryService().getAvailableJdbcDrivers(
-                new AsyncCallback<NameValue[]>() {
-                  public void onFailure(Throwable caught) {
-                    dataSourcesList.refresh();
-                    dataSourceGeneralPanel.refresh(null);
-                    dataSourceAdvancePanel.refresh();
-                    newDataSourceDialogBox.refresh(null);
-                    dataSourceSelectionChanged();
-                  }
-
-                  public void onSuccess(NameValue[] result) {
-                    dataSourcesList.refresh();
-                    dataSourceGeneralPanel.refresh(result);
-                    newDataSourceDialogBox.refresh(result);
-                    dataSourceAdvancePanel.refresh();
-                    dataSourceSelectionChanged();
-                  }
-                }); 
+          public void onSuccess(NameValue[] result) {
+            dataSourcesList.refresh();
+            dataSourceGeneralPanel.refresh(result);
+            newDataSourceDialogBox.refresh(result);
+            dataSourceAdvancePanel.refresh();
+            dataSourceSelectionChanged();
           }
-        });
-
+        }); 
   }
 
   public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
