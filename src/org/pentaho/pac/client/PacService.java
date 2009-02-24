@@ -18,6 +18,7 @@ import org.pentaho.pac.common.users.ProxyPentahoUser;
 import com.google.gwt.user.client.rpc.RemoteService;
 
 public interface PacService extends RemoteService {
+  public Boolean isValidConfiguration()  throws PacServiceException;
   public UserRoleSecurityInfo getUserRoleSecurityInfo() throws PacServiceException;
   public void initialze() throws ServiceInitializationException;
   public void refreshHibernateConfig() throws HibernateConfigException, HibernateConfigException;

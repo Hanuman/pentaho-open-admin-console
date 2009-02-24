@@ -96,6 +96,9 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   
   // ~ Methods =========================================================================================================
 
+  public Boolean isValidConfiguration()  throws PacServiceException {
+	  return AppConfigProperties.getInstance().isValidConfiguration();
+  }
   public UserRoleSecurityInfo getUserRoleSecurityInfo() throws PacServiceException {
     UserRoleSecurityInfo userRoleSecurityInfo = new UserRoleSecurityInfo();
     try {

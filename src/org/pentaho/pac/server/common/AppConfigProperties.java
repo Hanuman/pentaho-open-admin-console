@@ -100,6 +100,19 @@ public class AppConfigProperties {
     }
   }
 
+  public boolean isValidConfiguration() {
+	  boolean solutionPathValid = false;
+	  boolean warPathValid = false;
+	  File solutionPathFile = new File(getSolutionPath());
+	  if (solutionPathFile != null && solutionPathFile.isDirectory()) {
+		  solutionPathValid = true;
+	  }
+	  File warPathFile = new File(getWarPath());
+	  if (warPathFile != null && warPathFile.isDirectory()) {
+		  warPathValid = true;
+	  }
+	  return solutionPathValid && warPathValid;
+  }
   public PasswordEncoder getPasswordEncoder(){
     return getSpringSecurityHibernateConfig().getPasswordEncoder();
   }
@@ -275,5 +288,5 @@ public class AppConfigProperties {
     return springSecurityHibernateConfig;
   }
   
-  
+     
 }

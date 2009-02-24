@@ -37,22 +37,43 @@ public class PentahoAdminConsole extends DockPanel implements IRefreshableAdminC
     setCellWidth(adminConsoleMasterDetailsPanel, "100%"); //$NON-NLS-1$
     setCellHeight(adminConsoleMasterDetailsPanel, "100%"); //$NON-NLS-1$    
     
-    AsyncCallback<String> homepageUrlcallback = new AsyncCallback<String>() {
-      public void onSuccess(String result) {
-        adminConsoleMasterDetailsPanel.addPage(AdminConsolePageId.HOME_PAGE.ordinal(), PentahoAdminConsole.MSGS.home(), new HomePanel(result));
-        adminConsoleMasterDetailsPanel.addPage(AdminConsolePageId.ADMIN_PAGE.ordinal(), PentahoAdminConsole.MSGS.administration(), new AdministrationTabPanel());   
-        adminConsoleMasterDetailsPanel.selectPage(AdminConsolePageId.HOME_PAGE.ordinal());
-        refresh();
-      }
-      public void onFailure(Throwable caught) {
-        adminConsoleMasterDetailsPanel.addPage(AdminConsolePageId.HOME_PAGE.ordinal(), PentahoAdminConsole.MSGS.home(), new HomePanel(DEFAULT_HOMEPAGE_URL));
-        adminConsoleMasterDetailsPanel.addPage(AdminConsolePageId.ADMIN_PAGE.ordinal(), PentahoAdminConsole.MSGS.administration(), new AdministrationTabPanel());   
-        adminConsoleMasterDetailsPanel.selectPage(AdminConsolePageId.HOME_PAGE.ordinal());
-        refresh();
-      }
-    };
-    PacServiceFactory.getPacService().getHomepageUrl(homepageUrlcallback);  
-    setStyleName("main-panel"); //$NON-NLS-1$
+    AsyncCallback<Boolean> callback = new AsyncCallback<Boolean >() {
+        public void onSuccess(Boolean valid) {
+        	if(!valid) {
+	            MessageDialog errorDialog = new MessageDialog(PentahoAdminConsole.MSGS.error());
+	            errorDialog.setText(MSGS.invalidConfiguration());
+	            errorDialog.setMessage(MSGS.notValidConfiguration());          
+	            errorDialog.center();
+	            setVisible(false);
+        	} else {
+        	    AsyncCallback<String> homepageUrlcallback = new AsyncCallback<String>() {
+        	        public void onSuccess(String result) {
+        	          adminConsoleMasterDetailsPanel.addPage(AdminConsolePageId.HOME_PAGE.ordinal(), PentahoAdminConsole.MSGS.home(), new HomePanel(result));
+        	          adminConsoleMasterDetailsPanel.addPage(AdminConsolePageId.ADMIN_PAGE.ordinal(), PentahoAdminConsole.MSGS.administration(), new AdministrationTabPanel());   
+        	          adminConsoleMasterDetailsPanel.selectPage(AdminConsolePageId.HOME_PAGE.ordinal());
+        	          refresh();
+        	        }
+        	        public void onFailure(Throwable caught) {
+        	          adminConsoleMasterDetailsPanel.addPage(AdminConsolePageId.HOME_PAGE.ordinal(), PentahoAdminConsole.MSGS.home(), new HomePanel(DEFAULT_HOMEPAGE_URL));
+        	          adminConsoleMasterDetailsPanel.addPage(AdminConsolePageId.ADMIN_PAGE.ordinal(), PentahoAdminConsole.MSGS.administration(), new AdministrationTabPanel());   
+        	          adminConsoleMasterDetailsPanel.selectPage(AdminConsolePageId.HOME_PAGE.ordinal());
+        	          refresh();
+        	        }
+        	      };
+        	      PacServiceFactory.getPacService().getHomepageUrl(homepageUrlcallback);  
+        	      setStyleName("main-panel"); //$NON-NLS-1$
+        	}
+          
+        }
+        public void onFailure(Throwable caught) {
+          MessageDialog errorDialog = new MessageDialog(PentahoAdminConsole.MSGS.error());
+          errorDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
+          errorDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorInitializingPacService()));          
+          errorDialog.center();
+          setVisible(false);
+        }
+  };
+  PacServiceFactory.getPacService().isValidConfiguration(callback);
   }
   
   protected HorizontalPanel buildTopPanel() {

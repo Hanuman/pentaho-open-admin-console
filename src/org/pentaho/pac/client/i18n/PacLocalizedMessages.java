@@ -2193,4 +2193,21 @@ String loadingInvalidSchedule(String arg0);
     * @get.key errorDeletingUsers
     */   
    String errorDeletingUsers();
+   /**
+    * Translated "Administration Console configuration is not valid. 
+    * Please correct the configuration in console.xml and restart 
+    * administration console"
+    * 
+    * @return translated "Administration Console configuration is not valid. 
+    * Please correct the configuration in console.xml and restart administration console"
+    * @get.key notValidConfiguration
+    */      
+   String notValidConfiguration();
+      /**
+    * Translated "Invalid Configuration"
+    * 
+    * @return translated "Invalid Configuration"
+    * @get.key invalidConfiguration
+    */      
+   String invalidConfiguration();
 }
