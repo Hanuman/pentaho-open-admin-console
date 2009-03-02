@@ -64,8 +64,8 @@ public class AppConfigProperties {
   public static final String DEFAULT_HIBERNATE_CONFIG_PATH = "system/hibernate/hsql.hibernate.cfg.xml"; //$NON-NLS-1$
   public static final String DEFAULT_HELP_URL = "http://wiki.pentaho.com/display/ServerDoc2x/The+Pentaho+Administration+Console"; //$NON-NLS-1$
   public static final String DEFAULT_HOMEPAGE_URL = "http://www.pentaho.com/console_home"; //$NON-NLS-1$
-  public static final String DEFAULT_SOLUTION_PATH = "./../pentaho-solutions"; //$NON-NLS-1$ 
-  public static final String DEFAULT_WAR_PATH = "./../tomcat/webapps/pentaho"; //$NON-NLS-1$
+  public static final String DEFAULT_SOLUTION_PATH = "./../biserver-ce/pentaho-solutions"; //$NON-NLS-1$ 
+  public static final String DEFAULT_WAR_PATH = "./../biserver-ce/tomcat/webapps/pentaho"; //$NON-NLS-1$
 
   private IConsoleConfig consoleConfig = null;
   private HibernateSettingsXml hibernateSettingXml = null;
