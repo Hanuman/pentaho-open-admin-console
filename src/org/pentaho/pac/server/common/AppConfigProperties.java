@@ -142,7 +142,7 @@ public class AppConfigProperties {
     try {
       WebXml webXml = new WebXml(new File(getWarPath() + WEB_XML_PATH));
       baseUrl = webXml.getBaseUrl();
-      if ((baseUrl != null && baseUrl.length() > 0)) {
+      if (!(baseUrl != null && baseUrl.length() > 0)) {
         baseUrl = DEFAULT_BISERVER_BASE_URL;
       }
     } catch (Exception e) {
