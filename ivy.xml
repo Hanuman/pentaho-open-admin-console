@@ -63,6 +63,8 @@
     
     <dependency org="org.zenica"      name="gwt-datepicker" rev="r17" conf="codegen->default" />
     <dependency org="org.gwtwidgets" name="gwt-widgets" rev="0.2.0" conf="codegen->default" />
+    <dependency org="com.google.gwt" name="gwt-incubator" rev="1-5_Sept_04" 	conf="codegen->default"/>
+
     
     <!-- The organization of GWT Widgets can not be varied since we do not create optimized versions of the GWT Widgets -->
     <dependency org="pentaho" name="pentaho-gwt-widgets" rev="${dependency.pentaho-gwt-widgets.revision}" conf="codegen->default" changing="true">
