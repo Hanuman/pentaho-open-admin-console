@@ -55,40 +55,37 @@
 <!--=======================================================================
       Code Generation dependencies
     ====================================================================-->
-    <dependency org="com.google.gwt"  name="gwt-dev" rev="1.5.2" m:classifier="mac" conf="codegen-mac->default" />
-    <dependency org="com.google.gwt"  name="gwt-dev" rev="1.5.2" m:classifier="windows" conf="codegen-win->default" />
-    <dependency org="com.google.gwt"  name="gwt-dev" rev="1.5.2" m:classifier="linux" conf="codegen-linux->default" />
+    <dependency org="com.google.gwt"  name="gwt-dev" rev="1.6.4" m:classifier="mac" conf="codegen-mac->default" />
+    <dependency org="com.google.gwt"  name="gwt-dev" rev="1.6.4" m:classifier="windows" conf="codegen-win->default" />
+    <dependency org="com.google.gwt"  name="gwt-dev" rev="1.6.4" m:classifier="linux" conf="codegen-linux->default" />
         <!--    gwt-user needs to be excluded from the open-admin web assembly.-->
-    <dependency org="com.google.gwt" name="gwt-user" rev="1.5.2" conf="codegen->default" />
+    <dependency org="com.google.gwt" name="gwt-user" rev="1.6.4" conf="codegen->default" />
     
-    <dependency org="org.zenica"      name="gwt-datepicker" rev="r17" conf="codegen,runtime->default" />
-    <dependency org="org.gwtwidgets" name="gwt-widgets" rev="0.2.0" conf="codegen->default" />
+    <dependency org="org.zenica"      name="gwt-datepicker" rev="r17" conf="codegen-default" />
+    <dependency org="org.gwtwidgets" name="gwt-widgets" rev="0.2.0" conf="codegen-default" />
 
-<!--        need to check if this is actually used anywhere-->
-    <dependency org="com.google.gwt"  name="gwt-benchmark-viewer" rev="1.5.1" conf="codegen,runtime->default" />
-    <dependency org="pentaho"         name="pentaho-bi-platform-api" rev="${project.revision}" conf="codegen,runtime->default" changing="true" >
-        <exclude org="org.acegisecurity" name="acegi-security" />
-        <exclude org="org.springframework" name="spring" />
-    </dependency>
-    <dependency org="pentaho"         name="pentaho-bi-platform-util" rev="${project.revision}" conf="codegen,runtime->default" transitive="false" changing="true" />
-    <dependency org="pentaho"         name="pentaho-bi-platform-engine-core" rev="${project.revision}" conf="codegen,runtime->default" transitive="false" changing="true" />
-    <dependency org="pentaho"         name="pentaho-bi-platform-engine-services" rev="${project.revision}" conf="codegen,runtime->default" transitive="false" changing="true" />    
-    <dependency org="pentaho"         name="pentaho-bi-platform-engine-security" rev="${project.revision}" conf="codegen,runtime->default" transitive="false" changing="true" />     
-    <dependency org="pentaho"         name="pentaho-bi-platform-security-userroledao" rev="${project.revision}" conf="codegen,runtime->default" transitive="false" changing="true" />
-    <dependency org="pentaho"         name="pentaho-bi-platform-repository" rev="${project.revision}" conf="codegen,runtime->default" transitive="false" changing="true" />
     
     <!-- The organization of GWT Widgets can not be varied since we do not create optimized versions of the GWT Widgets -->
-    <dependency org="pentaho" name="pentaho-gwt-widgets" rev="${dependency.pentaho-gwt-widgets.revision}" conf="codegen,runtime->default" changing="true">
+    <dependency org="pentaho" name="pentaho-gwt-widgets" rev="${dependency.pentaho-gwt-widgets.revision}" conf="codegen-default" changing="true">
       <artifact name="pentaho-gwt-widgets"/>
       <artifact name="pentaho-gwt-widgets" type="source" ext="jar" m:classifier="sources"/>
-      <!--    we don't want gwt-user included in our distribution so exclude it here-->
-      <exclude org="com.google.gwt" name="gwt-user" />
     </dependency>
     
 <!--=======================================================================
       Runtime dependencies - need to verify that all of these are actually needed
     ====================================================================-->
-    <dependency org="com.google.gwt"      name="gwt-servlet" rev="1.5.2" conf="runtime->default"/>
+    <dependency org="pentaho"         name="pentaho-bi-platform-api" rev="${project.revision}" conf="runtime->default" changing="true" >
+        <exclude org="org.acegisecurity" name="acegi-security" />
+        <exclude org="org.springframework" name="spring" />
+    </dependency>
+    <dependency org="pentaho"         name="pentaho-bi-platform-util" rev="${project.revision}" conf="runtime->default" transitive="false" changing="true" />
+    <dependency org="pentaho"         name="pentaho-bi-platform-engine-core" rev="${project.revision}" conf="runtime->default" transitive="false" changing="true" />
+    <dependency org="pentaho"         name="pentaho-bi-platform-engine-services" rev="${project.revision}" conf="runtime->default" transitive="false" changing="true" />    
+    <dependency org="pentaho"         name="pentaho-bi-platform-engine-security" rev="${project.revision}" conf="runtime->default" transitive="false" changing="true" />     
+    <dependency org="pentaho"         name="pentaho-bi-platform-security-userroledao" rev="${project.revision}" conf="runtime->default" transitive="false" changing="true" />
+    <dependency org="pentaho"         name="pentaho-bi-platform-repository" rev="${project.revision}" conf="runtime->default" transitive="false" changing="true" />
+
+    <dependency org="com.google.gwt"      name="gwt-servlet" rev="1.6.4" conf="runtime->default"/>
     <dependency org="hsqldb"              name="hsqldb" rev="1.8.0.7"  conf="runtime->default"/>
     <dependency org="mysql"               name="mysql-connector-java" rev="5.0.7"  conf="runtime->default"/>
     
