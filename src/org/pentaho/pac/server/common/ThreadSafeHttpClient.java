@@ -120,11 +120,13 @@ public class ThreadSafeHttpClient {
         method = new PostMethod(serviceUrl);
         setPostMethodParams( (PostMethod)method, mapParams );
         method.setFollowRedirects( false );
+        method.addRequestHeader("Content-Type","text/html; UTF-8"); //$NON-NLS-1$//$NON-NLS-2$
         break;
       case GET:
         method = new GetMethod(serviceUrl);
         setGetMethodParams( (GetMethod)method, mapParams );
         method.setFollowRedirects( true );
+        method.addRequestHeader("Content-Type","text/html; UTF-8");//$NON-NLS-1$        //$NON-NLS-2$
         break;
       default:
         throw new RuntimeException( Messages.getErrorString( "ThreadSafeHttpClient.ERROR_0002_INVALID_HTTP_METHOD_TYPE", methodType.toString() ) );  // can never happen //$NON-NLS-1$
