@@ -32,7 +32,8 @@ public class ConsoleConfig implements IConsoleConfig, Serializable, Cloneable {
   protected String jdbcDriversClassPath;
   protected String homePageUrl;
   protected Integer homePageTimeout;
-  
+  protected String baseUrl;
+
   
   public ConsoleConfig() {
     
@@ -119,6 +120,13 @@ public class ConsoleConfig implements IConsoleConfig, Serializable, Cloneable {
 
   public void setHomePageUrl(String homePageUrl) {
     this.homePageUrl = homePageUrl;
+  }
+
+  public String getBaseUrl() {
+    return baseUrl;
+  }
+  public void setBaseUrl(String baseUrl) {
+    this.baseUrl = baseUrl;
   }
 
   public Object clone() {

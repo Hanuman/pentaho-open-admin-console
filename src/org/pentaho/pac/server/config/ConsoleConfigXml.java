@@ -40,9 +40,17 @@ public class ConsoleConfigXml implements IConsoleConfig {
   protected static final String DEFAULT_ROLES_XPATH = ROOT_ELEMENT +"/default-roles";
   protected static final String HOME_PAGE_TIMEOUT_XPATH = ROOT_ELEMENT +"/homepage-timeout-millis";
   protected static final String HOME_PAGE_URL_XPATH = ROOT_ELEMENT +"/homepage-url";
-  
+  protected static final String BASE_URL_XPATH = ROOT_ELEMENT +"/base-url";
+
   Document document;
-  
+
+  public String getBaseUrl() {
+     return getValue(BASE_URL_XPATH);
+  }
+  public void setBaseUrl(String url) {
+     setValue(BASE_URL_XPATH, url);
+  }
+
   public ConsoleConfigXml(File consoleConfigXmlFile) throws IOException, DocumentException{
     this(XmlDom4JHelper.getDocFromFile(consoleConfigXmlFile, null));    
   }

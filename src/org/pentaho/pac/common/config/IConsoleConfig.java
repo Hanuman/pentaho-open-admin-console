@@ -42,4 +42,7 @@ public interface IConsoleConfig {
   public void setJdbcDriversClassPath(String classpath);
   public String getDefaultRoles();
   public void setDefaultRoles(String defaultRoles);
+  public String getBaseUrl();
+  public void setBaseUrl(String url);
+
 }

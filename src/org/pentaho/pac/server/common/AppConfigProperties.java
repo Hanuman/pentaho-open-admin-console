@@ -144,6 +144,12 @@ public class AppConfigProperties {
 
   public String getBiServerBaseUrl() {
     String baseUrl = DEFAULT_BISERVER_BASE_URL;
+    // If this setting existe in console.xml, use it
+    String consoleXmlBaseUrl = getConsoleConfig().getBaseUrl();
+    if (consoleXmlBaseUrl != null){
+      return consoleXmlBaseUrl;
+    }
+
     try {
       WebXml webXml = new WebXml(new File(getWarPath() + WEB_XML_PATH));
       baseUrl = webXml.getBaseUrl();
