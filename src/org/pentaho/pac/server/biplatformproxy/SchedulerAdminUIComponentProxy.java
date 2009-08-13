@@ -30,6 +30,7 @@ import java.util.Map;
 import org.pentaho.pac.server.i18n.Messages;
 import org.apache.commons.lang.StringUtils;
 import org.pentaho.pac.client.scheduler.model.Schedule;
+import org.pentaho.pac.client.utils.ExceptionParser;
 import org.pentaho.pac.common.SchedulerServiceException;
 import org.pentaho.pac.server.biplatformproxy.xmlserializer.SchedulerXmlSerializer;
 import org.pentaho.pac.server.biplatformproxy.xmlserializer.XmlSerializerException;
@@ -430,7 +431,7 @@ public class SchedulerAdminUIComponentProxy {
     try {
       strXmlResponse = biServerProxy.execRemoteMethod(AppConfigProperties.getInstance().getBiServerBaseUrl(), SCHEDULER_SERVICE_NAME, HttpMethodType.GET, StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getPlatformUsername(), System.getProperty(AppConfigProperties.KEY_PLATFORM_USERNAME) ), params );
     } catch (ProxyException e) {
-      throw new SchedulerServiceException( e.getMessage(), e );
+      throw new SchedulerServiceException(ExceptionParser.getErrorMessage(e.getMessage(), e.getMessage()), e );
     }
     SchedulerXmlSerializer s = new SchedulerXmlSerializer();
     s.detectSchedulerExceptionInXml( strXmlResponse );
@@ -442,7 +443,7 @@ public class SchedulerAdminUIComponentProxy {
     try {
       strXmlResponse = biServerProxy.execRemoteMethod(AppConfigProperties.getInstance().getBiServerBaseUrl(), SCHEDULER_SERVICE_NAME, HttpMethodType.POST, StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getPlatformUsername(), System.getProperty(AppConfigProperties.KEY_PLATFORM_USERNAME) ), params );
     } catch (ProxyException e) {
-      throw new SchedulerServiceException( e.getMessage(), e );
+      throw new SchedulerServiceException(ExceptionParser.getErrorMessage(e.getMessage(), e.getMessage()), e );
     }
     SchedulerXmlSerializer s = new SchedulerXmlSerializer();
     s.detectSchedulerExceptionInXml( strXmlResponse );

@@ -423,7 +423,8 @@ public class SchedulerToolbarController {
         schedulesListCtrl.setTempMessage( MSGS.noSchedules() );
         MessageDialog messageDialog = new MessageDialog();
         messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), caught.getMessage()));           
+        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), caught.getMessage()));
+        messageDialog.show();
         enableTools();
       } // end outer onFailure
     }; // end schedulerServiceCallback

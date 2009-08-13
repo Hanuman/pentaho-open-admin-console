@@ -21,7 +21,6 @@
 
 package org.pentaho.pac.server.common;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -89,7 +88,7 @@ public class ThreadSafeHttpClient {
    * stream is unable to be converted into a String.
    */
   public String execRemoteMethod(String baseUrl, String serviceName, HttpMethodType methodType, Map<String, Object> mapParams)
-      throws ProxyException {
+      throws ProxyException  {
     return execRemoteMethod(baseUrl, serviceName, methodType, mapParams, "text/xml"); //$NON-NLS-1$
   }
 
@@ -104,7 +103,7 @@ public class ThreadSafeHttpClient {
    * stream is unable to be converted into a String.
    */
   public String execRemoteMethod(String baseUrl, String serviceName, HttpMethodType methodType, Map<String, Object> mapParams,
-      String requestedMimeType) throws ProxyException {
+      String requestedMimeType) throws ProxyException  {
 
     assert null != baseUrl : "baseUrl cannot be null"; //$NON-NLS-1$
     
@@ -144,7 +143,7 @@ public class ThreadSafeHttpClient {
    * if the attempt to read the response from the server fails, if the response
    * stream is unable to be converted into a String.
    */
-  private String executeMethod( HttpMethod method ) throws ProxyException {
+  private String executeMethod( HttpMethod method ) throws ProxyException{
     InputStream responseStrm = null;
     try {
       int httpStatus = CLIENT.executeMethod(method);
@@ -160,8 +159,11 @@ public class ThreadSafeHttpClient {
       // trim() is necessary because some jsp's put \n\r at the beginning of
       // the returned text, and the xml processor chokes on \n\r at the beginning.
       String response = IOUtils.toString(responseStrm).trim();
+      if(hasRequestFailedToAuthorize(response)) {
+        throw new ProxyException(Messages.getErrorString("ThreadSafeHttpClient.ERROR_0003_AUTHORIZATION_FAILED"));
+      }
       return response;
-    } catch (IOException e) {
+    } catch (Exception e) {
       throw new ProxyException(e);
     } finally {
       method.releaseConnection();
@@ -194,5 +196,16 @@ public class ThreadSafeHttpClient {
       idx++;
     }
     return pairAr;
+  }
+  private boolean hasRequestFailedToAuthorize(String response) {
+    final String LOGIN_PAGE_TEXT = "<title>Pentaho User Console - Login</title>";//$NON-NLS-1$
+    boolean returnValue = false;
+    if(response == null) {
+      returnValue = false;
+    } else if(response.indexOf(LOGIN_PAGE_TEXT) >= 0) {
+      returnValue = true; 
+    }
+    
+    return returnValue;
   }
 }

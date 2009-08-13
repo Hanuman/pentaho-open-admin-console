@@ -33,116 +33,128 @@ import org.pentaho.pac.client.i18n.PacLocalizedMessages;
  */
 public class RecurrenceEditorValidator implements IUiValidator {
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
-  
+
   private RecurrenceEditor recurrenceEditor = null;
+
   private DateRangeEditorValidator dateRangeEditorValidator = null;
+
   private static final String MUST_BE_A_NUMBER = MSGS.mustBeIntegerRange();
-  
-  public RecurrenceEditorValidator( RecurrenceEditor recurrenceEditor ) {
-    this.recurrenceEditor = recurrenceEditor; 
-    this.dateRangeEditorValidator = new DateRangeEditorValidator( recurrenceEditor.getDateRangeEditor() );
+
+  public RecurrenceEditorValidator(RecurrenceEditor recurrenceEditor) {
+    this.recurrenceEditor = recurrenceEditor;
+    this.dateRangeEditorValidator = new DateRangeEditorValidator(recurrenceEditor.getDateRangeEditor());
   }
-  
+
   public boolean isValid() {
     boolean isValid = true;
-    switch ( recurrenceEditor.getTemporalState() ) {
+    switch (recurrenceEditor.getTemporalState()) {
       case SECONDS:
         RecurrenceEditor.SecondlyRecurrenceEditor sEd = recurrenceEditor.getSecondlyEditor();
         String seconds = sEd.getValue();
-        if ( !StringUtils.isPositiveInteger( seconds ) 
-            || ( Integer.parseInt( seconds ) <= 0 ) ) {
+        try {
+          if (!StringUtils.isPositiveInteger(seconds) || (Integer.parseInt(seconds) <= 0)) {
+            isValid = false;
+          }
+          if (Integer.parseInt(seconds) > TimeUtil.MAX_SECOND_BY_MILLISEC) {
+            isValid = false;
+          }
+          if (!isValid) {
+            sEd.setValueError(MSGS.mustBeSecondsRange(Integer.toString(TimeUtil.MAX_SECOND_BY_MILLISEC)));
+          }
+        } catch (NumberFormatException nfe) {
           isValid = false;
-        }
-        if ( Integer.parseInt( seconds ) > TimeUtil.MAX_SECOND_BY_MILLISEC ) {
-          isValid = false;
-        }
-        if ( !isValid ) {
-          sEd.setValueError( MSGS.mustBeSecondsRange( Integer.toString( TimeUtil.MAX_SECOND_BY_MILLISEC ) ) );
+          sEd.setValueError(MSGS.mustBeSecondsRange(Integer.toString(TimeUtil.MAX_SECOND_BY_MILLISEC)));
         }
         break;
       case MINUTES:
+
         RecurrenceEditor.MinutelyRecurrenceEditor mEd = recurrenceEditor.getMinutelyEditor();
-        String minutes = mEd.getValue();
-        if ( !StringUtils.isPositiveInteger( minutes ) 
-            || ( Integer.parseInt( minutes ) <= 0 ) ) {
+        try {
+          String minutes = mEd.getValue();
+          if (!StringUtils.isPositiveInteger(minutes) || (Integer.parseInt(minutes) <= 0)) {
+            isValid = false;
+          }
+          if (Integer.parseInt(minutes) > TimeUtil.MAX_MINUTE_BY_MILLISEC) {
+            isValid = false;
+          }
+          if (!isValid) {
+            mEd.setValueError(MSGS.mustBeMinutesRange(Integer.toString(TimeUtil.MAX_MINUTE_BY_MILLISEC)));
+          }
+        } catch (NumberFormatException nfe) {
           isValid = false;
-        }
-        if ( Integer.parseInt( minutes ) > TimeUtil.MAX_MINUTE_BY_MILLISEC ) {
-          isValid = false;
-        }
-        if ( !isValid ) {
-          mEd.setValueError( MSGS.mustBeMinutesRange( Integer.toString( TimeUtil.MAX_MINUTE_BY_MILLISEC ) ) );
+          mEd.setValueError(MSGS.mustBeMinutesRange(Integer.toString(TimeUtil.MAX_MINUTE_BY_MILLISEC)));
         }
         break;
       case HOURS:
         RecurrenceEditor.HourlyRecurrenceEditor hEd = recurrenceEditor.getHourlyEditor();
-        String hours = hEd.getValue();
-        if ( !StringUtils.isPositiveInteger( hours ) 
-            || ( Integer.parseInt( hours ) <= 0 ) ) {
+        try {
+          String hours = hEd.getValue();
+          if (!StringUtils.isPositiveInteger(hours) || (Integer.parseInt(hours) <= 0)) {
+            isValid = false;
+          }
+          if (Integer.parseInt(hours) > TimeUtil.MAX_HOUR_BY_MILLISEC) {
+            isValid = false;
+          }
+          if (!isValid) {
+            hEd.setValueError(MSGS.mustBeHoursRange(Integer.toString(TimeUtil.MAX_HOUR_BY_MILLISEC)));
+          }
+        } catch (NumberFormatException nfe) {
           isValid = false;
-        }
-        if ( Integer.parseInt( hours ) > TimeUtil.MAX_HOUR_BY_MILLISEC ) {
-          isValid = false;
-        }
-        if ( !isValid ) {
-          hEd.setValueError( MSGS.mustBeHoursRange( Integer.toString( TimeUtil.MAX_HOUR_BY_MILLISEC ) ) );
+          hEd.setValueError(MSGS.mustBeHoursRange(Integer.toString(TimeUtil.MAX_HOUR_BY_MILLISEC)));
         }
         break;
       case DAILY:
         RecurrenceEditor.DailyRecurrenceEditor dEd = recurrenceEditor.getDailyEditor();
-        if ( dEd.isEveryNDays() ) {
+        if (dEd.isEveryNDays()) {
           String days = dEd.getRepeatValue();
-          if ( !StringUtils.isPositiveInteger( days ) 
-              || ( Integer.parseInt( days ) <= 0 ) ) {
+          if (!StringUtils.isPositiveInteger(days) || (Integer.parseInt(days) <= 0)) {
             isValid = false;
-            dEd.setRepeatError( MSGS.days( MUST_BE_A_NUMBER ) );
+            dEd.setRepeatError(MSGS.days(MUST_BE_A_NUMBER));
           }
         }
         break;
       case WEEKLY:
         RecurrenceEditor.WeeklyRecurrenceEditor wEd = recurrenceEditor.getWeeklyEditor();
-        if ( wEd.getNumCheckedDays() < 1 ) {
+        if (wEd.getNumCheckedDays() < 1) {
           isValid = false;
-          wEd.setEveryDayOnError( MSGS.oneOrMoreMustBeChecked() );
+          wEd.setEveryDayOnError(MSGS.oneOrMoreMustBeChecked());
         }
         break;
       case MONTHLY:
         RecurrenceEditor.MonthlyRecurrenceEditor monthlyEd = recurrenceEditor.getMonthlyEditor();
-        if ( monthlyEd.isDayNOfMonth() ) {
+        if (monthlyEd.isDayNOfMonth()) {
           String dayNOfMonth = monthlyEd.getDayOfMonth();
-          if ( !StringUtils.isPositiveInteger( dayNOfMonth ) 
-              || !TimeUtil.isDayOfMonth( Integer.parseInt( dayNOfMonth ) ) ) {
+          if (!StringUtils.isPositiveInteger(dayNOfMonth) || !TimeUtil.isDayOfMonth(Integer.parseInt(dayNOfMonth))) {
             isValid = false;
-            monthlyEd.setDayNOfMonthError( MSGS.dayOfMonthMustBeBetween() );
+            monthlyEd.setDayNOfMonthError(MSGS.dayOfMonthMustBeBetween());
           }
         }
         break;
       case YEARLY:
         RecurrenceEditor.YearlyRecurrenceEditor yearlyEd = recurrenceEditor.getYearlyEditor();
-        if ( yearlyEd.isEveryMonthOnNthDay() ) {
+        if (yearlyEd.isEveryMonthOnNthDay()) {
           String dayNOfMonth = yearlyEd.getDayOfMonth();
-          if ( !StringUtils.isPositiveInteger( dayNOfMonth ) 
-              || !TimeUtil.isDayOfMonth( Integer.parseInt( dayNOfMonth ) ) ) {
+          if (!StringUtils.isPositiveInteger(dayNOfMonth) || !TimeUtil.isDayOfMonth(Integer.parseInt(dayNOfMonth))) {
             isValid = false;
-            yearlyEd.setDayOfMonthError( MSGS.dayOfMonthMustBeBetween() );
+            yearlyEd.setDayOfMonthError(MSGS.dayOfMonthMustBeBetween());
           }
         }
         break;
       default:
-        throw new RuntimeException( MSGS.unrecognizedSchedType( recurrenceEditor.getTemporalState().toString() ) );
+        throw new RuntimeException(MSGS.unrecognizedSchedType(recurrenceEditor.getTemporalState().toString()));
     }
     isValid &= dateRangeEditorValidator.isValid();
     return isValid;
   }
 
   public void clear() {
-    recurrenceEditor.getSecondlyEditor().setValueError( null );
-    recurrenceEditor.getMinutelyEditor().setValueError( null );
-    recurrenceEditor.getHourlyEditor().setValueError( null );
-    recurrenceEditor.getDailyEditor().setRepeatError( null );
-    recurrenceEditor.getWeeklyEditor().setEveryDayOnError( null );
-    recurrenceEditor.getMonthlyEditor().setDayNOfMonthError( null );
-    recurrenceEditor.getYearlyEditor().setDayOfMonthError( null );
+    recurrenceEditor.getSecondlyEditor().setValueError(null);
+    recurrenceEditor.getMinutelyEditor().setValueError(null);
+    recurrenceEditor.getHourlyEditor().setValueError(null);
+    recurrenceEditor.getDailyEditor().setRepeatError(null);
+    recurrenceEditor.getWeeklyEditor().setEveryDayOnError(null);
+    recurrenceEditor.getMonthlyEditor().setDayNOfMonthError(null);
+    recurrenceEditor.getYearlyEditor().setDayOfMonthError(null);
     dateRangeEditorValidator.clear();
   }
 }

@@ -84,6 +84,7 @@ public class ScheduleEditorValidator implements IUiValidator {
   public void clear() {
     schedEd.setNameError( null );
     schedEd.setGroupNameError( null );
+    schedEd.setDescriptionError( null );
     recurrenceEditorValidator.clear();
     runOnceEditorValidator.clear();
     cronEditorValidator.clear();

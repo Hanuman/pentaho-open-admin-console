@@ -25,6 +25,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.pentaho.pac.server.i18n.Messages;
 import org.pentaho.pac.client.scheduler.model.Schedule;
+import org.pentaho.pac.client.utils.ExceptionParser;
 import org.pentaho.pac.common.SchedulerServiceException;
 import org.pentaho.pac.server.biplatformproxy.xmlserializer.SubscriptionXmlSerializer;
 import org.pentaho.pac.server.biplatformproxy.xmlserializer.XmlSerializerException;
@@ -311,7 +312,7 @@ public class SubscriptionAdminUIComponentProxy {
     try {
       strXmlResponse = biServerProxy.execRemoteMethod(AppConfigProperties.getInstance().getBiServerBaseUrl(), SUBSCRIPTION_SERVICE_NAME, HttpMethodType.GET, StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getPlatformUsername(), System.getProperty(AppConfigProperties.KEY_PLATFORM_USERNAME) ), params );
     } catch (ProxyException e) {
-      throw new SchedulerServiceException( e.getMessage(), e );
+      throw new SchedulerServiceException(ExceptionParser.getErrorMessage(e.getMessage(), e.getMessage()), e );
     }
     SubscriptionXmlSerializer s = new SubscriptionXmlSerializer();
     s.detectSubscriptionExceptionInXml( strXmlResponse );
@@ -324,7 +325,7 @@ public class SubscriptionAdminUIComponentProxy {
     try {
       strXmlResponse = biServerProxy.execRemoteMethod(AppConfigProperties.getInstance().getBiServerBaseUrl(), SUBSCRIPTION_SERVICE_NAME, HttpMethodType.POST, StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getPlatformUsername(), System.getProperty(AppConfigProperties.KEY_PLATFORM_USERNAME) ), params );
     } catch (ProxyException e) {
-      throw new SchedulerServiceException( e.getMessage(), e );
+      throw new SchedulerServiceException(ExceptionParser.getErrorMessage(e.getMessage(), e.getMessage()), e );
     }
     SubscriptionXmlSerializer s = new SubscriptionXmlSerializer();
     s.detectSubscriptionExceptionInXml( strXmlResponse );

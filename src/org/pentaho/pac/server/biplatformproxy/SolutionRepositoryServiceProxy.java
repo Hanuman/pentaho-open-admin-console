@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.pentaho.pac.client.utils.ExceptionParser;
 import org.pentaho.pac.common.SolutionRepositoryServiceException;
 import org.pentaho.pac.server.biplatformproxy.xmlserializer.SolutionRepositoryXmlSerializer;
 import org.pentaho.pac.server.common.AppConfigProperties;
@@ -62,7 +63,7 @@ public class SolutionRepositoryServiceProxy {
     try {
       strXmlResponse = biServerProxy.execRemoteMethod(AppConfigProperties.getInstance().getBiServerBaseUrl(), SOLUTION_REPOSITORY_SERVICE_NAME, HttpMethodType.GET, StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getPlatformUsername(), System.getProperty(AppConfigProperties.KEY_PLATFORM_USERNAME) ), params );
     } catch (ProxyException e) {
-      throw new SolutionRepositoryServiceException( e.getMessage(), e );
+      throw new SolutionRepositoryServiceException(ExceptionParser.getErrorMessage(e.getMessage(), e.getMessage()), e );
     }
 //    SolutionRepositoryXmlSerializer s = new SolutionRepositoryXmlSerializer();
 
@@ -74,7 +75,7 @@ public class SolutionRepositoryServiceProxy {
     try {
       strXmlResponse = biServerProxy.execRemoteMethod(AppConfigProperties.getInstance().getBiServerBaseUrl(), SOLUTION_REPOSITORY_SERVICE_NAME, HttpMethodType.POST, StringUtils.defaultIfEmpty( AppConfigProperties.getInstance().getPlatformUsername(), System.getProperty(AppConfigProperties.KEY_PLATFORM_USERNAME) ), params );
     } catch (ProxyException e) {
-      throw new SolutionRepositoryServiceException( e.getMessage(), e );
+      throw new SolutionRepositoryServiceException(ExceptionParser.getErrorMessage(e.getMessage(), e.getMessage()), e );
     }
 //    SolutionRepositoryXmlSerializer s = new SolutionRepositoryXmlSerializer();
 
