@@ -1686,9 +1686,9 @@ public interface PacLocalizedMessages extends com.google.gwt.i18n.client.Message
   String checkToSelectAll();
 
   /**
-   * Translated "Are your sure you want to delete the selected users? Restart of a PCI will be required for this change to take effect in the PCI".
+   * Translated "Are your sure you want to delete the selected users? You must restart the BI Server for this change to take effect.".
    * 
-   * @return translated "Are your sure you want to delete the selected users? Restart of a PCI will be required for this change to take effect in the PCI"
+   * @return translated "Are your sure you want to delete the selected users? You must restart the BI Server for this change to take effect."
    * @gwt.key confirmUserDeletionMsg
    */
   String confirmUserDeletionMsg();
