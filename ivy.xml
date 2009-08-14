@@ -32,8 +32,8 @@
     <dependency org="commons-logging"     name="commons-logging" rev="1.1" transitive="false" />
     <dependency org="dom4j"               name="dom4j" rev="1.6.1" transitive="false" />
     <dependency org="jaxen"               name="jaxen" rev="1.1" transitive="false" />
-    <dependency org="org.springframework" name="spring" rev="2.0" transitive="false" />
-    <dependency org="org.acegisecurity"   name="acegi-security"      rev="1.0.6" transitive="false"/>
+    <dependency org="org.springframework" name="spring" rev="2.5.6" transitive="false" />
+    <dependency org="org.springframework.security" name="spring-security-core" rev="2.0.5.RELEASE" transitive="false" />
 
     <!-- hibernate related dependencies -->
     <dependency org="org.hibernate"       name="hibernate" rev="3.2.6.ga">
@@ -77,7 +77,7 @@
       Runtime dependencies - need to verify that all of these are actually needed
     ====================================================================-->
     <dependency org="pentaho"         name="pentaho-bi-platform-api" rev="${project.revision}" conf="runtime->default" changing="true" >
-        <exclude org="org.acegisecurity" name="acegi-security" />
+        <exclude org="org.springframework.security" name="spring-security-core" />
         <exclude org="org.springframework" name="spring" />
     </dependency>
     <dependency org="pentaho"         name="pentaho-bi-platform-util" rev="${project.revision}" conf="runtime->default" transitive="false" changing="true" />

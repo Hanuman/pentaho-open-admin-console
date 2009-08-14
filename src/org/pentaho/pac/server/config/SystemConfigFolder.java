@@ -53,16 +53,16 @@ public class SystemConfigFolder {
     return new File(getFolder().getAbsoluteFile() + File.separator + "sessionStartupActions.xml"); //$NON-NLS-1$
   }
   
-  public File getAcegiSecurityXmlFile() {
-    return new File(getFolder().getAbsoluteFile() + File.separator + "applicationContext-acegi-security.xml"); //$NON-NLS-1$
+  public File getSpringSecurityXmlFile() {
+    return new File(getFolder().getAbsoluteFile() + File.separator + "applicationContext-spring-security.xml"); //$NON-NLS-1$
   }
   
   public File getPentahoSecurityXmlFile() {
     return new File(getFolder().getAbsoluteFile() + File.separator + "applicationContext-pentaho-security-ldap.xml"); //$NON-NLS-1$
   }
   
-  public File getAcegiSecurityLdapXmlFile() {
-    return new File(getFolder().getAbsoluteFile() + File.separator + "applicationContext-acegi-security-ldap.xml"); //$NON-NLS-1$
+  public File getSpringSecurityLdapXmlFile() {
+    return new File(getFolder().getAbsoluteFile() + File.separator + "applicationContext-spring-security-ldap.xml"); //$NON-NLS-1$
   }
   
   public File getCommonAuthorizationXmlFile() {

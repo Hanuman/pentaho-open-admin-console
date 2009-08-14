@@ -43,13 +43,12 @@ public class PentahoSpringBeansConfig {
   private static final String RESOURCE_XPATH = ROOT_ELEMENT + "/" + IMPORT_ELEMENT;//$NON-NLS-1$
   private static final String RESOURCE_ATTR_NAME = "resource";//$NON-NLS-1$
   
-  private static final String ACEGI_SECURITY_LDAP_CONFIG_FILE = "applicationContext-acegi-security-ldap.xml"; //$NON-NLS-1$
-  private static final String ACEGI_SECURITY_DB_CONFIG_FILE = "applicationContext-acegi-security-hibernate.xml"; //$NON-NLS-1$
-  private static final String ACEGI_SECURITY_MEMORY_CONFIG_FILE = "applicationContext-acegi-security-memory.xml"; //$NON-NLS-1$
+  private static final String SPRING_SECURITY_LDAP_CONFIG_FILE = "applicationContext-spring-security-ldap.xml"; //$NON-NLS-1$
+  private static final String SPRING_SECURITY_DB_CONFIG_FILE = "applicationContext-spring-security-hibernate.xml"; //$NON-NLS-1$
+  private static final String SPRING_SECURITY_MEMORY_CONFIG_FILE = "applicationContext-spring-security-memory.xml"; //$NON-NLS-1$
   private static final String PENTAHO_SECURITY_LDAP_CONFIG_FILE = "applicationContext-pentaho-security-ldap.xml"; //$NON-NLS-1$
   private static final String PENTAHO_SECURITY_DB_CONFIG_FILE = "applicationContext-pentaho-security-hibernate.xml"; //$NON-NLS-1$
   private static final String PENTAHO_SECURITY_MEMORY_CONFIG_FILE = "applicationContext-pentaho-security-memory.xml"; //$NON-NLS-1$
-  private static final String LDAP_PLACEHOLDER_CONFIG_FILE = "applicationContext-placeholder.xml"; //$NON-NLS-1$
   
   Document document;
   
@@ -103,11 +102,11 @@ public class PentahoSpringBeansConfig {
   public AuthenticationType getAuthenticationType() {
     List<String> configFiles = Arrays.asList(getSystemConfigFileNames());
     AuthenticationType authenticationType = null;
-    if(configFiles.contains(ACEGI_SECURITY_MEMORY_CONFIG_FILE) && configFiles.contains(PENTAHO_SECURITY_MEMORY_CONFIG_FILE)) { 
+    if(configFiles.contains(SPRING_SECURITY_MEMORY_CONFIG_FILE) && configFiles.contains(PENTAHO_SECURITY_MEMORY_CONFIG_FILE)) { 
       authenticationType = AuthenticationType.MEMORY_BASED_AUTHENTICATION;
-    } else if(configFiles.contains(ACEGI_SECURITY_DB_CONFIG_FILE) && configFiles.contains(PENTAHO_SECURITY_DB_CONFIG_FILE)) { 
+    } else if(configFiles.contains(SPRING_SECURITY_DB_CONFIG_FILE) && configFiles.contains(PENTAHO_SECURITY_DB_CONFIG_FILE)) { 
       authenticationType = AuthenticationType.DB_BASED_AUTHENTICATION;
-    } else if(configFiles.contains(ACEGI_SECURITY_LDAP_CONFIG_FILE) && configFiles.contains(PENTAHO_SECURITY_LDAP_CONFIG_FILE)) { 
+    } else if(configFiles.contains(SPRING_SECURITY_LDAP_CONFIG_FILE) && configFiles.contains(PENTAHO_SECURITY_LDAP_CONFIG_FILE)) { 
       authenticationType = AuthenticationType.LDAP_BASED_AUTHENTICATION;
     }
       
@@ -118,26 +117,24 @@ public class PentahoSpringBeansConfig {
     if ((authenticationType != getAuthenticationType()) && (authenticationType != null)) {
       ArrayList<String> configFiles = new ArrayList<String>();
       configFiles.addAll(Arrays.asList(getSystemConfigFileNames()));
-      configFiles.remove(ACEGI_SECURITY_MEMORY_CONFIG_FILE);
-      configFiles.remove(ACEGI_SECURITY_DB_CONFIG_FILE);
-      configFiles.remove(ACEGI_SECURITY_LDAP_CONFIG_FILE);
+      configFiles.remove(SPRING_SECURITY_MEMORY_CONFIG_FILE);
+      configFiles.remove(SPRING_SECURITY_DB_CONFIG_FILE);
+      configFiles.remove(SPRING_SECURITY_LDAP_CONFIG_FILE);
       configFiles.remove(PENTAHO_SECURITY_MEMORY_CONFIG_FILE);
       configFiles.remove(PENTAHO_SECURITY_DB_CONFIG_FILE);
       configFiles.remove(PENTAHO_SECURITY_LDAP_CONFIG_FILE);
-      configFiles.remove(LDAP_PLACEHOLDER_CONFIG_FILE);
       switch (authenticationType) {
         case MEMORY_BASED_AUTHENTICATION:
-          configFiles.add(ACEGI_SECURITY_MEMORY_CONFIG_FILE);
+          configFiles.add(SPRING_SECURITY_MEMORY_CONFIG_FILE);
           configFiles.add(PENTAHO_SECURITY_MEMORY_CONFIG_FILE);
           break;
         case DB_BASED_AUTHENTICATION:
-          configFiles.add(ACEGI_SECURITY_DB_CONFIG_FILE);
+          configFiles.add(SPRING_SECURITY_DB_CONFIG_FILE);
           configFiles.add(PENTAHO_SECURITY_DB_CONFIG_FILE);
           break;
         case LDAP_BASED_AUTHENTICATION:
-          configFiles.add(ACEGI_SECURITY_LDAP_CONFIG_FILE);
+          configFiles.add(SPRING_SECURITY_LDAP_CONFIG_FILE);
           configFiles.add(PENTAHO_SECURITY_LDAP_CONFIG_FILE);
-          configFiles.add(LDAP_PLACEHOLDER_CONFIG_FILE);
           break;
       }
       setSystemConfigFileNames(configFiles.toArray(new String[0]));

@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.acegisecurity.providers.encoding.PasswordEncoder;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,6 +36,7 @@ import org.pentaho.pac.server.config.PentahoObjectsConfig;
 import org.pentaho.pac.server.config.SpringSecurityHibernateConfig;
 import org.pentaho.pac.server.config.WebXml;
 import org.pentaho.pac.server.i18n.Messages;
+import org.springframework.security.providers.encoding.PasswordEncoder;
 
 /**
  * By default, this class will initialize itself from <code>resource/config/console.xml</code> (relative to the current
@@ -54,7 +54,7 @@ public class AppConfigProperties {
   public static final String WEB_XML_PATH = "/WEB-INF/web.xml"; //$NON-NLS-1$
   public static final String HIBERNATE_MANAGED_XML_PATH = "/system/hibernate/hibernate-settings.xml"; //$NON-NLS-1$
   public static final String PENTAHO_OBJECTS_SPRING_XML = "/system/pentahoObjects.spring.xml"; //$NON-NLS-1$
-  public static final String SPRING_SECURITY_HIBERNATE_XML = "/system/applicationContext-acegi-security-hibernate.xml" ; //$NON-NLS-1$
+  public static final String SPRING_SECURITY_HIBERNATE_XML = "/system/applicationContext-spring-security-hibernate.xml" ; //$NON-NLS-1$
   public static final String JDBC_DRIVER_PATH = "./jdbc"; //$NON-NLS-1$
   public static final String KEY_BISERVER_STATUS_CHECK_PERIOD = "biserver-status-check-period"; //$NON-NLS-1$
   public static final String KEY_BISERVER_BASE_URL = "biserver-base-url"; //$NON-NLS-1$

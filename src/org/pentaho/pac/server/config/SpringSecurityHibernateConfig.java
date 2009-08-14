@@ -22,7 +22,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import org.acegisecurity.providers.encoding.PasswordEncoder;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -31,9 +30,10 @@ import org.pentaho.pac.server.common.util.DtdEntityResolver;
 import org.pentaho.platform.api.util.XmlParseException;
 import org.pentaho.platform.engine.security.userroledao.messages.Messages;
 import org.pentaho.platform.util.xml.dom4j.XmlDom4JHelper;
+import org.springframework.security.providers.encoding.PasswordEncoder;
 
 /**
- * Object wrapper around contents of <code>applicationContext-acegi-security-hibernate.xml</code>.
+ * Object wrapper around contents of <code>applicationContext-spring-security-hibernate.xml</code>.
  * 
  * @author mlowery
  */
