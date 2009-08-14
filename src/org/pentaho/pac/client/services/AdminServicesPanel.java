@@ -111,13 +111,16 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
         MessageDialog messageDialog = new MessageDialog(MSGS.services(), 
             result);
         messageDialog.center();
-        serviceButton.setEnabled(true);
+        messageDialog.show();
+        serviceButton.setEnabled(true);        
       }
 
       public void onFailure(Throwable caught) {
         MessageDialog messageDialog = new MessageDialog();
         messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
         messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), caught.getMessage()));   
+        messageDialog.center();
+        messageDialog.show();
         serviceButton.setEnabled(true);
       }
     }; // end AsyncCallback

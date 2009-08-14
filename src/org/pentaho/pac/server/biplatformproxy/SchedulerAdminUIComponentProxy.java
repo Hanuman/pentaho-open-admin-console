@@ -42,7 +42,7 @@ import org.pentaho.pac.server.common.util.DateUtil;
 
 public class SchedulerAdminUIComponentProxy {
 
-  private static final String SCHEDULER_SERVICE_NAME = "SchedulerAdmin"; //$NON-NLS-1$
+  private static final String SCHEDULER_SERVICE_NAME = "SchedulerAdminService"; //$NON-NLS-1$
   // matches a string that contains no commas, and exactly three substrings each separated by a "/"
   private static String RE_MATCH_ACTION_REF = "^[^,/]+/[^,/]+/[^,/]+$"; //$NON-NLS-1$
 

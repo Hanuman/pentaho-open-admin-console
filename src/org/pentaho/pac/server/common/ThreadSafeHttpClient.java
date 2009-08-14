@@ -148,6 +148,11 @@ public class ThreadSafeHttpClient {
     try {
       int httpStatus = CLIENT.executeMethod(method);
       if (httpStatus != HttpStatus.SC_OK) {
+        // If the response comes as unauthorized access we will throw a proxy exception explaining the reason and
+        // what needs to be done to correct it
+        if(httpStatus == HttpStatus.SC_UNAUTHORIZED) {
+          throw new ProxyException(Messages.getErrorString("ThreadSafeHttpClient.ERROR_0003_AUTHORIZATION_FAILED"));
+        }
         String status = method.getStatusLine().toString();
         String uri = method.getURI().toString();
         String errorMsg = Messages.getErrorString( "ThreadSafeHttpClient.ERROR_0001_CLIENT_REQUEST_FAILED", //$NON-NLS-1$
@@ -159,9 +164,6 @@ public class ThreadSafeHttpClient {
       // trim() is necessary because some jsp's put \n\r at the beginning of
       // the returned text, and the xml processor chokes on \n\r at the beginning.
       String response = IOUtils.toString(responseStrm).trim();
-      if(hasRequestFailedToAuthorize(response)) {
-        throw new ProxyException(Messages.getErrorString("ThreadSafeHttpClient.ERROR_0003_AUTHORIZATION_FAILED"));
-      }
       return response;
     } catch (Exception e) {
       throw new ProxyException(e);
@@ -196,16 +198,5 @@ public class ThreadSafeHttpClient {
       idx++;
     }
     return pairAr;
-  }
-  private boolean hasRequestFailedToAuthorize(String response) {
-    final String LOGIN_PAGE_TEXT = "<title>Pentaho User Console - Login</title>";//$NON-NLS-1$
-    boolean returnValue = false;
-    if(response == null) {
-      returnValue = false;
-    } else if(response.indexOf(LOGIN_PAGE_TEXT) >= 0) {
-      returnValue = true; 
-    }
-    
-    return returnValue;
   }
 }

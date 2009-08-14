@@ -40,6 +40,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.pentaho.pac.client.PacService;
+import org.pentaho.pac.client.utils.ExceptionParser;
 import org.pentaho.pac.common.HibernateConfigException;
 import org.pentaho.pac.common.PacServiceException;
 import org.pentaho.pac.common.PentahoSecurityException;
@@ -83,7 +84,9 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class PacServiceImpl extends RemoteServiceServlet implements PacService {
 
   // ~ Static fields/initializers ====================================================================================== 
-
+  private static final String PUBLISH_SERVICE_NAME = "PublishService"; //$NON-NLS-1$
+  private static final String SERVICE_ACTION_SERVICE_NAME = "ServiceActionService"; //$NON-NLS-1$
+  private static final String RESET_REPOSITORY_SERVICE_NAME = "ResetRepositoryService"; //$NON-NLS-1$
   private static final Log logger = LogFactory.getLog(PacServiceImpl.class);
   
   private static final long serialVersionUID = 420L;
@@ -722,9 +725,9 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     
     String strResponse;
     try {
-      strResponse = biServerProxy.execRemoteMethod(getBIServerBaseUrl(), "ServiceAction", HttpMethodType.GET, getUserName(), params );//$NON-NLS-1$
+      strResponse = biServerProxy.execRemoteMethod(getBIServerBaseUrl(), SERVICE_ACTION_SERVICE_NAME, HttpMethodType.GET, getUserName(), params );
     } catch (ProxyException e) {
-      throw new PacServiceException( e.getMessage(), e );
+      throw new PacServiceException( ExceptionParser.getErrorMessage(e.getMessage(), e.getMessage()), e );
     } 
     XActionXmlSerializer s = new XActionXmlSerializer();
     String errorMsg;
@@ -749,9 +752,9 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     
     String strResponse;
     try {
-      strResponse = biServerProxy.execRemoteMethod(getBIServerBaseUrl(), "Publish", HttpMethodType.GET, getUserName(), params );//$NON-NLS-1$
+      strResponse = biServerProxy.execRemoteMethod(getBIServerBaseUrl(), PUBLISH_SERVICE_NAME, HttpMethodType.GET, getUserName(), params );
     } catch (ProxyException e) {
-      throw new PacServiceException( e.getMessage(), e );
+      throw new PacServiceException( ExceptionParser.getErrorMessage(e.getMessage(), e.getMessage()), e );
     } 
     XActionXmlSerializer s = new XActionXmlSerializer();
     String errorMsg = s.getPublishStatusFromXml( strResponse );
@@ -765,9 +768,9 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
   private String resetSolutionRepository(String userid ) throws PacServiceException {
 
     try {
-      biServerProxy.execRemoteMethod(getBIServerBaseUrl(), "ResetRepository", HttpMethodType.GET, getUserName(), /*params*/null );//$NON-NLS-1$
+      biServerProxy.execRemoteMethod(getBIServerBaseUrl(), RESET_REPOSITORY_SERVICE_NAME, HttpMethodType.GET, getUserName(), /*params*/null );
     } catch (ProxyException e) {
-      throw new PacServiceException( e.getMessage(), e );
+      throw new PacServiceException( ExceptionParser.getErrorMessage(e.getMessage(), e.getMessage()), e );
     } 
     return Messages.getString( "PacService.ACTION_COMPLETE" ); //$NON-NLS-1$
   }

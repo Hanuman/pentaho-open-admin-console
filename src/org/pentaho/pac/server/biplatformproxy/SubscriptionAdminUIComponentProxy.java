@@ -37,7 +37,7 @@ import org.pentaho.pac.server.common.util.DateUtil;
 
 public class SubscriptionAdminUIComponentProxy {
 
-  private static final String SUBSCRIPTION_SERVICE_NAME = "SubscriptionAdmin"; //$NON-NLS-1$
+  private static final String SUBSCRIPTION_SERVICE_NAME = "SubscriptionAdminService"; //$NON-NLS-1$
 
   private static BiServerTrustedProxy biServerProxy;
   static {

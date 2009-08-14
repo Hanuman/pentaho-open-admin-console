@@ -424,6 +424,7 @@ public class SchedulerToolbarController {
         MessageDialog messageDialog = new MessageDialog();
         messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
         messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), caught.getMessage()));
+        messageDialog.center();
         messageDialog.show();
         enableTools();
       } // end outer onFailure
