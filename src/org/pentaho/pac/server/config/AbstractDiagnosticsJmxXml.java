@@ -48,11 +48,13 @@ public abstract class AbstractDiagnosticsJmxXml {
   }
   
   public AbstractDiagnosticsJmxXml(Document jmxDocument) throws DocumentException {
-    Element rootElement = jmxDocument.getRootElement();
-    if ((rootElement != null) &&  !jmxDocument.getRootElement().getName().equals(ROOT_ELEMENT)) {
-      throw new DocumentException(Messages.getErrorString("GoogleMapsConfig.ERROR_0001_INVALID_ROOT_ELEMENT")); //$NON-NLS-1$
+    if(jmxDocument != null) {
+      Element rootElement = jmxDocument.getRootElement();
+      if ((rootElement != null) &&  !jmxDocument.getRootElement().getName().equals(ROOT_ELEMENT)) {
+        throw new DocumentException(Messages.getErrorString("GoogleMapsConfig.ERROR_0001_INVALID_ROOT_ELEMENT")); //$NON-NLS-1$
+      }
+      document = jmxDocument;
     }
-    document = jmxDocument;
   }
   
   public AbstractDiagnosticsJmxXml() {
