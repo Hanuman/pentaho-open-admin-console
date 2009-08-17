@@ -784,12 +784,13 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     
     String html = null;
     HttpClient client = new HttpClient();
+    GetMethod get = null;
     try {
 
       String timeOut = AppConfigProperties.getInstance().getHomepageTimeout();
       HttpMethodParams params = new HttpMethodParams();
       params.setParameter(HttpMethodParams.SO_TIMEOUT, Integer.parseInt(timeOut));
-      GetMethod get = new GetMethod(url);
+      get = new GetMethod(url);
       get.setParams(params);
       client.executeMethod(get);
       
@@ -803,6 +804,10 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     } catch (Exception e) {
       logger.error(e);
       html = showStatic();
+    } finally {
+      if(get != null) {
+        get.releaseConnection();
+      }
     }
     final String BODY_TAG = "<body>"; //$NON-NLS-1$
     
