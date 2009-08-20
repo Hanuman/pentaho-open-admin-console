@@ -107,7 +107,13 @@ public class ThreadSafeHttpClient {
 
     assert null != baseUrl : "baseUrl cannot be null"; //$NON-NLS-1$
     
-    String serviceUrl = baseUrl + ((StringUtils.isEmpty(serviceName)) ? "" : "/" + serviceName); //$NON-NLS-1$ //$NON-NLS-2$
+    String serviceUrl = baseUrl;
+    if (!StringUtils.isEmpty(serviceName)) {
+      if (!serviceUrl.endsWith("/")) { //$NON-NLS-1$
+        serviceUrl = serviceUrl + "/"; //$NON-NLS-1$
+      }
+      serviceUrl = serviceUrl + serviceName;
+    }
     if (null == mapParams) {
       mapParams = new HashMap<String, Object>();
     }
