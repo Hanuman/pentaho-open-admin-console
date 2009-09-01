@@ -30,6 +30,21 @@
 			<exclude name="**/test/*" />
 		</fileset>
 	</path>
+  
+  <!-- workaround bug in common build that includes all files not just jars in devlib -->
+  <path id="test.classpath">
+    <fileset dir="${devlib.dir}">
+      <include name="*.jar" />
+    </fileset>
+    <fileset dir="${lib.dir}">
+      <include name="*.jar" />
+    </fileset>
+    <fileset dir="${testlib.dir}">
+      <include name="*.jar" />
+    </fileset>
+    <dirset dir="${classes.dir}" />
+    <dirset dir="${testclasses.dir}" />
+  </path>
 
 	<target name="init">
 		<mkdir dir="${build.jars.dir}" />
