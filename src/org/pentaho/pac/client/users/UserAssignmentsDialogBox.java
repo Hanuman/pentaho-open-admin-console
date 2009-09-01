@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.pentaho.gwt.widgets.client.dialogs.MessageDialogBox;
 import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.client.common.ui.dialog.AccumulatorDialog;
@@ -34,7 +35,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public class UserAssignmentsDialogBox extends AccumulatorDialog<ProxyPentahoUser> {
   boolean userAssignmentsModified = false;
   ProxyPentahoRole role;
-  MessageDialog errorDialog = new MessageDialog( MSGS.error() );
   UsersList availableUsersList = new UsersList(true);
   UsersList accumulatedUsersList = new UsersList(true);
 
@@ -93,9 +93,8 @@ public class UserAssignmentsDialogBox extends AccumulatorDialog<ProxyPentahoUser
       }
 
       public void onFailure(Throwable caught) {
-        MessageDialog messageDialog = new MessageDialog();
-        messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorAssigningSelectedUsers()));    
+        MessageDialogBox messageDialog = new MessageDialogBox(ExceptionParser.getErrorHeader(caught.getMessage()), ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorAssigningSelectedUsers()), false, false, true);
+        messageDialog.center();
       }
     };
     UserAndRoleMgmtService.instance().setUsers(role, accumulatedUsersList.getObjects().toArray(new ProxyPentahoUser[0]), callback);

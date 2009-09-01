@@ -16,7 +16,7 @@
 */
 package org.pentaho.pac.client;
 
-import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
+import org.pentaho.gwt.widgets.client.dialogs.MessageDialogBox;
 import org.pentaho.pac.client.datasources.DataSourcesPanel;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.scheduler.ctlr.SchedulerController;
@@ -119,8 +119,7 @@ public class AdministrationTabPanel extends TabPanel implements IRefreshableAdmi
       }
     
       public void onFailure(Throwable caught) {
-        MessageDialog messageDialog = new MessageDialog( MSGS.error() );
-        messageDialog.setMessage(MSGS.securityRefreshError(caught.getMessage()));
+        MessageDialogBox messageDialog = new MessageDialogBox( MSGS.error(), MSGS.securityRefreshError(caught.getMessage()), false, false, true);
         messageDialog.center();
       }
     };

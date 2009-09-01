@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.pentaho.gwt.widgets.client.buttons.ImageButton;
+import org.pentaho.gwt.widgets.client.dialogs.PromptDialogBox;
 import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
@@ -40,6 +41,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Label;
@@ -77,7 +79,8 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
   
   
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
-  MessageDialog errorDialog = new MessageDialog( MSGS.error() );
+  HTML errorMsgHtml = new HTML();
+  PromptDialogBox errorDialog = new PromptDialogBox(MSGS.error(), MSGS.ok(), null, false, true, errorMsgHtml);
   RolesList rolesList = new RolesList(true);
   UsersList assignedUsersList = new UsersList(true);
   RoleDetailsPanel roleDetailsPanel = new RoleDetailsPanel();
@@ -274,7 +277,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 
 	      public void onFailure(Throwable caught) {
 	        errorDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-	        errorDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorDeletingRoles()));          
+	        errorMsgHtml.setHTML(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorDeletingRoles()));          
 	        errorDialog.center();
 	      }
 	    };
@@ -297,7 +300,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 
         public void onFailure(Throwable caught) {
           errorDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-          errorDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorUnassigningSelectedUsersFromRole()));          
+          errorMsgHtml.setHTML(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorUnassigningSelectedUsersFromRole()));          
           errorDialog.center();
         }
       };
@@ -344,7 +347,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 
       public void onFailure(Throwable caught) {
         errorDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-        errorDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorUpdatingRole()));          
+        errorMsgHtml.setHTML(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorUpdatingRole()));          
         errorDialog.center();
         ((Button)sender).setEnabled( true );
       }

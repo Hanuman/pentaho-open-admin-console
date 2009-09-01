@@ -17,11 +17,11 @@
 package org.pentaho.pac.client.datasources;
 
 import org.pentaho.gwt.widgets.client.buttons.ImageButton;
-import org.pentaho.gwt.widgets.client.ui.ICallback;
+import org.pentaho.gwt.widgets.client.dialogs.IDialogCallback;
+import org.pentaho.gwt.widgets.client.dialogs.MessageDialogBox;
+import org.pentaho.gwt.widgets.client.dialogs.PromptDialogBox;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
-import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.utils.ExceptionParser;
 import org.pentaho.pac.common.NameValue;
@@ -33,6 +33,7 @@ import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -52,7 +53,8 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 
 //  TabPanel generalAdvanceDbPanel = new TabPanel();
 
-  MessageDialog messageDialog = new MessageDialog();
+  HTML msgBoxHtml = new HTML();
+  PromptDialogBox messageDialog = new PromptDialogBox("", MSGS.ok(), null, false, true, msgBoxHtml);
   DataSourcesList dataSourcesList = new DataSourcesList();
   DataSourceGeneralPanel dataSourceGeneralPanel = new DataSourceGeneralPanel();
   DataSourceAdvancePanel dataSourceAdvancePanel = new DataSourceAdvancePanel();
@@ -66,9 +68,8 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
   ImageButton deleteDataSourceBtn = new ImageButton("style/images/remove.png", "style/images/remove_disabled.png", MSGS.deleteDataSources(), 15, 15); //$NON-NLS-1$ //$NON-NLS-2$
 
   NewDataSourceDialogBox newDataSourceDialogBox = new NewDataSourceDialogBox();
-
-  ConfirmDialog confirmDataSourceDeleteDialog = new ConfirmDialog(MSGS.deleteDataSources(), MSGS
-      .confirmDataSourceDeletionMsg());
+  
+  PromptDialogBox confirmDataSourceDeleteDialog = new PromptDialogBox(MSGS.deleteDataSources(), MSGS.ok() , MSGS.cancel(), false, true, new HTML(MSGS.confirmDataSourceDeletionMsg()));
 
   public DataSourcesPanel() {
     HorizontalPanel footerPanel = new HorizontalPanel();
@@ -100,12 +101,14 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
     newDataSourceDialogBox.addPopupListener(this);
     updateDataSourceBtn.addClickListener(this);
     testDataSourceBtn.addClickListener(this);
-    confirmDataSourceDeleteDialog.setOnOkHandler(new ICallback<MessageDialog>() {
-      public void onHandle(MessageDialog o) {
+    confirmDataSourceDeleteDialog.setCallback(new IDialogCallback() {
+      public void cancelPressed() {
+      }
+
+      public void okPressed() {
         confirmDataSourceDeleteDialog.hide();
         deleteSelectedDataSources();
-
-      }
+      }      
     });
   }
 
@@ -214,14 +217,14 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
       AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
         public void onSuccess(Boolean result) {
           messageDialog.setText(MSGS.deleteDataSources());
-          messageDialog.setMessage(MSGS.successfulDataSourceDelete()); 
+          msgBoxHtml.setHTML(MSGS.successfulDataSourceDelete()); 
           messageDialog.center();
           refresh();
         }
 
         public void onFailure(Throwable caught) {
           messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-          messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorDeletingDataSource()));          
+          msgBoxHtml.setHTML(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorDeletingDataSource()));          
           messageDialog.center();
         }
       };
@@ -249,16 +252,16 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
   private void updateDataSourceDetails(final Widget sender) {
     messageDialog.setText(MSGS.updateDataSource());
     if (dataSourceGeneralPanel.getJndiName().trim().length() == 0) {
-      messageDialog.setMessage(MSGS.invalidConnectionName());
+      msgBoxHtml.setHTML(MSGS.invalidConnectionName());
       messageDialog.center();
     } else if (dataSourceGeneralPanel.getUrl().trim().length() == 0) {
-      messageDialog.setMessage(MSGS.missingDbUrl());
+      msgBoxHtml.setHTML(MSGS.missingDbUrl());
       messageDialog.center();
     } else if (dataSourceGeneralPanel.getDriverClass().trim().length() == 0) {
-      messageDialog.setMessage(MSGS.missingDbDriver());
+      msgBoxHtml.setHTML(MSGS.missingDbDriver());
       messageDialog.center();
     } else if (dataSourceGeneralPanel.getUserName().trim().length() == 0) {
-      messageDialog.setMessage(MSGS.missingDbUserName());
+      msgBoxHtml.setHTML(MSGS.missingDbUserName());
       messageDialog.center();
     } else {
       final PentahoDataSource dataSource = getDataSource();
@@ -268,7 +271,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
       AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
         public void onSuccess(Boolean result) {
           messageDialog.setText(MSGS.updateDataSource());
-          messageDialog.setMessage(MSGS.successfulDataSourceUpdate()); 
+          msgBoxHtml.setHTML(MSGS.successfulDataSourceUpdate()); 
           messageDialog.center();
           dataSourcesList.setDataSource(index, dataSource);
           ((Button) sender).setEnabled(true);
@@ -277,7 +280,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 
         public void onFailure(Throwable caught) {
           messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-          messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorUpdatingDataSource()));          
+          msgBoxHtml.setHTML(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorUpdatingDataSource()));          
           messageDialog.center();
           ((Button) sender).setEnabled(true);
         }
@@ -292,13 +295,13 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
     final AsyncCallback<Boolean> validationUrlCallback = new AsyncCallback<Boolean>() {
         public void onSuccess(Boolean result) {
           messageDialog.setText(MSGS.testConnection());
-          messageDialog.setMessage(MSGS.connectionTestSuccessful());
+          msgBoxHtml.setHTML(MSGS.connectionTestSuccessful());
           messageDialog.center();
         }
 
         public void onFailure(Throwable caught) {
           messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-          messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorTestingDataSourceConnection()));          
+          msgBoxHtml.setHTML(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorTestingDataSourceConnection()));          
           messageDialog.center();
         }
       };
@@ -310,14 +313,14 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
         }
         else{
           messageDialog.setText(MSGS.testConnection());
-            messageDialog.setMessage(MSGS.connectionTestSuccessful());
+          msgBoxHtml.setHTML(MSGS.connectionTestSuccessful());
             messageDialog.center();
         }
       }
 
       public void onFailure(Throwable caught) {
         messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorTestingDataSourceConnection()));          
+        msgBoxHtml.setHTML(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorTestingDataSourceConnection()));          
         messageDialog.center();
       }
     };

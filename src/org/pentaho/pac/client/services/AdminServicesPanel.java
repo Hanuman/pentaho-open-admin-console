@@ -23,6 +23,7 @@ package org.pentaho.pac.client.services;
 
 import java.util.HashMap;
 
+import org.pentaho.gwt.widgets.client.dialogs.MessageDialogBox;
 import org.pentaho.pac.client.PacServiceAsync;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
@@ -108,17 +109,14 @@ public class AdminServicesPanel extends VerticalPanel implements ClickListener {
     AsyncCallback<String> callback = new AsyncCallback<String>() {
       
       public void onSuccess(String result) {
-        MessageDialog messageDialog = new MessageDialog(MSGS.services(), 
-            result);
+        MessageDialogBox messageDialog = new MessageDialogBox(MSGS.services(), result, false, false, true);
         messageDialog.center();
         messageDialog.show();
         serviceButton.setEnabled(true);        
       }
 
       public void onFailure(Throwable caught) {
-        MessageDialog messageDialog = new MessageDialog();
-        messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), caught.getMessage()));   
+        MessageDialogBox messageDialog = new MessageDialogBox(ExceptionParser.getErrorHeader(caught.getMessage()), ExceptionParser.getErrorMessage(caught.getMessage(), caught.getMessage()), false, false, true);   
         messageDialog.center();
         messageDialog.show();
         serviceButton.setEnabled(true);

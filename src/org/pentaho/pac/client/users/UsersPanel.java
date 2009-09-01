@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.pentaho.gwt.widgets.client.buttons.ImageButton;
+import org.pentaho.gwt.widgets.client.dialogs.MessageDialogBox;
 import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
@@ -77,7 +78,6 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
   }
   
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
-  MessageDialog errorDialog = new MessageDialog( MSGS.error() );
   UsersList usersList = new UsersList(true);
   RolesList assignedRolesList = new RolesList(true);
   UserDetailsPanel userDetailsPanel = new UserDetailsPanel();
@@ -307,9 +307,8 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
 	      }
 
 	      public void onFailure(Throwable caught) {
-          MessageDialog messageDialog = new MessageDialog();
-          messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-          messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorDeletingUsers()));  
+          MessageDialogBox messageDialog = new MessageDialogBox(ExceptionParser.getErrorHeader(caught.getMessage()), ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorDeletingUsers()), false, false, true);
+          messageDialog.center();
 	      }
 	    };
 	    UserAndRoleMgmtService.instance().deleteUsers(selectedUsers.toArray(new ProxyPentahoUser[0]), callback);
@@ -330,9 +329,8 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
         }
 
         public void onFailure(Throwable caught) {
-          MessageDialog messageDialog = new MessageDialog();
-          messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-          messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorUnassigningRoles()));  
+          MessageDialogBox messageDialog = new MessageDialogBox(ExceptionParser.getErrorHeader(caught.getMessage()), ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorUnassigningRoles()), false, false, true);
+          messageDialog.center();
         }
       };
       UserAndRoleMgmtService.instance().setRoles(selectedUsers.get(0), (ProxyPentahoRole[])assignedRoles.toArray(new ProxyPentahoRole[0]), callback);
@@ -380,8 +378,7 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
 	@SuppressWarnings("unchecked")
 	private void updateUserDetails( final Widget sender ) {
 	  if (!userDetailsPanel.getPassword().equals(userDetailsPanel.getPasswordConfirmation())) { 
-	    errorDialog.setText(MSGS.updateUser());
-      errorDialog.setMessage(MSGS.passwordConfirmationFailed());
+	    MessageDialogBox errorDialog = new MessageDialogBox(MSGS.updateUser(), MSGS.passwordConfirmationFailed(), false, false, true);
       errorDialog.center();
 	  } else {
       ((Button)sender).setEnabled( false );
@@ -398,9 +395,7 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
 	      }
 
 	      public void onFailure(Throwable caught) {
-	        MessageDialog messageDialog = new MessageDialog();
-	        messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-	        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorUpdatingUser()));   
+	        MessageDialogBox messageDialog = new MessageDialogBox(ExceptionParser.getErrorHeader(caught.getMessage()), ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorUpdatingUser()), false, false, true);
 	        messageDialog.center();
           ((Button)sender).setEnabled( true );
 	      }

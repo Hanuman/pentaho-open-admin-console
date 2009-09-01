@@ -16,6 +16,7 @@
 */
 package org.pentaho.pac.client.datasources;
 
+import org.pentaho.gwt.widgets.client.dialogs.PromptDialogBox;
 import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
@@ -29,6 +30,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.DockPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
@@ -46,7 +48,8 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
   DataSourceGeneralPanel dataSourceGeneralPanel;
   DataSourceAdvancePanel dataSourceAdvancePanel;
   boolean dataSourceCreated = false;
-  MessageDialog messageDialog = new MessageDialog( MSGS.error() );
+  HTML msgBoxHtml = new HTML();
+  PromptDialogBox messageDialog = new PromptDialogBox(MSGS.error(), MSGS.ok(), null, false, true, msgBoxHtml);
   DeckPanel deckPanel;
   ToggleButton generalButton;
   ToggleButton advanceButton;
@@ -296,16 +299,16 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
   
   private boolean createDataSource() {
     if (getJndiName().trim().length() == 0) {
-      messageDialog.setMessage(MSGS.invalidConnectionName());
+      msgBoxHtml.setHTML(MSGS.invalidConnectionName());
       messageDialog.center();
     } else if (getUrl().trim().length() == 0) {
-      messageDialog.setMessage(MSGS.missingDbUrl());
+      msgBoxHtml.setHTML(MSGS.missingDbUrl());
       messageDialog.center();
     } else if (getDriverClass().trim().length() == 0) {
-      messageDialog.setMessage(MSGS.missingDbDriver());
+      msgBoxHtml.setHTML(MSGS.missingDbDriver());
       messageDialog.center();
     } else if (getUserName().trim().length() == 0) {
-      messageDialog.setMessage(MSGS.missingDbUserName());
+      msgBoxHtml.setHTML(MSGS.missingDbUserName());
       messageDialog.center();
     } else {
       PentahoDataSource dataSource = getDataSource();
@@ -318,7 +321,7 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
 
           public void onFailure(Throwable caught) {
             messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-            messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorCreatingDataSource()));          
+            msgBoxHtml.setHTML(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorCreatingDataSource()));          
             messageDialog.center();
           }
         };
@@ -340,13 +343,13 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
     AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
       public void onSuccess(Boolean result) {
         messageDialog.setText(MSGS.testConnection());
-        messageDialog.setMessage(MSGS.connectionTestSuccessful());
+        msgBoxHtml.setHTML(MSGS.connectionTestSuccessful());
         messageDialog.center();
       }
 
       public void onFailure(Throwable caught) {
         messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-        messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorTestingDataSourceConnection()));          
+        msgBoxHtml.setHTML(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorTestingDataSourceConnection()));          
         messageDialog.center();
       }
     };

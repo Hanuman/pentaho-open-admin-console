@@ -16,6 +16,7 @@
 */
 package org.pentaho.pac.client.users;
 
+import org.pentaho.gwt.widgets.client.dialogs.MessageDialogBox;
 import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
@@ -124,9 +125,8 @@ public class NewUserDialogBox extends ConfirmDialog {
               }
               
               public void onFailure(Throwable caught) {
-                MessageDialog messageDialog = new MessageDialog();
-                messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-                messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorAddingRolesForUser()));                   
+                MessageDialogBox messageDialog = new MessageDialogBox(ExceptionParser.getErrorHeader(caught.getMessage()), ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorAddingRolesForUser()), false, false, true);
+                messageDialog.center();
               }
             });
             
@@ -135,9 +135,7 @@ public class NewUserDialogBox extends ConfirmDialog {
           }
 
           public void onFailure(Throwable caught) {
-            MessageDialog messageDialog = new MessageDialog();
-            messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-            messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorCreatingUser()));   
+            MessageDialogBox messageDialog = new MessageDialogBox(ExceptionParser.getErrorHeader(caught.getMessage()), ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorCreatingUser()), false, false, true);
             messageDialog.center();
             okBtn.setEnabled(true);
             cancelBtn.setEnabled(true);

@@ -16,6 +16,7 @@
 */
 package org.pentaho.pac.client;
 
+import org.pentaho.gwt.widgets.client.dialogs.MessageDialogBox;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.home.HomePanel;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
@@ -56,9 +57,7 @@ public class PentahoAdminConsole extends DockPanel implements IRefreshableAdminC
     AsyncCallback<Boolean> callback = new AsyncCallback<Boolean >() {
         public void onSuccess(Boolean valid) {
         	if(!valid) {
-	            MessageDialog errorDialog = new MessageDialog(PentahoAdminConsole.MSGS.error());
-	            errorDialog.setText(MSGS.invalidConfiguration());
-	            errorDialog.setMessage(MSGS.notValidConfiguration());          
+	            MessageDialogBox errorDialog = new MessageDialogBox(MSGS.invalidConfiguration(), MSGS.notValidConfiguration(), true, false, true);
 	            errorDialog.center();
 	            setVisible(false);
         	} else {
@@ -82,9 +81,7 @@ public class PentahoAdminConsole extends DockPanel implements IRefreshableAdminC
           
         }
         public void onFailure(Throwable caught) {
-          MessageDialog errorDialog = new MessageDialog(PentahoAdminConsole.MSGS.error());
-          errorDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-          errorDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorInitializingPacService()));          
+          MessageDialogBox errorDialog = new MessageDialogBox(ExceptionParser.getErrorHeader(caught.getMessage()), ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorInitializingPacService()), false, false, true);
           errorDialog.center();
           setVisible(false);
         }

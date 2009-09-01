@@ -21,9 +21,9 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import org.pentaho.gwt.widgets.client.dialogs.MessageDialogBox;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
 
@@ -144,9 +144,7 @@ public class DataSourcesList extends ListBox {
 
       public void onFailure(Throwable caught) {
         setDataSources(null);
-        MessageDialog errorDialog = new MessageDialog(MSGS.error() );
-        errorDialog.setText(MSGS.errorLoadingDataSources());
-        errorDialog.setMessage(MSGS.dataSourcesRefreshError(caught.getMessage()));
+        MessageDialogBox errorDialog = new MessageDialogBox(MSGS.errorLoadingDataSources(), MSGS.dataSourcesRefreshError(caught.getMessage()), false, false, true);
         errorDialog.center();
       }
     };
