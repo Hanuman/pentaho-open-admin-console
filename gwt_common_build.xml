@@ -44,10 +44,10 @@
   <property name="gwt-compile.maxstack" value="1024k" description="vm stack size setting" />
 
 	<path id="classpath">
+	<fileset dir="${devlib.dir}">
+		<include name="*.jar" />
+	</fileset>
     <fileset dir="${codegenlib.dir}">
-      <include name="*.jar" />
-    </fileset>
-    <fileset dir="${devlib.dir}">
       <include name="*.jar" />
     </fileset>
     <fileset dir="${lib.dir}">
