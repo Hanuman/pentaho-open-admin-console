@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.pentaho.gwt.widgets.client.buttons.ImageButton;
+import org.pentaho.gwt.widgets.client.dialogs.IDialogCallback;
 import org.pentaho.gwt.widgets.client.dialogs.MessageDialogBox;
 import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.PentahoAdminConsole;
@@ -123,7 +124,28 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
     userDetailsPanel.setEnabled(false);
     updateUserBtn.setEnabled(false);
     
-    newUserDialogBox.addPopupListener(this);
+    newUserDialogBox.setCallback(new IDialogCallback() {
+      public void cancelPressed() {
+      }
+
+      public void okPressed() {
+        if (newUserDialogBox.isUserCreated()) {
+          ProxyPentahoUser newUser = newUserDialogBox.getUser();
+          IListBoxFilter filter = usersList.getFilter();
+          if ((filter != null) && !filter.accepts(newUser)){
+            filterTextBox.setText(""); //$NON-NLS-1$
+            usersList.setFilter(null);
+          }
+          usersList.addObject(newUser);
+          usersList.setSelectedObject(newUser);
+          userSelectionChanged();
+          // default roles might have been added; update assigned roles list
+          List<ProxyPentahoRole> roleList = Arrays.asList(UserAndRoleMgmtService.instance().getRoles(newUser));
+          assignedRolesList.setObjects(roleList);
+          assignedRoleSelectionChanged();
+        }      }
+      
+    });
     roleAssignmentsDialog.addPopupListener(this);
     
     userDetailsPanel.getUserNameTextBox().setEnabled(false);
@@ -419,21 +441,7 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
 	}
 	
   public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
-    if ((sender == newUserDialogBox) && newUserDialogBox.isUserCreated()) {
-      ProxyPentahoUser newUser = newUserDialogBox.getUser();
-      IListBoxFilter filter = usersList.getFilter();
-      if ((filter != null) && !filter.accepts(newUser)){
-        filterTextBox.setText(""); //$NON-NLS-1$
-        usersList.setFilter(null);
-      }
-      usersList.addObject(newUser);
-      usersList.setSelectedObject(newUser);
-      userSelectionChanged();
-      // default roles might have been added; update assigned roles list
-      List<ProxyPentahoRole> roleList = Arrays.asList(UserAndRoleMgmtService.instance().getRoles(newUser));
-      assignedRolesList.setObjects(roleList);
-      assignedRoleSelectionChanged();
-    } else if ((sender == roleAssignmentsDialog) && roleAssignmentsDialog.getRoleAssignmentsModified()) {
+    if (roleAssignmentsDialog.getRoleAssignmentsModified()) {
       List<ProxyPentahoRole>roleList = Arrays.asList(UserAndRoleMgmtService.instance().getRoles(roleAssignmentsDialog.getUser()));
       assignedRolesList.setObjects(roleList);
       assignedRoleSelectionChanged();
