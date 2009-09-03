@@ -18,7 +18,6 @@ package org.pentaho.pac.client.datasources;
 
 import org.pentaho.gwt.widgets.client.buttons.ImageButton;
 import org.pentaho.gwt.widgets.client.dialogs.IDialogCallback;
-import org.pentaho.gwt.widgets.client.dialogs.MessageDialogBox;
 import org.pentaho.gwt.widgets.client.dialogs.PromptDialogBox;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
@@ -37,13 +36,11 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.PopupListener;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-public class DataSourcesPanel extends DockPanel implements ClickListener, ChangeListener, PopupListener {
+public class DataSourcesPanel extends DockPanel implements ClickListener, ChangeListener {
 
   private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   public static final String EMPTY_STRING = ""; //$NON-NLS-1$ 
@@ -98,7 +95,19 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
     dataSourceDetailsDockPanel.setHeight("100%"); //$NON-NLS-1$
     updateDataSourceBtn.setEnabled(false);
     testDataSourceBtn.setEnabled(false);
-    newDataSourceDialogBox.addPopupListener(this);
+    newDataSourceDialogBox.setCallback(new IDialogCallback() {
+      public void cancelPressed() {
+      }
+      public void okPressed() {
+        if (newDataSourceDialogBox.isDataSourceCreated()) {
+          PentahoDataSource dataSource = newDataSourceDialogBox.getDataSource();
+          if (dataSourcesList.addDataSource(dataSource)) {
+            dataSourcesList.setSelectedDataSource(dataSource);
+            dataSourceSelectionChanged();
+          }
+        }
+      }      
+    });
     updateDataSourceBtn.addClickListener(this);
     testDataSourceBtn.addClickListener(this);
     confirmDataSourceDeleteDialog.setCallback(new IDialogCallback() {
@@ -359,16 +368,6 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
             dataSourceSelectionChanged();
           }
         }); 
-  }
-
-  public void onPopupClosed(PopupPanel sender, boolean autoClosed) {
-    if ((sender == newDataSourceDialogBox) && newDataSourceDialogBox.isDataSourceCreated()) {
-      PentahoDataSource dataSource = newDataSourceDialogBox.getDataSource();
-      if (dataSourcesList.addDataSource(dataSource)) {
-        dataSourcesList.setSelectedDataSource(dataSource);
-        dataSourceSelectionChanged();
-      }
-    }
   }
 
   public boolean isInitialized() {

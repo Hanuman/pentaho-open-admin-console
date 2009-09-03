@@ -16,11 +16,11 @@
 */
 package org.pentaho.pac.client.datasources;
 
+import org.pentaho.gwt.widgets.client.buttons.RoundedButton;
 import org.pentaho.gwt.widgets.client.dialogs.PromptDialogBox;
-import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.PacServiceFactory;
-import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
-import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
+import org.pentaho.pac.client.PentahoAdminConsole;
+import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.client.utils.ExceptionParser;
 import org.pentaho.pac.common.NameValue;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
@@ -39,12 +39,13 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 
-public class NewDataSourceDialogBox extends ConfirmDialog {
+public class NewDataSourceDialogBox extends PromptDialogBox {
 
+  protected static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   private static final int GENERAL_PANEL_ID = 0;
   private static final int ADVANCE_PANEL_ID = 1;
 
-  Button testButton;
+  RoundedButton testButton;
   DataSourceGeneralPanel dataSourceGeneralPanel;
   DataSourceAdvancePanel dataSourceAdvancePanel;
   boolean dataSourceCreated = false;
@@ -54,14 +55,19 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
   ToggleButton generalButton;
   ToggleButton advanceButton;
   public NewDataSourceDialogBox() {
-    super();
+    super(MSGS.addDataSource(), MSGS.ok(), MSGS.cancel(), false, true);
     DockPanel dockPanel = new DockPanel();
     
     generalButton = new ToggleButton( MSGS.general(), MSGS.general() );
     advanceButton = new ToggleButton( MSGS.advance(), MSGS.advance() );
+    testButton = new RoundedButton(MSGS.test());
+    testButton.addClickListener(new ClickListener() {
+      public void onClick(Widget sender) {
+        testDataSourceConnection();
+      }
+    });
     
     setTitle( MSGS.addDataSource() );
-    setClientSize( "350px", "450px" ); //$NON-NLS-1$ //$NON-NLS-2$
     HorizontalPanel horizontalPanel = new HorizontalPanel();
     dataSourceGeneralPanel = new DataSourceGeneralPanel();
     horizontalPanel.add(generalButton);
@@ -85,6 +91,7 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
     deckPanel.setHeight("100%"); //$NON-NLS-1$
     deckPanel.setStyleName( "newDataSourceDialogBox.detailsPanel" ); //$NON-NLS-1$
     deckPanel.showWidget(GENERAL_PANEL_ID);
+    dockPanel.add(testButton, DockPanel.SOUTH);
     generalButton.setDown(true);
     advanceButton.setDown(false);
     generalButton.addClickListener(new ClickListener() {
@@ -113,23 +120,8 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
     dataSourceAdvancePanel.setWidth("100%"); //$NON-NLS-1$
     dataSourceAdvancePanel.setHeight("100%"); //$NON-NLS-1$
     
-    dockPanel.setWidth("100%"); //$NON-NLS-1$
-    dockPanel.setHeight("100%"); //$NON-NLS-1$
-    addWidgetToClientArea( dockPanel );
-    testButton = new Button(MSGS.test(), new ClickListener() {
-      public void onClick(Widget sender) {
-        testDataSourceConnection();
-      }
-    });
-
-    
-    addWidgetToClientArea( testButton );
-
-    setOnOkHandler( new ICallback<MessageDialog>() {
-      public void onHandle( MessageDialog o ) {
-        createDataSource();
-      }
-    });
+    setContent(dockPanel);
+    dockPanel.setWidth("350px");
   }
 
   public boolean isDataSourceCreated() {
@@ -317,14 +309,23 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
           public void onSuccess(Boolean result) {
             dataSourceCreated = true;
             hide();
+            okButton.setEnabled(true);
+            cancelButton.setEnabled(true);
+            if (getCallback() != null) {
+              getCallback().okPressed();
+            }
           }
 
           public void onFailure(Throwable caught) {
             messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
             msgBoxHtml.setHTML(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorCreatingDataSource()));          
             messageDialog.center();
+            okButton.setEnabled(true);
+            cancelButton.setEnabled(true);
           }
         };
+        okButton.setEnabled(false);
+        cancelButton.setEnabled(false);
         PacServiceFactory.getPacService().createDataSource(dataSource, callback);
       }
     }
@@ -359,5 +360,9 @@ public class NewDataSourceDialogBox extends ConfirmDialog {
   
   public void refresh(NameValue[] drivers) {
     dataSourceGeneralPanel.refresh(drivers);
+  }
+  
+  protected void onOk() {
+    createDataSource();
   }
 }
