@@ -69,8 +69,8 @@ public class AppConfigProperties {
   public static final String DEFAULT_HIBERNATE_CONFIG_PATH = "system/hibernate/hsql.hibernate.cfg.xml"; //$NON-NLS-1$
   public static final String DEFAULT_HELP_URL = "http://wiki.pentaho.com/display/ServerDoc2x/The+Pentaho+Administration+Console"; //$NON-NLS-1$
   public static final String DEFAULT_HOMEPAGE_URL = "http://www.pentaho.com/console_home"; //$NON-NLS-1$
-  public static final String DEFAULT_SOLUTION_PATH = "./../biserver-ce/pentaho-solutions"; //$NON-NLS-1$ 
-  public static final String DEFAULT_WAR_PATH = "./../biserver-ce/tomcat/webapps/pentaho"; //$NON-NLS-1$
+  public static final String DEFAULT_EE_INSTALL_DIR = "./../biserver-ee"; //$NON-NLS-1$
+  public static final String DEFAULT_CE_INSTALL_DIR = "./../biserver-ce"; //$NON-NLS-1$
 
   private IConsoleConfig consoleConfig = null;
   private HibernateSettingsXml hibernateSettingXml = null;
@@ -79,6 +79,7 @@ public class AppConfigProperties {
 
   // ~ Instance fields =================================================================================================
   private static AppConfigProperties instance = new AppConfigProperties();
+  private static String defaultInstallDir;
   
   private static final Log logger = LogFactory.getLog(AppConfigProperties.class);
 
@@ -105,6 +106,20 @@ public class AppConfigProperties {
     }
   }
 
+  private static String getDefaultInstallDir() {
+    if (defaultInstallDir == null) {
+      initDefaultInstallDir();
+    }
+    return defaultInstallDir;
+  }
+  
+  private static synchronized void initDefaultInstallDir() {
+    if (defaultInstallDir == null) {
+      File file = new File(DEFAULT_CE_INSTALL_DIR);
+      defaultInstallDir = file.exists() ? DEFAULT_CE_INSTALL_DIR : DEFAULT_EE_INSTALL_DIR;
+    }
+  }
+  
   public boolean isValidConfiguration() {
 	  boolean solutionPathValid = false;
 	  boolean warPathValid = false;
@@ -218,7 +233,8 @@ public class AppConfigProperties {
   public String getSolutionPath() {
     String pentahoSolutionPath = getConsoleConfig().getSolutionPath();
     if ((pentahoSolutionPath == null) || (pentahoSolutionPath.trim().length() == 0)) {
-      pentahoSolutionPath = DEFAULT_SOLUTION_PATH;
+      pentahoSolutionPath = getDefaultInstallDir() + "/pentaho-solutions"; //$NON-NLS-1$
+      
     }
     return pentahoSolutionPath;
   }
@@ -226,7 +242,7 @@ public class AppConfigProperties {
   public String getWarPath() {
     String pentahoWarPath = getConsoleConfig().getWebAppPath();
     if ((pentahoWarPath == null) || (pentahoWarPath.trim().length() == 0)) {
-      pentahoWarPath = DEFAULT_WAR_PATH;
+      pentahoWarPath = getDefaultInstallDir() + "/tomcat/webapps/pentaho"; //$NON-NLS-1$
     }
     return pentahoWarPath;
   }
