@@ -41,7 +41,7 @@ public class AppConfigPropertiesTest {
     assertTrue(StringUtils.isNotBlank(AppConfigProperties.getInstance().getBiServerStatusCheckPeriod()));
     assertTrue(StringUtils.isNotBlank(AppConfigProperties.getInstance().getHibernateConfigPath()));
     assertTrue(StringUtils.isNotBlank(AppConfigProperties.getInstance().getHomepageTimeout()));
-    assertTrue(StringUtils.isNotBlank(AppConfigProperties.getInstance().getPasswordServiceClass()));
+    //assertTrue(StringUtils.isNotBlank(AppConfigProperties.getInstance().getPasswordServiceClass()));
     assertTrue(StringUtils.isNotBlank(AppConfigProperties.getInstance().getPlatformUsername()));
     assertTrue(StringUtils.isNotBlank(AppConfigProperties.getInstance().getSolutionPath()));
     assertTrue(StringUtils.isNotBlank(AppConfigProperties.getInstance().getWarPath()));
