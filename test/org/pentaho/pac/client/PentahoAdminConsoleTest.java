@@ -16,13 +16,7 @@
 */
 package org.pentaho.pac.client;
 
-import org.pentaho.pac.common.datasources.PentahoDataSource;
-import org.pentaho.pac.common.roles.ProxyPentahoRole;
-import org.pentaho.pac.common.users.ProxyPentahoUser;
-
-import com.google.gwt.junit.client.GWTTestCase;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import org.junit.Test;
 
 /**
  * GWT JUnit tests must extend GWTTestCase.
@@ -821,6 +815,7 @@ public class PentahoAdminConsoleTest /*extends GWTTestCase*/ {
 //    timer.schedule(1000);
 //  }
   
+  @Test
   public void testDummy() {
     
   }
