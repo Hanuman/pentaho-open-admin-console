@@ -1,23 +1,21 @@
 #!/bin/sh
 
+cd $(dirname $0)
+DIR=$PWD
+cd -
+
+. $DIR/set-pentaho-java.sh
+
+if [ -d $DIR/../biserver-ce/jre ]; then
+  setPentahoJava $DIR/../biserver-ce/jre
+else 
+  setPentahoJava
+fi
+
 #---------------------------------#
 # dynamically build the classpath #
 #---------------------------------#
 
-echo "JAVA_HOME set to $JAVA_HOME"
-
-S1="x$JAVA"
-S2="x"
-if [ $S1 = $S2 ]; then
-  S1="x$JAVA_HOME"
-  if [ $S1 = $S2 ]; then
-    JAVA="java"
-  else 
-    JAVA="$JAVA_HOME/bin/java"
-  fi
-fi
-
-echo "JAVA is $JAVA"
 THE_CLASSPATH=".:./resource:./bin:./classes:./lib"
 files=$(ls ./lib/*.jar)
 
@@ -26,4 +24,4 @@ do
   THE_CLASSPATH="$THE_CLASSPATH:$i"
 done
 
-$JAVA -Djava.io.tmpdir=temp -cp $THE_CLASSPATH org.pentaho.pac.server.StopJettyServer
+$_PENTAHO_JAVA -Djava.io.tmpdir=temp -cp $THE_CLASSPATH org.pentaho.pac.server.StopJettyServer
