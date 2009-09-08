@@ -4,10 +4,10 @@ cd $(dirname $0)
 DIR=$PWD
 cd -
 
-. $DIR/set-pentaho-java.sh
+. "$DIR/set-pentaho-java.sh"
 
-if [ -d $DIR/../biserver-ce/jre ]; then
-  setPentahoJava $DIR/../biserver-ce/jre
+if [ -d "$DIR/../biserver-ce/jre" ]; then
+  setPentahoJava "$DIR/../biserver-ce/jre"
 else 
   setPentahoJava
 fi
@@ -24,4 +24,4 @@ do
   THE_CLASSPATH="$THE_CLASSPATH:$i"
 done
 
-$_PENTAHO_JAVA -Djava.io.tmpdir=temp -cp $THE_CLASSPATH org.pentaho.pac.server.StopJettyServer
+"$_PENTAHO_JAVA" -Djava.io.tmpdir=temp -cp $THE_CLASSPATH org.pentaho.pac.server.StopJettyServer
