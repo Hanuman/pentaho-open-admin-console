@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.i18n.Messages;
 
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -49,7 +49,6 @@ public class TableListCtrl<RowDataType> extends ScrollPanel {
   private static final int SELECT_COLUMN = 0;
   private static final int FIRST_COLUMN = SELECT_COLUMN+1;
   private static final String BLANK = "&nbsp;"; //$NON-NLS-1$
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   
   public TableListCtrl( String[] columnHeaderNames )
   {
@@ -96,7 +95,7 @@ public class TableListCtrl<RowDataType> extends ScrollPanel {
   {
     final TableListCtrl<RowDataType> localThis = this;
     selectAllCb = new CheckBox();
-    selectAllCb.setTitle( MSGS.checkToSelectAll() );
+    selectAllCb.setTitle( Messages.getString("checkToSelectAll") ); //$NON-NLS-1$
     selectAllCb.addClickListener( new ClickListener() {
       public void onClick(Widget sender) {
         if ( localThis.selectAllCb.isChecked() ) {

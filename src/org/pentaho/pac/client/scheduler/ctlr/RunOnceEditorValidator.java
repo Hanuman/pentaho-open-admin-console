@@ -21,12 +21,9 @@
 package org.pentaho.pac.client.scheduler.ctlr;
 
 import org.pentaho.gwt.widgets.client.controls.schededitor.RunOnceEditor;
-import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
-
+import org.pentaho.pac.client.i18n.Messages;
 
 public class RunOnceEditorValidator implements IUiValidator {
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
 
   private RunOnceEditor editor = null;
   
@@ -38,7 +35,7 @@ public class RunOnceEditorValidator implements IUiValidator {
     boolean isValid = true;
     if ( null == editor.getStartDate() ) {
       isValid = false;
-      editor.setStartDateError( MSGS.specifyStartDate() );
+      editor.setStartDateError( Messages.getString("specifyStartDate") ); //$NON-NLS-1$
     }
     return isValid;
   }

@@ -18,9 +18,8 @@ package org.pentaho.pac.client.users;
 
 import org.pentaho.gwt.widgets.client.dialogs.MessageDialogBox;
 import org.pentaho.gwt.widgets.client.dialogs.PromptDialogBox;
-import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.i18n.Messages;
 import org.pentaho.pac.client.utils.ExceptionParser;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
 import org.pentaho.pac.common.users.ProxyPentahoUser;
@@ -32,17 +31,16 @@ import com.google.gwt.user.client.ui.TextBox;
 
 public class NewUserDialogBox extends PromptDialogBox {
 
-  protected static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   UserDetailsPanel userDetailsPanel = new UserDetailsPanel();
   boolean userCreated = false;
   HTML dialogMsg = new HTML();
-  PromptDialogBox messageDialog = new PromptDialogBox(MSGS.error(), MSGS.ok(), null, false, true, dialogMsg);
+  PromptDialogBox messageDialog = new PromptDialogBox(Messages.getString("error"), Messages.getString("ok"), null, false, true, dialogMsg);  //$NON-NLS-1$//$NON-NLS-2$
   
   public NewUserDialogBox() {
-    super(MSGS.addUser(), MSGS.ok(), MSGS.cancel(), false, true);
+    super(Messages.getString("addUser"), Messages.getString("ok"), Messages.getString("cancel"), false, true);   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
     setContent(userDetailsPanel);
     
-    setTitle( MSGS.addUser() );
+    setTitle( Messages.getString("addUser") ); //$NON-NLS-1$
     
     userDetailsPanel.setStyleName( "newUserDialogBox.detailsPanel" ); //$NON-NLS-1$    
   }
@@ -99,10 +97,10 @@ public class NewUserDialogBox extends PromptDialogBox {
   
   private boolean createUser() {
     if (getUserName().trim().length() == 0) {
-      dialogMsg.setHTML(MSGS.invalidUserName());
+      dialogMsg.setHTML(Messages.getString("invalidUserName")); //$NON-NLS-1$
       messageDialog.center();
     } else if (!getPassword().equals(getPasswordConfirmation())) { 
-      dialogMsg.setHTML(MSGS.passwordConfirmationFailed());
+      dialogMsg.setHTML(Messages.getString("passwordConfirmationFailed")); //$NON-NLS-1$
       messageDialog.center();
     } else {
       final ProxyPentahoUser user = getUser();
@@ -125,7 +123,7 @@ public class NewUserDialogBox extends PromptDialogBox {
               }
               
               public void onFailure(Throwable caught) {
-                MessageDialogBox messageDialog = new MessageDialogBox(ExceptionParser.getErrorHeader(caught.getMessage()), ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorAddingRolesForUser()), false, false, true);
+                MessageDialogBox messageDialog = new MessageDialogBox(ExceptionParser.getErrorHeader(caught.getMessage()), ExceptionParser.getErrorMessage(caught.getMessage(), Messages.getString("errorAddingRolesForUser")), false, false, true); //$NON-NLS-1$
                 messageDialog.center();
                 if (getCallback() != null) {
                   getCallback().okPressed();
@@ -138,7 +136,7 @@ public class NewUserDialogBox extends PromptDialogBox {
           }
 
           public void onFailure(Throwable caught) {
-            MessageDialogBox messageDialog = new MessageDialogBox(ExceptionParser.getErrorHeader(caught.getMessage()), ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorCreatingUser()), false, false, true);
+            MessageDialogBox messageDialog = new MessageDialogBox(ExceptionParser.getErrorHeader(caught.getMessage()), ExceptionParser.getErrorMessage(caught.getMessage(), Messages.getString("errorCreatingUser")), false, false, true); //$NON-NLS-1$
             messageDialog.center();
             okButton.setEnabled(true);
             cancelButton.setEnabled(true);

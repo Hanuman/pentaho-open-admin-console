@@ -22,12 +22,10 @@ package org.pentaho.pac.client.scheduler.ctlr;
 
 import org.pentaho.gwt.widgets.client.controls.schededitor.ScheduleEditor;
 import org.pentaho.gwt.widgets.client.utils.StringUtils;
-import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.i18n.Messages;
 import org.pentaho.pac.client.scheduler.model.SchedulesModel;
 
 public class ScheduleEditorValidator implements IUiValidator {
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   protected ScheduleEditor schedEd;
   protected SchedulesModel schedulesModel;
   protected RecurrenceEditorValidator recurrenceEditorValidator;
@@ -47,15 +45,15 @@ public class ScheduleEditorValidator implements IUiValidator {
     
     if ( StringUtils.isEmpty( schedEd.getName() ) ) {
       isValid = false;
-      schedEd.setNameError( MSGS.specifyName() );
+      schedEd.setNameError( Messages.getString("specifyName") ); //$NON-NLS-1$
     }
     if ( StringUtils.isEmpty( schedEd.getGroupName() ) ) {
       isValid = false;
-      schedEd.setGroupNameError( MSGS.specifyGroupName() );
+      schedEd.setGroupNameError( Messages.getString("specifyGroupName") ); //$NON-NLS-1$
     }
     if ( StringUtils.isEmpty( schedEd.getDescription() ) ) {
       isValid = false;
-      schedEd.setDescriptionError( MSGS.specifyDescription() );
+      schedEd.setDescriptionError( Messages.getString("specifyDescription") ); //$NON-NLS-1$
     }
 
     switch ( schedEd.getScheduleType() ) {
@@ -75,7 +73,7 @@ public class ScheduleEditorValidator implements IUiValidator {
         isValid &= cronEditorValidator.isValid();
         break;
       default:
-        throw new RuntimeException( MSGS.unrecognizedSchedTypeInValidator( schedEd.getScheduleType().toString() ) );
+        throw new RuntimeException( Messages.getString("unrecognizedSchedTypeInValidator", schedEd.getScheduleType().toString() ) ); //$NON-NLS-1$
     }
     
     return isValid;

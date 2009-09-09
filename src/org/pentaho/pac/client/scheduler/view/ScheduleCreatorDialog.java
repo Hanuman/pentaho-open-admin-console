@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
+import org.pentaho.pac.client.i18n.Messages;
 
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -36,8 +37,8 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
   private static final String SELECTED = "selected"; //$NON-NLS-1$
   
   public enum TabIndex {
-    SCHEDULE( 0, MSGS.schedule() ),
-    SCHEDULE_ACTION( 1, MSGS.selectedFilesTabLabel() );
+    SCHEDULE( 0, Messages.getString("schedule") ), //$NON-NLS-1$
+    SCHEDULE_ACTION( 1, Messages.getString("selectedFilesTabLabel") ); //$NON-NLS-1$
     
     private TabIndex( int value, String name ) {
       this.value = value;
@@ -74,7 +75,7 @@ public class ScheduleCreatorDialog extends ConfirmDialog {
   public ScheduleCreatorDialog() {
     super();
     this.setNoBorderOnClientPanel();
-    setTitle( MSGS.scheduleCreator() );
+    setTitle( Messages.getString("scheduleCreator") ); //$NON-NLS-1$
     
     tabPanel.setSize("100%", "100%"); //$NON-NLS-1$ //$NON-NLS-2$
     

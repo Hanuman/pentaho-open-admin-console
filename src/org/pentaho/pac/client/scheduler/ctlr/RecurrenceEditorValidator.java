@@ -23,8 +23,7 @@ package org.pentaho.pac.client.scheduler.ctlr;
 import org.pentaho.gwt.widgets.client.controls.schededitor.RecurrenceEditor;
 import org.pentaho.gwt.widgets.client.utils.StringUtils;
 import org.pentaho.gwt.widgets.client.utils.TimeUtil;
-import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.i18n.Messages;
 
 /**
  * 
@@ -32,13 +31,11 @@ import org.pentaho.pac.client.i18n.PacLocalizedMessages;
  *
  */
 public class RecurrenceEditorValidator implements IUiValidator {
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
-
   private RecurrenceEditor recurrenceEditor = null;
 
   private DateRangeEditorValidator dateRangeEditorValidator = null;
 
-  private static final String MUST_BE_A_NUMBER = MSGS.mustBeIntegerRange();
+  private static final String MUST_BE_A_NUMBER = Messages.getString("mustBeIntegerRange"); //$NON-NLS-1$
 
   public RecurrenceEditorValidator(RecurrenceEditor recurrenceEditor) {
     this.recurrenceEditor = recurrenceEditor;
@@ -59,11 +56,11 @@ public class RecurrenceEditorValidator implements IUiValidator {
             isValid = false;
           }
           if (!isValid) {
-            sEd.setValueError(MSGS.mustBeSecondsRange(Integer.toString(TimeUtil.MAX_SECOND_BY_MILLISEC)));
+            sEd.setValueError(Messages.getString("mustBeSecondsRange", Integer.toString(TimeUtil.MAX_SECOND_BY_MILLISEC))); //$NON-NLS-1$
           }
         } catch (NumberFormatException nfe) {
           isValid = false;
-          sEd.setValueError(MSGS.mustBeSecondsRange(Integer.toString(TimeUtil.MAX_SECOND_BY_MILLISEC)));
+          sEd.setValueError(Messages.getString("mustBeSecondsRange", Integer.toString(TimeUtil.MAX_SECOND_BY_MILLISEC))); //$NON-NLS-1$
         }
         break;
       case MINUTES:
@@ -78,11 +75,11 @@ public class RecurrenceEditorValidator implements IUiValidator {
             isValid = false;
           }
           if (!isValid) {
-            mEd.setValueError(MSGS.mustBeMinutesRange(Integer.toString(TimeUtil.MAX_MINUTE_BY_MILLISEC)));
+            mEd.setValueError(Messages.getString("mustBeMinutesRange", Integer.toString(TimeUtil.MAX_MINUTE_BY_MILLISEC))); //$NON-NLS-1$
           }
         } catch (NumberFormatException nfe) {
           isValid = false;
-          mEd.setValueError(MSGS.mustBeMinutesRange(Integer.toString(TimeUtil.MAX_MINUTE_BY_MILLISEC)));
+          mEd.setValueError(Messages.getString("mustBeMinutesRange", Integer.toString(TimeUtil.MAX_MINUTE_BY_MILLISEC))); //$NON-NLS-1$
         }
         break;
       case HOURS:
@@ -96,11 +93,11 @@ public class RecurrenceEditorValidator implements IUiValidator {
             isValid = false;
           }
           if (!isValid) {
-            hEd.setValueError(MSGS.mustBeHoursRange(Integer.toString(TimeUtil.MAX_HOUR_BY_MILLISEC)));
+            hEd.setValueError(Messages.getString("mustBeHoursRange", Integer.toString(TimeUtil.MAX_HOUR_BY_MILLISEC))); //$NON-NLS-1$
           }
         } catch (NumberFormatException nfe) {
           isValid = false;
-          hEd.setValueError(MSGS.mustBeHoursRange(Integer.toString(TimeUtil.MAX_HOUR_BY_MILLISEC)));
+          hEd.setValueError(Messages.getString("mustBeHoursRange", Integer.toString(TimeUtil.MAX_HOUR_BY_MILLISEC))); //$NON-NLS-1$
         }
         break;
       case DAILY:
@@ -109,7 +106,7 @@ public class RecurrenceEditorValidator implements IUiValidator {
           String days = dEd.getRepeatValue();
           if (!StringUtils.isPositiveInteger(days) || (Integer.parseInt(days) <= 0)) {
             isValid = false;
-            dEd.setRepeatError(MSGS.days(MUST_BE_A_NUMBER));
+            dEd.setRepeatError(Messages.getString("days", MUST_BE_A_NUMBER)); //$NON-NLS-1$
           }
         }
         break;
@@ -117,7 +114,7 @@ public class RecurrenceEditorValidator implements IUiValidator {
         RecurrenceEditor.WeeklyRecurrenceEditor wEd = recurrenceEditor.getWeeklyEditor();
         if (wEd.getNumCheckedDays() < 1) {
           isValid = false;
-          wEd.setEveryDayOnError(MSGS.oneOrMoreMustBeChecked());
+          wEd.setEveryDayOnError(Messages.getString("oneOrMoreMustBeChecked")); //$NON-NLS-1$
         }
         break;
       case MONTHLY:
@@ -126,7 +123,7 @@ public class RecurrenceEditorValidator implements IUiValidator {
           String dayNOfMonth = monthlyEd.getDayOfMonth();
           if (!StringUtils.isPositiveInteger(dayNOfMonth) || !TimeUtil.isDayOfMonth(Integer.parseInt(dayNOfMonth))) {
             isValid = false;
-            monthlyEd.setDayNOfMonthError(MSGS.dayOfMonthMustBeBetween());
+            monthlyEd.setDayNOfMonthError(Messages.getString("dayOfMonthMustBeBetween")); //$NON-NLS-1$
           }
         }
         break;
@@ -136,12 +133,12 @@ public class RecurrenceEditorValidator implements IUiValidator {
           String dayNOfMonth = yearlyEd.getDayOfMonth();
           if (!StringUtils.isPositiveInteger(dayNOfMonth) || !TimeUtil.isDayOfMonth(Integer.parseInt(dayNOfMonth))) {
             isValid = false;
-            yearlyEd.setDayOfMonthError(MSGS.dayOfMonthMustBeBetween());
+            yearlyEd.setDayOfMonthError(Messages.getString("dayOfMonthMustBeBetween")); //$NON-NLS-1$
           }
         }
         break;
       default:
-        throw new RuntimeException(MSGS.unrecognizedSchedType(recurrenceEditor.getTemporalState().toString()));
+        throw new RuntimeException(Messages.getString("unrecognizedSchedType", recurrenceEditor.getTemporalState().toString())); //$NON-NLS-1$
     }
     isValid &= dateRangeEditorValidator.isValid();
     return isValid;

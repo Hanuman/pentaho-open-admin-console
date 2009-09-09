@@ -18,7 +18,7 @@ package org.pentaho.pac.client;
 
 import org.pentaho.gwt.widgets.client.dialogs.MessageDialogBox;
 import org.pentaho.pac.client.datasources.DataSourcesPanel;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.i18n.Messages;
 import org.pentaho.pac.client.scheduler.ctlr.SchedulerController;
 import org.pentaho.pac.client.scheduler.view.SchedulerPanel;
 import org.pentaho.pac.client.services.AdminServicesPanel;
@@ -31,8 +31,6 @@ import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class AdministrationTabPanel extends TabPanel implements IRefreshableAdminPage{
-
-  protected static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   
   public static final int ADMIN_USERS_ROLES_TAB_INDEX = 0;
   public static final int ADMIN_DATA_SOURCES_TAB_INDEX = 1;
@@ -56,9 +54,9 @@ public class AdministrationTabPanel extends TabPanel implements IRefreshableAdmi
     // Order that things are placed in the tab panel is important. There are
     // static constants defined within this class that assume a given tab position
     // for each of the panels on the tab panel.
-    add(usersAndRolesPanel, MSGS.usersAndRoles());
-    add(dataSourcesPanel, MSGS.dataSources());
-    add(servicesPanel, MSGS.services());
+    add(usersAndRolesPanel, Messages.getString("usersAndRoles")); //$NON-NLS-1$
+    add(dataSourcesPanel, Messages.getString("dataSources")); //$NON-NLS-1$
+    add(servicesPanel, Messages.getString("services")); //$NON-NLS-1$
     SchedulerPanel schedulerPanel = new SchedulerPanel();
     Panel p = new VerticalPanel();
     p.setStyleName( "schedulerPanelPadderPanel" );    //$NON-NLS-1$
@@ -71,7 +69,7 @@ public class AdministrationTabPanel extends TabPanel implements IRefreshableAdmi
 
     schedulerScrollWrapper.add(p);
     
-    add(schedulerScrollWrapper, MSGS.scheduler());
+    add(schedulerScrollWrapper, Messages.getString("scheduler")); //$NON-NLS-1$
     schedulerController = new SchedulerController( schedulerPanel );
     
     usersAndRolesPanel.setWidth("100%"); //$NON-NLS-1$
@@ -102,7 +100,7 @@ public class AdministrationTabPanel extends TabPanel implements IRefreshableAdmi
         // do nothing;
         break;
       default:
-        throw new RuntimeException(MSGS.invalidTabIndex(Integer.toString(tabIndex)));
+        throw new RuntimeException(Messages.getString("invalidTabIndex", Integer.toString(tabIndex))); //$NON-NLS-1$
     }   
   }
   
@@ -119,7 +117,7 @@ public class AdministrationTabPanel extends TabPanel implements IRefreshableAdmi
       }
     
       public void onFailure(Throwable caught) {
-        MessageDialogBox messageDialog = new MessageDialogBox( MSGS.error(), MSGS.securityRefreshError(caught.getMessage()), false, false, true);
+        MessageDialogBox messageDialog = new MessageDialogBox( Messages.getString("error"), Messages.getString("securityRefreshError", caught.getMessage()), false, false, true); //$NON-NLS-1$ //$NON-NLS-2$
         messageDialog.center();
       }
     };

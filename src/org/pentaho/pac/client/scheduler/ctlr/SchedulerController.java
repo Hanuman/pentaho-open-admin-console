@@ -25,7 +25,7 @@ import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.TableListCtrl;
 import org.pentaho.pac.client.common.ui.dialog.BasicDialog;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.i18n.Messages;
 import org.pentaho.pac.client.scheduler.model.Schedule;
 import org.pentaho.pac.client.scheduler.model.SchedulesModel;
 import org.pentaho.pac.client.scheduler.view.ActionSequencePickerDialog;
@@ -38,7 +38,6 @@ import org.pentaho.pac.client.scheduler.view.SolutionRepositoryActionSequenceLis
 
 public class SchedulerController {
 
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   private SchedulerPanel schedulerPanel = null; // this is the view
   private ScheduleCreatorDialog scheduleCreatorDialog = null;
 
@@ -90,7 +89,7 @@ public class SchedulerController {
       
       // init item picker
       SolutionRepositoryActionSequenceListEditor picker = scheduleCreatorDialog.getSolutionRepositoryActionSequenceEditor();
-      ActionSequencePickerDialog actionSequencePickerDialog = new ActionSequencePickerDialog( MSGS.selectTitleBarLabel() );
+      ActionSequencePickerDialog actionSequencePickerDialog = new ActionSequencePickerDialog( Messages.getString("selectTitleBarLabel") ); //$NON-NLS-1$
       solRepActionSequenceEditorController = new SolutionRepositoryActionSequenceListEditorController( picker,
           actionSequencePickerDialog );
       

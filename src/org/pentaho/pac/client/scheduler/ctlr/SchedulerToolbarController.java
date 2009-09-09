@@ -40,11 +40,10 @@ import org.pentaho.gwt.widgets.client.utils.CronParseException;
 import org.pentaho.gwt.widgets.client.utils.TimeUtil;
 import org.pentaho.pac.client.ISchedulerServiceAsync;
 import org.pentaho.pac.client.PacServiceFactory;
-import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.IResponseCallback;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.i18n.Messages;
 import org.pentaho.pac.client.scheduler.model.Schedule;
 import org.pentaho.pac.client.scheduler.model.SchedulesModel;
 import org.pentaho.pac.client.scheduler.view.DualModeScheduleEditor;
@@ -68,7 +67,6 @@ public class SchedulerToolbarController {
   private SchedulesListController schedulesListController = null;
   private SolutionRepositoryActionSequenceListEditorController solRepActionSequenceEditorController = null;
   private SchedulesModel schedulesModel = null;
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   private static final int INVALID_SCROLL_POS = -1;
   private static final String DISABLED = "disabled"; //$NON-NLS-1$
   private boolean isInitialized = false;
@@ -282,7 +280,7 @@ public class SchedulerToolbarController {
           );
         break;
       default:
-        throw new RuntimeException( MSGS.invalidRunType( rt.toString() ) );
+        throw new RuntimeException( Messages.getString("invalidRunType", rt.toString() ) ); //$NON-NLS-1$
     }
   }
   
@@ -379,7 +377,7 @@ public class SchedulerToolbarController {
   private void loadJobsTable() {
 
     final ProgressPopupPanel loadingPanel = new ProgressPopupPanel();
-    loadingPanel.setLabelText( MSGS.loading() );
+    loadingPanel.setLabelText( Messages.getString("loading") ); //$NON-NLS-1$
     loadingPanel.center();
     
     final int currScrollPos = schedulesListCtrl.getScrollPosition();
@@ -406,8 +404,8 @@ public class SchedulerToolbarController {
 
           public void onFailure(Throwable caught) {
             loadingPanel.hide();
-            schedulesListCtrl.setTempMessage( MSGS.noSchedules() );
-            MessageDialog messageDialog = new MessageDialog( MSGS.error(), 
+            schedulesListCtrl.setTempMessage( Messages.getString("noSchedules") ); //$NON-NLS-1$
+            MessageDialog messageDialog = new MessageDialog( Messages.getString("error"),  //$NON-NLS-1$
                 caught.getMessage() );
             messageDialog.center();
             enableTools();
@@ -419,7 +417,7 @@ public class SchedulerToolbarController {
 
       public void onFailure(Throwable caught) {
         loadingPanel.hide();
-        schedulesListCtrl.setTempMessage( MSGS.noSchedules() );
+        schedulesListCtrl.setTempMessage( Messages.getString("noSchedules") ); //$NON-NLS-1$
         MessageDialogBox messageDialog = new MessageDialogBox(ExceptionParser.getErrorHeader(caught.getMessage()), ExceptionParser.getErrorMessage(caught.getMessage(), caught.getMessage()), false, false, true);
         messageDialog.center();
         messageDialog.show();
@@ -562,7 +560,7 @@ public class SchedulerToolbarController {
           );
         break;
       default:
-        throw new RuntimeException( MSGS.invalidRunType( rt.toString() ) );
+        throw new RuntimeException( Messages.getString("invalidRunType", rt.toString() ) ); //$NON-NLS-1$
     }
   }
   
@@ -631,7 +629,7 @@ public class SchedulerToolbarController {
         scheduleEditor.setRepeatInSecs( (int) repeatIntervalInSecs );
       }
     } else {
-      throw new RuntimeException( MSGS.illegalStateMissingCronAndRepeat() );
+      throw new RuntimeException( Messages.getString("illegalStateMissingCronAndRepeat") ); //$NON-NLS-1$
     }
 
     String timePart = null;
@@ -682,7 +680,7 @@ public class SchedulerToolbarController {
   private void handleCreateSchedule() {
     final SchedulerToolbarController localThis = this;
     
-    scheduleCreatorDialog.setTitle( MSGS.scheduleCreator() );
+    scheduleCreatorDialog.setTitle( Messages.getString("scheduleCreator") ); //$NON-NLS-1$
     scheduleCreatorDialog.reset( new Date() );
     if(!loadingInitialized) {
       scheduleCreatorDialog.setOkBtnEnabled( false );  
@@ -707,7 +705,7 @@ public class SchedulerToolbarController {
   private void handleUpdateSchedule() {
     final SchedulerToolbarController localThis = this;
 
-    scheduleCreatorDialog.setTitle( MSGS.scheduleEditor() );
+    scheduleCreatorDialog.setTitle( Messages.getString("scheduleEditor") ); //$NON-NLS-1$
     final List<Schedule> scheduleList = schedulesListCtrl.getSelectedSchedules();
     if(!loadingInitialized) {
       scheduleCreatorDialog.setOkBtnEnabled( false );  
@@ -731,8 +729,8 @@ public class SchedulerToolbarController {
       scheduleCreatorDialog.center();
       scheduleCreatorDialog.getScheduleEditor().setFocus();
     } catch (CronParseException e) {
-      final MessageDialog errorDialog = new MessageDialog( MSGS.error(),
-          MSGS.invalidCronInInitOfRecurrenceDialog( sched.getCronString(), e.getMessage() ) );
+      final MessageDialog errorDialog = new MessageDialog( Messages.getString("error"), //$NON-NLS-1$
+          Messages.getString("invalidCronInInitOfRecurrenceDialog", sched.getCronString(), e.getMessage() ) ); //$NON-NLS-1$
       errorDialog.setOnOkHandler( new ICallback<MessageDialog>() {
         public void onHandle(MessageDialog messageDialog ) {
           errorDialog.hide();
@@ -751,8 +749,8 @@ public class SchedulerToolbarController {
   private void handleDeleteSchedules() {
     final SchedulerToolbarController localThis = this;
     
-    final ConfirmDialog confirm = new ConfirmDialog( MSGS.confirmDelete(),
-        MSGS.confirmDeleteQuestion( Integer.toString( getNumSubscribers() ) ) );
+    final ConfirmDialog confirm = new ConfirmDialog( Messages.getString("confirmDelete"), //$NON-NLS-1$
+        Messages.getString("confirmDeleteQuestion", Integer.toString( getNumSubscribers() ) ) ); //$NON-NLS-1$
     confirm.setOnOkHandler( new ICallback<MessageDialog>() {
       public void onHandle( MessageDialog d ) {
         confirm.hide();

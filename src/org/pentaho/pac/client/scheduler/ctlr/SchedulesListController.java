@@ -23,8 +23,7 @@ package org.pentaho.pac.client.scheduler.ctlr;
 import java.util.List;
 
 import org.pentaho.gwt.widgets.client.utils.StringUtils;
-import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.i18n.Messages;
 import org.pentaho.pac.client.scheduler.model.Schedule;
 import org.pentaho.pac.client.scheduler.view.SchedulesListCtrl;
 
@@ -34,7 +33,6 @@ import com.google.gwt.user.client.ui.Widget;
 public class SchedulesListController {
 
   private SchedulesListCtrl schedulesListCtrl = null;
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   
   public SchedulesListController( SchedulesListCtrl schedulesListCtrl ) {
     assert (null != schedulesListCtrl ) : "schedulesListCtrl cannot be null."; //$NON-NLS-1$
@@ -75,16 +73,15 @@ public class SchedulesListController {
 
         // column 5
         String labelTxt = schedule.isSubscriptionSchedule()
-          ? MSGS.publicLabel() + "[" + schedule.getSubscriberCount() + "]" //$NON-NLS-1$ //$NON-NLS-2$
-          : MSGS.notApplicable();
+          ? Messages.getString("publicLabel") + "[" + schedule.getSubscriberCount() + "]" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+          : Messages.getString("notApplicable"); //$NON-NLS-1$
         l = new Label( labelTxt );
         widgets[ 5 ] = l;
 
         schedulesListCtrl.addRow( widgets, schedule );
       }
     } else {
-      PacLocalizedMessages msgs = PentahoAdminConsole.getLocalizedMessages();
-      schedulesListCtrl.setTempMessage( msgs.noSchedules() );
+      schedulesListCtrl.setTempMessage( Messages.getString("noSchedules") ); //$NON-NLS-1$
     }
   }
 }

@@ -22,11 +22,9 @@ package org.pentaho.pac.client.scheduler.ctlr;
 
 import org.pentaho.gwt.widgets.client.controls.schededitor.CronEditor;
 import org.pentaho.gwt.widgets.client.utils.CronParser;
-import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.i18n.Messages;
 
 public class CronEditorValidator implements IUiValidator {
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
 
   private CronEditor editor = null;
   private DateRangeEditorValidator dateRangeEditorValidator = null;
@@ -41,7 +39,7 @@ public class CronEditorValidator implements IUiValidator {
     
     if ( !CronParser.isValidCronString( editor.getCronString() ) ) {
       isValid = false;
-      editor.setCronError( MSGS.invalidCronString() );
+      editor.setCronError( Messages.getString("invalidCronString") ); //$NON-NLS-1$
     }
     isValid &= dateRangeEditorValidator.isValid();
     

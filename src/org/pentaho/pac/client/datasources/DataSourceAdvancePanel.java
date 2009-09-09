@@ -17,10 +17,10 @@
 package org.pentaho.pac.client.datasources;
 
 import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
 import org.pentaho.pac.client.common.keyfilters.KeyListenerFactory;
 import org.pentaho.pac.client.common.keyfilters.KeyListenerFactory.FILTER_TYPE;
+import org.pentaho.pac.client.i18n.Messages;
 
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Label;
@@ -28,22 +28,21 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class DataSourceAdvancePanel extends VerticalPanel{
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   private KeyboardListener defaultKeyListener = KeyListenerFactory.getKeyboardListener(FILTER_TYPE.NUMERIC);
   TextBox maxActiveConnTextBox = new TextBox();
   TextBox idleConnTextBox = new TextBox();
   TextBox validationQueryTextBox = new TextBox();
   TextBox waitTextBox = new TextBox();
-  Label label = new Label(MSGS.datasourceAdvanceInfo());
+  Label label = new Label(Messages.getString("datasourceAdvanceInfo")); //$NON-NLS-1$
   
   public DataSourceAdvancePanel() {
-    add(new Label(MSGS.maxActiveDbConnections()));
+    add(new Label(Messages.getString("maxActiveDbConnections"))); //$NON-NLS-1$
     add(maxActiveConnTextBox);
-    add(new Label(MSGS.numIdleDbConnnections()));
+    add(new Label(Messages.getString("numIdleDbConnnections"))); //$NON-NLS-1$
     add(idleConnTextBox);
-    add(new Label(MSGS.dbValidationQuery()));
+    add(new Label(Messages.getString("dbValidationQuery"))); //$NON-NLS-1$
     add(validationQueryTextBox);
-    add(new Label(MSGS.dbWaitTime()));
+    add(new Label(Messages.getString("dbWaitTime"))); //$NON-NLS-1$
     add(waitTextBox);
     add(label);
     maxActiveConnTextBox.addKeyboardListener(defaultKeyListener);

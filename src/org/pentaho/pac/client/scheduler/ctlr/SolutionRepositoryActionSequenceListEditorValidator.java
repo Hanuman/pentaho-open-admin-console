@@ -22,13 +22,10 @@ package org.pentaho.pac.client.scheduler.ctlr;
 
 import java.util.List;
 
-import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.i18n.Messages;
 import org.pentaho.pac.client.scheduler.view.SolutionRepositoryActionSequenceListEditor;
 
 public class SolutionRepositoryActionSequenceListEditorValidator implements IUiValidator {
-
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   
   private SolutionRepositoryActionSequenceListEditor solRepActionSequenceListEditor = null;
   private boolean isSubscriptionSched;
@@ -45,10 +42,10 @@ public class SolutionRepositoryActionSequenceListEditorValidator implements IUiV
       List<String> actionList = solRepActionSequenceListEditor.getActionsAsList();
       if (actionList.size() != 1 ) {
         isValid = false;
-        solRepActionSequenceListEditor.setActionsError( MSGS.onlyOneActionSequence() );
+        solRepActionSequenceListEditor.setActionsError( Messages.getString("onlyOneActionSequence") ); //$NON-NLS-1$
       } else if ( actionList.size() <= 0 ) {
         isValid = false;
-        solRepActionSequenceListEditor.setActionsError( MSGS.actionSequenceCannotBeEmpty() );
+        solRepActionSequenceListEditor.setActionsError( Messages.getString("actionSequenceCannotBeEmpty") ); //$NON-NLS-1$
       }
     }
     return isValid;

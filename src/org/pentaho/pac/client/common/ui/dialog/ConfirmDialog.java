@@ -17,6 +17,7 @@
 package org.pentaho.pac.client.common.ui.dialog;
 
 import org.pentaho.gwt.widgets.client.ui.ICallback;
+import org.pentaho.pac.client.i18n.Messages;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -43,7 +44,7 @@ public class ConfirmDialog extends MessageDialog {
     setButtonPanelAlign(HasHorizontalAlignment.ALIGN_RIGHT, null);
     
     final ConfirmDialog localThis = this;
-    cancelBtn = new Button(MSGS.cancel(), new ClickListener() {
+    cancelBtn = new Button(Messages.getString("cancel"), new ClickListener() { //$NON-NLS-1$
       public void onClick(Widget sender) {
         if (cancelHandler != null) {
           cancelHandler.onHandle(localThis);

@@ -16,8 +16,7 @@
 */
 package org.pentaho.pac.client.users;
 
-import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.i18n.Messages;
 import org.pentaho.pac.common.users.ProxyPentahoUser;
 
 import com.google.gwt.user.client.ui.Label;
@@ -26,20 +25,19 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class UserDetailsPanel extends VerticalPanel {
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   TextBox userNameTextBox = new TextBox();
   PasswordTextBox passwordTextBox = new PasswordTextBox();
   PasswordTextBox passwordConfirmationTextBox = new PasswordTextBox();
   TextBox descriptionTextBox = new TextBox();
   
   public UserDetailsPanel() {
-    add(new Label(MSGS.userName()));
+    add(new Label(Messages.getString("userName"))); //$NON-NLS-1$
     add(userNameTextBox);
-    add(new Label(MSGS.password()));
+    add(new Label(Messages.getString("password"))); //$NON-NLS-1$
     add(passwordTextBox);
-    add(new Label(MSGS.passwordConfirmation()));
+    add(new Label(Messages.getString("passwordConfirmation"))); //$NON-NLS-1$
     add(passwordConfirmationTextBox);
-    add(new Label(MSGS.description()));
+    add(new Label(Messages.getString("description"))); //$NON-NLS-1$
     add(descriptionTextBox);
     userNameTextBox.setWidth("100%"); //$NON-NLS-1$
     passwordTextBox.setWidth("100%"); //$NON-NLS-1$

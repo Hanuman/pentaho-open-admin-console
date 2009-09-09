@@ -16,6 +16,8 @@
 */
 package org.pentaho.pac.client;
 
+import org.pentaho.pac.client.i18n.Messages;
+
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -31,7 +33,7 @@ public class CommonTasksPanel extends SimplePanel {
     SimplePanel headerPanel = new SimplePanel();
     headerPanel.setStyleName("CommonTasksHeader"); //$NON-NLS-1$
     
-    Label header = new Label(PentahoAdminConsole.MSGS.commonTasks());
+    Label header = new Label(Messages.getString("commonTasks")); //$NON-NLS-1$
     header.setStyleName("commonTasksHeaderText"); //$NON-NLS-1$
     headerPanel.add(header);
     vertPanel.add(headerPanel);

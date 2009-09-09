@@ -19,7 +19,7 @@ package org.pentaho.pac.client.common.ui;
 import java.util.Iterator;
 import java.util.List;
 
-import org.pentaho.pac.client.PentahoAdminConsole;
+import org.pentaho.pac.client.i18n.Messages;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -35,8 +35,8 @@ public class AccumulatorPanel<T> extends HorizontalPanel implements ClickListene
   Button removeFromAccumulationBtn = new Button("&lt;"); //$NON-NLS-1$
   GenericObjectListBox<T> availableItemsListBox = new GenericObjectListBox<T>(true);
   GenericObjectListBox<T> accumulatedItemsListBox = new GenericObjectListBox<T>(true);
-  Label availableItemsLabel = new Label(PentahoAdminConsole.getLocalizedMessages().availableItemsTitle());
-  Label accumulatedItemsLabel = new Label(PentahoAdminConsole.getLocalizedMessages().assignedItemsTitle());
+  Label availableItemsLabel = new Label(Messages.getString("availableItemsTitle")); //$NON-NLS-1$
+  Label accumulatedItemsLabel = new Label(Messages.getString("assignedItemsTitle")); //$NON-NLS-1$
 
   public AccumulatorPanel() {
     this(new GenericObjectListBox<T>(true), new GenericObjectListBox<T>(true));

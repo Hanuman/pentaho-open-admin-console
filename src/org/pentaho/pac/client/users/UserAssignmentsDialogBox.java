@@ -26,6 +26,7 @@ import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.client.common.ui.dialog.AccumulatorDialog;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
+import org.pentaho.pac.client.i18n.Messages;
 import org.pentaho.pac.client.utils.ExceptionParser;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
 import org.pentaho.pac.common.users.ProxyPentahoUser;
@@ -43,7 +44,7 @@ public class UserAssignmentsDialogBox extends AccumulatorDialog<ProxyPentahoUser
     availableUsersList = (UsersList)getAvailableItemsListBox();
     accumulatedUsersList = (UsersList)getAccumulatedItemsListBox();
     
-    setTitle(MSGS.assignUsers());
+    setTitle(Messages.getString("assignUsers")); //$NON-NLS-1$
 
     setOnOkHandler( new ICallback<MessageDialog>() {
       public void onHandle( MessageDialog o ) {
@@ -93,7 +94,7 @@ public class UserAssignmentsDialogBox extends AccumulatorDialog<ProxyPentahoUser
       }
 
       public void onFailure(Throwable caught) {
-        MessageDialogBox messageDialog = new MessageDialogBox(ExceptionParser.getErrorHeader(caught.getMessage()), ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorAssigningSelectedUsers()), false, false, true);
+        MessageDialogBox messageDialog = new MessageDialogBox(ExceptionParser.getErrorHeader(caught.getMessage()), ExceptionParser.getErrorMessage(caught.getMessage(), Messages.getString("errorAssigningSelectedUsers")), false, false, true); //$NON-NLS-1$
         messageDialog.center();
       }
     };

@@ -20,6 +20,7 @@ import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
+import org.pentaho.pac.client.i18n.Messages;
 import org.pentaho.pac.client.utils.ExceptionParser;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
 
@@ -30,12 +31,12 @@ public class NewRoleDialogBox extends ConfirmDialog {
 
   RoleDetailsPanel roleDetailsPanel = new RoleDetailsPanel();
   boolean roleCreated = false;
-  MessageDialog messageDialog = new MessageDialog( MSGS.error() );
+  MessageDialog messageDialog = new MessageDialog( Messages.getString("error") ); //$NON-NLS-1$
   
   public NewRoleDialogBox() {
     super();
     
-    setTitle(MSGS.addRole());
+    setTitle(Messages.getString("addRole")); //$NON-NLS-1$
     
     roleDetailsPanel.setStyleName( "newRoleDialogBox.detailsPanel" ); //$NON-NLS-1$
     addWidgetToClientArea( roleDetailsPanel );
@@ -82,7 +83,7 @@ public class NewRoleDialogBox extends ConfirmDialog {
   
   private boolean createRole() {
     if (getRoleName().trim().length() == 0) {
-      messageDialog.setMessage(MSGS.invalidRoleName());
+      messageDialog.setMessage(Messages.getString("invalidRoleName")); //$NON-NLS-1$
       messageDialog.center();
     } else {
       ProxyPentahoRole role = getRole();
@@ -97,7 +98,7 @@ public class NewRoleDialogBox extends ConfirmDialog {
 
           public void onFailure(Throwable caught) {
             messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-            messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorCreatingRole()));          
+            messageDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), Messages.getString("errorCreatingRole")));           //$NON-NLS-1$
             messageDialog.center();
             okBtn.setEnabled(true);
             cancelBtn.setEnabled(true);

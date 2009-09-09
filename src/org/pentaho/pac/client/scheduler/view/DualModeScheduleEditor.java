@@ -17,8 +17,7 @@
 package org.pentaho.pac.client.scheduler.view;
 
 import org.pentaho.gwt.widgets.client.controls.schededitor.ScheduleEditor;
-import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.i18n.Messages;
 
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -34,12 +33,11 @@ import com.google.gwt.user.client.ui.Label;
 public class DualModeScheduleEditor extends ScheduleEditor {
 
   private CheckBox subscriptionCb = new CheckBox();
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   
   public DualModeScheduleEditor() {
     super();
     HorizontalPanel p = new HorizontalPanel();
-    Label l = new Label( MSGS.scheduleTypeCheckboxLabel() );
+    Label l = new Label( Messages.getString("scheduleTypeCheckboxLabel") ); //$NON-NLS-1$
     p.add( subscriptionCb );
     p.add( l );
     this.insert( p, 0 );

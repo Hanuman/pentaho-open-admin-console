@@ -16,13 +16,30 @@
 */
 package org.pentaho.pac.client;
 
+import org.pentaho.gwt.widgets.client.utils.i18n.IResourceBundleLoadCallback;
+import org.pentaho.gwt.widgets.client.utils.i18n.ResourceBundle;
+import org.pentaho.pac.client.i18n.Messages;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.RootPanel;
 
-public class PentahoAdminConsoleEntryPoint implements EntryPoint{
+public class PentahoAdminConsoleEntryPoint implements EntryPoint, IResourceBundleLoadCallback{
 
   public void onModuleLoad() {
+ // just some quick sanity setting of the platform effective locale based on the override
+    // TODO:
+    // which comes from the url parameter
+//    if (!StringUtils.isEmpty(Window.Location.getParameter("locale"))) {
+//        MantleServiceCache.getService().setLocaleOverride(Window.Location.getParameter("locale"), null);
+//    }
+    
+    ResourceBundle messages = new ResourceBundle();
+    Messages.setResourceBundle(messages); 
+    messages.loadBundle("messages/", "messages", true, PentahoAdminConsoleEntryPoint.this); //$NON-NLS-1$ //$NON-NLS-2$
+  }
 
+  // Make sure the resource bundle is loaded before doing anything else
+  public void bundleLoaded(String bundleName) {
     //attach all to the page
     RootPanel.get("canvas").add(new PentahoAdminConsole());  //$NON-NLS-1$
   }

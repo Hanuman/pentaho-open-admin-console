@@ -16,6 +16,7 @@
 */
 package org.pentaho.pac.client;
 
+import org.pentaho.pac.client.i18n.Messages;
 import org.pentaho.pac.client.utils.PacImageBundle;
 
 import com.google.gwt.user.client.Timer;
@@ -75,7 +76,7 @@ public class AdminConsoleToolbar extends HorizontalPanel {
     setIndicators(toolbarIndicator);
 
     Image refreshConsoleImage = PacImageBundle.getBundle().refreshIcon().createImage();
-    refreshConsoleImage.setTitle(PentahoAdminConsole.MSGS.resetServer());
+    refreshConsoleImage.setTitle(Messages.getString("resetServer")); //$NON-NLS-1$
     refreshConsoleImage.addClickListener(new ClickListener(){
       public void onClick(Widget sender) {
         console.refresh();
@@ -85,11 +86,11 @@ public class AdminConsoleToolbar extends HorizontalPanel {
     addImageButton(refreshConsoleImage);
     
     Image helpImage = PacImageBundle.getBundle().helpIcon().createImage();
-    helpImage.setTitle(PentahoAdminConsole.MSGS.help());
+    helpImage.setTitle(Messages.getString("help")); //$NON-NLS-1$
     helpImage.addClickListener( new ClickListener() {
       public void onClick(Widget sender) {
         if (helpUrlOverride != null && helpUrlOverride.length() > 0){
-          Window.open(helpUrlOverride, PentahoAdminConsole.MSGS.userGuide(), ""); //$NON-NLS-1$
+          Window.open(helpUrlOverride, Messages.getString("userGuide"), ""); //$NON-NLS-1$ //$NON-NLS-2$
         }else{
           PacServiceFactory.getPacService().getHelpUrl(new AsyncCallback<String>(){
 
@@ -98,7 +99,7 @@ public class AdminConsoleToolbar extends HorizontalPanel {
             }
 
             public void onSuccess(String helpUrl) {
-              Window.open(helpUrl, PentahoAdminConsole.MSGS.userGuide(), ""); //$NON-NLS-1$ 
+              Window.open(helpUrl, Messages.getString("userGuide"), ""); //$NON-NLS-1$ //$NON-NLS-2$ 
             }          
           });
         }

@@ -20,7 +20,7 @@ import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.gwt.widgets.client.utils.StringUtils;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.IResponseCallback;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.i18n.Messages;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -39,7 +39,6 @@ public class MessageDialog extends BasicDialog {
   private static final String DEFAULT_WIDTH = "240px"; //$NON-NLS-1$
   private static final String DEFAULT_HEIGHT = "120px"; //$NON-NLS-1$
 
-  protected static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   protected Label msgLabel = null;
   protected Button okBtn = null;
   private ICallback<MessageDialog> okHandler = new ICallback<MessageDialog>() {
@@ -61,7 +60,7 @@ public class MessageDialog extends BasicDialog {
     setMessage( msg );
     final MessageDialog localThis = this;
     
-    okBtn = new Button(MSGS.ok(), new ClickListener() {
+    okBtn = new Button(Messages.getString("ok"), new ClickListener() { //$NON-NLS-1$
       public void onClick(Widget sender) {
         boolean isValid = ( null != validateHandler )
           ? validateHandler.onHandle( localThis )

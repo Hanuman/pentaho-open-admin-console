@@ -37,6 +37,7 @@ import org.pentaho.pac.client.PacServiceAsync;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.GroupBox;
+import org.pentaho.pac.client.i18n.Messages;
 import org.pentaho.pac.client.utils.ExceptionParser;
 
 import com.google.gwt.user.client.DOM;
@@ -81,7 +82,7 @@ public class HomePanel extends SimplePanel implements IRefreshableAdminPage{
     PacServiceAsync pacService = PacServiceFactory.getPacService();
     pacService.getHomePageAsHtml(url, new AsyncCallback<String>() {
       public void onFailure(Throwable caught) {
-        MessageDialogBox messageDialog = new MessageDialogBox(ExceptionParser.getErrorHeader(caught.getMessage()), ExceptionParser.getErrorMessage(caught.getMessage(), PentahoAdminConsole.MSGS.errorGettingHomepage()), false, false, true);          
+        MessageDialogBox messageDialog = new MessageDialogBox(ExceptionParser.getErrorHeader(caught.getMessage()), ExceptionParser.getErrorMessage(caught.getMessage(), Messages.getString("errorGettingHomepage")), false, false, true);           //$NON-NLS-1$
         messageDialog.center();
       }
       public void onSuccess(String htmlContent) {

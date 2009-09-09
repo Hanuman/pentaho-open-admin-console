@@ -25,12 +25,10 @@ import org.pentaho.gwt.widgets.client.buttons.ImageButton;
 import org.pentaho.gwt.widgets.client.dialogs.IDialogCallback;
 import org.pentaho.gwt.widgets.client.dialogs.MessageDialogBox;
 import org.pentaho.gwt.widgets.client.ui.ICallback;
-import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.client.common.ui.IListBoxFilter;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
-import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.i18n.Messages;
 import org.pentaho.pac.client.roles.RoleAssignmentsDialogBox;
 import org.pentaho.pac.client.roles.RolesList;
 import org.pentaho.pac.client.utils.ExceptionParser;
@@ -78,15 +76,14 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
     }  
   }
   
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   UsersList usersList = new UsersList(true);
   RolesList assignedRolesList = new RolesList(true);
   UserDetailsPanel userDetailsPanel = new UserDetailsPanel();
-  Button updateUserBtn = new Button(MSGS.update());
-  ImageButton addUserBtn = new ImageButton("style/images/add.png", "style/images/add_disabled.png", MSGS.addUser(), 15, 15); //$NON-NLS-1$ //$NON-NLS-2$
-  ImageButton deleteUserBtn = new ImageButton("style/images/remove.png", "style/images/remove_disabled.png", MSGS.deleteUsers(), 15, 15); //$NON-NLS-1$ //$NON-NLS-2$ 
-  ImageButton addRoleAssignmentBtn = new ImageButton("style/images/add.png", "style/images/add_disabled.png", MSGS.assignRoles(), 15, 15); //$NON-NLS-1$ //$NON-NLS-2$ 
-  ImageButton deleteRoleAssignmentBtn = new ImageButton("style/images/remove.png", "style/images/remove_disabled.png", MSGS.unassignRoles(), 15, 15); //$NON-NLS-1$ //$NON-NLS-2$ 
+  Button updateUserBtn = new Button(Messages.getString("update")); //$NON-NLS-1$
+  ImageButton addUserBtn = new ImageButton("style/images/add.png", "style/images/add_disabled.png", Messages.getString("addUser"), 15, 15); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+  ImageButton deleteUserBtn = new ImageButton("style/images/remove.png", "style/images/remove_disabled.png", Messages.getString("deleteUsers"), 15, 15); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+  ImageButton addRoleAssignmentBtn = new ImageButton("style/images/add.png", "style/images/add_disabled.png", Messages.getString("assignRoles"), 15, 15); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+  ImageButton deleteRoleAssignmentBtn = new ImageButton("style/images/remove.png", "style/images/remove_disabled.png", Messages.getString("unassignRoles"), 15, 15); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
   TextBox filterTextBox = new TextBox();
   NewUserDialogBox newUserDialogBox = new NewUserDialogBox();
   ConfirmDialog confirmDeleteUsersDialog = new ConfirmDialog();
@@ -150,8 +147,8 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
     
     userDetailsPanel.getUserNameTextBox().setEnabled(false);
     
-    confirmDeleteUsersDialog.setText(MSGS.deleteUsers());
-    confirmDeleteUsersDialog.setMessage(MSGS.confirmUserDeletionMsg());
+    confirmDeleteUsersDialog.setText(Messages.getString("deleteUsers")); //$NON-NLS-1$
+    confirmDeleteUsersDialog.setMessage(Messages.getString("confirmUserDeletionMsg")); //$NON-NLS-1$
     confirmDeleteUsersDialog.setOnOkHandler( new ICallback() {
       public void onHandle(Object o) {
         confirmDeleteUsersDialog.hide();
@@ -160,8 +157,8 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
       }
     });
     
-    confirmRemoveRoleAssignmentDialog.setText(MSGS.unassignRoles());
-    confirmRemoveRoleAssignmentDialog.setMessage(MSGS.confirmUnassignRolesMsg());
+    confirmRemoveRoleAssignmentDialog.setText(Messages.getString("unassignRoles")); //$NON-NLS-1$
+    confirmRemoveRoleAssignmentDialog.setMessage(Messages.getString("confirmUnassignRolesMsg")); //$NON-NLS-1$
     confirmRemoveRoleAssignmentDialog.setOnOkHandler( new ICallback() {
       public void onHandle(Object o) {
         confirmRemoveRoleAssignmentDialog.hide();
@@ -187,7 +184,7 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
     userPanelFieldsetContent.setCellHorizontalAlignment(updateUserBtn, VerticalPanel.ALIGN_RIGHT);
     
     VerticalPanel fieldsetPanel = new VerticalPanel();
-    fieldsetPanel.add(new Label(MSGS.userDetails()));
+    fieldsetPanel.add(new Label(Messages.getString("userDetails"))); //$NON-NLS-1$
     fieldsetPanel.add(userPanelFieldsetContent);
     userPanelFieldsetContent.setWidth("100%"); //$NON-NLS-1$
 
@@ -228,7 +225,7 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
 	  VerticalPanel userListPanel = new VerticalPanel();
     userListPanel.add(headerDockPanel);
     userListPanel.add(usersList);    
-    userListPanel.add(new Label(MSGS.filter()));
+    userListPanel.add(new Label(Messages.getString("filter"))); //$NON-NLS-1$
     userListPanel.add(filterTextBox);
     
     userListPanel.setCellHeight(usersList, "100%"); //$NON-NLS-1$
@@ -252,7 +249,7 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
     
     VerticalPanel fieldsetPanel = new VerticalPanel();
     
-    Label label = new Label(MSGS.assignedRoles());
+    Label label = new Label(Messages.getString("assignedRoles")); //$NON-NLS-1$
     Label spacer = new Label(""); //$NON-NLS-1$
     
     
@@ -329,7 +326,7 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
 	      }
 
 	      public void onFailure(Throwable caught) {
-          MessageDialogBox messageDialog = new MessageDialogBox(ExceptionParser.getErrorHeader(caught.getMessage()), ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorDeletingUsers()), false, false, true);
+          MessageDialogBox messageDialog = new MessageDialogBox(ExceptionParser.getErrorHeader(caught.getMessage()), ExceptionParser.getErrorMessage(caught.getMessage(), Messages.getString("errorDeletingUsers")), false, false, true); //$NON-NLS-1$
           messageDialog.center();
 	      }
 	    };
@@ -351,7 +348,7 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
         }
 
         public void onFailure(Throwable caught) {
-          MessageDialogBox messageDialog = new MessageDialogBox(ExceptionParser.getErrorHeader(caught.getMessage()), ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorUnassigningRoles()), false, false, true);
+          MessageDialogBox messageDialog = new MessageDialogBox(ExceptionParser.getErrorHeader(caught.getMessage()), ExceptionParser.getErrorMessage(caught.getMessage(), Messages.getString("errorUnassigningRoles")), false, false, true); //$NON-NLS-1$
           messageDialog.center();
         }
       };
@@ -400,7 +397,7 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
 	@SuppressWarnings("unchecked")
 	private void updateUserDetails( final Widget sender ) {
 	  if (!userDetailsPanel.getPassword().equals(userDetailsPanel.getPasswordConfirmation())) { 
-	    MessageDialogBox errorDialog = new MessageDialogBox(MSGS.updateUser(), MSGS.passwordConfirmationFailed(), false, false, true);
+	    MessageDialogBox errorDialog = new MessageDialogBox(Messages.getString("updateUser"), Messages.getString("passwordConfirmationFailed"), false, false, true);  //$NON-NLS-1$//$NON-NLS-2$
       errorDialog.center();
 	  } else {
       ((Button)sender).setEnabled( false );
@@ -417,7 +414,7 @@ public class UsersPanel extends HorizontalPanel implements ClickListener, Change
 	      }
 
 	      public void onFailure(Throwable caught) {
-	        MessageDialogBox messageDialog = new MessageDialogBox(ExceptionParser.getErrorHeader(caught.getMessage()), ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorUpdatingUser()), false, false, true);
+	        MessageDialogBox messageDialog = new MessageDialogBox(ExceptionParser.getErrorHeader(caught.getMessage()), ExceptionParser.getErrorMessage(caught.getMessage(), Messages.getString("errorUpdatingUser")), false, false, true); //$NON-NLS-1$
 	        messageDialog.center();
           ((Button)sender).setEnabled( true );
 	      }

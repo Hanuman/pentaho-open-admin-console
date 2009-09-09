@@ -20,7 +20,7 @@ import org.pentaho.gwt.widgets.client.buttons.RoundedButton;
 import org.pentaho.gwt.widgets.client.dialogs.PromptDialogBox;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.i18n.Messages;
 import org.pentaho.pac.client.utils.ExceptionParser;
 import org.pentaho.pac.common.NameValue;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
@@ -41,7 +41,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class NewDataSourceDialogBox extends PromptDialogBox {
 
-  protected static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   private static final int GENERAL_PANEL_ID = 0;
   private static final int ADVANCE_PANEL_ID = 1;
 
@@ -50,24 +49,24 @@ public class NewDataSourceDialogBox extends PromptDialogBox {
   DataSourceAdvancePanel dataSourceAdvancePanel;
   boolean dataSourceCreated = false;
   HTML msgBoxHtml = new HTML();
-  PromptDialogBox messageDialog = new PromptDialogBox(MSGS.error(), MSGS.ok(), null, false, true, msgBoxHtml);
+  PromptDialogBox messageDialog = new PromptDialogBox(Messages.getString("error"),Messages.getString("ok"), null, false, true, msgBoxHtml); //$NON-NLS-1$ //$NON-NLS-2$
   DeckPanel deckPanel;
   ToggleButton generalButton;
   ToggleButton advanceButton;
   public NewDataSourceDialogBox() {
-    super(MSGS.addDataSource(), MSGS.ok(), MSGS.cancel(), false, true);
+    super(Messages.getString("addDataSource"), Messages.getString("ok"), Messages.getString("cancel"), false, true);   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
     DockPanel dockPanel = new DockPanel();
     
-    generalButton = new ToggleButton( MSGS.general(), MSGS.general() );
-    advanceButton = new ToggleButton( MSGS.advance(), MSGS.advance() );
-    testButton = new RoundedButton(MSGS.test());
+    generalButton = new ToggleButton( Messages.getString("general"), Messages.getString("general") ); //$NON-NLS-1$ //$NON-NLS-2$
+    advanceButton = new ToggleButton( Messages.getString("advance"), Messages.getString("advance") ); //$NON-NLS-1$ //$NON-NLS-2$
+    testButton = new RoundedButton(Messages.getString("test")); //$NON-NLS-1$
     testButton.addClickListener(new ClickListener() {
       public void onClick(Widget sender) {
         testDataSourceConnection();
       }
     });
     
-    setTitle( MSGS.addDataSource() );
+    setTitle( Messages.getString("addDataSource") ); //$NON-NLS-1$
     HorizontalPanel horizontalPanel = new HorizontalPanel();
     dataSourceGeneralPanel = new DataSourceGeneralPanel();
     horizontalPanel.add(generalButton);
@@ -76,8 +75,8 @@ public class NewDataSourceDialogBox extends PromptDialogBox {
     dockPanel.add(horizontalPanel, DockPanel.NORTH);
     dockPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
     dockPanel.setSpacing(10);
-    generalButton.setTitle( MSGS.clickAddGeneral() );
-    advanceButton.setTitle( MSGS.clickAddAdvance() );
+    generalButton.setTitle( Messages.getString("clickAddGeneral") ); //$NON-NLS-1$
+    advanceButton.setTitle( Messages.getString("clickAddAdvance") ); //$NON-NLS-1$
     
     generalButton.setStylePrimaryName( "generalToggleBtn" ); //$NON-NLS-1$
     advanceButton.setStylePrimaryName( "advanceToggleBtn" ); //$NON-NLS-1$
@@ -291,16 +290,16 @@ public class NewDataSourceDialogBox extends PromptDialogBox {
   
   private boolean createDataSource() {
     if (getJndiName().trim().length() == 0) {
-      msgBoxHtml.setHTML(MSGS.invalidConnectionName());
+      msgBoxHtml.setHTML(Messages.getString("invalidConnectionName")); //$NON-NLS-1$
       messageDialog.center();
     } else if (getUrl().trim().length() == 0) {
-      msgBoxHtml.setHTML(MSGS.missingDbUrl());
+      msgBoxHtml.setHTML(Messages.getString("missingDbUrl")); //$NON-NLS-1$
       messageDialog.center();
     } else if (getDriverClass().trim().length() == 0) {
-      msgBoxHtml.setHTML(MSGS.missingDbDriver());
+      msgBoxHtml.setHTML(Messages.getString("missingDbDriver")); //$NON-NLS-1$
       messageDialog.center();
     } else if (getUserName().trim().length() == 0) {
-      msgBoxHtml.setHTML(MSGS.missingDbUserName());
+      msgBoxHtml.setHTML(Messages.getString("missingDbUserName")); //$NON-NLS-1$
       messageDialog.center();
     } else {
       PentahoDataSource dataSource = getDataSource();
@@ -318,7 +317,7 @@ public class NewDataSourceDialogBox extends PromptDialogBox {
 
           public void onFailure(Throwable caught) {
             messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-            msgBoxHtml.setHTML(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorCreatingDataSource()));          
+            msgBoxHtml.setHTML(ExceptionParser.getErrorMessage(caught.getMessage(), Messages.getString("errorCreatingDataSource")));           //$NON-NLS-1$
             messageDialog.center();
             okButton.setEnabled(true);
             cancelButton.setEnabled(true);
@@ -343,14 +342,14 @@ public class NewDataSourceDialogBox extends PromptDialogBox {
 
     AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
       public void onSuccess(Boolean result) {
-        messageDialog.setText(MSGS.testConnection());
-        msgBoxHtml.setHTML(MSGS.connectionTestSuccessful());
+        messageDialog.setText(Messages.getString("testConnection")); //$NON-NLS-1$
+        msgBoxHtml.setHTML(Messages.getString("connectionTestSuccessful")); //$NON-NLS-1$
         messageDialog.center();
       }
 
       public void onFailure(Throwable caught) {
         messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-        msgBoxHtml.setHTML(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorTestingDataSourceConnection()));          
+        msgBoxHtml.setHTML(ExceptionParser.getErrorMessage(caught.getMessage(), Messages.getString("errorTestingDataSourceConnection")));           //$NON-NLS-1$
         messageDialog.center();
       }
     };

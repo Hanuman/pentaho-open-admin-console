@@ -19,7 +19,7 @@ package org.pentaho.pac.client;
 import org.pentaho.gwt.widgets.client.dialogs.MessageDialogBox;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
 import org.pentaho.pac.client.home.HomePanel;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.i18n.Messages;
 import org.pentaho.pac.client.utils.ExceptionParser;
 
 import com.google.gwt.core.client.GWT;
@@ -31,7 +31,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class PentahoAdminConsole extends DockPanel implements IRefreshableAdminConsole {
   
-  public static final PacLocalizedMessages MSGS = (PacLocalizedMessages)GWT.create(PacLocalizedMessages.class);
   public static final String DEFAULT_HOMEPAGE_URL = "http://www.pentaho.com/console_home"; //$NON-NLS-1$  
   protected AdminConsoleToolbar toolbar = new AdminConsoleToolbar(this);
   protected AdminConsoleMasterDetailsPanel adminConsoleMasterDetailsPanel = new AdminConsoleMasterDetailsPanel();
@@ -57,20 +56,20 @@ public class PentahoAdminConsole extends DockPanel implements IRefreshableAdminC
     AsyncCallback<Boolean> callback = new AsyncCallback<Boolean >() {
         public void onSuccess(Boolean valid) {
         	if(!valid) {
-	            MessageDialogBox errorDialog = new MessageDialogBox(MSGS.invalidConfiguration(), MSGS.notValidConfiguration(), true, false, true);
+	            MessageDialogBox errorDialog = new MessageDialogBox(Messages.getString("invalidConfiguration"), Messages.getString("notValidConfiguration"), true, false, true); //$NON-NLS-1$ //$NON-NLS-2$
 	            errorDialog.center();
 	            setVisible(false);
         	} else {
         	    AsyncCallback<String> homepageUrlcallback = new AsyncCallback<String>() {
         	        public void onSuccess(String result) {
-        	          adminConsoleMasterDetailsPanel.addPage(AdminConsolePageId.HOME_PAGE.ordinal(), PentahoAdminConsole.MSGS.home(), new HomePanel(result));
-        	          adminConsoleMasterDetailsPanel.addPage(AdminConsolePageId.ADMIN_PAGE.ordinal(), PentahoAdminConsole.MSGS.administration(), new AdministrationTabPanel());   
+        	          adminConsoleMasterDetailsPanel.addPage(AdminConsolePageId.HOME_PAGE.ordinal(), Messages.getString("home"), new HomePanel(result)); //$NON-NLS-1$
+        	          adminConsoleMasterDetailsPanel.addPage(AdminConsolePageId.ADMIN_PAGE.ordinal(), Messages.getString("administration"), new AdministrationTabPanel());    //$NON-NLS-1$
         	          adminConsoleMasterDetailsPanel.selectPage(AdminConsolePageId.HOME_PAGE.ordinal());
         	          refresh();
         	        }
         	        public void onFailure(Throwable caught) {
-        	          adminConsoleMasterDetailsPanel.addPage(AdminConsolePageId.HOME_PAGE.ordinal(), PentahoAdminConsole.MSGS.home(), new HomePanel(DEFAULT_HOMEPAGE_URL));
-        	          adminConsoleMasterDetailsPanel.addPage(AdminConsolePageId.ADMIN_PAGE.ordinal(), PentahoAdminConsole.MSGS.administration(), new AdministrationTabPanel());   
+        	          adminConsoleMasterDetailsPanel.addPage(AdminConsolePageId.HOME_PAGE.ordinal(), Messages.getString("home"), new HomePanel(DEFAULT_HOMEPAGE_URL)); //$NON-NLS-1$
+        	          adminConsoleMasterDetailsPanel.addPage(AdminConsolePageId.ADMIN_PAGE.ordinal(), Messages.getString("administration"), new AdministrationTabPanel());    //$NON-NLS-1$
         	          adminConsoleMasterDetailsPanel.selectPage(AdminConsolePageId.HOME_PAGE.ordinal());
         	          refresh();
         	        }
@@ -81,7 +80,7 @@ public class PentahoAdminConsole extends DockPanel implements IRefreshableAdminC
           
         }
         public void onFailure(Throwable caught) {
-          MessageDialogBox errorDialog = new MessageDialogBox(ExceptionParser.getErrorHeader(caught.getMessage()), ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorInitializingPacService()), false, false, true);
+          MessageDialogBox errorDialog = new MessageDialogBox(ExceptionParser.getErrorHeader(caught.getMessage()), ExceptionParser.getErrorMessage(caught.getMessage(), Messages.getString("errorInitializingPacService")), false, false, true); //$NON-NLS-1$
           errorDialog.center();
           setVisible(false);
         }
@@ -100,10 +99,6 @@ public class PentahoAdminConsole extends DockPanel implements IRefreshableAdminC
     return topPanel;
   }
 
-  static public PacLocalizedMessages getLocalizedMessages() {
-    return MSGS;
-  }
-  
   public void refresh() {
     for (Widget page : adminConsoleMasterDetailsPanel.getPages()) {
       if (page instanceof IRefreshableAdminPage) {

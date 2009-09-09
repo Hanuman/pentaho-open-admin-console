@@ -25,6 +25,7 @@ import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.client.common.ui.dialog.AccumulatorDialog;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
+import org.pentaho.pac.client.i18n.Messages;
 import org.pentaho.pac.client.utils.ExceptionParser;
 import org.pentaho.pac.common.roles.ProxyPentahoRole;
 import org.pentaho.pac.common.users.ProxyPentahoUser;
@@ -34,7 +35,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 public class RoleAssignmentsDialogBox extends AccumulatorDialog<ProxyPentahoRole> {
   boolean roleAssignmentsModified = false;
   ProxyPentahoUser user;
-  MessageDialog errorDialog = new MessageDialog( MSGS.error() );
+  MessageDialog errorDialog = new MessageDialog( Messages.getString("error") ); //$NON-NLS-1$
   RolesList availableRolesList;
   RolesList accumulatedRolesList;
 
@@ -43,7 +44,7 @@ public class RoleAssignmentsDialogBox extends AccumulatorDialog<ProxyPentahoRole
     availableRolesList = (RolesList)getAvailableItemsListBox();
     accumulatedRolesList = (RolesList)getAccumulatedItemsListBox();
     
-    setTitle(MSGS.assignRoles());
+    setTitle(Messages.getString("assignRoles")); //$NON-NLS-1$
 
     setOnOkHandler( new ICallback<MessageDialog>() {
       public void onHandle( MessageDialog o ) {
@@ -93,7 +94,7 @@ public class RoleAssignmentsDialogBox extends AccumulatorDialog<ProxyPentahoRole
 
       public void onFailure(Throwable caught) {
         errorDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-        errorDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorAssigningSelectedRoles()));          
+        errorDialog.setMessage(ExceptionParser.getErrorMessage(caught.getMessage(), Messages.getString("errorAssigningSelectedRoles")));           //$NON-NLS-1$
         errorDialog.center();
       }
     };

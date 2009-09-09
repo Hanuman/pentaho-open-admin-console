@@ -16,6 +16,7 @@
 */
 package org.pentaho.pac.client;
 
+import org.pentaho.pac.client.i18n.Messages;
 import org.pentaho.pac.client.utils.PacImageBundle;
 
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -32,10 +33,10 @@ public class ToolbarIndicator  extends HorizontalPanel{
   public ToolbarIndicator() {
     imageHolderPanel = new VerticalPanel();
     serverAliveImage = PacImageBundle.getBundle().serverAliveIcon().createImage();
-    serverAliveImage.setTitle(PentahoAdminConsole.MSGS.biServerAlive());
+    serverAliveImage.setTitle(Messages.getString("biServerAlive")); //$NON-NLS-1$
     serverDeadImage = PacImageBundle.getBundle().serverDeadIcon().createImage();
-    serverDeadImage.setTitle(PentahoAdminConsole.MSGS.biServerDead());
-    statusLabel = new Label(PentahoAdminConsole.MSGS.toolbarStatus());
+    serverDeadImage.setTitle(Messages.getString("biServerDead")); //$NON-NLS-1$
+    statusLabel = new Label(Messages.getString("toolbarStatus")); //$NON-NLS-1$
     statusLabel.setStyleName("indicators_label"); //$NON-NLS-1$
     imageHolderPanel.add(serverDeadImage);
     setStyleName("indicators"); //$NON-NLS-1$

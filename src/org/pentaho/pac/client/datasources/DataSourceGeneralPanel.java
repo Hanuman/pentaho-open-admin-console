@@ -16,8 +16,7 @@
 */
 package org.pentaho.pac.client.datasources;
 
-import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.i18n.Messages;
 import org.pentaho.pac.common.NameValue;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
 
@@ -29,7 +28,6 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class DataSourceGeneralPanel extends VerticalPanel {
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   public static final int PASSWORD_MAX_LENGTH = 50;
   HorizontalPanel jdbcClassNamePanel = new HorizontalPanel(); 
   TextBox userNameTextBox = new TextBox();
@@ -46,17 +44,17 @@ public class DataSourceGeneralPanel extends VerticalPanel {
   }
 
   private void constructDatasourcePanel() {
-    add(new Label(MSGS.jndiName()));
+    add(new Label(Messages.getString("jndiName"))); //$NON-NLS-1$
     add(jndiNameTextBox);
-    add(new Label(MSGS.jdbcDriverClass()));
+    add(new Label(Messages.getString("jdbcDriverClass"))); //$NON-NLS-1$
     add(jdbcClassNamePanel);
     jdbcClassNamePanel.setWidth("100%");//$NON-NLS-1$
-    add(new Label(MSGS.dbUserName()));
+    add(new Label(Messages.getString("dbUserName"))); //$NON-NLS-1$
     add(userNameTextBox);
-    add(new Label(MSGS.dbPassword()));
+    add(new Label(Messages.getString("dbPassword"))); //$NON-NLS-1$
     add(passwordTextBox);
     passwordTextBox.setMaxLength(PASSWORD_MAX_LENGTH);
-    add(new Label(MSGS.dbUrl()));
+    add(new Label(Messages.getString("dbUrl"))); //$NON-NLS-1$
     add(urlTextBox);
     jndiNameTextBox.setWidth("100%"); //$NON-NLS-1$
     driverList.setWidth("100%"); //$NON-NLS-1$

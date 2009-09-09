@@ -24,14 +24,13 @@ import java.util.List;
 import org.pentaho.gwt.widgets.client.dialogs.MessageDialogBox;
 import org.pentaho.pac.client.PacServiceFactory;
 import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.i18n.Messages;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ListBox;
 
 public class DataSourcesList extends ListBox {
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   List<PentahoDataSource> dataSources = new ArrayList<PentahoDataSource>();
   boolean isInitialized = false;
   
@@ -144,7 +143,7 @@ public class DataSourcesList extends ListBox {
 
       public void onFailure(Throwable caught) {
         setDataSources(null);
-        MessageDialogBox errorDialog = new MessageDialogBox(MSGS.errorLoadingDataSources(), MSGS.dataSourcesRefreshError(caught.getMessage()), false, false, true);
+        MessageDialogBox errorDialog = new MessageDialogBox(Messages.getString("errorLoadingDataSources"), Messages.getString("dataSourcesRefreshError", caught.getMessage()), false, false, true);  //$NON-NLS-1$//$NON-NLS-2$
         errorDialog.center();
       }
     };

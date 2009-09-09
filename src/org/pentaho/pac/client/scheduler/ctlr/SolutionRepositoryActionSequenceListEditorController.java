@@ -25,9 +25,8 @@ import org.pentaho.gwt.widgets.client.filechooser.FileChooserListener;
 import org.pentaho.gwt.widgets.client.ui.ICallback;
 import org.pentaho.gwt.widgets.client.utils.StringUtils;
 import org.pentaho.pac.client.PacServiceFactory;
-import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.i18n.Messages;
 import org.pentaho.pac.client.scheduler.model.SolutionRepositoryModel;
 import org.pentaho.pac.client.scheduler.view.ActionSequencePicker;
 import org.pentaho.pac.client.scheduler.view.ActionSequencePickerDialog;
@@ -44,7 +43,6 @@ public class SolutionRepositoryActionSequenceListEditorController {
   private ActionSequencePickerDialog actionSequencePickerDialog = null;
   private SolutionRepositoryModel solutionRepositoryModel = null;
   private boolean isInitialized = false;
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   
   public SolutionRepositoryActionSequenceListEditorController(
       SolutionRepositoryActionSequenceListEditor solRepActionSequenceEditor,
@@ -169,7 +167,7 @@ public class SolutionRepositoryActionSequenceListEditorController {
   }
 
   private void showLoadingMessage() {
-    solRepActionSequenceEditor.setMessage( MSGS.loading() );
+    solRepActionSequenceEditor.setMessage( Messages.getString("loading") ); //$NON-NLS-1$
   }
   private void hideLoadingMessage() {
     solRepActionSequenceEditor.clearMessage();

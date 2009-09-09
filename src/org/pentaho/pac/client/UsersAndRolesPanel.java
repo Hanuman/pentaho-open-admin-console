@@ -16,7 +16,7 @@
 */
 package org.pentaho.pac.client;
 
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.i18n.Messages;
 import org.pentaho.pac.client.roles.RolesPanel;
 import org.pentaho.pac.client.users.UsersPanel;
 
@@ -31,10 +31,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class UsersAndRolesPanel extends DockPanel implements ClickListener {
 
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
-
-	ToggleButton usersButton = new ToggleButton( MSGS.users(), MSGS.users() );
-  ToggleButton rolesButton = new ToggleButton( MSGS.roles(), MSGS.roles() );
+	ToggleButton usersButton = new ToggleButton( Messages.getString("users"), Messages.getString("users") );  //$NON-NLS-1$//$NON-NLS-2$
+  ToggleButton rolesButton = new ToggleButton( Messages.getString("roles"), Messages.getString("roles") );  //$NON-NLS-1$//$NON-NLS-2$
   
   DeckPanel deckPanel = new DeckPanel();
   UsersPanel usersPanel = new UsersPanel();
@@ -58,8 +56,8 @@ public class UsersAndRolesPanel extends DockPanel implements ClickListener {
     
     setHorizontalAlignment(HasHorizontalAlignment.ALIGN_LEFT);
 
-    usersButton.setTitle( MSGS.clickEditUsers() );
-    rolesButton.setTitle( MSGS.clickEditRoles() );
+    usersButton.setTitle( Messages.getString("clickEditUsers") ); //$NON-NLS-1$
+    rolesButton.setTitle( Messages.getString("clickEditRoles") ); //$NON-NLS-1$
     
     usersButton.setStylePrimaryName( "usersToggleBtn" ); //$NON-NLS-1$
     rolesButton.setStylePrimaryName( "rolesToggleBtn" ); //$NON-NLS-1$

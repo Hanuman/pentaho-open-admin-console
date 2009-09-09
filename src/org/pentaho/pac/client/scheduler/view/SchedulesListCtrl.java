@@ -23,22 +23,20 @@ package org.pentaho.pac.client.scheduler.view;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.common.ui.TableListCtrl;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.i18n.Messages;
 import org.pentaho.pac.client.scheduler.model.Schedule;
 
 public class SchedulesListCtrl extends TableListCtrl<Schedule> {
 
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   // requirement: Name, Group Name, Schedule State, Next Fire, Previous Fire, Subscriber Count 
   private static final String[] COLUMN_HEADER_TITLE = {
-    MSGS.scheduleName(),
-    MSGS.scheduleGroupName(),
-    MSGS.state(),
-    MSGS.nextFireTime(),
-    MSGS.lastFireTime(),
-    MSGS.subscriberCount()
+    Messages.getString("scheduleName"), //$NON-NLS-1$
+    Messages.getString("scheduleGroupName"), //$NON-NLS-1$
+    Messages.getString("state"), //$NON-NLS-1$
+    Messages.getString("nextFireTime"), //$NON-NLS-1$
+    Messages.getString("lastFireTime"), //$NON-NLS-1$
+    Messages.getString("subscriberCount") //$NON-NLS-1$
   };
   
   public SchedulesListCtrl()

@@ -164,7 +164,11 @@ public class BasicDialog extends DialogBox {
     super.show();
 
     if ( null == titleBarSpan ) {
-      titleBarSpan = RootPanel.get(titleBarSpanId);
+      try{
+        titleBarSpan = RootPanel.get(titleBarSpanId);
+      } catch (Throwable ex){
+        
+      }
       final BasicDialog localThis = this;
       
       HorizontalPanel p = new HorizontalPanel();
@@ -188,7 +192,9 @@ public class BasicDialog extends DialogBox {
         
         p.add( img );
       }
-      titleBarSpan.add( p );
+      if(titleBarSpan != null){
+        titleBarSpan.add( p );
+      }
     }
     titleBarLabel.setText( title );
   }

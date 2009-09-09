@@ -21,18 +21,15 @@ import java.util.List;
 
 import org.pentaho.gwt.widgets.client.controls.TableEditor;
 import org.pentaho.gwt.widgets.client.ui.ICallback;
-import org.pentaho.pac.client.PentahoAdminConsole;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.i18n.Messages;
 
 import com.google.gwt.user.client.ui.SimplePanel;
 
 public class SolutionRepositoryActionSequenceListEditor extends SimplePanel {
-  
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
 
   private ICallback<SolutionRepositoryActionSequenceListEditor> onLoadingCompleteHandler = null;
   
-  private TableEditor actionsEditor = new TableEditor( MSGS.fileLocationLabel() );
+  private TableEditor actionsEditor = new TableEditor( Messages.getString("fileLocationLabel") ); //$NON-NLS-1$
 
   public SolutionRepositoryActionSequenceListEditor() {
     super();
@@ -71,7 +68,7 @@ public class SolutionRepositoryActionSequenceListEditor extends SimplePanel {
   }
   
   public void setActionsAsList( List<String> friendlyNames, List<String> names ) {
-    assert friendlyNames == null || friendlyNames.size() == names.size() : MSGS.sizeListMustBeIdentical();
+    assert friendlyNames == null || friendlyNames.size() == names.size() : Messages.getString("sizeListMustBeIdentical"); //$NON-NLS-1$
     
     actionsEditor.removeAll();
     if ( null != friendlyNames ) {

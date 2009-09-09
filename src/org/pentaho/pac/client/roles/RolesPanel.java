@@ -29,7 +29,7 @@ import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.client.common.ui.IListBoxFilter;
 import org.pentaho.pac.client.common.ui.dialog.ConfirmDialog;
 import org.pentaho.pac.client.common.ui.dialog.MessageDialog;
-import org.pentaho.pac.client.i18n.PacLocalizedMessages;
+import org.pentaho.pac.client.i18n.Messages;
 import org.pentaho.pac.client.users.UserAssignmentsDialogBox;
 import org.pentaho.pac.client.users.UsersList;
 import org.pentaho.pac.client.utils.ExceptionParser;
@@ -78,17 +78,16 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
   }
   
   
-  private static final PacLocalizedMessages MSGS = PentahoAdminConsole.getLocalizedMessages();
   HTML errorMsgHtml = new HTML();
-  PromptDialogBox errorDialog = new PromptDialogBox(MSGS.error(), MSGS.ok(), null, false, true, errorMsgHtml);
+  PromptDialogBox errorDialog = new PromptDialogBox(Messages.getString("error"), Messages.getString("ok"), null, false, true, errorMsgHtml); //$NON-NLS-1$ //$NON-NLS-2$
   RolesList rolesList = new RolesList(true);
   UsersList assignedUsersList = new UsersList(true);
   RoleDetailsPanel roleDetailsPanel = new RoleDetailsPanel();
-  Button updateRoleBtn = new Button(MSGS.update());
-  ImageButton addRoleBtn = new ImageButton("style/images/add.png", "style/images/add_disabled.png", MSGS.addRole(), 15, 15); //$NON-NLS-1$ //$NON-NLS-2$
-  ImageButton deleteRoleBtn = new ImageButton("style/images/remove.png", "style/images/remove_disabled.png", MSGS.deleteRoles(), 15, 15); //$NON-NLS-1$ //$NON-NLS-2$ 
-  ImageButton addRoleAssignmentBtn = new ImageButton("style/images/add.png", "style/images/add_disabled.png", MSGS.assignRoles(), 15, 15); //$NON-NLS-1$ //$NON-NLS-2$ 
-  ImageButton deleteRoleAssignmentBtn = new ImageButton("style/images/remove.png", "style/images/remove_disabled.png", MSGS.unassignRoles(), 15, 15); //$NON-NLS-1$ //$NON-NLS-2$
+  Button updateRoleBtn = new Button(Messages.getString("update")); //$NON-NLS-1$
+  ImageButton addRoleBtn = new ImageButton("style/images/add.png", "style/images/add_disabled.png", Messages.getString("addRole"), 15, 15); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+  ImageButton deleteRoleBtn = new ImageButton("style/images/remove.png", "style/images/remove_disabled.png", Messages.getString("deleteRoles"), 15, 15); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+  ImageButton addRoleAssignmentBtn = new ImageButton("style/images/add.png", "style/images/add_disabled.png", Messages.getString("assignRoles"), 15, 15); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+  ImageButton deleteRoleAssignmentBtn = new ImageButton("style/images/remove.png", "style/images/remove_disabled.png", Messages.getString("unassignRoles"), 15, 15); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
   TextBox filterTextBox = new TextBox();
   NewRoleDialogBox newRoleDialogBox = new NewRoleDialogBox();
   ConfirmDialog confirmDeleteRolesDialog = new ConfirmDialog();
@@ -125,8 +124,8 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     
     roleDetailsPanel.getRoleNameTextBox().setEnabled(false);
     
-    confirmDeleteRolesDialog.setText(MSGS.deleteRoles());
-    confirmDeleteRolesDialog.setMessage(MSGS.confirmRoleDeletionMsg());
+    confirmDeleteRolesDialog.setText(Messages.getString("deleteRoles")); //$NON-NLS-1$
+    confirmDeleteRolesDialog.setMessage(Messages.getString("confirmRoleDeletionMsg")); //$NON-NLS-1$
     confirmDeleteRolesDialog.setOnOkHandler( new ICallback() {
       public void onHandle(Object o) {
         confirmDeleteRolesDialog.hide();
@@ -135,8 +134,8 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
       }
     });
     
-    confirmRemoveRoleAssignmentDialog.setText(MSGS.unassignUsers());
-    confirmRemoveRoleAssignmentDialog.setMessage(MSGS.confirmUnassignUsersMsg());
+    confirmRemoveRoleAssignmentDialog.setText(Messages.getString("unassignUsers")); //$NON-NLS-1$
+    confirmRemoveRoleAssignmentDialog.setMessage(Messages.getString("confirmUnassignUsersMsg")); //$NON-NLS-1$
     confirmRemoveRoleAssignmentDialog.setOnOkHandler( new ICallback() {
       public void onHandle(Object o) {
         confirmRemoveRoleAssignmentDialog.hide();
@@ -151,7 +150,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     DockPanel assignedRolesPanel = buildAssignedUsersPanel();
     
 	  DockPanel dockPanel = new DockPanel();
-	  dockPanel.add(new Label(MSGS.userDetails()), DockPanel.NORTH);
+	  dockPanel.add(new Label(Messages.getString("userDetails")), DockPanel.NORTH); //$NON-NLS-1$
 	  dockPanel.add(roleDetailsPanel, DockPanel.NORTH);
     dockPanel.add(updateRoleBtn, DockPanel.NORTH);
     
@@ -183,14 +182,14 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     spacer.setWidth("2"); //$NON-NLS-1$
     headerDockPanel.add(spacer, DockPanel.EAST);
 	  headerDockPanel.add(addRoleBtn, DockPanel.EAST);
-    Label label = new Label(MSGS.roles());
+    Label label = new Label(Messages.getString("roles")); //$NON-NLS-1$
 	  headerDockPanel.add(label, DockPanel.WEST);
 	  headerDockPanel.setCellWidth(label, "100%"); //$NON-NLS-1$
     DockPanel roleListPanel = new DockPanel();
     roleListPanel.add(headerDockPanel, DockPanel.NORTH);
     roleListPanel.add(rolesList, DockPanel.CENTER);
     roleListPanel.add(filterTextBox, DockPanel.SOUTH  );
-    roleListPanel.add(new Label(MSGS.filter()), DockPanel.SOUTH );
+    roleListPanel.add(new Label(Messages.getString("filter")), DockPanel.SOUTH ); //$NON-NLS-1$
 
     roleListPanel.setCellHeight(rolesList, "100%"); //$NON-NLS-1$
     roleListPanel.setCellWidth(rolesList, "100%"); //$NON-NLS-1$
@@ -215,7 +214,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
     spacer.setWidth("2"); //$NON-NLS-1$
     headerDockPanel.add(spacer, DockPanel.EAST);
     headerDockPanel.add(addRoleAssignmentBtn, DockPanel.EAST);
-    Label label = new Label(MSGS.assignedUsers());
+    Label label = new Label(Messages.getString("assignedUsers")); //$NON-NLS-1$
     headerDockPanel.add(label, DockPanel.WEST);
     headerDockPanel.setCellWidth(label, "100%"); //$NON-NLS-1$
     
@@ -277,7 +276,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 
 	      public void onFailure(Throwable caught) {
 	        errorDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-	        errorMsgHtml.setHTML(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorDeletingRoles()));          
+	        errorMsgHtml.setHTML(ExceptionParser.getErrorMessage(caught.getMessage(), Messages.getString("errorDeletingRoles")));           //$NON-NLS-1$
 	        errorDialog.center();
 	      }
 	    };
@@ -300,7 +299,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 
         public void onFailure(Throwable caught) {
           errorDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-          errorMsgHtml.setHTML(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorUnassigningSelectedUsersFromRole()));          
+          errorMsgHtml.setHTML(ExceptionParser.getErrorMessage(caught.getMessage(), Messages.getString("errorUnassigningSelectedUsersFromRole")));           //$NON-NLS-1$
           errorDialog.center();
         }
       };
@@ -347,7 +346,7 @@ public class RolesPanel extends DockPanel implements ClickListener, ChangeListen
 
       public void onFailure(Throwable caught) {
         errorDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-        errorMsgHtml.setHTML(ExceptionParser.getErrorMessage(caught.getMessage(), MSGS.errorUpdatingRole()));          
+        errorMsgHtml.setHTML(ExceptionParser.getErrorMessage(caught.getMessage(), Messages.getString("errorUpdatingRole")));           //$NON-NLS-1$
         errorDialog.center();
         ((Button)sender).setEnabled( true );
       }
