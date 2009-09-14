@@ -1,7 +1,8 @@
 #!/bin/sh
 
-cd $(dirname $0)
-DIR=$PWD
+DIR_REL=`dirname $0`
+cd $DIR_REL
+DIR=`pwd`
 cd -
 
 . "$DIR/set-pentaho-java.sh"
@@ -12,12 +13,12 @@ else
   setPentahoJava
 fi
 
-CLASSPATH=.:resource/config:
-files=$(ls ./jdbc/*.jar ./lib/*.jar)
+CLASSPATH=`$DIR_REL:resource/config:`
+files=`ls $DIR_REL/jdbc/*.jar $DIR_REL/lib/*.jar`
 
 for i in $files
 do
   CLASSPATH="$CLASSPATH:$i"
 done
 
-"$_PENTAHO_JAVA" -Xmx512M -XX:PermSize=64M -XX:MaxPermSize=128M  -DCONSOLE_HOME=. -Dlog4j.configuration=resource/config/log4j.xml -cp $CLASSPATH  org.pentaho.pac.server.JettyServer
+"$_PENTAHO_JAVA" -Xmx512M -XX:PermSize=64M -XX:MaxPermSize=128M  -DCONSOLE_HOME=$DIR_REL -Dlog4j.configuration=resource/config/log4j.xml -cp $CLASSPATH  org.pentaho.pac.server.JettyServer
