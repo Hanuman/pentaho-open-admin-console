@@ -309,7 +309,7 @@ public class DataSourcesPanel extends DockPanel implements ClickListener, Change
 
         public void onFailure(Throwable caught) {
           messageDialog.setText(ExceptionParser.getErrorHeader(caught.getMessage()));
-          msgBoxHtml.setHTML(Messages.getString("errorTestingValidationQuery",ExceptionParser.getErrorMessage(caught.getMessage(), Messages.getString("errorTestingDataSourceConnectionDefault"))));           //$NON-NLS-1$          
+          msgBoxHtml.setHTML(Messages.getString("errorTestingValidationQuery",ExceptionParser.getErrorMessage(caught.getMessage(), Messages.getString("errorTestingValidationQueryDefault"))));           //$NON-NLS-1$          
           messageDialog.center();
         }
       };
