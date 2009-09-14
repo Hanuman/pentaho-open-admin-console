@@ -641,15 +641,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0029_QUERY_VALIDATION_FAILED",ds.getQuery()), e); //$NON-NLS-1$
     } finally {
       try {
-        if (rs != null) {
-          rs.close();
-        }
-        if (stmt != null) {
-          stmt.close();
-        }
-        if (conn != null) {
-          conn.close();
-        }
+        closeAll(conn, stmt, rs, true);
       } catch (SQLException e) {
         throw new PacServiceException(e);
       }
@@ -975,5 +967,34 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     
     
   }  
+
+  private void closeAll(Connection conn, Statement stmt, ResultSet rs, boolean throwsException) throws SQLException {
+    SQLException rethrow = null;
+    if (rs != null) {
+      try {
+        rs.close();
+      } catch (SQLException ignored) {
+        rethrow = ignored;
+      }
+    }
+    if (stmt != null) {
+      try {
+        stmt.close();
+      } catch (SQLException ignored) {
+        rethrow = ignored;
+      }
+    }
+    if (conn != null) {
+      try {
+        conn.close();
+      } catch (SQLException ignored) {
+        rethrow = ignored;
+      }
+    }
+    if (throwsException && rethrow != null) {
+      throw rethrow;
+    }
+      
+  }
 
 }
