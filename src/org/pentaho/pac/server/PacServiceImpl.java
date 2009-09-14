@@ -636,9 +636,9 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
         throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0028_QUERY_NOT_VALID")); //$NON-NLS-1$
       }
     } catch (DataSourceManagementException dme) {
-      throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0029_QUERY_VALIDATION_FAILED",ds.getQuery()), dme); //$NON-NLS-1$
+      throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0029_QUERY_VALIDATION_FAILED", dme.getLocalizedMessage()), dme); //$NON-NLS-1$
     } catch (SQLException e) {
-      throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0029_QUERY_VALIDATION_FAILED",ds.getQuery()), e); //$NON-NLS-1$
+      throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0029_QUERY_VALIDATION_FAILED",e.getLocalizedMessage()), e); //$NON-NLS-1$
     } finally {
       try {
         closeAll(conn, stmt, rs, true);
