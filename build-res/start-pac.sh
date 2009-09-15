@@ -21,4 +21,4 @@ do
   CLASSPATH="$CLASSPATH:$i"
 done
 
-"$_PENTAHO_JAVA" -Xmx512M -XX:PermSize=64M -XX:MaxPermSize=128M  -DCONSOLE_HOME=$DIR_REL -Dlog4j.configuration=resource/config/log4j.xml -cp $CLASSPATH  org.pentaho.pac.server.JettyServer
+"$_PENTAHO_JAVA" -Xmx512M -XX:PermSize=64M -XX:MaxPermSize=128M  -DCONSOLE_HOME=$DIR_REL -Dfile.encoding="UTF-8" -Dlog4j.configuration=resource/config/log4j.xml -cp $CLASSPATH  org.pentaho.pac.server.JettyServer

@@ -20,4 +20,4 @@ goto :eof
 if exist "%~dp0..\biserver-ce\jre" call "%~dp0set-pentaho-java.bat" "%~dp0..\biserver-ce\jre"
 if not exist "%~dp0..\biserver-ce\jre" call "%~dp0set-pentaho-java.bat"
 
-call "%_PENTAHO_JAVA%" -Xmx512M -XX:PermSize=64M -XX:MaxPermSize=128M -DCONSOLE_HOME=. -Dlog4j.configuration=resource/config/log4j.xml -cp %CLASSPATH%  org.pentaho.pac.server.JettyServer
+call "%_PENTAHO_JAVA%" -Xmx512M -XX:PermSize=64M -XX:MaxPermSize=128M -DCONSOLE_HOME=. -Dfile.encoding="UTF-8" -Dlog4j.configuration=resource/config/log4j.xml -cp %CLASSPATH%  org.pentaho.pac.server.JettyServer

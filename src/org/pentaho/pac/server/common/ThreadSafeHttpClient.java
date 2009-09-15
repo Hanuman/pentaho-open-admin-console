@@ -123,15 +123,17 @@ public class ThreadSafeHttpClient {
     switch (methodType) {
       case POST:
         method = new PostMethod(serviceUrl);
+        method.getParams().setContentCharset("utf-8");//$NON-NLS-1$
         setPostMethodParams( (PostMethod)method, mapParams );
+        method.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");  //$NON-NLS-1$ //$NON-NLS-2$
         method.setFollowRedirects( false );
-        //method.addRequestHeader("Content-Type","text/html; UTF-8"); //$NON-NLS-1$//$NON-NLS-2$
         break;
       case GET:
         method = new GetMethod(serviceUrl);
+        method.getParams().setContentCharset("utf-8");      //$NON-NLS-1$  
         setGetMethodParams( (GetMethod)method, mapParams );
+        method.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");    //$NON-NLS-1$    //$NON-NLS-2$
         method.setFollowRedirects( true );
-        //method.addRequestHeader("Content-Type","text/html; UTF-8");//$NON-NLS-1$        //$NON-NLS-2$
         break;
       default:
         throw new RuntimeException( Messages.getErrorString( "ThreadSafeHttpClient.ERROR_0002_INVALID_HTTP_METHOD_TYPE", methodType.toString() ) );  // can never happen //$NON-NLS-1$
