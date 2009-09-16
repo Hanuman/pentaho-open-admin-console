@@ -21,9 +21,14 @@
 
 package org.pentaho.pac.server.common;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
@@ -53,9 +58,11 @@ import org.pentaho.pac.server.i18n.Messages;
  */
 public class ThreadSafeHttpClient {
   private static final Log logger = LogFactory.getLog(ThreadSafeHttpClient.class);
-
   private static final String REQUESTED_MIME_TYPE = "requestedMimeType"; //$NON-NLS-1$
-
+  public static final String DEFAULT_CONSOLE_PROPERTIES_FILE_NAME = "console.properties"; //$NON-NLS-1$
+  public static final String CONTENT_CHARACTERSET_PROPERTY = "content.characterset"; //$NON-NLS-1$
+  public static final String DEFAULT_CONTENT_CHARACTERSET_VALUE = "utf-8"; //$NON-NLS-1$
+  public static String contentCharacterSet = null;
   public enum HttpMethodType {
     POST, GET
   };
@@ -68,6 +75,7 @@ public class ThreadSafeHttpClient {
     MultiThreadedHttpConnectionManager connectionManager = new MultiThreadedHttpConnectionManager();
     CLIENT = new HttpClient(connectionManager);
     CLIENT.getParams().setParameter("http.useragent", ThreadSafeHttpClient.class.getName() ); //$NON-NLS-1$
+    loadProperties();
   }
 
   /**
@@ -123,13 +131,13 @@ public class ThreadSafeHttpClient {
     switch (methodType) {
       case POST:
         method = new PostMethod(serviceUrl);
-        method.getParams().setContentCharset("utf-8");//$NON-NLS-1$
+        method.getParams().setContentCharset(contentCharacterSet);//$NON-NLS-1$
         setPostMethodParams( (PostMethod)method, mapParams );
         method.setFollowRedirects( false );
         break;
       case GET:
         method = new GetMethod(serviceUrl);
-        method.getParams().setContentCharset("utf-8");      //$NON-NLS-1$  
+        method.getParams().setContentCharset(contentCharacterSet);      //$NON-NLS-1$  
         setGetMethodParams( (GetMethod)method, mapParams );
         method.setFollowRedirects( true );
         break;
@@ -204,5 +212,29 @@ public class ThreadSafeHttpClient {
       idx++;
     }
     return pairAr;
+  }
+  
+  private static void loadProperties() {
+    FileInputStream fis = null;
+    Properties properties = null;
+    try {
+      URL url = ClassLoader.getSystemResource(DEFAULT_CONSOLE_PROPERTIES_FILE_NAME);
+      fis = new FileInputStream(new File(url.toURI()));
+    } catch (Exception e) {
+      contentCharacterSet = DEFAULT_CONTENT_CHARACTERSET_VALUE;
+    }
+    if (null != fis) {
+      properties = new Properties();
+      try {
+        properties.load(fis);
+      } catch (IOException e) {
+        contentCharacterSet = DEFAULT_CONTENT_CHARACTERSET_VALUE;
+      }
+    }
+    if (properties != null) {
+      contentCharacterSet = properties.getProperty(CONTENT_CHARACTERSET_PROPERTY, DEFAULT_CONTENT_CHARACTERSET_VALUE);
+    } else {
+      contentCharacterSet = DEFAULT_CONTENT_CHARACTERSET_VALUE;
+    }
   }
 }
