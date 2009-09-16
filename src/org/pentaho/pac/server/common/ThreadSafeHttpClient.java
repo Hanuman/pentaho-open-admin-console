@@ -125,14 +125,12 @@ public class ThreadSafeHttpClient {
         method = new PostMethod(serviceUrl);
         method.getParams().setContentCharset("utf-8");//$NON-NLS-1$
         setPostMethodParams( (PostMethod)method, mapParams );
-        method.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");  //$NON-NLS-1$ //$NON-NLS-2$
         method.setFollowRedirects( false );
         break;
       case GET:
         method = new GetMethod(serviceUrl);
         method.getParams().setContentCharset("utf-8");      //$NON-NLS-1$  
         setGetMethodParams( (GetMethod)method, mapParams );
-        method.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");    //$NON-NLS-1$    //$NON-NLS-2$
         method.setFollowRedirects( true );
         break;
       default:
