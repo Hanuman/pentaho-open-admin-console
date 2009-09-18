@@ -976,6 +976,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       } catch (SQLException ignored) {
         rethrow = ignored;
       }
+      rs = null;
     }
     if (stmt != null) {
       try {
@@ -983,6 +984,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       } catch (SQLException ignored) {
         rethrow = ignored;
       }
+      stmt = null;
     }
     if (conn != null) {
       try {
@@ -990,6 +992,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       } catch (SQLException ignored) {
         rethrow = ignored;
       }
+      conn = null;
     }
     if (throwsException && rethrow != null) {
       throw rethrow;
