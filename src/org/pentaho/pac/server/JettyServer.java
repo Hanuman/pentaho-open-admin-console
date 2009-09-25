@@ -229,8 +229,8 @@ public class JettyServer implements Halter, IJettyServer {
     servletContext.addServlet(defaultServlet, "/*"); //$NON-NLS-1$
     servletContext.addServlet(defaultServlet, "/halt"); //$NON-NLS-1$
     
-    ServletHolder welcomeServlet = new ServletHolder(new PentahoAdminConsole());
-    servletContext.addServlet(welcomeServlet, "/welcomesvc"); //$NON-NLS-1$
+    ServletHolder welcomeServlet = new ServletHolder(new BrowserLocaleServlet());
+    servletContext.addServlet(welcomeServlet, "/browserlocalesvc"); //$NON-NLS-1$
 
     ServletHolder pacsvc = new ServletHolder(new org.pentaho.pac.server.PacServiceImpl());
     servletContext.addServlet(pacsvc, "/pacsvc"); //$NON-NLS-1$
