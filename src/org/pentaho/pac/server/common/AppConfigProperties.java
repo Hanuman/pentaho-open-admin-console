@@ -105,7 +105,7 @@ public class AppConfigProperties {
 
   private String getDefaultInstallDir() {
     String defaultInstallDir = "./.."; //$NON-NLS-1$
-    if ((getConsoleConfig().getDefaultBiServerDir() == null) && (getConsoleConfig().getDefaultBiServerDir().trim().length() > 0)) {
+    if ((getConsoleConfig().getDefaultBiServerDir() != null) && (getConsoleConfig().getDefaultBiServerDir().trim().length() > 0)) {
       defaultInstallDir = defaultInstallDir + "/" + getConsoleConfig().getDefaultBiServerDir(); //$NON-NLS-1$
     }
     return defaultInstallDir;
