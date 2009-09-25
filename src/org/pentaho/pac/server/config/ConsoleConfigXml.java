@@ -41,6 +41,7 @@ public class ConsoleConfigXml implements IConsoleConfig {
   protected static final String HOME_PAGE_TIMEOUT_XPATH = ROOT_ELEMENT +"/homepage-timeout-millis";
   protected static final String HOME_PAGE_URL_XPATH = ROOT_ELEMENT +"/homepage-url";
   protected static final String BASE_URL_XPATH = ROOT_ELEMENT +"/base-url";
+  protected static final String DEFAULT_SERVER_DIR_XPATH = ROOT_ELEMENT +"/default-server-dir";
 
   Document document;
 
@@ -180,6 +181,14 @@ public class ConsoleConfigXml implements IConsoleConfig {
     element.setText(value);
   }
 
+  public String getDefaultBiServerDir() {
+    return getValue(DEFAULT_SERVER_DIR_XPATH);
+  }
+
+  public void setDefaultBiServerDir(String defaultBiServerDir) {
+    setValue(DEFAULT_SERVER_DIR_XPATH, defaultBiServerDir);
+  }
+  
   public String getValue(String xpath) {
     String value = null;
     Element element = (Element)document.selectSingleNode(xpath);
