@@ -33,6 +33,7 @@ public class ConsoleConfig implements IConsoleConfig, Serializable, Cloneable {
   protected String homePageUrl;
   protected Integer homePageTimeout;
   protected String baseUrl;
+  protected String defaultBiServerDir;
 
   
   public ConsoleConfig() {
@@ -51,6 +52,7 @@ public class ConsoleConfig implements IConsoleConfig, Serializable, Cloneable {
     jdbcDriversClassPath = config.getJdbcDriversClassPath();
     homePageTimeout = config.getHomePageTimeout();
     homePageUrl = config.getHomePageUrl();
+    defaultBiServerDir = config.getDefaultBiServerDir();
   }
   
   public String getBackupDirectory() {
@@ -129,6 +131,14 @@ public class ConsoleConfig implements IConsoleConfig, Serializable, Cloneable {
     this.baseUrl = baseUrl;
   }
 
+  public String getDefaultBiServerDir() {
+    return defaultBiServerDir;
+  }
+
+  public void setDefaultBiServerDir(String defaultBiServerDir) {
+    this.defaultBiServerDir = defaultBiServerDir;
+  }
+
   public Object clone() {
     ConsoleConfig clone = new ConsoleConfig();
     clone.backupDirectory = backupDirectory;
@@ -142,6 +152,7 @@ public class ConsoleConfig implements IConsoleConfig, Serializable, Cloneable {
     clone.jdbcDriversClassPath = jdbcDriversClassPath;
     clone.homePageTimeout = homePageTimeout;
     clone.homePageUrl = homePageUrl;
+    clone.defaultBiServerDir = defaultBiServerDir;
     return clone;
   }
 }

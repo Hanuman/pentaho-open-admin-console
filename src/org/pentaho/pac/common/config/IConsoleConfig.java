@@ -44,5 +44,7 @@ public interface IConsoleConfig {
   public void setDefaultRoles(String defaultRoles);
   public String getBaseUrl();
   public void setBaseUrl(String url);
+  public String getDefaultBiServerDir();
+  public void setDefaultBiServerDir(String dir);
 
 }
