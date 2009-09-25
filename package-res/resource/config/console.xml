@@ -8,4 +8,5 @@
   <homepage-timeout-millis>15000</homepage-timeout-millis>  
   <!-- comma separated list of roles (no spaces) -->  
   <default-roles>Authenticated</default-roles>
+  <default-server-dir>biserver-ce</default-server-dir>
 </console>
