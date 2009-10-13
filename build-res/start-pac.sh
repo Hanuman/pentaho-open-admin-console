@@ -17,7 +17,7 @@ else
   setPentahoJava
 fi
 
-CLASSPATH=`$DIR_REL:resource/config:`
+CLASSPATH="$DIR_REL:resource/config:"
 files=`ls $DIR_REL/jdbc/*.jar $DIR_REL/lib/*.jar`
 
 for i in $files
