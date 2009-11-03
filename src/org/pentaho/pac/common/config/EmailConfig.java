@@ -31,6 +31,7 @@ public class EmailConfig implements IEmailConfig, Serializable {
   boolean useStartTls;
   String userId;
   String pop3Server;
+  boolean quitWait;
   
   public EmailConfig() {
   }
@@ -47,6 +48,7 @@ public class EmailConfig implements IEmailConfig, Serializable {
     setUserId(config.getUserId());
     setUseSsl(config.getUseSsl());
     setUseStartTls(config.getUseStartTls());
+    setQuitWait(config.getQuitWait());
   }
   
   public String getPassword() {
@@ -115,4 +117,13 @@ public class EmailConfig implements IEmailConfig, Serializable {
   public void setPop3Server(String pop3Server) {
     this.pop3Server = pop3Server;
   }
+
+  public boolean getQuitWait() {
+    return quitWait;
+  }
+
+  public void setQuitWait(boolean quitWait) {
+    this.quitWait = quitWait;
+  }
+  
 }

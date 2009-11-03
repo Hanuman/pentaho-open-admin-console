@@ -39,5 +39,6 @@ public interface IEmailConfig {
   public void setUserId(String userId);
   public String getPop3Server();
   public void setPop3Server(String pop3Server);
-
+  public boolean getQuitWait();
+  public void setQuitWait(boolean quitWait);
 }

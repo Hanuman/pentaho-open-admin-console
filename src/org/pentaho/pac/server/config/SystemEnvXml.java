@@ -16,8 +16,12 @@
 */
 package org.pentaho.pac.server.config;
 
+import java.util.List;
+import java.util.Properties;
+
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
+import org.dom4j.Element;
 import org.pentaho.pac.common.config.ISystemEnv;
 
 public class SystemEnvXml extends AbstractDiagnosticsJmxXml implements ISystemEnv {
@@ -217,4 +221,14 @@ public class SystemEnvXml extends AbstractDiagnosticsJmxXml implements ISystemEn
     setAttributeValue(USER_TIMEZONE, userTimeZone);
   }
 
+  public Properties getEnv() {
+    Properties properties = new Properties();
+    List<Element> elements = document.selectNodes(ROOT_ELEMENT + "/" + ATTRIBUTE_ELEMENT + "[@" + ID_ATTRIBUTE + "]");   
+    for (Element element : elements) {
+      String propertyName = element.attributeValue(ID_ATTRIBUTE);
+      String propertyValue = getAttributeValue(propertyName);
+      properties.put(propertyName, propertyValue);
+    }
+    return properties;
+  }
 }

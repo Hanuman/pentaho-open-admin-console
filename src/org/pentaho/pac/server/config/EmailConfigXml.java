@@ -39,6 +39,7 @@ public class EmailConfigXml implements IEmailConfig {
   private static final String SMTP_HOST_XPATH = ROOT_ELEMENT +"/properties/mail.smtp.host";  //$NON-NLS-1$
   private static final String SMTP_PORT_XPATH = ROOT_ELEMENT +"/properties/mail.smtp.port";  //$NON-NLS-1$
   private static final String SMTP_PROTOCOL_XPATH = ROOT_ELEMENT +"/properties/mail.transport.protocol";  //$NON-NLS-1$
+  private static final String SMTP_QUIT_WAIT_XPATH = ROOT_ELEMENT +"/properties/mail.smtp.quitwait";  //$NON-NLS-1$
   private static final String USER_ID_XPATH = ROOT_ELEMENT +"/mail.userid";  //$NON-NLS-1$
   private static final String USE_SSL_XPATH = ROOT_ELEMENT +"/properties/mail.smtp.ssl";  //$NON-NLS-1$
   private static final String USE_START_TLS_XPATH = ROOT_ELEMENT +"/properties/mail.smtp.starttls.enable";  //$NON-NLS-1$
@@ -152,6 +153,12 @@ public class EmailConfigXml implements IEmailConfig {
   }
   public void setUseSsl(boolean useSsl) {
     setValue(USE_SSL_XPATH, Boolean.toString(useSsl));
+  }
+  public boolean getQuitWait() {
+    return Boolean.parseBoolean(getValue(SMTP_QUIT_WAIT_XPATH));
+  }
+  public void setQuitWait(boolean useSsl) {
+    setValue(SMTP_QUIT_WAIT_XPATH, Boolean.toString(useSsl));
   }
   public boolean getUseStartTls() {
     return Boolean.parseBoolean(getValue(USE_START_TLS_XPATH));

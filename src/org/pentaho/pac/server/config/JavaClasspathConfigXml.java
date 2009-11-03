@@ -22,7 +22,7 @@ import org.pentaho.pac.common.config.IJavaClasspathConfig;
 
 public class JavaClasspathConfigXml extends AbstractDiagnosticsJmxXml implements IJavaClasspathConfig {
   private static final String SYSTEM_CLASSPATH = "systemClasspath"; //$NON-NLS-1$
-  private static final String APP_SERVER_LIB_CLASSPATH = "jbossLibClasspath"; //$NON-NLS-1$
+  private static final String APP_SERVER_LIB_CLASSPATH = "tomcatCommonClasspath"; //$NON-NLS-1$
   private static final String WEBAPP_LIB_CLASSPATH = "webappLibClasspath"; //$NON-NLS-1$
 
   public JavaClasspathConfigXml(String jmxXml) throws DocumentException {
