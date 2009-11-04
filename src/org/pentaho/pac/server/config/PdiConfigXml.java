@@ -51,7 +51,7 @@ public class PdiConfigXml implements IPdiConfig {
   public PdiConfigXml(Document doc) throws DocumentException {
     Element rootElement = doc.getRootElement();
     if ((rootElement != null) &&  !doc.getRootElement().getName().equals(ROOT_ELEMENT)) {
-      throw new DocumentException(Messages.getErrorString("GoogleMapsConfig.ERROR_0001_INVALID_ROOT_ELEMENT")); //$NON-NLS-1$
+      throw new DocumentException(Messages.getInstance().getErrorString("GoogleMapsConfig.ERROR_0001_INVALID_ROOT_ELEMENT")); //$NON-NLS-1$
     }
     document = doc;
   }

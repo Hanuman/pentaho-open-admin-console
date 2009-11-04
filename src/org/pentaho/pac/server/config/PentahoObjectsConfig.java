@@ -93,7 +93,7 @@ public class PentahoObjectsConfig {
   public void setDocument(Document doc) throws DocumentException {
     Element rootElement = doc.getRootElement();
     if ((rootElement != null) &&  !doc.getRootElement().getName().equals(ROOT)) {
-      throw new DocumentException(Messages.getErrorString("PentahoObjectsConfig.ERROR_0001_INVALID_ROOT_ELEMENT")); //$NON-NLS-1$
+      throw new DocumentException(Messages.getInstance().getErrorString("PentahoObjectsConfig.ERROR_0001_INVALID_ROOT_ELEMENT")); //$NON-NLS-1$
     }
     document = doc;
   }

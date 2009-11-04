@@ -63,7 +63,7 @@ public class PentahoSpringBeansConfig {
   public PentahoSpringBeansConfig(Document doc) throws DocumentException {
     Element rootElement = doc.getRootElement();
     if ((rootElement != null) &&  !doc.getRootElement().getName().equals(ROOT_ELEMENT)) {
-      throw new DocumentException(Messages.getErrorString("PentahoSpringBeansConfig.ERROR_0001_INVALID_ROOT_ELEMENT")); //$NON-NLS-1$      
+      throw new DocumentException(Messages.getInstance().getErrorString("PentahoSpringBeansConfig.ERROR_0001_INVALID_ROOT_ELEMENT")); //$NON-NLS-1$      
     }
     document = doc;
   }

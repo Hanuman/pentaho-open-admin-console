@@ -51,7 +51,7 @@ public abstract class AbstractDiagnosticsJmxXml {
     if(jmxDocument != null) {
       Element rootElement = jmxDocument.getRootElement();
       if ((rootElement != null) &&  !jmxDocument.getRootElement().getName().equals(ROOT_ELEMENT)) {
-        throw new DocumentException(Messages.getErrorString("GoogleMapsConfig.ERROR_0001_INVALID_ROOT_ELEMENT")); //$NON-NLS-1$
+        throw new DocumentException(Messages.getInstance().getErrorString("GoogleMapsConfig.ERROR_0001_INVALID_ROOT_ELEMENT")); //$NON-NLS-1$
       }
       document = jmxDocument;
     }
