@@ -36,9 +36,7 @@
     <dependency org="org.springframework.security" name="spring-security-core" rev="2.0.5.RELEASE" transitive="false" />
 
     <!-- hibernate related dependencies -->
-    <dependency org="net.sf.ehcache" name="ehcache" rev="1.7.0">
-      <exclude org="net.sf.ehcache" name="ehcache-terracotta" />
-    </dependency>
+    <dependency org="net.sf.ehcache" name="ehcache-core" rev="1.7.0" />
     <dependency org="org.hibernate"       name="hibernate" rev="3.2.6.ga">
       <exclude org="commons-logging"      name="commons-logging" />
       <exclude org="commons-collections"  name="commons-collections" />
