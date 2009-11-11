@@ -4,7 +4,6 @@
 	<inherits name='com.google.gwt.user.User'/>
 
 	<!-- Specify the app entry point class.                   -->
-	<servlet path='/subscriptionsvc' class='org.pentaho.pac.server.SubscriptionServiceImpl'/>  
 	<source path="client"/>
 	<source path="common"/>
 </module>
