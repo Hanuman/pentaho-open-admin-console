@@ -26,7 +26,7 @@
 	<property name="package.resdir" value="${basedir}/package-res" />
 	
 	<path id="oac.classpath">
-		<fileset dir="lib">
+		<fileset dir="${lib.dir}">
 			<exclude name="**/test/*" />
 		</fileset>
 	</path>
@@ -55,14 +55,14 @@
 		<zip destfile="${gwt.package.zipfile}" compress="true">
 			<zipfileset dir="${build.jars.dir}" prefix="${admin-console.name}/lib" />
 			<!--<zipfileset file="${dist.dir}/${ivy.artifact.id}-${project.revision}.jar" prefix="${admin-console.name}/lib" />-->
-			<zipfileset dir="lib" excludes="**/test/*" prefix="${admin-console.name}/lib">
+			<zipfileset dir="${lib.dir}" excludes="**/test/*" prefix="${admin-console.name}/lib">
 				<!-- temporary fix to exclude jar slipping through the cracks and making it this far that shouldn't -->
 				<exclude name="**/gwt-user*.jar" />
 				<exclude name="**/gwt-dev*.jar" />
 				<exclude name="**/hsqldb*.jar" />
 				<exclude name="**/mysql*.jar" />
 			</zipfileset>
-			<zipfileset dir="lib" prefix="${admin-console.name}/jdbc">
+			<zipfileset dir="${lib.dir}" prefix="${admin-console.name}/jdbc">
 				<include name="hsqldb*.jar"/>
 				<include name="mysql*.jar"/>
 			</zipfileset>
