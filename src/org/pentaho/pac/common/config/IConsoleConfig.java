@@ -46,5 +46,7 @@ public interface IConsoleConfig {
   public void setBaseUrl(String url);
   public String getDefaultBiServerDir();
   public void setDefaultBiServerDir(String dir);
+  public String getXmlEncoding();
+  public void setXmlEncoding(String encoding);
 
 }

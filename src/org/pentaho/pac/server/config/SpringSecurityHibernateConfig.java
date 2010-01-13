@@ -45,7 +45,7 @@ public class SpringSecurityHibernateConfig {
   private static final String PASSWORD_ENCODER_CLASS_XPATH = "/beans/bean[@id=\"passwordEncoder\"]/@class"; //$NON-NLS-1$
 
   public SpringSecurityHibernateConfig(File xmlFile) throws IOException, DocumentException, XmlParseException {
-    this(getContents(xmlFile));
+    this(XmlDom4JHelper.getDocFromFile(xmlFile, new DtdEntityResolver()));
   }
 
   public SpringSecurityHibernateConfig(String xml) throws DocumentException, XmlParseException {
@@ -85,23 +85,4 @@ public class SpringSecurityHibernateConfig {
   public Document getDocument() {
     return document;
   }
-
-  private static String getContents(File aFile) throws FileNotFoundException, IOException {
-    StringBuilder contents = new StringBuilder();
-
-    BufferedReader input = new BufferedReader(new FileReader(aFile));
-    try {
-      String line = null;
-      String lineSeparator = System.getProperty("line.separator"); //$NON-NLS-1$
-      while ((line = input.readLine()) != null) {
-        contents.append(line);
-        contents.append(lineSeparator);
-      }
-    } finally {
-      input.close();
-    }
-
-    return contents.toString();
-  }
-
 }

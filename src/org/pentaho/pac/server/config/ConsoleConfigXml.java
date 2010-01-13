@@ -40,6 +40,7 @@ public class ConsoleConfigXml implements IConsoleConfig {
   protected static final String DEFAULT_ROLES_XPATH = ROOT_ELEMENT +"/default-roles";
   protected static final String HOME_PAGE_TIMEOUT_XPATH = ROOT_ELEMENT +"/homepage-timeout-millis";
   protected static final String HOME_PAGE_URL_XPATH = ROOT_ELEMENT +"/homepage-url";
+  protected static final String XML_ENCODING_XPATH = ROOT_ELEMENT +"/xml-encoding";
   protected static final String BASE_URL_XPATH = ROOT_ELEMENT +"/base-url";
   protected static final String DEFAULT_SERVER_DIR_XPATH = ROOT_ELEMENT +"/default-server-dir";
 
@@ -190,9 +191,16 @@ public class ConsoleConfigXml implements IConsoleConfig {
   }
   
   public String getValue(String xpath) {
-    String value = null;
     Element element = (Element)document.selectSingleNode(xpath);
     return element != null ? element.getText() : null;
+  }
+  
+  public String getXmlEncoding() {
+    return getValue(XML_ENCODING_XPATH);
+  }
+
+  public void setXmlEncoding(String encoding) {
+    setValue(XML_ENCODING_XPATH, encoding);
   }
   
   public Document getDocument() {

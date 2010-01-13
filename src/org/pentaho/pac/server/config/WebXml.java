@@ -52,7 +52,7 @@ public class WebXml {
   private static final String SERVLET_NAME_TEMPLATE_XPATH = ROOT_ELEMENT + "/servlet/servlet-name[text() = \"{0}\"]"; //$NON-NLS-1$
   
   public WebXml(File pentahoXmlFile) throws IOException, DocumentException, XmlParseException{
-    this(getContents(pentahoXmlFile));    
+    this(XmlDom4JHelper.getDocFromFile(pentahoXmlFile, new DtdEntityResolver()));    
   }
   
   public WebXml(String xml) throws DocumentException, XmlParseException {
@@ -130,25 +130,6 @@ public class WebXml {
   
   public Document getDocument() {
     return document;
-  }
-  
-  private static String getContents(File aFile) throws FileNotFoundException, IOException{
-    StringBuilder contents = new StringBuilder();
-    
-    BufferedReader input =  new BufferedReader(new FileReader(aFile));
-    try {
-      String line = null;
-      String lineSeparator = System.getProperty("line.separator"); //$NON-NLS-1$
-      while (( line = input.readLine()) != null){
-        contents.append(line);
-        contents.append(lineSeparator);
-      }
-    }
-    finally {
-      input.close();
-    }
-    
-    return contents.toString();
   }
   
   public String getContextParamValue( String name ) {

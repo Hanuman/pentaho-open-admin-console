@@ -54,7 +54,7 @@ public class PentahoXml {
   private static final String ACL_ENTRY_XPATH = ROOT_ELEMENT + "/acl-publisher/default-acls/acl-entry"; //$NON-NLS-1$
   
   public PentahoXml(File pentahoXmlFile) throws IOException, DocumentException, XmlParseException{
-    this(getContents(pentahoXmlFile));    
+    this(XmlDom4JHelper.getDocFromFile(pentahoXmlFile, new DtdEntityResolver()));    
   }
   
   public PentahoXml(String xml) throws DocumentException, XmlParseException {
@@ -215,22 +215,4 @@ public class PentahoXml {
     return document;
   }
   
-  private static String getContents(File aFile) throws FileNotFoundException, IOException{
-    StringBuilder contents = new StringBuilder();
-    
-    BufferedReader input =  new BufferedReader(new FileReader(aFile));
-    try {
-      String line = null;
-      String lineSeparator = System.getProperty("line.separator"); //$NON-NLS-1$
-      while (( line = input.readLine()) != null){
-        contents.append(line);
-        contents.append(lineSeparator);
-      }
-    }
-    finally {
-      input.close();
-    }
-    
-    return contents.toString();
-  }
 }

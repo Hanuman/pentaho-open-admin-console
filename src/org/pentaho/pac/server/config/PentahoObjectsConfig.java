@@ -34,6 +34,7 @@ import org.jaxen.JaxenException;
 import org.jaxen.SimpleNamespaceContext;
 import org.jaxen.dom4j.Dom4jXPath;
 import org.pentaho.platform.engine.security.userroledao.messages.Messages;
+import org.pentaho.platform.util.xml.dom4j.XmlDom4JHelper;
 
 public class PentahoObjectsConfig {
   private static final String DEFAULT_NAMESPACE = "http://www.springframework.org/schema/beans";  //$NON-NLS-1$
@@ -81,7 +82,7 @@ public class PentahoObjectsConfig {
   Document document;
   
   public PentahoObjectsConfig(File pentahoXmlFile) throws IOException, DocumentException{
-    this(getContents(pentahoXmlFile));    
+    setDocument(XmlDom4JHelper.getDocFromFile(pentahoXmlFile, null));
   }
   
   public PentahoObjectsConfig(String xml) throws DocumentException {
@@ -379,7 +380,6 @@ public class PentahoObjectsConfig {
 
   public String getObjectScope(String objectId) {
     try {
-      String xPath = MessageFormat.format(BEAN_ID_XPATH, objectId);
       HashMap<String, String> map = new HashMap<String, String>();
       map.put( "default", DEFAULT_NAMESPACE);  //$NON-NLS-1$
       Dom4jXPath xpath = new Dom4jXPath(BEAN_ID_XPATH);
@@ -405,24 +405,6 @@ public class PentahoObjectsConfig {
     return document;
   }
   
-  private static String getContents(File aFile) throws FileNotFoundException, IOException{
-    StringBuilder contents = new StringBuilder();
-    
-    BufferedReader input =  new BufferedReader(new FileReader(aFile));
-    try {
-      String line = null;
-      String lineSeparator = System.getProperty("line.separator");  //$NON-NLS-1$
-      while (( line = input.readLine()) != null){
-        contents.append(line);
-        contents.append(lineSeparator);
-      }
-    }
-    finally {
-      input.close();
-    }
-    
-    return contents.toString();
-  }
   
   private class ObjectDescriptor {
      private String className;

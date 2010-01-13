@@ -34,6 +34,7 @@ public class ConsoleConfig implements IConsoleConfig, Serializable, Cloneable {
   protected Integer homePageTimeout;
   protected String baseUrl;
   protected String defaultBiServerDir;
+  protected String xmlEncoding;
 
   
   public ConsoleConfig() {
@@ -53,6 +54,7 @@ public class ConsoleConfig implements IConsoleConfig, Serializable, Cloneable {
     homePageTimeout = config.getHomePageTimeout();
     homePageUrl = config.getHomePageUrl();
     defaultBiServerDir = config.getDefaultBiServerDir();
+    xmlEncoding = config.getXmlEncoding();
   }
   
   public String getBackupDirectory() {
@@ -137,6 +139,14 @@ public class ConsoleConfig implements IConsoleConfig, Serializable, Cloneable {
 
   public void setDefaultBiServerDir(String defaultBiServerDir) {
     this.defaultBiServerDir = defaultBiServerDir;
+  }
+
+  public String getXmlEncoding() {
+    return xmlEncoding;
+  }
+
+  public void setXmlEncoding(String xmlEncoding) {
+    this.xmlEncoding = xmlEncoding;
   }
 
   public Object clone() {

@@ -41,7 +41,7 @@ public class HibernateSettingsXml implements IHibernateSettings{
   private static final String XPATH_TO_HIBERNATE_MANAGED = "settings/managed"; //$NON-NLS-1$
   
   public HibernateSettingsXml(File hibernateSettingsXmlFile) throws IOException, DocumentException, XmlParseException{
-    this(getContents(hibernateSettingsXmlFile));    
+    this(XmlDom4JHelper.getDocFromFile(hibernateSettingsXmlFile, new DtdEntityResolver()));    
   }
   
   public HibernateSettingsXml(String xml) throws DocumentException, XmlParseException {
@@ -103,22 +103,4 @@ public class HibernateSettingsXml implements IHibernateSettings{
     return document;
   }
   
-  private static String getContents(File aFile) throws FileNotFoundException, IOException{
-    StringBuilder contents = new StringBuilder();
-    
-    BufferedReader input =  new BufferedReader(new FileReader(aFile));
-    try {
-      String line = null;
-      String lineSeparator = System.getProperty("line.separator"); //$NON-NLS-1$
-      while (( line = input.readLine()) != null){
-        contents.append(line);
-        contents.append(lineSeparator);
-      }
-    }
-    finally {
-      input.close();
-    }
-    
-    return contents.toString();
-  }
 }

@@ -38,7 +38,7 @@ public class SystemActionsXml {
   private static final String ROOT_ELEMENT = "beans"; //$NON-NLS-1$
   
   public SystemActionsXml(File pentahoXmlFile) throws IOException, DocumentException, XmlParseException{
-    this(getContents(pentahoXmlFile));    
+    this(XmlDom4JHelper.getDocFromFile(pentahoXmlFile, new DtdEntityResolver()));    
   }
   
   public SystemActionsXml(String xml) throws DocumentException, XmlParseException {
@@ -85,22 +85,4 @@ public class SystemActionsXml {
     return document;
   }
   
-  private static String getContents(File aFile) throws FileNotFoundException, IOException{
-    StringBuilder contents = new StringBuilder();
-    
-    BufferedReader input =  new BufferedReader(new FileReader(aFile));
-    try {
-      String line = null;
-      String lineSeparator = System.getProperty("line.separator"); //$NON-NLS-1$
-      while (( line = input.readLine()) != null){
-        contents.append(line);
-        contents.append(lineSeparator);
-      }
-    }
-    finally {
-      input.close();
-    }
-    
-    return contents.toString();
-  }
 }
