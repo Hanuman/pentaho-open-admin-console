@@ -6,6 +6,7 @@
 	<inherits name="org.pentaho.pac.SchedulerServiceModule"/>
 	<inherits name="org.pentaho.pac.SubscriptionServiceModule"/>
 	<inherits name="org.pentaho.pac.SolutionRepositoryServiceModule"/>
+    <inherits name="org.pentaho.platform.engine.security.userroledao.WS"/>
 	<inherits name="org.pentaho.gwt.widgets.Widgets"/>
 	<inherits name="org.gwtwidgets.WidgetLibrary"/>
 
