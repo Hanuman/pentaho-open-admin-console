@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.pentaho.pac.common.UserRoleSecurityInfo;
-import org.pentaho.pac.common.UserToRoleAssignment;
-import org.pentaho.pac.common.roles.ProxyPentahoRole;
-import org.pentaho.pac.common.users.ProxyPentahoUser;
+import org.pentaho.platform.engine.security.userroledao.ws.ProxyPentahoRole;
+import org.pentaho.platform.engine.security.userroledao.ws.ProxyPentahoUser;
+import org.pentaho.platform.engine.security.userroledao.ws.UserRoleSecurityInfo;
+import org.pentaho.platform.engine.security.userroledao.ws.UserToRoleAssignment;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 

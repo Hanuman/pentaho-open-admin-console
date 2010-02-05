@@ -22,14 +22,14 @@ import org.pentaho.pac.common.HibernateConfigException;
 import org.pentaho.pac.common.PacServiceException;
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.ServiceInitializationException;
-import org.pentaho.pac.common.UserRoleSecurityInfo;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
 import org.pentaho.pac.common.roles.DuplicateRoleException;
 import org.pentaho.pac.common.roles.NonExistingRoleException;
-import org.pentaho.pac.common.roles.ProxyPentahoRole;
 import org.pentaho.pac.common.users.DuplicateUserException;
 import org.pentaho.pac.common.users.NonExistingUserException;
-import org.pentaho.pac.common.users.ProxyPentahoUser;
+import org.pentaho.platform.engine.security.userroledao.ws.ProxyPentahoRole;
+import org.pentaho.platform.engine.security.userroledao.ws.ProxyPentahoUser;
+import org.pentaho.platform.engine.security.userroledao.ws.UserRoleSecurityInfo;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 

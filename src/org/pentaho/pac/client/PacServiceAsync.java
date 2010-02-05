@@ -17,10 +17,10 @@
 package org.pentaho.pac.client;
 
 import org.pentaho.pac.client.common.PentahoAsyncService;
-import org.pentaho.pac.common.UserRoleSecurityInfo;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
-import org.pentaho.pac.common.roles.ProxyPentahoRole;
-import org.pentaho.pac.common.users.ProxyPentahoUser;
+import org.pentaho.platform.engine.security.userroledao.ws.ProxyPentahoRole;
+import org.pentaho.platform.engine.security.userroledao.ws.ProxyPentahoUser;
+import org.pentaho.platform.engine.security.userroledao.ws.UserRoleSecurityInfo;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 

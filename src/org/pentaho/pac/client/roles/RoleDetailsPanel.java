@@ -16,9 +16,8 @@
 */
 package org.pentaho.pac.client.roles;
 
-import org.pentaho.pac.client.PentahoAdminConsole;
 import org.pentaho.pac.client.i18n.Messages;
-import org.pentaho.pac.common.roles.ProxyPentahoRole;
+import org.pentaho.platform.engine.security.userroledao.ws.ProxyPentahoRole;
 
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;

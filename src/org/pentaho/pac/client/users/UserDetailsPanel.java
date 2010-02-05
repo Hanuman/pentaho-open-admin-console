@@ -17,7 +17,7 @@
 package org.pentaho.pac.client.users;
 
 import org.pentaho.pac.client.i18n.Messages;
-import org.pentaho.pac.common.users.ProxyPentahoUser;
+import org.pentaho.platform.engine.security.userroledao.ws.ProxyPentahoUser;
 
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;

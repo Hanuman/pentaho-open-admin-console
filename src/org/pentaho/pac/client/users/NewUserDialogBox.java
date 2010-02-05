@@ -21,8 +21,8 @@ import org.pentaho.gwt.widgets.client.dialogs.PromptDialogBox;
 import org.pentaho.pac.client.UserAndRoleMgmtService;
 import org.pentaho.pac.client.i18n.Messages;
 import org.pentaho.pac.client.utils.ExceptionParser;
-import org.pentaho.pac.common.roles.ProxyPentahoRole;
-import org.pentaho.pac.common.users.ProxyPentahoUser;
+import org.pentaho.platform.engine.security.userroledao.ws.ProxyPentahoRole;
+import org.pentaho.platform.engine.security.userroledao.ws.ProxyPentahoUser;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;

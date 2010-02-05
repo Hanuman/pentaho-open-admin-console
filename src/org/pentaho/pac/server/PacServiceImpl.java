@@ -45,18 +45,14 @@ import org.pentaho.pac.common.HibernateConfigException;
 import org.pentaho.pac.common.PacServiceException;
 import org.pentaho.pac.common.PentahoSecurityException;
 import org.pentaho.pac.common.ServiceInitializationException;
-import org.pentaho.pac.common.UserRoleSecurityInfo;
-import org.pentaho.pac.common.UserToRoleAssignment;
 import org.pentaho.pac.common.datasources.DataSourceManagementException;
 import org.pentaho.pac.common.datasources.DuplicateDataSourceException;
 import org.pentaho.pac.common.datasources.NonExistingDataSourceException;
 import org.pentaho.pac.common.datasources.PentahoDataSource;
 import org.pentaho.pac.common.roles.DuplicateRoleException;
 import org.pentaho.pac.common.roles.NonExistingRoleException;
-import org.pentaho.pac.common.roles.ProxyPentahoRole;
 import org.pentaho.pac.common.users.DuplicateUserException;
 import org.pentaho.pac.common.users.NonExistingUserException;
-import org.pentaho.pac.common.users.ProxyPentahoUser;
 import org.pentaho.pac.server.biplatformproxy.xmlserializer.XActionXmlSerializer;
 import org.pentaho.pac.server.biplatformproxy.xmlserializer.XmlSerializerException;
 import org.pentaho.pac.server.common.AppConfigProperties;
@@ -76,7 +72,11 @@ import org.pentaho.platform.api.util.PasswordServiceException;
 import org.pentaho.platform.engine.security.userroledao.IPentahoRole;
 import org.pentaho.platform.engine.security.userroledao.IPentahoUser;
 import org.pentaho.platform.engine.security.userroledao.PentahoRole;
-import org.pentaho.platform.engine.security.userroledao.PentahoUser;
+import org.pentaho.platform.engine.security.userroledao.ws.ProxyPentahoRole;
+import org.pentaho.platform.engine.security.userroledao.ws.ProxyPentahoUser;
+import org.pentaho.platform.engine.security.userroledao.ws.ProxyPentahoUserRoleHelper;
+import org.pentaho.platform.engine.security.userroledao.ws.UserRoleSecurityInfo;
+import org.pentaho.platform.engine.security.userroledao.ws.UserToRoleAssignment;
 import org.pentaho.platform.repository.datasource.Datasource;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -124,7 +124,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       List<IPentahoUser> users = getUserRoleMgmtService().getUsers();
       for (IPentahoUser user : users) {
 
-        userRoleSecurityInfo.getUsers().add(toProxyUser(user));
+        userRoleSecurityInfo.getUsers().add(ProxyPentahoUserRoleHelper.toProxyUser(user));
 
         Set<IPentahoRole> roles = user.getRoles();
         for (IPentahoRole role : roles) {
@@ -154,7 +154,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       PacServiceException {
     boolean result = false;
 
-    IPentahoUser user = syncUsers(null, proxyUser);
+    IPentahoUser user = ProxyPentahoUserRoleHelper.syncUsers(null, proxyUser);
     try {
       getUserRoleMgmtService().createUser(user);
       result = true;
@@ -193,7 +193,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     try {
       IPentahoUser user = getUserRoleMgmtService().getUser(pUserName);
       if (null != user) {
-        proxyPentahoUser = toProxyUser(user);
+        proxyPentahoUser = ProxyPentahoUserRoleHelper.toProxyUser(user);
 
       }
     } catch (DAOException e) {
@@ -209,7 +209,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       proxyUsers = new ProxyPentahoUser[users.size()];
       int i = 0;
       for (IPentahoUser user : users) {
-        proxyUsers[i++] = toProxyUser(user);
+        proxyUsers[i++] = ProxyPentahoUserRoleHelper.toProxyUser(user);
       }
     } catch (DAOException e) {
       throw new PacServiceException(Messages.getErrorString("PacService.ERROR_0033_FAILED_TO_GET_USER_NAME"), e); //$NON-NLS-1$
@@ -223,7 +223,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       IPentahoRole role = getUserRoleMgmtService().getRole(proxyRole.getName());
       if (null != role) {
         for (IPentahoUser user : role.getUsers()) {
-          users.add(toProxyUser(user));
+          users.add(ProxyPentahoUserRoleHelper.toProxyUser(user));
         }
       } else {
         throw new NonExistingRoleException(proxyRole.getName());
@@ -242,7 +242,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       if (null == user) {
         throw new NonExistingUserException(proxyUser.getName());
       }
-      getUserRoleMgmtService().updateUser(syncUsers(user, proxyUser));
+      getUserRoleMgmtService().updateUser(ProxyPentahoUserRoleHelper.syncUsers(user, proxyUser));
       result = true;
     } catch (DAOException e) {
       String msg = Messages.getErrorString("PacService.ERROR_0038_USER_UPDATE_FAILED", proxyUser.getName()) //$NON-NLS-1$
@@ -262,7 +262,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       
       Set<IPentahoRole> rolesToSet = new HashSet<IPentahoRole>();
       for (ProxyPentahoRole proxyRole : assignedRoles) {
-        rolesToSet.add(syncRoles(null, proxyRole));
+        rolesToSet.add(ProxyPentahoUserRoleHelper.syncRoles(null, proxyRole));
       }
 
       user.setRoles(rolesToSet);
@@ -286,7 +286,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
 
       Set<IPentahoUser> usersToSet = new HashSet<IPentahoUser>();
       for (ProxyPentahoUser proxyUser : assignedUsers) {
-        usersToSet.add(syncUsers(null, proxyUser));
+        usersToSet.add(ProxyPentahoUserRoleHelper.syncUsers(null, proxyUser));
       }
    
       role.setUsers(usersToSet);
@@ -330,7 +330,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     IPentahoRole role = new PentahoRole(proxyRole.getName());
 
     try {
-      getUserRoleMgmtService().createRole(syncRoles(role, proxyRole));
+      getUserRoleMgmtService().createRole(ProxyPentahoUserRoleHelper.syncRoles(role, proxyRole));
       result = true;
     } catch ( DAOException e) {
       throw new PacServiceException(e);
@@ -369,7 +369,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
       if ( null != user )
       {
         for (IPentahoRole role : user.getRoles()) {
-          proxyRoles.add(toProxyRole(role));
+          proxyRoles.add(ProxyPentahoUserRoleHelper.toProxyRole(role));
         }
       } else {
         throw new NonExistingUserException(proxyUser.getName());
@@ -386,7 +386,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     try {
       List<IPentahoRole> roles = getUserRoleMgmtService().getRoles();
       for (IPentahoRole role : roles) {
-        proxyRoles.add(toProxyRole(role));
+        proxyRoles.add(ProxyPentahoUserRoleHelper.toProxyRole(role));
       }
     } catch (DAOException e) {
       throw new PacServiceException(
@@ -405,7 +405,7 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
             Messages.getErrorString("PacService.ERROR_0036_ROLE_UPDATE_FAILED_DOES_NOT_EXIST", proxyPentahoRole.getName()) ); //$NON-NLS-1$
       }
 
-      getUserRoleMgmtService().updateRole(syncRoles(role, proxyPentahoRole));
+      getUserRoleMgmtService().updateRole(ProxyPentahoUserRoleHelper.syncRoles(role, proxyPentahoRole));
       result = true;
     } catch (DAOException e) {
       throw new PacServiceException(
@@ -886,56 +886,8 @@ public class PacServiceImpl extends RemoteServiceServlet implements PacService {
     return AppConfigProperties.getInstance().getHelpUrl(); 
   }
   
-  //~ User/Role Support Methods ========================================================================================
-  
-  protected ProxyPentahoUser toProxyUser(IPentahoUser user) throws PacServiceException {
-    ProxyPentahoUser proxyPentahoUser = new ProxyPentahoUser();
-    proxyPentahoUser.setName(user.getUsername());
-    proxyPentahoUser.setDescription(user.getDescription());
-    proxyPentahoUser.setEnabled(user.isEnabled());
-    proxyPentahoUser.setPassword(""); //$NON-NLS-1$
-    return proxyPentahoUser;
-  }
+  //~ Datasource Support Methods ========================================================================================
 
-  /**
-   * Synchronizes <code>user</code> with fields from <code>proxyUser</code>. The roles set of given <code>user</code> is
-   * unmodified.
-   */
-  protected IPentahoUser syncUsers(IPentahoUser user, ProxyPentahoUser proxyUser) throws PacServiceException {
-    IPentahoUser syncedUser = user;
-    if (syncedUser == null) {
-      syncedUser = new PentahoUser(proxyUser.getName());
-    }
-    syncedUser.setDescription(proxyUser.getDescription());
-    
-    // PPP-1527: Password is never sent back to the UI. It always shows as blank. If the user leaves it blank,
-    // password is not changed. If the user enters a value, set the password.
-    if (!StringUtils.isBlank(proxyUser.getPassword())) {
-      syncedUser.setPassword(AppConfigProperties.getInstance().getPasswordEncoder().encodePassword(proxyUser.getPassword(), null));
-    }
-    syncedUser.setEnabled(proxyUser.getEnabled());
-    return syncedUser;
-  }
-
-  
-  /**
-   * Synchronizes <code>role</code> with fields from <code>proxyRole</code>. The users set of given <code>role</code> is
-   * unmodified.
-   */
-  protected IPentahoRole syncRoles(IPentahoRole role, ProxyPentahoRole proxyRole) throws PacServiceException {
-    IPentahoRole syncedRole = role;
-    if (syncedRole == null) {
-      syncedRole = new PentahoRole(proxyRole.getName());
-    }
-    syncedRole.setDescription(proxyRole.getDescription());
-    return syncedRole;
-  }
-  
-  protected ProxyPentahoRole toProxyRole(IPentahoRole role) throws PacServiceException {
-    ProxyPentahoRole proxyRole = new ProxyPentahoRole(role.getName());
-    proxyRole.setDescription(role.getDescription());
-    return proxyRole;
-  }
   
   protected PentahoDataSource toPentahoDataSource(IDatasource datasource)  throws PacServiceException {
     PentahoDataSource pentahoDataSource = new PentahoDataSource();

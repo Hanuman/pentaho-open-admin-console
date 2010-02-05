@@ -17,8 +17,8 @@
 package org.pentaho.pac.client.roles;
 
 import org.pentaho.pac.client.common.ui.GenericObjectListBox;
-import org.pentaho.pac.common.roles.ProxyPentahoRole;
-import org.pentaho.pac.common.roles.RoleComparator;
+import org.pentaho.platform.engine.security.userroledao.ws.ProxyPentahoRole;
+import org.pentaho.platform.engine.security.userroledao.ws.RoleComparator;
 
 public class RolesList extends GenericObjectListBox<ProxyPentahoRole> {
   
